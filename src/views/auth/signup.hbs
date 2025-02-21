@@ -4,17 +4,67 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Hello Bulma!</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css">
+    <link rel="stylesheet" href="/css/signup.css">
   </head>
+
   <body>
   <section class="section">
-    <div class="container">
       <h1 class="title">
-        Signup
+        SignUp
       </h1>
-      <p class="subtitle">
-        My first website with <strong>Bulma</strong>!
-      </p>
+      
+     <div class="container" id="container">
+        <div class="form-container sign-up">
+            <form>
+                <h1>Crear Cuenta</h1>
+                <div class="social-icons">
+                    <a href="#" class="icon"><i class="fa-brands fa-google-plus-g"></i></a>
+                    <a href="#" class="icon"><i class="fa-brands fa-facebook-f"></i></a>
+                    <a href="#" class="icon"><i class="fa-brands fa-github"></i></a>
+                    <a href="#" class="icon"><i class="fa-brands fa-linkedin-in"></i></a>
+                </div>
+                <span>o usa tu email para registrarte</span>
+                <input type="text" placeholder="Nombre">
+                <input type="email" placeholder="Correo">
+                <input type="password" placeholder="Contraseña">
+                <input type="password" placeholder="Confirmar Contraseña">
+                <button>Registrarse</button>
+            </form>
+        </div>
+        <div class="form-container sign-in">
+            <form>
+                <h1>Iniciar Sesion</h1>
+                <div class="social-icons">
+                    <a href="#" class="icon"><i class="fa-brands fa-google-plus-g"></i></a>
+                    <a href="#" class="icon"><i class="fa-brands fa-facebook-f"></i></a>
+                    <a href="#" class="icon"><i class="fa-brands fa-github"></i></a>
+                    <a href="#" class="icon"><i class="fa-brands fa-linkedin-in"></i></a>
+                </div>
+                <span>o usa tu correo y contraseña</span>
+                <input type="email" placeholder="Correo">
+                <input type="password" placeholder="Contraseña">
+                <a href="https://mrjac0bm.github.io/githubpagetest/">¿Olvidaste tu contraseña?</a>
+                <a href="https://mrjac0bm.github.io/githubpagetest/" ><button>Iniciar Sesión</button></a>
+                
+            </form>
+        </div>
+        <div class="toggle-container">
+            <div class="toggle">
+                <div class="toggle-panel toggle-left">
+                    <h1>Hola de vuelta!</h1>
+                    <p>Inicia sesión con tus datos personales para usar esta hermosa pagina</p>
+                    <button class="hidden" id="login">Iniciar Sesión</button>
+                </div>
+                <div class="toggle-panel toggle-right">
+                    <h1>Hola, Amigo!</h1>
+                    <p>Registra tus datos personales para usar esta hermosa página</p>
+                    <button class="hidden" id="register">Registrarse</button>
+                </div>
+            </div>
+        </div>
     </div>
+
+    <script src="/js/signup.js"></script>
   </section>
   </body>
 </html>
