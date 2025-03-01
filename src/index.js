@@ -13,6 +13,7 @@ const app = express();
 require('dotenv').config();
 app.set('port', process.env.PORT || 4000);
 app.set('views', path.join(__dirname, 'views'));
+
 const exphbs = create({
     defaultLayout: 'main',
     layoutsDir: path.join(__dirname, 'views', 'pages'),
@@ -36,17 +37,28 @@ app.use(flash());
 //     res.locals.message = req.flash('message');
 //     res.locals.success = req.flash('success');
 //     res.locals.user = req.user;
-//     res.locals.currentPath = req.path;
+//     res.locals.currentPath = req.path
 //     next();
 // });
+// test data
+
 
 // routes 
 app.use(require('./routes'));
 app.use('/nuclea', require('./routes/authentication'));
 app.use('/nuclea', require('./routes/dashboard'));
+app.use('/nuclea', require('./routes/requests'));
+app.use('/nuclea', require('./routes/objectives'));
+app.use('/nuclea', require('./routes/one'));
+app.use('/nuclea', require('./routes/reports'));
+app.use('/nuclea', require('./routes/admin'));
 
 // public
 app.use(express.static(path.join(__dirname, 'public')));
+
+
+
+
 // starting the server 
 app.listen(app.get('port'), () => {
     console.log('Server on port', app.get('port'));

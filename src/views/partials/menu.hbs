@@ -1,0 +1,54 @@
+<nav class="menu">
+    {{!-- <i class="fa-solid fa-bars"></i> --}}
+    <div class="logo">
+        <a href="/nuclea/signup"><img src="/media/logo.png" alt=""></a>
+    </div>
+    <ul>
+        <li><a href="/nuclea/dashboard" data-text="dashboard"><i class="fa-solid fa-house"></i></a></li>
+        <li><a href="/nuclea/requests" data-text="requests"><i class="fa-solid fa-hand"></i></a></li>
+        <li><a href="/nuclea/objectives" data-text="objectives"><i class="fa-solid fa-bullseye"></i></a></li>
+        <li><a href="/nuclea/one" data-text="one-to-one"><i class="fa-solid fa-people-arrows"></i></a></li>
+        <li><a href="/nuclea/reports" data-text="reports"><i class="fa-solid fa-clipboard-list"></i></a></li>
+        <li><a href="/nuclea/admin" data-text="admin"><i class="fa-solid fa-user-tie"></i></a></li>
+    </ul>
+    <div class="user">
+        <ul>
+             <li><a href="#" title="dashboard"><i class="fa-solid fa-gear"></i></a></li>
+             <li><a href="#" title="dashboard"><i class="fa-solid fa-user"></i></a></li>
+        </ul>
+    </div>
+</nav>
+<style>
+    .menu{
+        width: 70px;
+        height: 100vh;
+        position: fixed;
+        left: 0;
+        top: 0; 
+        z-index: 1000;
+        display: flex;
+        flex-direction: column;
+        box-shadow: 5px 0 10px rgba(0, 0, 0, 0.5); /* Desplazamiento a la derecha */
+        justify-content: center;
+        align-items: center;
+        background: var(--color-bg);
+    }
+    ul{
+        text-align: center;
+    }
+    .menu i{
+        color: #A1B0B9;
+        font-size: 20px;
+        margin: 30px auto;
+        transition: .5s ease all;
+    }
+    .menu i:hover{
+        color: #fff;
+        font-size: 20px;
+        margin: 30px auto;
+    }
+    .logo{  
+        width: 35px;
+        margin: 20px auto;
+    }
+</style>

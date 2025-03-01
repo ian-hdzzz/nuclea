@@ -3,9 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <title>Mi App</title>
+     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css">
+    <link rel="icon" href="/media/logo.ico" type="image/x-icon">
+    <link rel="stylesheet" href="/css/main.css">
+    <title>Flowit</title>
 </head>
 <body>
-    {{{body}}}  
+    {{#unless hideMenu}}
+        {{> menu }}
+    {{/unless}}
+
+    {{#unless hideContainer}}
+        <div class="container">
+            {{{body}}}  
+        </div>
+    {{else}}
+        {{{body}}} 
+    {{/unless}}
+
 </body>
 </html>
