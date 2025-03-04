@@ -1,16 +1,18 @@
 <nav class="menu">
     {{!-- <i class="fa-solid fa-bars"></i> --}}
+    <div class="routes">
     <div class="logo">
         <a href="/nuclea/signup"><img src="/media/logo.png" alt=""></a>
     </div>
-    <ul>
-        <li><a href="/nuclea/dashboard" data-text="dashboard"><i class="fa-solid fa-house"></i></a></li>
-        <li><a href="/nuclea/requests" data-text="requests"><i class="fa-solid fa-hand"></i></a></li>
-        <li><a href="/nuclea/objectives" data-text="objectives"><i class="fa-solid fa-bullseye"></i></a></li>
-        <li><a href="/nuclea/one" data-text="one-to-one"><i class="fa-solid fa-people-arrows"></i></a></li>
-        <li><a href="/nuclea/reports" data-text="reports"><i class="fa-solid fa-clipboard-list"></i></a></li>
-        <li><a href="/nuclea/admin" data-text="admin"><i class="fa-solid fa-user-tie"></i></a></li>
-    </ul>
+        <ul>
+            <li><a href="/nuclea/dashboard" class="tooltip"><i class="fa-solid fa-house"></i><span class="tooltip-text">Dashboard</span></a></li>
+            <li><a href="/nuclea/requests" class="tooltip"><i class="fa-solid fa-hand"></i><span class="tooltip-text">Requests</span></a></li>
+            <li><a href="/nuclea/objectives" class="tooltip"><i class="fa-solid fa-bullseye"></i><span class="tooltip-text">Goals</span></a></li>
+            <li><a href="/nuclea/one" class="tooltip"><i class="fa-solid fa-people-arrows"></i><span class="tooltip-text">One-to-one</span></a></li>
+            <li><a href="/nuclea/reports" class="tooltip"><i class="fa-solid fa-clipboard-list"></i><span class="tooltip-text">Reports</span></a></li>
+            <li><a href="/nuclea/admin" class="tooltip"><i class="fa-solid fa-user-tie"></i><span class="tooltip-text">Admin</span></a></li>
+        </ul>
+    </div>
     <div class="user">
         <ul>
              <li><a href="#" title="dashboard"><i class="fa-solid fa-gear"></i></a></li>
@@ -29,23 +31,51 @@
         display: flex;
         flex-direction: column;
         box-shadow: 5px 0 10px rgba(0, 0, 0, 0.5); /* Desplazamiento a la derecha */
-        justify-content: center;
+        justify-content: space-between;
         align-items: center;
         background: var(--color-bg);
     }
-    ul{
+    .routes > ul {
         text-align: center;
+        padding: 10px;
+    }
+    .tooltip {
+        position: relative;
+        display: inline-block;
+    }
+
+    .tooltip .tooltip-text {
+        visibility: hidden;
+        background-color: black;
+        color: white;
+        font-size: 13px;
+        text-align: center;
+        padding: 5px;
+        border-radius: 5px;
+        text-transform: none; /* Asegura que el texto no se fuerce a mayúsculas */
+        
+        position: absolute;
+        bottom: 30%;
+        left: 30px;
+        white-space: nowrap;
+        
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+
+    .tooltip:hover .tooltip-text {
+        visibility: visible;
+        opacity: 1;
     }
     .menu i{
-        color: #A1B0B9;
+        color: var(--color-iconos);
         font-size: 20px;
-        margin: 30px auto;
+        margin: 22px auto;
         transition: .5s ease all;
     }
     .menu i:hover{
         color: #fff;
         font-size: 20px;
-        margin: 30px auto;
     }
     .logo{  
         width: 35px;
