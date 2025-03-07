@@ -52,6 +52,7 @@ app.use('/nuclea', require('./routes/objectives'));
 app.use('/nuclea', require('./routes/one'));
 app.use('/nuclea', require('./routes/reports'));
 app.use('/nuclea', require('./routes/admin'));
+app.use('/nuclea', require('./routes/faltaAdministrativa'));
 
 // public
 app.use(express.static(path.join(__dirname, 'public')));
