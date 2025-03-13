@@ -14,6 +14,7 @@ require('dotenv').config();
 app.set('port', process.env.PORT || 4000);
 app.set('views', path.join(__dirname, 'views'));
 
+
 const exphbs = create({
     defaultLayout: 'main',
     layoutsDir: path.join(__dirname, 'views', 'pages'),
@@ -52,6 +53,7 @@ app.use('/nuclea', require('./routes/objectives'));
 app.use('/nuclea', require('./routes/one'));
 app.use('/nuclea', require('./routes/reports'));
 app.use('/nuclea', require('./routes/admin'));
+app.use('/nuclea', require('./routes/profile'));
 
 // public
 app.use(express.static(path.join(__dirname, 'public')));
