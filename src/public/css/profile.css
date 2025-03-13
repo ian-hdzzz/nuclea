@@ -42,7 +42,7 @@ body {
 }
 
 .right-panel {
-  padding: 80px 200px 20px 20px;
+  padding: 95px 200px 20px 20px;
 }
 
 .info-item {
@@ -52,20 +52,7 @@ body {
   padding: 15px;
   border-radius: 10px;
 }
-.id-container {
-  display: flex;
-  align-items: center;
-  gap: 10px; /* Espacio entre el texto "Id:" y el número */
-}
 
-.id-container .info-item {
-  flex-grow: 1; /* Ocupa todo el espacio restante */
-  text-align: center; /* Centra el número si es necesario */
-  background-color: #141720; /* Ajusta al estilo de los otros campos */
-  padding: 15px;
-  border-radius: 10px;
-  font-size:x-large;
-}
 .label {
   font-weight: bold;
   display: block;
