@@ -1,0 +1,85 @@
+
+body {
+  margin: 0;
+  font-family: sans-serif;
+  background-color: #0C1019; /* Fondo oscuro */
+  color: #fff; /* Texto blanco */
+}
+
+.container {
+  display: grid;
+  grid-template-columns: 50% 50%;
+  height: 100vh;
+  width: 100vw;
+}
+
+.left-panel {
+ 
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  
+}
+
+.profile-image {
+  width: 230px;
+  height: 300px;
+}
+
+.edit-button {
+  width: 60px;
+  height: auto;
+ 
+}
+
+.profile-name {
+  margin-top: 20px;
+  background-color: #4a69bd;
+  padding: 10px 20px;
+  border-radius: 10px;
+}
+
+.right-panel {
+  padding: 80px 200px 20px 20px;
+}
+
+.info-item {
+  margin-bottom: 20px;
+  background-color: #141720;
+  text-align: center;
+  padding: 15px;
+  border-radius: 10px;
+}
+.id-container {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Espacio entre el texto "Id:" y el número */
+}
+
+.id-container .info-item {
+  flex-grow: 1; /* Ocupa todo el espacio restante */
+  text-align: center; /* Centra el número si es necesario */
+  background-color: #141720; /* Ajusta al estilo de los otros campos */
+  padding: 15px;
+  border-radius: 10px;
+  font-size:x-large;
+}
+.label {
+  font-weight: bold;
+  display: block;
+  padding: 20px;
+  margin-bottom: 5px;
+}
+
+
+h2{
+  font-size:x-large; 
+}
+
+.left{
+  padding-right: 100px;
+  padding-left: 100px;
+  
+}
