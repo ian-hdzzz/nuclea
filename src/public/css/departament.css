@@ -1,0 +1,149 @@
+@import url('https://fonts.googleapis.com/css2?family=Radio+Canada:ital,wght@0,300..700;1,300..700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+*{
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+.first-container{
+    margin-left: 140px;
+    display: flex;
+    height: 80%;
+    width: 800px;
+
+}
+body{
+    background-color: #0c1019;
+    color: #fff;
+}
+.nav-bar{
+    font-family: "Radio Canada", sans-serif;
+    margin: 20px 20px ;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 50px;
+}
+.search-container{
+    flex-grow: 0.7;
+    background-color: #fff;
+    padding: 4px;
+    border-radius: 0 8px 8px 0;
+
+}
+
+.input-search{
+    font-size: 18px;
+    padding: 4px;
+    outline: none;
+    border: none;
+    width: 95%;
+    height: 100%;
+}
+
+.search-icon{
+    cursor: pointer;
+    color: #000;
+    transform: translateY(8%);
+    padding-right: 5px;
+}
+.views{
+    font-size: 18px;
+    display: flex;
+    flex-grow: 0.3;
+    width: 120px;
+    background: linear-gradient(to right, #2762ea 0%,#4162f0 29%, #8061fd 100%);
+    border-radius: 8px 0 0 8px;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+}
+
+.notification,.perfil{
+    margin-top: 20px;
+    background: #253d90;
+    padding: 10px 12px;
+   border-radius: 50%;
+   cursor: pointer;
+}
+
+.second-container{
+    margin-left: -100px;
+    display: flex;
+    gap: 30px;
+}
+
+.content{
+    width: 80%;
+    border-radius: 2rem;
+    margin: auto;
+    padding: 40px;
+    background-color: #151720;
+}
+
+.nav-content{
+    font-family: "Radio Canada", sans-serif;
+    display: flex;
+    justify-content: space-between;
+}
+
+.info{
+    width: 80%;
+}
+
+h2{
+    margin-bottom: 20px;
+    font-size: 30px;
+}
+
+.add-btn{
+    cursor: pointer;
+    color: #fff;
+    font-size: 18px;
+    width: 158px;
+    height: 50px;
+    border-radius: 2rem;
+    transform: translateY(-15%);
+    background: linear-gradient(to right, #2762ea 0%,#4162f0 29%, #8061fd 100%);
+    border: none;
+    box-shadow: 3px 3px 15px rgba(46, 82, 227, 0.515);
+
+}
+
+table {
+    font-family: 'Montserrat',sans-serif;
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+th, td {
+    padding: 20px 10px;
+    text-align: center;
+}
+
+.active{
+    cursor: auto;
+    align-items: center;
+    padding: 4px 20px;
+    background: #63d754;
+    box-sizing: border-box;
+    font-size: 18px;
+    border-radius: 2rem;
+}
+
+.action-btn{
+    cursor: pointer;
+    padding: 10px 25px;
+    background: linear-gradient(to right, #2762ea 0%,#4162f0 29%, #8061fd 100%);
+    color: #fff;
+    border-radius: 2rem;border: none;
+    box-shadow: 3px 3px 5px rgba(46, 82, 227, 0.515);
+}
+
+.perfil{
+    height: 37px;
+}
+.notification{
+    height: 37px;
+}
