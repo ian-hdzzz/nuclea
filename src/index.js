@@ -1,4 +1,5 @@
 const express = require('express');
+const session = require('express-session');
 const morgan  = require('morgan');
 const path = require('path');
 const  { create, engine } = require('express-handlebars');
@@ -30,7 +31,11 @@ app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({extended:false}));
 app.use(express.static('public'));
-
+app.use(session({
+  secret: 'ian', 
+  resave: false, //La sesión no se guardará en cada petición, sino sólo se guardará si algo cambió 
+  saveUninitialized: false, //Asegura que no se guarde una sesión para una petición que no lo necesita
+}));
 // global variables
 app.use(flash());
 // app.use((req, res, next) => {
@@ -44,15 +49,15 @@ app.use(flash());
 
 
 // routes 
-app.use(require('./routes'));
-app.use('/nuclea', require('./routes/authentication'));
-app.use('/nuclea', require('./routes/dashboard'));
-app.use('/nuclea', require('./routes/requests'));
-app.use('/nuclea', require('./routes/objectives'));
-app.use('/nuclea', require('./routes/one'));
-app.use('/nuclea', require('./routes/reports'));
-app.use('/nuclea', require('./routes/admin'));
-app.use('/nuclea', require('./routes/faltaAdministrativa'));
+app.use(require('./routes/index.routes'));
+app.use('/nuclea', require('./routes/authentication.routes'));
+app.use('/nuclea', require('./routes/dashboard.routes'));
+app.use('/nuclea', require('./routes/requests.routes'));
+app.use('/nuclea', require('./routes/one.routes'));
+app.use('/nuclea', require('./routes/reports.routes'));
+app.use('/nuclea', require('./routes/admin.routes'));
+app.use('/nuclea', require('./routes/faltaAdministrativa.routes'));
+// app.use('/nuclea', require('./routes/objectives'));
 
 // public
 app.use(express.static(path.join(__dirname, 'public')));

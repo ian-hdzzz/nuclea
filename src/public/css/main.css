@@ -2,6 +2,7 @@
     padding: 0;
     margin: 0;
     box-sizing: border-box;
+    
 }
 :root{
     --color-bg:#0C1019;
@@ -13,7 +14,8 @@
     --color-fuente:#fff;
 }
 body{
-    background: var(--color-bg);
+    background-color: var(--color-bg);
+
 }
 h1{ 
 
