@@ -1,4 +1,5 @@
 const express = require('express');
+const session = require('express-session');
 const morgan  = require('morgan');
 const path = require('path');
 const  { create, engine } = require('express-handlebars');
@@ -31,7 +32,11 @@ app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({extended:false}));
 app.use(express.static('public'));
-
+app.use(session({
+  secret: 'ian', 
+  resave: false, //La sesión no se guardará en cada petición, sino sólo se guardará si algo cambió 
+  saveUninitialized: false, //Asegura que no se guarde una sesión para una petición que no lo necesita
+}));
 // global variables
 app.use(flash());
 // app.use((req, res, next) => {

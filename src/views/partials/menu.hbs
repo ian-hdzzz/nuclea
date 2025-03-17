@@ -20,6 +20,19 @@
              <li><a href="/nuclea/profile" title="Profile"><i class="fa-solid fa-user"></i></a></li>
         </ul>
     </div>
+    
+        <div class="buttons">
+          {{#if isAuthenticated}}
+              <a href="logout" class="button is-red">
+                Log out
+              </a>
+          {{ else }}
+              <a href="login" class="button is-light">
+                Log in
+              </a>
+           {{/if}}
+        </div>
+
 </nav>
 <style>
     .menu{
