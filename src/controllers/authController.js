@@ -65,18 +65,23 @@ class Auth {
   }
 
   isAuthenticated(req, res, next) {
-    // Verifica si la sesión tiene datos (por ejemplo, nombre o email)
-    if (req.session.email) {
+    console.log("Sesión actual:", req.session);
+    
+    // Verifica si la sesión tiene la marca isLoggedIn
+    if (req.session && req.session.isLoggedIn) {
+      console.log("Usuario autenticado:", req.session.email);
       return next(); // Si está logueado, permite continuar
     }
+    
     // Si no está logueado, redirige al login
-    res.redirect('/login');
+    console.log("Usuario no autenticado, redirigiendo a login");
+    res.redirect('login');
   }
 
   logOut(req, res) {
     // Elimina la sesión cuando se haga logout
     req.session.destroy(() => {
-      res.redirect('/home'); // Redirige al usuario después de cerrar sesión
+      res.redirect('login'); // Redirige al usuario después de cerrar sesión
     });
   }
 }
