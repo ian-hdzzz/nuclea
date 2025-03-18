@@ -35,6 +35,10 @@ app.use(express.static('public'));
 const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({extended: false}));
 
+const csrf = require('csurf');
+const csrfProtection = csrf();
+app.use(csrfProtection);
+
 // global variables
 app.use(flash());
 // app.use((req, res, next) => {

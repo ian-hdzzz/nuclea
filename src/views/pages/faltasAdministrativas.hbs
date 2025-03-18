@@ -13,6 +13,7 @@
     </header>
     <section class="modal-card-body">
       <form action="/nuclea/faltasAdministrativas" id="form-falta" method="POST">
+        <input type="hidden" name="_csrf" value="{{csrfToken}}">
         <label for="usuario" class="label">Find collaborator:</label>
           <div class="select is-primary">
             <select id="idUsu" name="idUsu">
