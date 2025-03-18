@@ -56,7 +56,6 @@ app.use('/nuclea', require('./routes/admin'));
 app.use('/nuclea', require('./routes/profile'));
 app.use('/nuclea',require('./routes/departament'));
 
-
 const faltaAdministrativa = require('./routes/faltaAdministrativa.routes');
 app.use('/nuclea/faltasAdministrativas', faltaAdministrativa);
 // public
