@@ -53,10 +53,12 @@ app.use('/nuclea', require('./routes/objectives'));
 app.use('/nuclea', require('./routes/one'));
 app.use('/nuclea', require('./routes/reports'));
 app.use('/nuclea', require('./routes/admin'));
-app.use('/nuclea', require('./routes/faltaAdministrativa'));
 app.use('/nuclea', require('./routes/profile'));
 app.use('/nuclea',require('./routes/departament'));
 
+
+const faltaAdministrativa = require('./routes/faltaAdministrativa.routes');
+app.use('/nuclea/faltasAdministrativas', faltaAdministrativa);
 // public
 app.use(express.static(path.join(__dirname, 'public')));
 
