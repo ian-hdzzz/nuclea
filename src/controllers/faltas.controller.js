@@ -15,11 +15,11 @@ exports.get_fa = (req, res, next) => {
 
 exports.post_agregar_fa = (request, response, next) => {
     console.log(request.body);
-    const personaje = new Falta(request.body.nombre);
-    personaje.save()
+    console.log(request.body.fecha);
+    const falta = new Falta(request.body.idUsu, request.body.fecha, request.body.motivo);
+    falta.save()
         .then(() => {
-            request.session.info = `Personaje ${personaje.nombre} guardado.`;
-            response.redirect('../views/pages/faltasAdministrativas.hbs');
+            response.redirect('/nuclea/faltasAdministrativas');
         })
         .catch((error) => {
             console.log(error);
