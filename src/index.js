@@ -32,6 +32,9 @@ app.use(express.json());
 app.use(express.urlencoded({extended:false}));
 app.use(express.static('public'));
 
+const bodyParser = require('body-parser');
+app.use(bodyParser.urlencoded({extended: false}));
+
 // global variables
 app.use(flash());
 // app.use((req, res, next) => {
