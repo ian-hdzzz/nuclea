@@ -12,7 +12,7 @@ module.exports = class Falta {
 
     //Este método servirá para guardar de manera persistente el nuevo objeto. 
     save() {
-        return db.execute('INSERT INTO Faltas_administrativas(idUsuario,Fecha_asignacion_falta,Motivo) VALUES (?,?,?)', [this.usuario],[this.fecha],[this.motivo]); //Extaer datos de ña base de datos
+        return db.execute('INSERT INTO Faltas_administrativas(idUsuario,Fecha_asignacion_falta,Motivo) VALUES (?,?,?)', [this.usuario,this.fecha,this.motivo]); //Extaer datos de ña base de datos
     }
 
     //Este método servirá para devolver los objetos del almacenamiento persistente.
