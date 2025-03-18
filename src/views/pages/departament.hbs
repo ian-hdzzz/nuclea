@@ -11,16 +11,15 @@
         <nav class="nav-bar">
             <div class="first-container">
                 <div class="views">Views</div>
-            <div class="search-container">
-                <input type="text" placeholder="Search..." class="input-search">
-                <i class="fa-solid fa-magnifying-glass search-icon"></i>
-            </div>
+                <div class="search-container">
+                    <input type="text" placeholder="Search..." class="input-search">
+                    <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                </div>
             </div>
             <div class="second-container">
                 <div class="notification">
                     <i class="fa-solid fa-bell"></i>
                 </div>
-                    
                 <div class="perfil">
                     <i class="fa-solid fa-user"></i>
                 </div>
@@ -30,42 +29,33 @@
 
     <div class="content">
         <div class="nav-content">
-            <h2>Departament Magnament</h2>
+            <h2>Departament Management</h2>
             <input type="button" value="Add Dept" class="add-btn">
         </div>
         <table>
             <thead>
                 <tr>
-                    <th>Name(s)</th>
-                    <th>Nº Dept</th>
+                    <th>ID</th>
+                    <th>Department Name</th>
                     <th>Description</th>
                     <th>State</th>
                     <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
+                {{#each datos}}
                 <tr>
-                    <td>Finance</td>
-                    <td>101</td>
-                    <td>Manages financial operations</td>
-                    <td><span class="active">Active</span></td>
+                    <td>{{idDepartamento}}</td>
+                    <td>{{Nombre_departamento}}</td>
+                    <td>{{Descripcion}}</td>
+                    <td><span class="{{#if Estado}}active{{else}}inactive{{/if}}">{{#if Estado}}Active{{else}}Inactive{{/if}}</span></td>
                     <td>
                         <div class="dropdown">
                             <button class="action-btn">Actions</button>
                         </div>
                     </td>
                 </tr>
-                <tr>
-                    <td>UX/UI</td>
-                    <td>102</td>
-                    <td>Develops digital technologies</td>
-                    <td><span class="active">Active</span></td>
-                    <td>
-                        <div class="dropdown">
-                            <button class="action-btn">Actions</button>
-                        </div>
-                    </td>
-                </tr>
+                {{/each}}
             </tbody>
         </table>
     </div>
