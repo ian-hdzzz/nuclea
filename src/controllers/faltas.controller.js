@@ -5,8 +5,10 @@ const Usuario = require('../models/usuario.model');
 
 exports.get_fa = (req, res, next) => {
     Usuario.fetchAll().then(([rows, fieldData])=>{
-        res.render('../views/pages/faltasAdministrativas.hbs', {usuariosfa:rows}
-        );
+        res.render('../views/pages/faltasAdministrativas.hbs', {
+            usuariosfa:rows,
+            csrfToken: request.csrfToken(),
+        });
     }).catch((error)=>{
         console.log(error);
     });
