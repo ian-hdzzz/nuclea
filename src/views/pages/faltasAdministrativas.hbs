@@ -8,14 +8,17 @@
   <div class="modal-background"></div>
   <div class="modal-card">
     <header class="modal-card-head">
-      <p class="modal-card-title">Modal title</p>
+      <p class="modal-card-title">Add administrative Offense</p>
       <button class="delete" aria-label="close"></button>
     </header>
     <section class="modal-card-body">
-      <form action="/nucle/faltasAdministrativas" method="POST">
+      <form action="/nuclea/faltasAdministrativas" method="POST">
         <label for="usuario" class="label">Find collaborator:</label>
           <div class="select is-primary">
             <select id="niveles" name="niveles">
+              {{#each usuariosfa}}
+                <option value="{{idUsuario}}">{{Nombre}}</option>
+              {{/each}}
             </select>
           </div>
         <br><br>
