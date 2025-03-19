@@ -16,8 +16,12 @@ module.exports = class Falta {
     }
 
     //Este método servirá para devolver los objetos del almacenamiento persistente.
-    static fetchAll() {
-        return db.execute('SELECT * FROM Departamentos');
+    static fetchFA() {
+        return db.execute(`
+            SELECT fa.idFalta, u.Nombre, fa.Motivo, fa.Fecha_asignacion_falta 
+            FROM Faltas_administrativas fa 
+            JOIN Usuarios u ON fa.idUsuario = u.idUsuario
+        `);
     }
 
     static fetchOne(id) {

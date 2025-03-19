@@ -4,15 +4,20 @@ const Usuario = require('../models/usuario.model');
 
 
 exports.get_fa = (req, res, next) => {
-    Usuario.fetchAll().then(([rows, fieldData])=>{
-        res.render('../views/pages/faltasAdministrativas.hbs', {
-            usuariosfa:rows,
-            csrfToken: req.csrfToken(),
+
+    Falta.fetchFA().then(([faltas, fD])=>{
+        Usuario.fetchAll().then(([rows, fieldData])=>{
+            res.render('../views/pages/faltasAdministrativas.hbs', {
+                usuariosfa:rows,
+                csrfToken: req.csrfToken(),
+                faltas: faltas
+            });
+        }).catch((error)=>{
+            console.log(error);
         });
     }).catch((error)=>{
-        console.log(error);
-    });
-    
+        console.log(error)
+    })
 };
 
 exports.post_agregar_fa = (request, response, next) => {

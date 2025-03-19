@@ -1,7 +1,59 @@
-<h1>Faltas Administrativas</h1>
-<button class="js-modal-trigger button is-primary" data-target="modal-fa">
-  Add Administrative Offense
-</button>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="/css/departament.css">
+<div class="top-container">
+        <nav class="nav-bar">
+            <div class="first-container">
+                <div class="views">Views</div>
+                <div class="search-container">
+                    <input type="text" placeholder="Search..." class="input-search">
+                    <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                </div>
+            </div>
+            <div class="second-container">
+                <div class="notification">
+                    <i class="fa-solid fa-bell"></i>
+                </div>
+                <div class="perfil">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+            </div>
+        </nav>
+    </div>
+    <div class="content">
+        <div class="nav-content">
+            <h2>Departament Management</h2>
+            <button class="js-modal-trigger add-btn" data-target="modal-fa">
+              Add AO
+            </button>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Assigned to</th>
+                    <th>Reason</th>
+                    <th>Date</th>
+                    <th>File</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each faltas}}
+                <tr>
+                    <td>{{Nombre}}</td>
+                    <td>{{Motivo}}</td>
+                    <td>{{formatDate Fecha_asignacion_falta}}</td>
+                    <td>agregar despues</td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="action-btn">Actions</button>
+                        </div>
+                    </td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+
 
 
 <div id="modal-fa" class="modal">
