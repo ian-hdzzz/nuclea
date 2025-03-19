@@ -30,7 +30,7 @@
     <div class="content">
         <div class="nav-content">
             <h2>Departament Management</h2>
-            <input type="button" value="Add Dept" class="add-btn">
+            <input type="button" value="Add Dept" class="add-btn" id="openModal">
         </div>
         <table>
             <thead>
@@ -58,6 +58,44 @@
                 {{/each}}
             </tbody>
         </table>
+     <div id="modal" class="modal hidden">
+        <div class="modal-content">
+            <!-- Botón de cerrar -->
+            <button id="closeModal" class="close-btn">✖</button>
+
+            <h2 class="title-modal">Add Departament</h2>
+            <p class="description">Fill in the required details to recall this Departament</p>
+
+            <!-- Campos -->
+            <div class="form-group">
+                <label>Departament Name</label>
+                <input type="text" placeholder="Finance" class="text-modal">
+            </div>
+
+            <div class="form-group">
+                <label>Description</label>
+                <input type="text" placeholder="Manage Financial Operations" class="text-modal">
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Departament Number</label>
+                    <input type="text" placeholder="101" class="text-modal">
+                </div>
+                <div class="form-group">
+                    <label>Estatus</label>
+                    <input type="text" placeholder="Active" class="text-modal">
+                </div>
+            </div>
+
+            <!-- Botón de enviar -->
+            <button class="btn-submit">Add Departament</button>
+        </div>
     </div>
+
+    </div>
+
+
+    <script src="/js/addDepartament.js"></script>
 </body>
 </html>
