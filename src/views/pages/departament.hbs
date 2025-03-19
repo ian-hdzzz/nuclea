@@ -58,40 +58,45 @@
                 {{/each}}
             </tbody>
         </table>
-     <div id="modal" class="modal hidden">
+
+    <div id="modal" class="modal hidden">
         <div class="modal-content">
             <!-- Botón de cerrar -->
             <button id="closeModal" class="close-btn">✖</button>
 
-            <h2 class="title-modal">Add Departament</h2>
-            <p class="description">Fill in the required details to recall this Departament</p>
+            <h2 class="title-modal">Add Department</h2>
+            <p class="description">Fill in the required details to register this Department</p>
 
-            <!-- Campos -->
-            <div class="form-group">
-                <label>Departament Name</label>
-                <input type="text" placeholder="Finance" class="text-modal">
-            </div>
-
-            <div class="form-group">
-                <label>Description</label>
-                <input type="text" placeholder="Manage Financial Operations" class="text-modal">
-            </div>
-
-            <div class="form-row">
+            <!-- Formulario -->
+            <form id="departmentForm" method="POST" action="/nuclea/departament">
+            <input type="hidden" name="_csrf" value="{{csrfToken}}">
                 <div class="form-group">
-                    <label>Departament Number</label>
-                    <input type="text" placeholder="101" class="text-modal">
+                    <label for="deptName">Department Name</label>
+                    <input type="text" id="deptName" name="Nombre_departamento" placeholder="Finance" class="text-modal" required>
                 </div>
-                <div class="form-group">
-                    <label>Estatus</label>
-                    <input type="text" placeholder="Active" class="text-modal">
-                </div>
-            </div>
 
-            <!-- Botón de enviar -->
-            <button class="btn-submit">Add Departament</button>
+                <div class="form-group">
+                    <label for="desc">Description</label>
+                    <input type="text" id="desc" name="Descripcion" placeholder="Manage Financial Operations" class="text-modal" required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="deptNumber">Department Number</label>
+                        <input type="text" id="deptNumber" name="idDepartamento" placeholder="101" class="text-modal" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="status">Status</label>
+                        <input type="text" name="Estado" placeholder="Active" class="text-modal" required>
+                    </div>
+                </div>
+
+                <!-- Botón de enviar -->
+                <input type="submit" class="btn-submit" value="Add Department">
+            </form>
         </div>
     </div>
+
 
     </div>
 
