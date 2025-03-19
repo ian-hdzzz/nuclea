@@ -11,7 +11,11 @@ module.exports = class Departament {
 
     //Este método servirá para guardar de manera persistente el nuevo objeto. 
     save() {
-        return db.execute('INSERT INTO personajes(nombre) VALUES (?)', [this.nombre]); //Extaer datos de ña base de datos
+        return db.execute(
+            'INSERT INTO Departamentos (Nombre_departamento, Descripcion, Estado) VALUES (?, ?, ?)',
+            [this.nombre, this.descripcion, this.estado]
+        );
+        
     }
 
     //Este método servirá para devolver los objetos del almacenamiento persistente.
