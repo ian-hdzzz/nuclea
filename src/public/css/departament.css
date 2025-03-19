@@ -108,7 +108,11 @@ h2{
     background: linear-gradient(to right, #2762ea 0%,#4162f0 29%, #8061fd 100%);
     border: none;
     box-shadow: 3px 3px 15px rgba(46, 82, 227, 0.515);
+    transition: all 0.3s ease-in-out;
+}
 
+.add-btn:hover{
+    opacity: 0.7;
 }
 
 table {
@@ -139,6 +143,11 @@ th, td {
     color: #fff;
     border-radius: 2rem;border: none;
     box-shadow: 3px 3px 5px rgba(46, 82, 227, 0.515);
+    transition: all 0.3s ease-in-out;
+}
+
+.action-btn:hover{
+    opacity: 0.7;
 }
 
 .perfil{
