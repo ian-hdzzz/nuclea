@@ -32,6 +32,20 @@ app.use(express.json());
 app.use(express.urlencoded({extended:false}));
 app.use(express.static('public'));
 
+const session = require('express-session');
+app.use(session({
+    secret: 'mi string secreto que debe ser un string aleatorio muy largo, no como éste', 
+    resave: false, //La sesión no se guardará en cada petición, sino sólo se guardará si algo cambió 
+    saveUninitialized: false, //Asegura que no se guarde una sesión para una petición que no lo necesita
+}));
+
+const bodyParser = require('body-parser');
+app.use(bodyParser.urlencoded({extended: false}));
+
+const csrf = require('csurf');
+const csrfProtection = csrf();
+app.use(csrfProtection);
+
 // global variables
 app.use(flash());
 // app.use((req, res, next) => {
@@ -53,10 +67,11 @@ app.use('/nuclea', require('./routes/objectives'));
 app.use('/nuclea', require('./routes/one'));
 app.use('/nuclea', require('./routes/reports'));
 app.use('/nuclea', require('./routes/admin'));
-app.use('/nuclea', require('./routes/faltaAdministrativa'));
 app.use('/nuclea', require('./routes/profile'));
 app.use('/nuclea',require('./routes/departament'));
 
+const faltaAdministrativa = require('./routes/faltaAdministrativa.routes');
+app.use('/nuclea/faltasAdministrativas', faltaAdministrativa);
 // public
 app.use(express.static(path.join(__dirname, 'public')));
 

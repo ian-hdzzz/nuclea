@@ -1,1 +1,151 @@
-<h1>Faltas Administrativas</h1>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="/css/departament.css">
+<div class="top-container">
+        <nav class="nav-bar">
+            <div class="first-container">
+                <div class="views">Views</div>
+                <div class="search-container">
+                    <input type="text" placeholder="Search..." class="input-search">
+                    <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                </div>
+            </div>
+            <div class="second-container">
+                <div class="notification">
+                    <i class="fa-solid fa-bell"></i>
+                </div>
+                <div class="perfil">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+            </div>
+        </nav>
+    </div>
+    <div class="content">
+        <div class="nav-content">
+            <h2>Departament Management</h2>
+            <button class="js-modal-trigger add-btn" data-target="modal-fa">
+              Add AO
+            </button>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Assigned to</th>
+                    <th>Reason</th>
+                    <th>Date</th>
+                    <th>File</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each faltas}}
+                <tr>
+                    <td>{{Nombre}}</td>
+                    <td>{{Motivo}}</td>
+                    <td>{{formatDate Fecha_asignacion_falta}}</td>
+                    <td>agregar despues</td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="action-btn">Actions</button>
+                        </div>
+                    </td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+
+
+
+<div id="modal-fa" class="modal">
+  <div class="modal-background"></div>
+  <div class="modal-card">
+    <header class="modal-card-head">
+      <p class="modal-card-title">Add administrative Offense</p>
+      <button class="delete" aria-label="close"></button>
+    </header>
+    <section class="modal-card-body">
+      <form action="/nuclea/faltasAdministrativas" id="form-falta" method="POST">
+        <input type="hidden" name="_csrf" value="{{csrfToken}}">
+        <label for="usuario" class="label">Find collaborator:</label>
+          <div class="select is-primary">
+            <select id="idUsu" name="idUsu">
+              {{#each usuariosfa}}
+                <option value="{{idUsuario}}">{{Nombre}}</option>
+              {{/each}}
+            </select>
+          </div>
+        <br><br>
+        <label for="fecha" class="label">Date</label>
+        <input
+          class="input is-primary"
+          type="date"
+          placeholder="dd/mm/yy"
+          id="fecha"
+          name="fecha"
+          required
+        />
+        <br><br>
+        <label for="motivo" class="label">Reason</label>
+        <input
+          class="input is-primary"
+          type="text"
+          placeholder=""
+          id="motivo"
+          name="motivo"
+          required
+        />
+    </form>
+    </section>
+    <footer class="modal-card-foot">
+      <div class="buttons">
+        <button form="form-falta" type="submit" class="button is-success" value="Add administrative offense">Add administrative offense</button>
+        <button class="button">Cancel</button>
+      </div>
+    </footer>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+  // Functions to open and close a modal
+  function openModal($el) {
+    $el.classList.add('is-active');
+  }
+
+  function closeModal($el) {
+    $el.classList.remove('is-active');
+  }
+
+  function closeAllModals() {
+    (document.querySelectorAll('.modal') || []).forEach(($modal) => {
+      closeModal($modal);
+    });
+  }
+
+  // Add a click event on buttons to open a specific modal
+  (document.querySelectorAll('.js-modal-trigger') || []).forEach(($trigger) => {
+    const modal = $trigger.dataset.target;
+    const $target = document.getElementById(modal);
+
+    $trigger.addEventListener('click', () => {
+      openModal($target);
+    });
+  });
+
+  // Add a click event on various child elements to close the parent modal
+  (document.querySelectorAll('.modal-background, .modal-close, .modal-card-head .delete, .modal-card-foot .button') || []).forEach(($close) => {
+    const $target = $close.closest('.modal');
+
+    $close.addEventListener('click', () => {
+      closeModal($target);
+    });
+  });
+
+  // Add a keyboard event to close all modals
+  document.addEventListener('keydown', (event) => {
+    if(event.key === "Escape") {
+      closeAllModals();
+    }
+  });
+});
+</script>
