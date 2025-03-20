@@ -255,3 +255,7 @@ th, td {
 .text-modal::placeholder{
     color: rgba(0, 0, 0, 0.603);
 }
+
+.option-modal{
+    width: 200px;
+}
