@@ -4,17 +4,29 @@ const bcrypt = require('bcryptjs');
 module.exports = class Usuario {
 
     //Constructor de la clase. Sirve para crear un nuevo objeto, y en Ã©l se definen las propiedades del modelo
-    constructor(mi_username, mi_password) {
-        this.username = mi_username;
-        this.password = mi_password;
+    constructor(my_name, my_lastname, my_email, my_country, my_city,
+        my_street, my_model, my_passw, my_status, my_start_date, my_end_date, my_dvacaciones) {
+        this.name = my_name;
+        this.lastname = my_lastname;
+        this.email = my_email;
+        this.country = my_country;
+        this.city = my_city;
+        this.model = my_model;
+        this.password = my_passw;
+        this.status = my_status;
+        this.start_date = my_start_date;
+        this.end_date = my_end_date;
+        this.street = my_street;
+        this.dvacaciones = my_dvacaciones;
     }
 
     //Este mÃ©todo servirÃ¡ para guardar de manera persistente el nuevo objeto. 
     save() {
         return bcrypt.hash(this.password, 12).then((password_cifrado) => {
             return db.execute(
-                'INSERT INTO usuarios(username, password) VALUES (?, ?)', 
-                [this.username, password_cifrado]
+                `INSERT INTO Usuarios (Nombre, Contrasena, Apellidos, Correo_electronico, Fecha_inicio_colab, Fecha_vencimiento_colab, Ciudad, Pais, Calle, Modalidad, Estatus, dias_vaciones ) 
+                VALUES (?,?,?,?,?,?,?,?,?,?,?,?)`, 
+                [this.name, password_cifrado, this.lastname, this.email, this.start_date, this.end_date, this.city, this.country, this.street, this.model, this.status, this.dvacaciones]
             );
         }).catch((error) => {
             console.log(error);

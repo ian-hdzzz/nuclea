@@ -74,6 +74,9 @@ app.use('/nuclea', departamentRoutes);
 
 const faltaAdministrativa = require('./routes/faltaAdministrativa.routes');
 app.use('/nuclea/faltasAdministrativas', faltaAdministrativa);
+
+const users = require('./routes/users.routes');
+app.use('/nuclea/users', users);
 // public
 app.use(express.static(path.join(__dirname, 'public')));
 
