@@ -162,7 +162,7 @@ th, td {
 .modal {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.699);
+    background: rgba(0, 0, 0, 0.838);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -254,4 +254,8 @@ th, td {
 
 .text-modal::placeholder{
     color: rgba(0, 0, 0, 0.603);
+}
+
+.option-modal{
+    width: 200px;
 }
