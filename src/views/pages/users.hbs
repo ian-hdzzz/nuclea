@@ -116,8 +116,8 @@
               {{#each usuarios}}
                 <tr>
                     <td>{{Nombre}}</td>
+                    <td>{{idDepartamento}}</td>
                     <td>101</td>
-                    <td>{{formatDate Fecha_inicio_colab}}</td>
                     <td>{{Modalidad}}</td>
                     <td>{{Ciudad}}</td>
                     <td>{{#if Estatus}}
@@ -146,6 +146,7 @@
 
             <!-- Campos -->
             <form action="/nuclea/users" id="form-user" method="POST">
+            <input type="hidden" name="action" value="register"> <!-- Campo oculto -->
             <input type="hidden" name="_csrf" value="{{csrfToken}}">
                 <div class="form-group">
                     <label>Employee Names</label>
@@ -193,7 +194,7 @@
 
                 <div class="form-group">
                     <label>Password</label>
-                    <input type="text" placeholder="Choose a Numer" value={{tempPassword}} class="text-modal" name="passw" readonly>
+                    <input type="text" placeholder="Choose a Numer" value="{{tempPassword}}" class="text-modal" name="password" readonly>
                 </div>
 
                 <div class="form-group">
@@ -245,36 +246,39 @@
             <p class="description">Fill in the required details to recall this Users</p>
 
             <!-- Campos -->
-    
-
+              <form action="/nuclea/users" id="form-user" method="POST">
+              <input type="hidden" name="action" value="assign">
+              <input type="hidden" name="_csrf" value="{{csrfToken}}">
                 <div class="form-group">
                     <label for="status">Choose user</label>
-                    <select name="Estado" class="text-modal" name="model_us" required>
-                        <option value="On-Site-Work">Jacob Espejel </option>
-                        <option value="Hybrid Work">Ian Hernandez</option>
-                        <option value="Remote Work">Sebastian Osorio</option>
+                    <select name="ch_user" class="text-modal" required>
+                      {{#each usuarios}}
+                        <option value="{{idUsuario}}">{{Nombre}}</option>
+                      {{/each}}
                     </select>
                 </div>
 
 
                 <div class="form-group">
                     <label for="status">Choose Departament</label>
-                    <select name="Estado" class="text-modal" name="role" required>
-                        <option value="iddepartament1">Finace</option>
-                        <option value="idedepartament2">UX/UI</option>
-                        <option value="iddepartament3">Zig Zag</option>
+                    <select name="ch_dept" class="text-modal" required>
+                      {{#each deptos}}
+                        <option value="{{idDepartamento}}">{{Nombre_departamento}}</option>
+                      {{/each}}
                     </select>
                 </div>
 
                 <div class="form-group form-date">
                     <label>Assignment Date</label>
-                    <input type="date" class="text-modal date-modal" name="end_date">
+                    <input type="date" class="text-modal date-modal" name="ch_date">
                 </div>
                 
             <!-- Botón de enviar -->
-            <button class="btn-submit">Assign User</button>
+            <input type="submit" class="btn-submit" value="Assign Users">
         </div>
+      </form>
     </div>
+
     
     </div>
 

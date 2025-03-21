@@ -5,7 +5,7 @@ module.exports = class Usuario {
 
     //Constructor de la clase. Sirve para crear un nuevo objeto, y en Ã©l se definen las propiedades del modelo
     constructor(my_name, my_lastname, my_email, my_country, my_city,
-        my_street, my_model, my_passw, my_status, my_start_date, my_end_date, my_dvacaciones) {
+        my_street, my_model, my_passw, my_status, my_start_date, my_end_date, my_dvacaciones,my_user,my_dept,my_date) {
         this.name = my_name;
         this.lastname = my_lastname;
         this.email = my_email;
@@ -18,6 +18,9 @@ module.exports = class Usuario {
         this.end_date = my_end_date;
         this.street = my_street;
         this.dvacaciones = my_dvacaciones;
+        this.user = my_user;
+        this.dept= my_dept;
+        this.date = my_date;
     }
 
     //Este mÃ©todo servirÃ¡ para guardar de manera persistente el nuevo objeto. 
@@ -34,10 +37,19 @@ module.exports = class Usuario {
         
     }
 
+    assignment(){
+        return db.execute(`INSERT INTO Pertenece (idUsuario, idDepartamento, Fecha_asignacion) 
+                VALUES (?,?,?)`, 
+                [this.user, this.dept,this.date])
+    }
+
     //Este mÃ©todo servirÃ¡ para devolver los objetos del almacenamiento persistente.
     static fetchAll() {
         return db.execute('SELECT * FROM Usuarios');
     }
+
+
+   
 
     static fetchOne(username) {
         return db.execute('SELECT * FROM usuarios WHERE username=?', [username]);
