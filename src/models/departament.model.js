@@ -23,6 +23,10 @@ module.exports = class Departament {
         return db.execute('SELECT * FROM Departamentos');
     }
 
+    static fetchDept(){
+        return db.execute('SELECT * FROM Departamentos'); //Para el controlador de Usuarios
+    }
+
     static fetchOne(id) {
         return db.execute('SELECT * FROM personajes WHERE id=?', [id]);
     }
