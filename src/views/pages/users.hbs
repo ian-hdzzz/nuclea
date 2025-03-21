@@ -95,7 +95,10 @@
     <div class="content">
         <div class="nav-content">
             <h2>Users Managment</h2>
-            <input type="button" value="Add Users" id="openModal" class="add-btn">
+            <div class="add-btn-container">
+                <input type="button" value="Add Users" id="openModal" class="add-btn">
+                <input type="button" value="Assign user to Dep" id="openModal2" class="add-btn">
+            </div>
         </div>
         <table>
             <thead>
@@ -229,6 +232,47 @@
             <input type="submit" class="btn-submit" value="Add Users">
 
           </form>
+        </div>
+    </div>
+
+
+    <div id="modal2" class="modal hidden">
+        <div class="modal-content">
+            <!-- Botón de cerrar -->
+            <button id="closeModal2" class="close-btn">✖</button>
+
+            <h2 class="title-modal">Add Users</h2>
+            <p class="description">Fill in the required details to recall this Users</p>
+
+            <!-- Campos -->
+    
+
+                <div class="form-group">
+                    <label for="status">Choose user</label>
+                    <select name="Estado" class="text-modal" name="model_us" required>
+                        <option value="On-Site-Work">Jacob Espejel </option>
+                        <option value="Hybrid Work">Ian Hernandez</option>
+                        <option value="Remote Work">Sebastian Osorio</option>
+                    </select>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="status">Choose Departament</label>
+                    <select name="Estado" class="text-modal" name="role" required>
+                        <option value="iddepartament1">Finace</option>
+                        <option value="idedepartament2">UX/UI</option>
+                        <option value="iddepartament3">Zig Zag</option>
+                    </select>
+                </div>
+
+                <div class="form-group form-date">
+                    <label>Assignment Date</label>
+                    <input type="date" class="text-modal date-modal" name="end_date">
+                </div>
+                
+            <!-- Botón de enviar -->
+            <button class="btn-submit">Assign User</button>
         </div>
     </div>
     
