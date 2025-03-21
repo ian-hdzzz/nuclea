@@ -16,13 +16,16 @@ exports.get_users = (req, res, next) => {
         console.log("Roles obtenidos:", roles)
         Usuario.fetchAll().then(([rows, fieldData])=>{
             Dept.fetchDept().then(([dept,FD])=>{
-                const tempPassword = generateRandomPassword();
-                res.render('../views/pages/users.hbs',{
-                rols:roles,
-                csrfToken: req.csrfToken(),
-                usuarios: rows,
-                tempPassword: tempPassword,
-                deptos:dept
+                Usuario.fetchDeptAll().then(([all,FiDA])=>{
+                    const tempPassword = generateRandomPassword();
+                    res.render('../views/pages/users.hbs',{
+                    rols:roles,
+                    csrfToken: req.csrfToken(),
+                    usuarios: all,
+                    tempPassword: tempPassword,
+                    deptos:dept
+                })
+                
 
             })
             
