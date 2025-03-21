@@ -1,43 +1,4 @@
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-<link rel="stylesheet" href="">
-<div class="top-container">
-        <nav class="nav-bar">
-            <div class="first-container">
-                <div class="views">Views</div>
-                <div class="search-container">
-                    <input type="text" placeholder="Search..." class="input-search">
-                    <i class="fa-solid fa-magnifying-glass search-icon"></i>
-                </div>
-            </div>
-            <div class="second-container">
-                <div class="notification">
-                    <i class="fa-solid fa-bell"></i>
-                </div>
-                <div class="perfil">
-                    <i class="fa-solid fa-user"></i>
-                </div>
-            </div>
-        </nav>
-    </div>
-    <div class="content">
-        <div class="nav-content">
-            <h2>User Management</h2>
-            <button class="js-modal-trigger add-btn" data-target="modal-fa">
-              Add users
-            </button>
-        </div>
-        <table>
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Dept</th>
-                    <th>start date</th>
-                    <th>Working Model</th>
-                    <th>City</th>
-                    <th>Status</th>  
-                    <th>Actions</th>
-                </tr>
-            </thead>
+{{!-- 
             <tbody>
                 {{#each usuarios}}
                 <tr>
@@ -57,8 +18,6 @@
             </tbody>
         </table>
     </div>
-
-
 
 <div id="modal-fa" class="modal">
   <div class="modal-background"></div>
@@ -80,73 +39,6 @@
           required
         />
         <br><br>
-        <label for="lastname_us" class="label">Last Name</label>
-        <input
-          class="input is-primary"
-          type="text"
-          placeholder="User Last Name"
-          id="lastname_us"
-          name="lastname_us"
-          required
-        />
-        <br><br>
-        <label for="email_us" class="label">Email</label>
-        <input
-          class="input is-primary"
-          type="email"
-          placeholder="example@nuclea.solutions"
-          id="email_us"
-          name="email_us"
-          required
-        />
-        <br><br>
-        <label for="country_us" class="label">Country</label>
-        <input
-          class="input is-primary"
-          type="text"
-          placeholder="Mexico"
-          id="country_us"
-          name="country_us"
-          required
-        />
-        <label for="city_us" class="label">City</label>
-        <input
-          class="input is-primary"
-          type="text"
-          placeholder="example@nuclea.solutions"
-          id="city_us"
-          name="city_us"
-          required
-        />
-        <label for="street_us" class="label">Street</label>
-        <input
-          class="input is-primary"
-          type="text"
-          placeholder="mexico city"
-          id="street_us"
-          name="street_us"
-          required
-        />
-        <label for="model_us" class="label">Working Model</label>
-          <div class="select is-primary">
-            <select id="model_us" name="model_us">
-                <option value="On-site">On-site work</option>
-                <option value="Hybrid">Hybrid work</option>
-                <option value="Remote">Remote work</option>
-            </select>
-          </div>
-        <br><br>
-        <label for="dias_vacaciones" class="label">Vacation Days</label>
-        <input
-          class="input is-primary"
-          type="number"
-          id="dias_vacaciones"
-          name="dias_vacaciones"
-          min="0"
-          max="12"
-          step="1"
-          value="1"
-        />
         <br><br>
         <label for="passw" class="label">Password</label>
         <input
@@ -168,84 +60,181 @@
             </select>
           </div>
         <br><br>
-        <label for="status_us" class="label">Status</label>
-          <div class="select is-primary">
-            <select id="status_us" name="status_us">
-                <option value="1">Active</option>
-                <option value="0">Not active</option>
-            </select>
-          </div>
-        <br><br>
-        <label for="start_date" class="label">Start Date</label>
-        <input
-          class="input is-primary"
-          type="date"
-          placeholder="dd/mm/yy"
-          id="start_date"
-          name="start_date"
-          required
-        />
-        <br><br>
-        <label for="end_date" class="label">End date</label>
-        <input
-          class="input is-primary"
-          type="date"
-          placeholder="can leave empty"
-          id="end_date"
-          name="end_date"
-        />
-    </form>
-    </section>
-    <footer class="modal-card-foot">
-      <div class="buttons">
-        <button form="form-user" type="submit" class="button is-success" value="Add user">Add user</button>
-        <button class="button">Cancel</button>
-      </div>
-    </footer>
-  </div>
-</div>
+ --}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Department Management</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="/css/users.css">
+</head>
+<body>
 
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-  // Functions to open and close a modal
-  function openModal($el) {
-    $el.classList.add('is-active');
-  }
+    <div class="top-container">
+        <nav class="nav-bar">
+            <div class="first-container">
+                <div class="views">Views</div>
+                <div class="search-container">
+                    <input type="text" placeholder="Search..." class="input-search">
+                    <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                </div>
+            </div>
+            <div class="second-container">
+                <div class="notification">
+                    <i class="fa-solid fa-bell"></i>
+                </div>
+                <div class="perfil">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+            </div>
+        </nav>
+    </div>
 
-  function closeModal($el) {
-    $el.classList.remove('is-active');
-  }
+    <div class="content">
+        <div class="nav-content">
+            <h2>Users Managment</h2>
+            <input type="button" value="Add Users" id="openModal" class="add-btn">
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Dept</th>
+                    <th>Start Date</th>
+                    <th>Working Model</th>
+                    <th>City</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+              {{#each usuarios}}
+                <tr>
+                    <td>{{Nombre}}</td>
+                    <td>101</td>
+                    <td>{{formatDate Fecha_inicio_colab}}</td>
+                    <td>{{Modalidad}}</td>
+                    <td>{{Ciudad}}</td>
+                    <td>{{#if Estatus}}
+                          <span class="active">Active</span>
+                        {{else}}
+                          <span class="inactive">Inactive</span>
+                        {{/if}}</td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="action-btn">Actions</button>
+                        </div>
+                    </td>
+                </tr>
+              {{/each}}
+            </tbody>
+        </table>
 
-  function closeAllModals() {
-    (document.querySelectorAll('.modal') || []).forEach(($modal) => {
-      closeModal($modal);
-    });
-  }
+        <!-- MODAL -->
+    <div id="modal" class="modal hidden">
+        <div class="modal-content">
+            <!-- Botón de cerrar -->
+            <button id="closeModal" class="close-btn">✖</button>
 
-  // Add a click event on buttons to open a specific modal
-  (document.querySelectorAll('.js-modal-trigger') || []).forEach(($trigger) => {
-    const modal = $trigger.dataset.target;
-    const $target = document.getElementById(modal);
+            <h2 class="title-modal">Add Users</h2>
+            <p class="description">Fill in the required details to recall this Users</p>
 
-    $trigger.addEventListener('click', () => {
-      openModal($target);
-    });
-  });
+            <!-- Campos -->
+            <form action="/nuclea/users" id="form-user" method="POST">
+            <input type="hidden" name="_csrf" value="{{csrfToken}}">
+                <div class="form-group">
+                    <label>Employee Names</label>
+                    <input type="text" placeholder="Jacob" class="text-modal" name="name_us" >
+                </div>
+    
+                <div class="form-group">
+                    <label>Last Name</label>
+                    <input type="text" placeholder="Espejel" class="text-modal" name="lastname_us">
+                </div>
+            
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="text" placeholder="jacob@nuclea.com" class="text-modal" name="email_us">
+                </div>
+    
+                <div class="form-group">
+                    <label>Country</label>
+                    <input type="text" placeholder="Mexico" class="text-modal" name="country_us">
+                </div>
 
-  // Add a click event on various child elements to close the parent modal
-  (document.querySelectorAll('.modal-background, .modal-close, .modal-card-head .delete, .modal-card-foot .button') || []).forEach(($close) => {
-    const $target = $close.closest('.modal');
+                <div class="form-group">
+                    <label>City </label>
+                    <input type="text" placeholder="Queretaro" class="text-modal" name="city_us">
+                </div>
 
-    $close.addEventListener('click', () => {
-      closeModal($target);
-    });
-  });
+                <div class="form-group">
+                    <label>Street</label>
+                    <input type="text" placeholder="Las Praderas 123" class="text-modal" name="street_us">
+                </div>
 
-  // Add a keyboard event to close all modals
-  document.addEventListener('keydown', (event) => {
-    if(event.key === "Escape") {
-      closeAllModals();
-    }
-  });
-});
-</script>
+                <div class="form-group">
+                    <label for="status">Working Model</label>
+                    <select class="text-modal" name="model_us" required>
+                        <option value="On-Site-Work">On-site-work</option>
+                        <option value="Hybrid Work">Hybrid work</option>
+                        <option value="Remote Work">Remote Work</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Vacation Days</label>
+                    <input type="number" placeholder="Choose a Numer" class="text-modal" name="dias_vacaciones">
+                </div>
+
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="text" placeholder="Choose a Numer" value={{tempPassword}} class="text-modal" name="passw" readonly>
+                </div>
+
+                <div class="form-group">
+                    <label for="status">Select Role</label>
+                    <select class="text-modal" name="role" required>
+                      {{#each rols}}
+                        <option value="{{idRol}}">{{Nombre_rol}}</option>
+                      {{/each}}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Status</label>
+                    <select  class="text-modal" name="status_us" required>
+                        <option value="Active">Active</option>
+                        <option value="Inactive">Inactive</option>
+                    </select>
+                </div>
+
+
+
+            <div class="form-row">
+                <div class="form-group form-date">
+                    <label>Start Date</label>
+                    <input type="date" class="text-modal date-modal" name="start_date">
+                </div>
+
+                <div class="form-group form-date">
+                    <label>End Date</label>
+                    <input type="date" class="text-modal date-modal" name="end_date">
+                </div>
+                
+            </div>
+
+            <!-- Botón de enviar -->
+            <input type="submit" class="btn-submit" value="Add Users">
+
+          </form>
+        </div>
+    </div>
+    
+    </div>
+
+    <script src="/js/users.js"></script>
+
+</body>
+</html>
