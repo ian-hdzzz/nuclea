@@ -23,7 +23,10 @@ exports.get_fa = (req, res, next) => {
 exports.post_agregar_fa = (request, response, next) => {
     console.log(request.body);
     console.log(request.body.fecha);
-    const falta = new Falta(request.body.idUsu, request.body.fecha, request.body.motivo);
+    console.log(request.file);
+    const falta = new Falta(
+        request.body.idUsu, request.body.fecha, request.body.motivo, request.file.filename
+    );
     falta.save()
         .then(() => {
             response.redirect('/nuclea/faltasAdministrativas');
