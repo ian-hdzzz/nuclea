@@ -26,7 +26,7 @@ exports.postAuth = (req,res)=>{
                 console.log(error);
             });
         } else {
-            res.redirect('/signup');
+            res.redirect('/nuclea/signup');
         }
     }).catch((error) => {
         console.log(error);
