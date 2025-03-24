@@ -1,5 +1,7 @@
+// eslint-disable-next-line no-undef
 const db = require('../util/database');
 
+// eslint-disable-next-line no-undef
 module.exports = class Departament {
 
     //Constructor de la clase. Sirve para crear un nuevo objeto, y en él se definen las propiedades del modelo

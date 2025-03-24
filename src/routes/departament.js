@@ -1,11 +1,11 @@
 const express = require('express');
-const Departament = require('../models/departament.model');
  const router = express.Router();
+ const isAuth = require('../util/is-auth')
  const departamentController = require('../controllers/departamento')
  
  // Definir rutas
- router.get('/departament',departamentController.getDepartaments);
- router.post('/departament',departamentController.post_agregar_dep)
+ router.get('/departament',isAuth,departamentController.getDepartaments);
+ router.post('/departament',isAuth,departamentController.post_agregar_dep)
  
  
  module.exports =  router;
