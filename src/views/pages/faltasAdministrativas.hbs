@@ -42,7 +42,7 @@
                     <td>{{Nombre}}</td>
                     <td>{{Motivo}}</td>
                     <td>{{formatDate Fecha_asignacion_falta}}</td>
-                    <td>agregar despues</td>
+                    <td>{{archivo}}</td>
                     <td>
                         <div class="dropdown">
                             <button class="action-btn">Actions</button>
@@ -64,7 +64,7 @@
       <button class="delete" aria-label="close"></button>
     </header>
     <section class="modal-card-body">
-      <form action="/nuclea/faltasAdministrativas" id="form-falta" method="POST">
+      <form action="/nuclea/faltasAdministrativas" id="form-falta" method="POST" enctype="multipart/form-data">
         <input type="hidden" name="_csrf" value="{{csrfToken}}">
         <label for="usuario" class="label">Find collaborator:</label>
           <div class="select is-primary">
@@ -94,6 +94,14 @@
           name="motivo"
           required
         />
+        <br><br>
+        <input 
+          type="file" 
+          id="archivo" 
+          name="archivo" 
+          accept=".pdf"
+          class="input is-primary">
+        <br><br>
     </form>
     </section>
     <footer class="modal-card-foot">
