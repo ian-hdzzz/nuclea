@@ -3,7 +3,7 @@
     "bcryptjs": "^3.0.2",
     "body-parser": "^1.20.3",
     "connect-flash": "^0.1.1",
-    "csurf": "^1.10.0",
+    "csurf": "^1.2.2",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "express-handlebars": "^8.0.1",
@@ -17,6 +17,9 @@
     "timeago.js": "^4.0.2"
   },
   "devDependencies": {
+    "@eslint/js": "^9.23.0",
+    "eslint": "^9.23.0",
+    "globals": "^16.0.0",
     "nodemon": "^3.1.9"
   },
   "name": "nuclea",

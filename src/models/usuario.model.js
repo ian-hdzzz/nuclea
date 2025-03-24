@@ -1,6 +1,9 @@
+// eslint-disable-next-line no-undef
 const db = require('../util/database');
+// eslint-disable-next-line no-undef
 const bcrypt = require('bcryptjs');
 
+// eslint-disable-next-line no-undef
 module.exports = class Usuario {
 
     //Constructor de la clase. Sirve para crear un nuevo objeto, y en Ã©l se definen las propiedades del modelo
@@ -62,13 +65,13 @@ module.exports = class Usuario {
 
    
 
-    static fetchOne(username) {
-        return db.execute('SELECT * FROM usuarios WHERE username=?', [username]);
+    static fetchOne(email) {
+        return db.execute('SELECT * FROM usuarios WHERE username=?', [email]);
     }
 
-    static fetch(username) {
-        if (username) {
-            return this.fetchOne(username);
+    static fetch(email) {
+        if (email) {
+            return this.fetchOne(email);
         } else {
             return this.fetchAll();
         }
