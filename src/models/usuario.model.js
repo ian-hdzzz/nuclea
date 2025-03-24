@@ -66,7 +66,7 @@ module.exports = class Usuario {
    
 
     static fetchOne(email) {
-        return db.execute('SELECT * FROM usuarios WHERE username=?', [email]);
+        return db.execute('SELECT * FROM Usuarios WHERE Correo_electronico=?', [email]);
     }
 
     static fetch(email) {
