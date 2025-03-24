@@ -62,7 +62,7 @@ app.use(flash());
 app.use(require('./routes'));
 app.use('/nuclea', require('./routes/authentication'));
 app.use('/nuclea', require('./routes/dashboard'));
-app.use('/nuclea', require('./routes/requests'));
+app.use('/nuclea', require('./routes/request'));
 app.use('/nuclea', require('./routes/objectives'));
 app.use('/nuclea', require('./routes/one'));
 app.use('/nuclea', require('./routes/reports'));
