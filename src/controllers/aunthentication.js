@@ -28,10 +28,7 @@ exports.postAuth = (req, res) => {
               req.session.ciudad = rows[0].Ciudad;
               req.session.pais = rows[0].Pais;
               req.session.calle = rows[0].Calle;
-
-              req.session.isLoggedIn = true;
-              res.redirect("/nuclea/dashboard");
-            } else {
+              
               req.session.failed = true;
               res.redirect("/nuclea/signup");
             }

@@ -7,5 +7,6 @@ exports.get_profile = (req, res, next)=>{
         ciudad: req.session.ciudad || [],
         pais: req.session.pais || [],
         calle: req.session.calle || [],
+        
     });
 };
