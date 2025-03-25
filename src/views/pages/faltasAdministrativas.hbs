@@ -73,10 +73,13 @@
 
               <div class="form-group">
                 <label for="usuario" class="label">Find collaborator:</label>
-                  <select class="text-modal" id="idUsu" name="idUsu">
-                    {{#each usuariosfa}}
+                  <select class="text-modal" id="idUsu" name="idUsu" required
+                      oninvalid="this.setCustomValidity('Please select a collaborator')" 
+                      onchange="this.setCustomValidity('')">
+                      <option value="">- Select User -</option>
+                      {{#each usuariosfa}}
                       <option value="{{idUsuario}}">{{Nombre}}</option>
-                    {{/each}}
+                      {{/each}}
                   </select>
               </div>
 
@@ -90,6 +93,8 @@
                     id="fecha"
                     name="fecha"
                     required
+                    oninvalid="this.setCustomValidity('Please select a Date')" 
+                    onchange="this.setCustomValidity('')"
                     style="width: auto;"
                   />
                 </div>
@@ -106,6 +111,8 @@
                   id="motivo"
                   name="motivo"
                   required
+                  oninvalid="this.setCustomValidity('Please remember to write a reason')"
+                  oninput="this.setCustomValidity('')"
                 />
               </div>
       
