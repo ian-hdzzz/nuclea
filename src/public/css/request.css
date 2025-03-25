@@ -1,0 +1,144 @@
+@import url('https://fonts.googleapis.com/css2?family=Radio+Canada:ital,wght@0,300..700;1,300..700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+* {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+body {
+    background-color: #0c1019;
+    color: #fff;
+}
+
+.nav-bar {
+    font-family: "Radio Canada", sans-serif;
+    margin: 20px 20px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 50px;
+}
+
+.first-container {
+    margin-left: 140px;
+    display: flex;
+    height: 80%;
+    width: 800px;
+}
+
+.search-container {
+    flex-grow: 0.7;
+    background-color: #fff;
+    padding: 4px;
+    border-radius: 0 8px 8px 0;
+}
+
+.input-search {
+    font-size: 18px;
+    padding: 4px;
+    outline: none;
+    border: none;
+    width: 95%;
+    height: 100%;
+}
+
+.search-icon {
+    cursor: pointer;
+    color: #000;
+    transform: translateY(8%);
+    padding-right: 5px;
+}
+
+.views {
+    font-size: 18px;
+    display: flex;
+    flex-grow: 0.3;
+    width: 120px;
+    background: linear-gradient(to right, #2762ea 0%, #4162f0 29%, #8061fd 100%);
+    border-radius: 8px 0 0 8px;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+}
+
+.notification, .perfil {
+    margin-top: 20px;
+    background: #253d90;
+    padding: 10px 12px;
+    border-radius: 50%;
+    cursor: pointer;
+    height: 37px;
+}
+
+.second-container {
+    margin-left: -100px;
+    display: flex;
+    gap: 30px;
+}
+
+.content {
+    width: 80%;
+    border-radius: 2rem;
+    margin: auto;
+    padding: 40px;
+    background-color: #151720;
+}
+
+.nav-content {
+    font-family: "Radio Canada", sans-serif;
+    display: flex;
+    justify-content: space-between;
+}
+
+h2 {
+    margin-bottom: 20px;
+    font-size: 30px;
+}
+
+table {
+    font-family: 'Montserrat', sans-serif;
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+thead {
+    background-color: #1f1f2e;
+    color: white;
+}
+
+th, td {
+    padding: 12px;
+    text-align: center;
+    border-bottom: 1px solid #444;
+}
+
+tbody tr:hover {
+    background-color: #2d2d44;
+}
+
+.pending {
+    background-color: #f1c40f;
+    color: white;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-weight: bold;
+}
+
+.active {
+    background-color: #27ae60;
+    color: white;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-weight: bold;
+}
+
+.inactive {
+    background-color: #e74c3c;
+    color: white;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-weight: bold;
+}
