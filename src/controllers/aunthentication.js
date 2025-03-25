@@ -3,10 +3,13 @@ const bcrypt = require('bcryptjs');
 const Usuario = require('../models/usuario.model');
 
 exports.getAuth = (req, res) => {
+    const failed = req.session.failed || false;
+    req.session.failed = false;
     res.render('auth/signup', { 
         hideMenu: true, 
         hideContainer: true, 
-        csrfToken: req.csrfToken() 
+        csrfToken: req.csrfToken(),
+        failed
     });
 };
 
@@ -20,13 +23,14 @@ exports.postAuth = (req,res)=>{
                         req.session.isLoggedIn = true;
                         res.redirect('/nuclea/dashboard');
                     } else {
+                        req.session.failed = true;
                         res.redirect('/nuclea/signup');
                     }
             }).catch((error) => {
                 console.log(error);
             });
         } else {
-            res.redirect('/nuclea/signup');
+            res.redirect('nuclea/signup')
         }
     }).catch((error) => {
         console.log(error);
