@@ -273,8 +273,8 @@
             <!-- Botón de cerrar -->
             <button id="closeModal2" class="close-btn">✖</button>
 
-            <h2 class="title-modal">Add Users</h2>
-            <p class="description">Fill in the required details to recall this Users</p>
+            <h2 class="title-modal">Asign user to department</h2>
+            <p class="description">Fill in the required details to asign a user to a department</p>
 
             <!-- Campos -->
               <form action="/nuclea/users" id="form-user" method="POST">
@@ -283,6 +283,7 @@
                 <div class="form-group">
                     <label for="status">Choose user</label>
                     <select name="ch_user" class="text-modal" required>
+                        <option value="">- Select User -</option>
                       {{#each usuarios}}
                         <option value="{{idUsuario}}">{{Nombre}}</option>
                       {{/each}}
@@ -293,6 +294,7 @@
                 <div class="form-group">
                     <label for="status">Choose Departament</label>
                     <select name="ch_dept" class="text-modal" required>
+                        <option value="">- Select Departament -</option>
                       {{#each deptos}}
                         <option value="{{idDepartamento}}">{{Nombre_departamento}}</option>
                       {{/each}}
@@ -301,7 +303,9 @@
 
                 <div class="form-group form-date">
                     <label>Assignment Date</label>
-                    <input type="date" class="text-modal date-modal" name="ch_date">
+                    <input type="date" class="text-modal date-modal" name="ch_date" required
+                    oninvalid="this.setCustomValidity('Please select a date')" 
+                    onchange="this.setCustomValidity('')">
                 </div>
                 
             <!-- Botón de enviar -->
