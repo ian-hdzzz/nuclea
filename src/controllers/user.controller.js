@@ -62,7 +62,10 @@ exports.post_users = (request, response, next) => {
             request.body.status_us,
             request.body.start_date,
             request.body.end_date,
-            request.body.dias_vacaciones
+            request.body.dias_vacaciones,
+            null,
+            null,
+            null
         );
 
         usua.save()

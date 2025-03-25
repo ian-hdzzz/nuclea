@@ -29,6 +29,9 @@
                 <span>o usa tu correo y contraseña</span>
                 <input type="email" placeholder="Correo" name="email">
                 <input type="password" placeholder="Contraseña" name="password">
+                {{#if failed}}
+                <p style="color: red;">Usuario o contraseña incorrectos</p>
+                {{/if}}
                 <a href="">¿Olvidaste tu contraseña?</a>
                 <a href="" ><button>Iniciar Sesión</button></a>
             </form>
