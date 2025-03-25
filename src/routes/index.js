@@ -3,7 +3,7 @@ const router = express.Router();
 
 // Definir rutas
 router.get('/', (req, res) => {
-  res.render('./pages/main');
+  res.redirect('nuclea/signup')
 });
 
 
