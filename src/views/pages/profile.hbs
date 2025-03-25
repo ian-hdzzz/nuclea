@@ -15,12 +15,12 @@
                     <img class="edit-button" src="/media/boton.png" alt="Icono de edición">
                 </div>
                 <div class="profile-name">
-                    <%= Nombre %> <%= Apellidos %> 
+                    {{Nombre}} {{Apellidos}}
                 </div>
                 <br />
                 <div class="left">
                     <span class="label"><h2>Location:</h2></span>
-                    <div class="info-item" style="text-align: justify;"><%= Pais %>, <%= Ciudad %>, <%= Calle %> </div>
+                    <div class="info-item" style="text-align: justify;">{{Pais}}, {{Ciudad}}, {{Calle}} </div>
                 </div>
             </div>
             <div class="right-panel">
@@ -30,12 +30,12 @@
                 </div>
                 <div >
                     <span class="label"><h2>Email:</h2></span>
-                    <div class="info-item"><h2><%= Correo_electronico %> </h2></div>
+                    <div class="info-item"><h2>{{Correo_electronico}}</h2></div>
                 </div>
                 
                 <div >
                     <span class="label"><h2>Registration date:</h2></span>
-                    <div class="info-item"><h2><%= Fecha_inicio_colab %> </h2></div>
+                    <div class="info-item"><h2>{{Fecha_inicio_colab}}</h2></div>
                 </div>
                 <br>
                 <a href="/nuclea/faltasAdministrativas"><center><button class="button is-link is-outlined" >Administrative offenses</button></center></a>
