@@ -1,45 +1,58 @@
-<!DOCTYPE html>
-<html >
-    <head>
-        <title>Profile</title>
-        <meta charset="UTF-8">
-        <link rel="stylesheet" href="/css/profile.css">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-    </head>
-    <body>
-        <div class="container">
-            <div class="left-panel">
-                <div >
-                    <img class="profile-image" src="/media/profile.png" alt="Imagen de perfil" >
-                
-                    <img class="edit-button" src="/media/boton.png" alt="Icono de edición">
-                </div>
-                <div class="profile-name">
-                    {{Nombre}} {{Apellidos}}
-                </div>
-                <br />
-                <div class="left">
-                    <span class="label"><h2>Location:</h2></span>
-                    <div class="info-item" style="text-align: justify;">{{Pais}}, {{Ciudad}}, {{Calle}} </div>
-                </div>
-            </div>
-            <div class="right-panel">
-                <div >
-                    <span class="label"><h2>Department:</h2></span>
-                    <div class="info-item"><h2>Human Resources</h2></div>
-                </div>
-                <div >
-                    <span class="label"><h2>Email:</h2></span>
-                    <div class="info-item"><h2>{{emailpf9}}</h2></div>
-                </div>
-                
-                <div >
-                    <span class="label"><h2>Registration date:</h2></span>
-                    <div class="info-item"><h2>{{Fecha_inicio_colab}}</h2></div>
-                </div>
-                <br>
-                <a href="/nuclea/faltasAdministrativas"><center><button class="button is-link is-outlined" >Administrative offenses</button></center></a>
-            </div>
+<html>
+  <head>
+    <title>Profile</title>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="/css/profile.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="left-panel">
+        <div>
+          <img
+            class="profile-image"
+            src="/media/profile.png"
+            alt="Imagen de perfil"
+          />
+
+          <img
+            class="edit-button"
+            src="/media/boton.png"
+            alt="Icono de edición"
+          />
         </div>
-    </body>
+        <div class="profile-name">
+          {{nombre}}
+          {{apellidos}}
+        </div>
+        <br />
+        <div class="left">
+          <span class="label"><h2>Location:</h2></span>
+          <div class="info-item" style="text-align: justify;">{{pais}},
+            {{ciudad}},
+            {{calle}}
+          </div>
+        </div>
+      </div>
+      <div class="right-panel">
+        <div>
+          <span class="label"><h2>Department:</h2></span>
+          <div class="info-item"><h2>Human Resources</h2></div>
+        </div>
+        <div>
+          <span class="label"><h2>Email:</h2></span>
+          <div class="info-item"><h2>{{email}}</h2></div>
+        </div>
+
+        <div>
+          <span class="label"><h2>Registration date:</h2></span>
+          <div class="info-item"><h2>{{formatDate registration}}</h2></div>
+        </div>
+        <br />
+        <a href="/nuclea/faltasAdministrativas"><center><button
+              class="button is-link is-outlined"
+            >Administrative offenses</button></center></a>
+      </div>
+    </div>
+  </body>
 </html>

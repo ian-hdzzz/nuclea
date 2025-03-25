@@ -1,13 +1,7 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-
+const profile = require("../controllers/profile.controller");
 // Definir rutas
-router.get('/profile', (req, res) => {
-  
-  res.render('./pages/profile', {
-    emailpf: req.session.email || []
-  });
-});
+router.get("/profile", profile.get_profile);
 
-
-module.exports =  router;
+module.exports = router;
