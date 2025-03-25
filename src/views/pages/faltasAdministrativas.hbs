@@ -73,8 +73,9 @@
 
               <div class="form-group">
                 <label for="usuario" class="label">Find collaborator:</label>
-                  <select class="text-modal" id="idUsu" name="idUsu">
+                  <select class="text-modal" id="idUsu" name="idUsu" required placeholder="select a user">
                     {{#each usuariosfa}}
+                      <option value="">Select a user</option>
                       <option value="{{idUsuario}}">{{Nombre}}</option>
                     {{/each}}
                   </select>
