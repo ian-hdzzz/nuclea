@@ -20,6 +20,7 @@ exports.postAuth = (req,res)=>{
                 .then((doMatch) => {
                     if (doMatch) {
                         req.session.nombre = rows[0].Nombre;
+                        req.session.email = rows[0].Correo_electronico;
                         req.session.isLoggedIn = true;
                         res.redirect('/nuclea/dashboard');
                     } else {
