@@ -1,109 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="/css/departament.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="/css/request.css" />
 </head>
 <body>
-    <div class="top-container">
-        <nav class="nav-bar">
-            <div class="first-container">
-                <div class="views">Views</div>
-                <div class="search-container">
-                    <input type="text" placeholder="Search..." class="input-search">
-                    <i class="fa-solid fa-magnifying-glass search-icon"></i>
-                </div>
-            </div>
-            <div class="second-container">
-                <div class="notification">
-                    <i class="fa-solid fa-bell"></i>
-                </div>
-                <div class="perfil">
-                    <i class="fa-solid fa-user"></i>
-                </div>
-            </div>
-        </nav>
-    </div>
-
-    <div class="content">
-        <div class="nav-content">
-            <h2>Departament Management</h2>
-            <input type="button" value="Add Dept" class="add-btn" id="openModal">
+  <div class="top-container">
+    <nav class="nav-bar">
+      <div class="first-container">
+        <div class="views">Views</div>
+        <div class="search-container">
+          <input type="text" placeholder="Search..." class="input-search" />
+          <i class="fa-solid fa-magnifying-glass search-icon"></i>
         </div>
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Department Name</th>
-                    <th>Description</th>
-                    <th>State</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {{#each datos}}
-                <tr>
-                    <td>{{idDepartamento}}</td>
-                    <td>{{Nombre_departamento}}</td>
-                    <td>{{Descripcion}}</td>
-                    <td><span class="{{#if Estado}}active{{else}}inactive{{/if}}">{{#if Estado}}Active{{else}}Inactive{{/if}}</span></td>
-                    <td>
-                        <div class="dropdown">
-                            <button class="action-btn">Actions</button>
-                        </div>
-                    </td>
-                </tr>
-                {{/each}}
-            </tbody>
-        </table>
-
-    <div id="modal" class="modal hidden">
-        <div class="modal-content">
-            <!-- Botón de cerrar -->
-            <button id="closeModal" class="close-btn">✖</button>
-
-            <h2 class="title-modal">Add Department</h2>
-            <p class="description">Fill in the required details to register this Department</p>
-
-            <!-- Formulario -->
-            <form id="departmentForm" method="POST" action="/nuclea/departament">
-            <input type="hidden" name="_csrf" value="{{csrfToken}}">
-                <div class="form-group">
-                    <label for="deptName">Department Name</label>
-                    <input type="text" id="deptName" name="Nombre_departamento" placeholder="Finance" class="text-modal" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="desc">Description</label>
-                    <input type="text" id="desc" name="Descripcion" placeholder="Manage Financial Operations" class="text-modal" required>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="deptNumber">Department Number</label>
-                        <input type="text" id="deptNumber" name="idDepartamento" placeholder="101" class="text-modal" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="status">Status</label>
-                        <select name="Estado" class="text-modal option-modal" required>
-                            <option value="1" class="option-modal">1</option>
-                            <option value="0" class="option-modal">0</option>
-                         </select>
-                    </div>
-                </div>
-
-                <!-- Botón de enviar -->
-                <input type="submit" class="btn-submit" value="Add Department">
-            </form>
+      </div>
+      <div class="second-container">
+        <div class="notification">
+          <i class="fa-solid fa-bell"></i>
         </div>
+        <div class="perfil">
+          <i class="fa-solid fa-user"></i>
+        </div>
+      </div>
+    </nav>
+  </div>
+
+  <div class="content">
+    <div class="nav-content">
+      <h2>Absences Management</h2>
     </div>
 
-
-    </div>
-
-
-    <script src="/js/addDepartament.js"></script>
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>User ID</th>
+          <th>Type</th>
+          <th>Start Date</th>
+          <th>End Date</th>
+          <th>Description</th>
+          <th>Leader Approval</th>
+          <th>Admin Approval</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each datos}}
+        <tr>
+          <td>{{idSolicitud}}</td>
+          <td>{{idUsuario}}</td>
+          <td>{{Tipo}}</td>
+          <td>{{formatDate Fecha_inicio}}</td>
+          <td>{{formatDate Fecha_fin}}</td>
+          <td>{{Descripcion}}</td>
+          <td>
+            <span class="
+              {{#if (eq Aprobacion_L 'Aprobado')}}active
+              {{else if (eq Aprobacion_L 'Rechazado')}}inactive
+              {{else}}pending{{/if}}">
+              {{Aprobacion_L}}
+            </span>
+          </td>
+          <td>
+            <span class="
+              {{#if (eq Aprobacion_A 'Aprobado')}}active
+              {{else if (eq Aprobacion_A 'Rechazado')}}inactive
+              {{else}}pending{{/if}}">
+              {{Aprobacion_A}}
+            </span>
+          </td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
 </body>
 </html>
