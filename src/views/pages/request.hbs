@@ -55,18 +55,12 @@
           <td>{{formatDate Fecha_fin}}</td>
           <td>{{Descripcion}}</td>
           <td>
-            <span class="
-              {{#if (eq Aprobacion_L 'Aprobado')}}active
-              {{else if (eq Aprobacion_L 'Rechazado')}}inactive
-              {{else}}pending{{/if}}">
+            <span class="{{#if (eq Aprobacion_L 'Aprobado')}}active{{else if (eq Aprobacion_L 'Rechazado')}}inactive{{else}}pending{{/if}}">
               {{Aprobacion_L}}
             </span>
           </td>
           <td>
-            <span class="
-              {{#if (eq Aprobacion_A 'Aprobado')}}active
-              {{else if (eq Aprobacion_A 'Rechazado')}}inactive
-              {{else}}pending{{/if}}">
+            <span class="{{#if (eq Aprobacion_A 'Aprobado')}}active{{else if (eq Aprobacion_A 'Rechazado')}}inactive{{else}}pending{{/if}}">
               {{Aprobacion_A}}
             </span>
           </td>
