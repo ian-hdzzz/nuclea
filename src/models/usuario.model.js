@@ -93,6 +93,18 @@ module.exports = class Usuario {
             GROUP BY u.idUsuario;`);
   }
 
+  static fetchDeptSession(email) {
+    return db.execute(`
+            SELECT 
+            u.*, 
+            GROUP_CONCAT(d.Nombre_departamento SEPARATOR ', ') AS Departamentos
+            FROM Usuarios u
+            LEFT JOIN Pertenece p ON u.idUsuario = p.idUsuario
+            LEFT JOIN Departamentos d ON p.idDepartamento = d.idDepartamento
+            WHERE u.Correo_electronico=?
+            GROUP BY u.idUsuario;`,[email]);
+  }
+
   static fetchOne(email) {
     return db.execute("SELECT * FROM Usuarios WHERE Correo_electronico=?", [
       email,
