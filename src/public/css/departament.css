@@ -259,3 +259,19 @@ th, td {
 .option-modal{
     width: 200px;
 }
+
+.error-icon {
+    font-size: 3rem;
+    color: red;
+    text-align: center;
+    margin-top: 10px;
+}
+
+.title-modal2{
+    text-align: center;
+    font-size: 3rem;
+}
+
+.description2{
+    text-align: center;
+}
