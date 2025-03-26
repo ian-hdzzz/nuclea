@@ -48,10 +48,18 @@
               <tbody>
                   {{#each faltas}}
                   <tr>
-                      <td>{{Nombre}}</td>
+                      <td>{{Nombre}} {{Apellidos}}</td>
                       <td>{{Motivo}}</td>
                       <td>{{formatDate Fecha_asignacion_falta}}</td>
-                      <td>{{archivo}}</td>
+                      <td>
+                        {{#if archivo}}
+                            <a href="/uploads/{{archivo}}" target="_blank" class="pdf-link">
+                                <i class="fa-solid fa-file-pdf"></i> Open PDF
+                            </a>
+                        {{else}}
+                            Sin archivo
+                        {{/if }}
+                      </td>
                       <td>
                           <div class="dropdown">
                               <button class="action-btn">Actions</button>
