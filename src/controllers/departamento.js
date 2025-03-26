@@ -3,10 +3,22 @@ const Departament = require('../models/departament.model');
 exports.getDepartaments = (req, res) => {
     Departament.fetchAll()
       .then(([rows, fieldData]) => {
-        res.render('../views/pages/departament.hbs', { 
+        if(rows.length>0){
+          res.render('../views/pages/departament.hbs', { 
             datos: rows,
             csrfToken: req.csrfToken(),
         });
+        }
+        else{
+          const error = req.session.error || true;
+          req.session.error = false;
+          res.render('../views/pages/departament.hbs', { 
+            datos: rows,
+            csrfToken: req.csrfToken(),
+            error:error,
+        });
+        }
+        
       })
       .catch((err) => {
         console.error('Error fetching departments:', err);

@@ -32,6 +32,18 @@
             <h2>Departament Management</h2>
             <input type="button" value="Add Dept" class="add-btn" id="openModal">
         </div>
+        {{#if error}}
+            <div id="modal3" class="modal">
+                <div class="modal-content">
+                    <button id="closeModal2" class="close-btn">✖</button>
+                    <div class="error-icon">❌</div>
+
+                    <h2 class="tit le-modal2">Error</h2>
+                    <p class="description2">No existen departamentos disponibles.</p>
+
+                </div>
+            </div>
+        {{/if}}
         <table>
             <thead>
                 <tr>
