@@ -96,3 +96,11 @@ exports.post_users = (request, response, next) => {
             response.status(500).send("Error interno del servidor.");
         });
 };
+
+
+exports.get_logout = (request, response, next) => {
+    request.session.destroy(() => {
+        //Este código se ejecuta cuando la sesión se elimina.
+        response.redirect('/nuclea/signup'); 
+    });
+};
