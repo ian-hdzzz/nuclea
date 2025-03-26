@@ -6,145 +6,138 @@
   <title>Department Management</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="stylesheet" href="/css/AO.css">
-
 </head>
 <body>
   <div class="top-container">
-          <nav class="nav-bar">
-              <div class="first-container">
-                  <div class="views">Views</div>
-                  <div class="search-container">
-                      <input type="text" placeholder="Search..." class="input-search">
-                      <i class="fa-solid fa-magnifying-glass search-icon"></i>
-                  </div>
-              </div>
-              <div class="second-container">
-                  <div class="notification">
-                      <i class="fa-solid fa-bell"></i>
-                  </div>
-                  <div class="perfil">
-                      <i class="fa-solid fa-user"></i>
-                  </div>
-              </div>
-          </nav>
+    <nav class="nav-bar">
+      <div class="first-container">
+        <div class="views">Views</div>
+        <div class="search-container">
+          <input type="text" placeholder="Search..." class="input-search">
+          <i class="fa-solid fa-magnifying-glass search-icon"></i>
+        </div>
       </div>
-      <div class="content">
-          <div class="nav-content">
-              <h2>Administrative offenses</h2>
-              <input type="button" value="Add Administrative offense" id="openModal" class="add-btn" 
-              style="padding-right: 15px;
-                     padding-left: 15px;
-                     width:auto;">
-          </div>
-          <table>
-              <thead>
-                  <tr>
-                      <th>Assigned to</th>
-                      <th>Reason</th>
-                      <th>Date</th>
-                      <th>File</th>
-                      <th>Actions</th>
-                  </tr>
-              </thead>
-              <tbody>
-                  {{#each faltas}}
-                  <tr>
-                      <td>{{Nombre}} {{Apellidos}}</td>
-                      <td>{{Motivo}}</td>
-                      <td>{{formatDate Fecha_asignacion_falta}}</td>
-                      <td>
-                        {{#if archivo}}
-                            <a href="/uploads/{{archivo}}" target="_blank" class="pdf-link">
-                                <i class="fa-solid fa-file-pdf"></i> Open PDF
-                            </a>
-                        {{else}}
-                            Sin archivo
-                        {{/if }}
-                      </td>
-                      <td>
-                          <div class="dropdown">
-                              <button class="action-btn">Actions</button>
-                          </div>
-                      </td>
-                  </tr>
-                  {{/each}}
-              </tbody>
-          </table>
+      <div class="second-container">
+        <div class="notification">
+          <i class="fa-solid fa-bell"></i>
+        </div>
+        <div class="perfil">
+          <i class="fa-solid fa-user"></i>
+        </div>
       </div>
-
-  
-  <div id="modal" class="modal hidden">
-      <div class="modal-content">
-        <!-- Botón de cerrar -->
-        <button id="closeModal" class="close-btn">✖</button>
-        <h2 class="title-modal">Add Addministrative Offense</h2>
-        <p class="description">Fill in the required details to <br>assign a Addministrative Offense</p>
-          <br>
-          <form action="/nuclea/faltasAdministrativas" id="form-falta" method="POST" enctype="multipart/form-data">
-            <input type="hidden" name="_csrf" value="{{csrfToken}}">
-
-              <div class="form-group">
-                <label for="usuario" class="label">Find collaborator:</label>
-                  <select class="text-modal" id="idUsu" name="idUsu" required
-                      oninvalid="this.setCustomValidity('Please select a collaborator')" 
-                      onchange="this.setCustomValidity('')">
-                      <option value="">- Select User -</option>
-                      {{#each usuariosfa}}
-                      <option value="{{idUsuario}}">{{Nombre}}</option>
-                      {{/each}}
-                  </select>
-              </div>
-
-               <div class="form-row">
-                <div class="form-group form-date date-modal">
-                  <label for="fecha" class="label">Date</label>
-                  <input
-                    class="text-modal"
-                    type="date"
-                    placeholder="dd/mm/yy"
-                    id="fecha"
-                    name="fecha"
-                    required
-                    oninvalid="this.setCustomValidity('Please select a date')" 
-                    onchange="this.setCustomValidity('')"
-                    style="width: auto;"
-                  />
-                </div>
-
-               </div>
-              
-
-              <div class="form-group">
-                <label for="motivo" class="label">Reason</label>
-                <input
-                  class="text-modal"
-                  type="text"
-                  placeholder=""
-                  id="motivo"
-                  name="motivo"
-                  required
-                  oninvalid="this.setCustomValidity('Please remember to write a reason')"
-                  oninput="this.setCustomValidity('')"
-                />
-              </div>
-      
-              <div class="form-group">
-                <label for="fecha" class="label">Add file</label>
-                <input 
-                  type="file" 
-                  id="archivo" 
-                  name="archivo" 
-                  accept=".pdf"
-                  class="text-modal">
-              </div>
-            <!-- Botón de enviar -->
-                <input type="submit" class="btn-submit" value="Add Administrative Offense">
-
-          </form>
-      
-      </div>
+    </nav>
   </div>
-    
-    
+  <div class="content">
+    <div class="nav-content">
+      <h2>Administrative offenses</h2>
+      <input type="button" value="Add Administrative offense" id="openModal" class="add-btn" 
+             style="padding-right: 15px; padding-left: 15px; width:auto;">
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Assigned to</th>
+          <th>Reason</th>
+          <th>Date</th>
+          <th>File</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each faltas}}
+        <tr>
+          <td>{{Nombre}} {{Apellidos}}</td>
+          <td>{{Motivo}}</td>
+          <td>{{formatDate Fecha_asignacion_falta}}</td>
+          <td>
+            {{#if archivo}}
+              <a href="/uploads/{{archivo}}" target="_blank" class="pdf-link">
+                <i class="fa-solid fa-file-pdf"></i> Open PDF
+              </a>
+            {{else}}
+              Sin archivo
+            {{/if}}
+          </td>
+          <td>
+            <div class="dropdown">
+              <button class="action-btn">Actions</button>
+            </div>
+          </td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+    {{#if noFaltas}}
+      <p style="text-align: center; margin-top: 20px;">No administrative offenses existing</p>
+    {{/if}}
+  </div>
 
-<script src="/js/AO.js"></script>
+  <div id="modal" class="modal hidden">
+    <div class="modal-content">
+      <button id="closeModal" class="close-btn">✖</button>
+      <h2 class="title-modal">Add Administrative Offense</h2>
+      <p class="description">Fill in the required details to <br>assign an Administrative Offense</p>
+      <br>
+      <form action="/nuclea/faltasAdministrativas" id="form-falta" method="POST" enctype="multipart/form-data">
+        <input type="hidden" name="_csrf" value="{{csrfToken}}">
+
+        <div class="form-group">
+          <label for="usuario" class="label">Find collaborator:</label>
+          <select class="text-modal" id="idUsu" name="idUsu" required
+                  oninvalid="this.setCustomValidity('Please select a collaborator')" 
+                  onchange="this.setCustomValidity('')">
+            <option value="">- Select User -</option>
+            {{#each usuariosfa}}
+            <option value="{{idUsuario}}">{{Nombre}}</option>
+            {{/each}}
+          </select>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group form-date date-modal">
+            <label for="fecha" class="label">Date</label>
+            <input
+              class="text-modal"
+              type="date"
+              placeholder="dd/mm/yy"
+              id="fecha"
+              name="fecha"
+              required
+              oninvalid="this.setCustomValidity('Please select a date')" 
+              onchange="this.setCustomValidity('')"
+              style="width: auto;"
+            />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="motivo" class="label">Reason</label>
+          <input
+            class="text-modal"
+            type="text"
+            placeholder=""
+            id="motivo"
+            name="motivo"
+            required
+            oninvalid="this.setCustomValidity('Please remember to write a reason')"
+            oninput="this.setCustomValidity('')"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="fecha" class="label">Add file</label>
+          <input 
+            type="file" 
+            id="archivo" 
+            name="archivo" 
+            accept=".pdf"
+            class="text-modal">
+        </div>
+        <input type="submit" class="btn-submit" value="Add Administrative Offense">
+      </form>
+    </div>
+  </div>
+
+  <script src="/js/AO.js"></script>
+</body>
+</html>
