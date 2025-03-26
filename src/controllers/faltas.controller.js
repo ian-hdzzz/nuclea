@@ -41,7 +41,7 @@ exports.post_agregar_fa = (request, response, next) => {
         })
         .catch((error) => {
             console.log(error);
-            response.status(500).send('Error al guardar la falta');
+            response.status(500).send('Error registrating Administrative offense');
         });
 };
 
