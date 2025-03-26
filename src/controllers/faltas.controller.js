@@ -12,11 +12,13 @@ exports.get_fa = (req, res, next) => {
                 csrfToken: req.csrfToken(),
                 faltas: faltas
             });
-        }).catch((error)=>{
-            console.log(error);
+        }).catch((err)=>{
+            console.error('Error fetching Users:', err);
+            res.status(500).send('Internal Server Error');
         });
-    }).catch((error)=>{
-        console.log(error)
+    }).catch((err)=>{
+        console.error('Error fetching Administrative ofenses:', err);
+        res.status(500).send('Internal Server Error');
     })
 };
 
