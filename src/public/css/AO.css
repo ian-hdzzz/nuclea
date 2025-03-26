@@ -1,0 +1,270 @@
+@import url('https://fonts.googleapis.com/css2?family=Radio+Canada:ital,wght@0,300..700;1,300..700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+*{
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+.first-container{
+    margin-left: 140px;
+    display: flex;
+    height: 80%;
+    width: 800px;
+
+}
+body{
+    background-color: #0c1019;
+    color: #fff;
+}
+.nav-bar{
+    font-family: "Radio Canada", sans-serif;
+    margin: 20px 20px ;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 50px;
+}
+.search-container{
+    flex-grow: 0.7;
+    background-color: #fff;
+    padding: 4px;
+    border-radius: 0 8px 8px 0;
+
+}
+
+.input-search{
+    font-size: 18px;
+    padding: 4px;
+    outline: none;
+    border: none;
+    width: 95%;
+    height: 100%;
+}
+
+.search-icon{
+    cursor: pointer;
+    color: #000;
+    transform: translateY(8%);
+    padding-right: 5px;
+}
+.views{
+    font-size: 18px;
+    display: flex;
+    flex-grow: 0.3;
+    width: 120px;
+    background: linear-gradient(to right, #2762ea 0%,#4162f0 29%, #8061fd 100%);
+    border-radius: 8px 0 0 8px;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+}
+
+.notification,.perfil{
+    background: #253d90;
+    padding: 10px 12px;
+   border-radius: 50%;
+   cursor: pointer;
+}
+
+.second-container{
+    margin-left: -60px;
+    display: flex;
+    gap: 30px;
+}
+
+.content{
+    width: 80%;
+    border-radius: 2rem;
+    margin: auto;
+    padding: 40px;
+    background-color: #151720;
+}
+
+.nav-content{
+    font-family: "Radio Canada", sans-serif;
+    display: flex;
+    justify-content: space-between;
+}
+
+.info{
+    width: 80%;
+}
+
+h2{
+    margin-bottom: 20px;
+    font-size: 30px;
+}
+
+.add-btn{
+    cursor: pointer;
+    color: #fff;
+    font-size: 18px;
+    width: 158px;
+    height: 50px;
+    border-radius: 2rem;
+    transform: translateY(-15%);
+    background: linear-gradient(to right, #2762ea 0%,#4162f0 29%, #8061fd 100%);
+    border: none;
+    box-shadow: 3px 3px 15px rgba(46, 82, 227, 0.515);
+    margin-right: 10px;
+}
+
+table {
+    font-family: 'Montserrat',sans-serif;
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+th, td {
+    padding: 20px 10px;
+    text-align: center;
+}
+
+.active{
+    cursor: auto;
+    align-items: center;
+    padding: 4px 20px;
+    background: #63d754;
+    box-sizing: border-box;
+    font-size: 18px;
+    border-radius: 2rem;
+}
+
+.action-btn{
+    cursor: pointer;
+    padding: 10px 25px;
+    background: linear-gradient(to right, #2762ea 0%,#4162f0 29%, #8061fd 100%);
+    color: #fff;
+    border-radius: 2rem;border: none;
+    box-shadow: 3px 3px 5px rgba(46, 82, 227, 0.515);
+}
+
+
+/* MODAL */
+.modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.699);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Contenedor del modal */
+.modal-content {
+    background: #151720;
+    padding: 25px;
+    border-radius: 12px;
+    width: 450px;
+    position: relative;
+    overflow-y: auto; 
+    max-height: 70vh;
+    text-align: left;
+}
+
+/* Botón de cerrar */
+.close-btn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    color: white;
+    border: none;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Estilos del formulario */
+.form-group {
+    margin-bottom: 12px;
+    font-family: "Radio Canada", sans-serif;
+}
+
+.form-group label {
+    display: block;
+    font-size: 14px;
+    margin-bottom: 4px;
+}
+
+.text-modal {
+    z-index: 1000;
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #e3def9;
+    border-radius: 6px;
+    background: #e3edf9;
+    outline: none;
+    color: #000000;
+}
+
+/* Diseño en fila */
+.form-row {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+}
+
+/* Botón de enviar */
+.btn-submit {
+    width: 200px;
+    padding: 10px;
+    margin-left: 10px;
+    background: linear-gradient(to right, #2563eb, #9333ea);
+    border: none;
+    color: white;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+.btn-submit:hover {
+    opacity: 0.9;
+}
+
+/* Ocultar modal */
+.hidden {
+    display: none;
+}
+
+.title-modal{
+    font-size: 20px;
+    font-weight: 900;
+    margin-bottom: 15px;
+}
+
+
+.text-modal::placeholder{
+    color: rgba(0, 0, 0, 0.603);
+}
+
+
+.form-date{
+    flex-grow: 1;
+}
+
+.date-modal{
+    width: 100%;
+}
+
+.checkbox-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.checkbox-item {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Espacio entre checkbox y label */
+    width: calc(33.33% - 16px); /* Para mostrar 3 columnas */
+    box-sizing: border-box;
+}
+
+input[type="checkbox"] {
+    cursor: pointer;
+}

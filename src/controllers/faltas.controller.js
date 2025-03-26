@@ -22,26 +22,24 @@ exports.get_fa = (req, res, next) => {
     })
 };
 
-exports.post_agregar_fa = (request, response, next) => {
-    console.log(request.body);
-    console.log(request.body.fecha);
-    console.log(request.file);
-
-    const archivo = request.file ? request.file.filename : null; // Si hay archivo, usa el filename; si no, usa null
+exports.post_agregar_fa = (req, res, next) => {
+    console.log(req.body);
+    const archivo = req.file ? req.file.filename : null;
 
     const falta = new Falta(
-        request.body.idUsu,
-        request.body.fecha,
-        request.body.motivo,
-        archivo
+      req.body.idUsu,
+      req.body.fecha,
+      req.body.motivo,
+      archivo
     );
+
     falta.save()
-        .then(() => {
-            response.redirect('/nuclea/faltasAdministrativas');
-        })
-        .catch((error) => {
-            console.log(error);
-            response.status(500).send('Error registrating Administrative offense');
-        });
+      .then(() => {
+        res.redirect('/nuclea/faltasAdministrativas');
+      })
+      .catch((error) => {
+        console.error("Error al asignar falta:", error);
+        res.status(500).send('Error registrando falta administrativa');
+      });
 };
 
