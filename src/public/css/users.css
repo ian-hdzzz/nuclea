@@ -250,3 +250,21 @@ th, td {
 .date-modal{
     width: 100%;
 }
+
+.checkbox-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.checkbox-item {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Espacio entre checkbox y label */
+    width: calc(33.33% - 16px); /* Para mostrar 3 columnas */
+    box-sizing: border-box;
+}
+
+input[type="checkbox"] {
+    cursor: pointer;
+}

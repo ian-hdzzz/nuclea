@@ -97,7 +97,7 @@
             <h2>Users Managment</h2>
             <div class="add-btn-container">
                 <input type="button" value="Add Users" id="openModal" class="add-btn">
-                <input type="button" value="Assign user to Dep" id="openModal2" class="add-btn">
+                <!-- Botón de enviar <input type="button" value="Assign user to Dep" id="openModal2" class="add-btn"> -->
             </div>
         </div>
         <table>
@@ -235,6 +235,16 @@
                 </div>
 
                 <div class="form-group">
+                    <label>Choose Department(s)</label>
+                    {{#each deptos}}
+                        <div>
+                        <input type="checkbox" id="dept{{idDepartamento}}" name="departamentos" value="{{idDepartamento}}">
+                        <label for="dept{{idDepartamento}}">{{Nombre_departamento}}</label>
+                        </div>
+                    {{/each}}
+                </div>
+
+                <div class="form-group">
                     <label>Status</label>
                     <select  class="text-modal" name="status_us" required
                         oninvalid="this.setCustomValidity('Please select a Status')" 
@@ -267,16 +277,17 @@
         </div>
     </div>
 
-
+     <!-- modal para asignar usuario a departamento
     <div id="modal2" class="modal hidden">
         <div class="modal-content">
-            <!-- Botón de cerrar -->
+
+             Botón de cerrar
             <button id="closeModal2" class="close-btn">✖</button>
 
             <h2 class="title-modal">Asign user to department</h2>
             <p class="description">Fill in the required details to asign a user to a department</p>
 
-            <!-- Campos -->
+             Campos
               <form action="/nuclea/users" id="form-user" method="POST">
               <input type="hidden" name="action" value="assign">
               <input type="hidden" name="_csrf" value="{{csrfToken}}">
@@ -308,11 +319,12 @@
                     onchange="this.setCustomValidity('')">
                 </div>
                 
-            <!-- Botón de enviar -->
+            Botón de enviar
             <input type="submit" class="btn-submit" value="Assign Users">
         </div>
       </form>
     </div>
+    -->
 
     
     </div>
