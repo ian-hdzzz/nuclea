@@ -8,11 +8,12 @@
     box-shadow: 0px 1px 1px rgba(255, 255, 255, 0.046);
     background: var(--color-bg);
     margin: 0;
-    margin-bottom: 40px;
+    margin-bottom: 20px;
   
   }
   .navbar h1{
     font-size: 2rem;
+
   }
   .navbar .icon-container{
       width: 58px;
@@ -22,6 +23,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
+      margin-left: 70px;
   }
   .navbar i{
     font-size: 1.8rem;
