@@ -28,18 +28,17 @@
   </div>
 
   <div class="content">
-    <!-- Encabezado con botón arriba -->
     <div class="nav-content">
       <h2>Absences Management</h2>
       <input type="button" value="Add Request" class="add-btn" id="openModal">
     </div>
 
-    <!-- Tabla de datos -->
     <table>
       <thead>
         <tr>
           <th>ID</th>
-          <th>User ID</th>
+          <th>First Name</th>
+          <th>Last Name</th>
           <th>Type</th>
           <th>Start Date</th>
           <th>End Date</th>
@@ -52,7 +51,8 @@
         {{#each datos}}
         <tr>
           <td>{{idSolicitud}}</td>
-          <td>{{idUsuario}}</td>
+          <td>{{Nombre}}</td>
+          <td>{{Apellido}}</td>
           <td>{{Tipo}}</td>
           <td>{{formatDate Fecha_inicio}}</td>
           <td>{{formatDate Fecha_fin}}</td>
@@ -77,17 +77,25 @@
       <div class="modal-content">
         <button id="closeModal" class="close-btn">✖</button>
         <h2 class="title-modal">New Vacation Request</h2>
-        <p class="description">Fill the form to create a request</p>
+        <p class="description">Hi {{nombreUsuario}} {{apellidosUsuario}}, fill the form to create a request</p>
+        
         <form method="POST" action="/nuclea/request">
           <input type="hidden" name="_csrf" value="{{csrfToken}}">
-          <div class="form-group">
-            <label for="idUsuario">User ID</label>
-            <input type="number" id="idUsuario" name="idUsuario" placeholder="157" class="text-modal" required>
-          </div>
+          <input type="hidden" name="idUsuario" value="{{sessionId}}">
 
           <div class="form-group">
             <label for="Tipo">Type</label>
-            <input type="text" id="Tipo" name="Tipo" placeholder="Vacaciones" class="text-modal" required>
+            <select id="Tipo" name="Tipo" class="text-modal" required>
+              <option value="">Select a type</option>
+              <option value="Vacaciones">Vacaciones</option>
+              <option value="Permiso médico">Permiso médico</option>
+              <option value="Capacitación">Capacitación</option>
+              <option value="Día personal">Día personal</option>
+              <option value="Trabajo remoto">Trabajo remoto</option>
+              <option value="Emergencia familiar">Emergencia familiar</option>
+              <option value="Asuntos legales">Asuntos legales</option>
+              <option value="Permiso académico">Permiso académico</option>
+            </select>
           </div>
 
           <div class="form-row">
