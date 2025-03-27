@@ -6,7 +6,10 @@ exports.getRequests = (req, res) => {
     .then(([rows]) => {
       res.render('pages/request', {
         datos: rows,
-        csrfToken: req.csrfToken()
+        csrfToken: req.csrfToken(),
+        sessionId: req.session.id,
+        nombreUsuario: req.session.nombre,
+        apellidosUsuario: req.session.apellidos
       });
     })
     .catch((err) => {
@@ -14,6 +17,8 @@ exports.getRequests = (req, res) => {
       res.status(500).send('Error al obtener los datos');
     });
 };
+
+
 
 exports.postRequest = async (req, res) => {
   try {
