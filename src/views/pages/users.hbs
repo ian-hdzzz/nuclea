@@ -214,6 +214,7 @@
                         max="12"
                         oninvalid="this.setCustomValidity('Please enter a number of vacation days between 0 and 12')"
                         oninput="this.setCustomValidity('')"
+                        onkeydown="if(['e', 'E', '+', '-', '.'].includes(event.key)){ event.preventDefault(); }"
                     />
                 </div>
 
@@ -238,8 +239,13 @@
                     <label>Choose Department(s)</label>
                     {{#each deptos}}
                         <div>
-                        <input type="checkbox" id="dept{{idDepartamento}}" name="departamentos" value="{{idDepartamento}}">
-                        <label for="dept{{idDepartamento}}">{{Nombre_departamento}}</label>
+                            <input type="checkbox" 
+                                id="dept{{idDepartamento}}" 
+                                name="departamentos" 
+                                value="{{idDepartamento}}"
+                                class="department-check"
+                                {{#if @first}}checked{{/if}}>
+                            <label for="dept{{idDepartamento}}">{{Nombre_departamento}}</label>
                         </div>
                     {{/each}}
                 </div>

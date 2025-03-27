@@ -265,6 +265,17 @@ th, td {
     box-sizing: border-box;
 }
 
-input[type="checkbox"] {
-    cursor: pointer;
+.form-group {
+    position: relative;
+}
+
+.validation-error {
+    color: red;
+    font-size: 0.8em;
+    margin-top: 5px;
+    display: none;
+}
+
+.form-group.invalid .validation-error {
+    display: block;
 }
