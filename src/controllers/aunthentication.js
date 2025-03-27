@@ -22,7 +22,7 @@ exports.postAuth = (req, res) => {
           .compare(req.body.password, rows[0].Contrasena)
           .then((doMatch) => {
             if (doMatch) {
-              req.session.id = rows[0].idUsuario;
+              req.session.idUsuario = rows[0].idUsuario;
               req.session.nombre = rows[0].Nombre;
               req.session.apellidos = rows[0].Apellidos;
               req.session.email = rows[0].Correo_electronico;

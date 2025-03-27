@@ -7,7 +7,7 @@ exports.getRequests = (req, res) => {
       res.render('pages/request', {
         datos: rows,
         csrfToken: req.csrfToken(),
-        sessionId: req.session.id,
+        sessionId: req.session.idUsuario,
         nombreUsuario: req.session.nombre,
         apellidosUsuario: req.session.apellidos
       });
@@ -18,7 +18,27 @@ exports.getRequests = (req, res) => {
     });
 };
 
+exports.postRequest = (request, response,next) => {
+  
+  const sessionId = request.session.idUsuario; // Definir antes de usar
+  console.log(`Id: ${sessionId}`)
+  const nombreUsuario = request.session.nombre; // Para mostrar en el mensaje
 
+  const requests = new Request(sessionId, request.body.Tipo, request.body.Fecha_inicio, request.body.Fecha_fin,request.body.Descripcion);
+  requests.save()
+      .then(() => {
+          request.session.info = `Solicitud de ${nombreUsuario} guardado.`;
+          response.redirect('/nuclea/request');
+      })
+      .catch((err) => {
+        console.error('Error al cargar las solicitudes:', err);
+        response.status(500).send('Error al obtener los datos');
+      });
+};
+
+
+
+/* 
 
 exports.postRequest = async (req, res) => {
   try {
@@ -45,3 +65,4 @@ exports.postRequest = async (req, res) => {
     res.status(500).send('Error al insertar la solicitud');
   }
 };
+ */
