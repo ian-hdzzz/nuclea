@@ -115,7 +115,7 @@
             <tbody>
               {{#each usuarios}}
                 <tr>
-                    <td>{{Nombre}}</td>
+                    <td>{{Nombre}} {{Apellidos}}</td>
                     <td>{{Departamentos}}</td>
                     <td>{{formatDate Fecha_inicio_colab}}</td>
                     <td>{{Modalidad}}</td>
@@ -134,6 +134,9 @@
               {{/each}}
             </tbody>
         </table>
+        {{#if noUsers}}
+        <p style="text-align: center; margin-top: 20px;">No Users existing</p>
+        {{/if}}
 
         <!-- MODAL -->
     <div id="modal" class="modal hidden">
