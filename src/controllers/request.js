@@ -9,7 +9,8 @@ exports.getRequests = (req, res) => {
         csrfToken: req.csrfToken(),
         sessionId: req.session.idUsuario,
         nombreUsuario: req.session.nombre,
-        apellidosUsuario: req.session.apellidos
+        apellidosUsuario: req.session.apellidos,
+        title: 'Request',
       });
     })
     .catch((err) => {
