@@ -6,14 +6,14 @@ exports.get_fa = (req, res, next) => {
         .then(([faltas, fD]) => {
             Usuario.fetchAll()
                 .then(([rows, fieldData]) => {
-                    // Check if faltas is empty and set a flag
                     const noFaltas = faltas.length === 0;
 
                     res.render('../views/pages/faltasAdministrativas.hbs', {
                         usuariosfa: rows,
                         csrfToken: req.csrfToken(),
                         faltas: faltas,
-                        noFaltas: noFaltas // Pass the flag to the template
+                        noFaltas: noFaltas,
+                        title: 'Administrative offenses'
                     });
                 })
                 .catch((err) => {
