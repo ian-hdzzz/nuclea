@@ -1,6 +1,33 @@
 const db = require('../util/database');
 
 module.exports = class Request {
+
+  constructor(Id, Tipo, Fecha_I, Fecha_F,Descripcion) {
+    this.id = Id;
+    this.tipo = Tipo;
+    this.fecha_i= Fecha_I;
+    this.fecha_f= Fecha_F;
+    this.descripcion = Descripcion;
+}
+
+//Este método servirá para guardar de manera persistente el nuevo objeto. 
+save() {
+    return db.execute(`INSERT INTO Solicitudes (
+
+  idUsuario, Tipo, Fecha_inicio, Fecha_fin, Descripcion,
+
+  Aprobacion_L, Fecha_aprob_L, Aprobacion_A, Fecha_aprob_A
+
+)
+
+VALUES (
+
+  ?, ?, ?, ?,?,
+
+  'Pendiente', NULL, 'Pendiente', NULL
+
+)`, [this.id,this.tipo,this.fecha_f,this.fecha_f,this.descripcion]);
+}
   // Método para obtener todas las solicitudes
   static fetchAll() {
     return db.execute(`
