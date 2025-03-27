@@ -239,13 +239,17 @@
                     <label>Choose Department(s)</label>
                     {{#each deptos}}
                         <div>
-                            <input type="checkbox" 
+                            <label for="dept{{idDepartamento}}">
+                                <input type="checkbox" 
                                 id="dept{{idDepartamento}}" 
                                 name="departamentos" 
                                 value="{{idDepartamento}}"
                                 class="department-check"
                                 {{#if @first}}checked{{/if}}>
-                            <label for="dept{{idDepartamento}}">{{Nombre_departamento}}</label>
+                                {{Nombre_departamento}}
+                            </label>
+                            
+                            
                         </div>
                     {{/each}}
                 </div>
