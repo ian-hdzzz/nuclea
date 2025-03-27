@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const users_controller = require('../controllers/userController');
+const users_controller = require('../controllers/user.controller');
 const isAuth = require('../util/is-auth')
 
 // Definir rutas

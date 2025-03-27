@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const faltas_controller = require('../controllers/faltasController');
+const faltas_controller = require('../controllers/faltas.controller');
 const isAuth = require('../util/is-auth')
 
 // Definir rutas

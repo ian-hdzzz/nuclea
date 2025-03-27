@@ -1,5 +1,5 @@
 const express = require('express');
-const OneToOneController = require('../controllers/oneToOneController');
+const OneToOneController = require('../controllers/oneToOne.controller');
 
 const router = express.Router();
 
