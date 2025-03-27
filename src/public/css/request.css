@@ -105,7 +105,7 @@ table {
 }
 
 thead {
-    background-color: #1f1f2e;
+    background-color: #151720;
     color: white;
 }
 
@@ -115,32 +115,30 @@ th, td {
     border-bottom: 1px solid #444;
 }
 
-tbody tr:hover {
-    background-color: #2d2d44;
-}
+
 
 .pending {
-    background-color: #f1c40f;
+    background-color: #f39d12;
     color: white;
-    padding: 4px 10px;
+    padding: 4px 20px;
     border-radius: 20px;
-    font-weight: bold;
+    font-size: 18px;
 }
 
 .active {
-    background-color: #27ae60;
-    color: white;
-    padding: 4px 10px;
+    background-color: #3aaa35;
+    color: white;       
+    padding: 4px 20px;
     border-radius: 20px;
-    font-weight: bold;
+    font-size: 18px;
 }
 
 .inactive {
-    background-color: #e74c3c;
+    background-color: #c0392b;
     color: white;
-    padding: 4px 10px;
+    padding: 4px 20px;
     border-radius: 20px;
-    font-weight: bold;
+    font-size: 18px;
 }
 
 /* MODAL */
@@ -255,3 +253,16 @@ tbody tr:hover {
 .add-btn:hover {
     opacity: 0.7;
 }
+
+/*Forzar que el texto en los encabezados no se divida */
+th {
+    white-space: nowrap;
+    padding: 12px 16px;
+  }
+  
+  /*Ajuste tamaño para las columnas de aprobación */
+  th:nth-child(6),
+  th:nth-child(7) {
+    min-width: 130px;
+  }
+
