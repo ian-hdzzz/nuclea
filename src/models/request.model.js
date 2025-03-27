@@ -26,7 +26,7 @@ VALUES (
 
   'Pendiente', NULL, 'Pendiente', NULL
 
-)`, [this.id,this.tipo,this.fecha_f,this.fecha_f,this.descripcion]);
+)`, [this.id,this.tipo,this.fecha_i ,this.fecha_f,this.descripcion]);
 }
   // Método para obtener todas las solicitudes
   static fetchAll() {
