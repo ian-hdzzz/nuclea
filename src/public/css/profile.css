@@ -1,78 +1,25 @@
+/* Gradient text effect */
+.is-gradient-text {
+  background: linear-gradient(to right, #2762EA, #8360FE);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
 
+/* Hoverable card effect */
+.card.is-hoverable:hover {
+  border-color: #2762EA;
+  box-shadow: 0 10px 20px rgba(39, 98, 234, 0.1);
+  transition: all 0.3s ease;
+}
+
+/* Dark theme enhancements */
 body {
-  margin: 0;
-  font-family: sans-serif;
-  background-color: #0C1019; /* Fondo oscuro */
-  color: #fff; /* Texto blanco */
+  background-color: #0C1019;
+  color: #ffffff;
 }
 
-.container {
-  display: grid;
-  grid-template-columns: 50% 50%;
-  padding-right: 20px;
-  height: 100vh;
-  width: 100vw;
-}
-
-.left-panel {
- 
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  
-}
-
-.profile-image {
-  width: 230px;
-  height: 300px;
-}
-
-.edit-button {
-  width: 60px;
-  height: auto;
- 
-}
-
-.profile-name {
-  margin-top: 20px;
-  background-color: #4a69bd;
-  padding: 10px 20px;
-  border-radius: 10px;
-}
-
-.right-panel {
-  display: flex;
-  flex-direction: column;
-  align-items: justify;  /* Centra los elementos horizontalmente */
-  gap: 20px; /* Espaciado uniforme entre elementos */
-  padding: 20px;
-  height: 100vh; /* Mantiene la altura de la pantalla */
-}
-
-.info-item {
-  margin-bottom: 20px;
-  background-color: #141720;
-  text-align: center;
-  padding: 15px;
-  border-radius: 10px;
-}
-
-.label {
-  font-weight: bold;
-  display: block;
-  padding: 20px;
-  margin-bottom: 5px;
-}
-
-
-h2{
-  font-size:x-large; 
-}
-
-.left{
-  padding-right: 50px;
-  padding-left: 50px;
-  
+.card {
+  border: 1px solid #2F3647;
+  transition: all 0.3s ease;
 }
