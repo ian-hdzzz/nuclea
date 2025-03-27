@@ -1,6 +1,5 @@
 exports.get_profile = (req, res, next)=>{
     res.render('./pages/profile', {
-        id: req.session.idUsuario || [],
         nombre: req.session.nombre || [],
         apellidos: req.session.apellidos || [],
         email: req.session.email || [],
@@ -9,6 +8,6 @@ exports.get_profile = (req, res, next)=>{
         pais: req.session.pais || [],
         calle: req.session.calle || [],
         departamentos: req.session.departamentos || [],
-
+        title: 'Profile',
     });
 };
