@@ -34,6 +34,7 @@
         .extra h1{
             font-size: 4rem;
             font-weight: bold;
+            
         }
         .login-container {
             width: 50%;
@@ -42,10 +43,11 @@
         }
         
         .title {
-            color: #ffffff;
+           
             text-align: center;
             font-size: 2rem;
             margin-bottom: 0.5rem;
+            padding: 20px 0;
         }
 
         .subtitle {
@@ -149,6 +151,21 @@
             color: #8b949e;
             cursor: pointer;
         }
+        .login-container .gradient-text {
+            font-size: 32px; /* Ajusta según el tamaño deseado */
+            font-weight: 700; /* Negrita */
+            background: linear-gradient(to right, #4A6CF7, #7660FB);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: inline-block;
+           
+        }
+
+        /* Opcional: Añadir efecto de brillo */
+        .login-container .gradient-text:hover {
+            text-shadow: 0 0 10px rgba(74, 108, 247, 0.5);
+        }
     </style>
 </head>
 <body>
@@ -159,9 +176,11 @@
          {{!-- <div id="particles-js"></div> --}}
         <h1>NUCLEA</h1>
         <p>powered by Flowit</p>
+        {{!-- <p>A comprehensive solution for managing your company's human resources.</p> --}}
     </div>
 
     <div class="login-container">
+        {{!-- <h1 class="gradient-text">HRMS Management System</h1> --}}
         <h1 class="title">Sign In to your Account</h1>
         <p class="subtitle">Welcome back! please enter your detail</p>
         
