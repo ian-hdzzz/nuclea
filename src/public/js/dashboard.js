@@ -2,7 +2,7 @@ window.onload = function() {
     const loaderWrapper = document.getElementById('loaderWrapper');
     const mainContent = document.getElementById('mainContent');
     
-    const randomTime = Math.floor(Math.random() * (2000 - 1000 + 1)) + 1000;      
+    const randomTime = Math.floor(Math.random() * (1000 - 500 + 1)) + 500;
 
     setTimeout(function() {
 
