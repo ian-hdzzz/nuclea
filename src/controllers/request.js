@@ -1,22 +1,30 @@
 const db = require('../util/database');
 const Request = require('../models/request.model');
+const DiasFeriados = require('../models/diasferiados.model');
 
 exports.getRequests = (req, res) => {
-  Request.fetchAll()
-    .then(([rows]) => {
-      res.render('pages/request', {
-        datos: rows,
-        csrfToken: req.csrfToken(),
-        sessionId: req.session.idUsuario,
-        nombreUsuario: req.session.nombre,
-        apellidosUsuario: req.session.apellidos,
-        title: 'Request',
-      });
-    })
-    .catch((err) => {
-      console.error('Error al cargar las solicitudes:', err);
-      res.status(500).send('Error al obtener los datos');
-    });
+  DiasFeriados.fetchAll()
+    .then(([diasf,fD]) => {
+      Request.fetchAll()
+        .then(([rows]) => {
+          res.render('pages/request', {
+            datos: rows,
+            csrfToken: req.csrfToken(),
+            sessionId: req.session.idUsuario,
+            nombreUsuario: req.session.nombre,
+            apellidosUsuario: req.session.apellidos,
+            title: 'Request',
+            diasferiados: diasf
+          });
+        })
+        .catch((err) => {
+          console.error('Error al cargar las solicitudes:', err);
+          res.status(500).send('Error al obtener los datos');
+        });
+  }).catch((err) => {
+    console.error('Error fetching the holidays:', err);
+    res.status(500).send('Internal Server Error');
+  });
 };
 
 exports.postRequest = (request, response,next) => {
@@ -32,7 +40,8 @@ exports.postRequest = (request, response,next) => {
           response.redirect('/nuclea/request');
       })
       .catch((err) => {
-        console.error('Error al cargar las solicitudes:', err);
+        console.error('Error al guardar la solicitud:', err.message);
+        console.error(err);
         response.status(500).send('Error al obtener los datos');
       });
 };
