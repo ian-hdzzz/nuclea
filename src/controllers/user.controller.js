@@ -30,15 +30,15 @@ exports.get_users = (req, res, next) => {
                     res.status(500).send('Internal Server Error');
                 });
             }).catch((err)=>{
-                console.error('Error fetching Administrative ofenses:', err);
+                console.error('Error fetching departments:', err);
                 res.status(500).send('Internal Server Error');
             });
         }).catch((err)=>{
-            console.error('Error fetching Administrative ofenses:', err);
+            console.error('Error fetching users:', err);
             res.status(500).send('Internal Server Error');
         });
     }).catch((err)=>{
-        console.error('Error fetching Administrative Roles:', err);
+        console.error('Error fetching Roles:', err);
         res.status(500).send('Internal Server Error');
     })
 };
@@ -98,7 +98,7 @@ exports.post_users = (request, response, next) => {
         })
         .catch((error) => {
             console.error("Error en post_users (register):", error);
-            response.status(500).send("Error interno del servidor.");
+            response.status(500).send("Internal Server Error");
         });
 };
 
