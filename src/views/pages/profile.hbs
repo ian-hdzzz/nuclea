@@ -13,15 +13,16 @@
                 <img class="profile-image" src="/media/profile.png" alt="Profile image">
                 <img class="edit-button" src="/media/boton.png" alt="Edit icon">
             </div>
-            <h1 class="profile-name">{{nombre}} {{apellidos}}</h1>
+            <div class="profile-name">{{nombre}} {{apellidos}}</div>
+            <div class="profile-info">
+                <div class="info-label">Location:</div>
+                <div class="info-value">
+                    {{pais}}, {{ciudad}}, {{calle}}
+                </div>
+            </div>
         </div>
         
-        <div class="profile-info">
-            <div class="info-section">
-                <div class="info-label">ID:</div>
-                <div class="info-value">{{id}}</div>
-            </div>
-            
+        <div class="profile-info">            
             <div class="info-section">
                 <div class="info-label">Department:</div>
                 <div class="info-value">{{departamentos}}</div>
@@ -36,13 +37,8 @@
                 <div class="info-label">Registration Date:</div>
                 <div class="info-value">{{formatDate registration}}</div>
             </div>
+            <a href="/nuclea/faltasAdministrativas"><center><button class="button is-link is-outlined" >Administrative offenses</button></center></a>
             
-            <div class="info-section">
-                <div class="info-label">Location:</div>
-                <div class="info-value">
-                    {{pais}}, {{ciudad}}, {{direccion}}
-                </div>
-            </div>
         </div>
     </div>
 </body>
