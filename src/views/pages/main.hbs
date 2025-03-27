@@ -10,9 +10,7 @@
 </head>
 <body>
 
-    {{#unless hideMenu}}
-        {{> header}}
-    {{/unless}}
+
 
 
 
@@ -21,6 +19,9 @@
     {{/unless}}
 
     {{#unless hideContainer}}
+  
+        {{> header}}
+  
         <div class="container">
             {{{body}}}  
         </div>

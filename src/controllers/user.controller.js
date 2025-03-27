@@ -17,7 +17,7 @@ exports.get_users = (req, res, next) => {
         Usuario.fetchAll().then(([rows, fieldData])=>{
             Dept.fetchDept().then(([dept,FD])=>{
                 Usuario.fetchDeptAll().then(([all,FiDA])=>{
-                    const nousers = faltas.length === 0;
+                    const nousers = all.length === 0;
                     const tempPassword = generateRandomPassword();
                     res.render('../views/pages/users.hbs',{
                     rols:roles,
@@ -25,7 +25,8 @@ exports.get_users = (req, res, next) => {
                     usuarios: all,
                     tempPassword: tempPassword,
                     deptos:dept,
-                    noUsers : nousers 
+                    noUsers : nousers,
+                    title: 'Users',
                 })
                 }).catch((err)=>{
                     console.error('Error fetching Departments:', err);
