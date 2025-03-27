@@ -10,7 +10,8 @@ exports.get_fa = (req, res, next) => {
             res.render('../views/pages/faltasAdministrativas.hbs', {
                 usuariosfa:rows,
                 csrfToken: req.csrfToken(),
-                faltas: faltas
+                faltas: faltas,
+                title: 'Administrative offenses',
             });
         }).catch((error)=>{
             console.log(error);
