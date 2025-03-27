@@ -39,7 +39,7 @@
                     <div class="error-icon">❌</div>
 
                     <h2 class="tit le-modal2">Error</h2>
-                    <p class="description2">No existen departamentos disponibles.</p>
+                    <p class="description2">No departaments existing.</p>
 
                 </div>
             </div>
@@ -70,6 +70,9 @@
                 {{/each}}
             </tbody>
         </table>
+        {{#if error}}
+            <p style="text-align: center; margin-top: 20px;">No departaments existing</p>
+        {{/if}}
 
     <div id="modal" class="modal hidden">
         <div class="modal-content">
