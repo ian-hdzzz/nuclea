@@ -32,18 +32,6 @@
             <h2>Departament Management</h2>
             <input type="button" value="Add Dept" class="add-btn" id="openModal">
         </div>
-        {{#if error}}
-            <div id="modal3" class="modal">
-                <div class="modal-content">
-                    <button id="closeModal2" class="close-btn">✖</button>
-                    <div class="error-icon">❌</div>
-
-                    <h2 class="tit le-modal2">Error</h2>
-                    <p class="description2">No departaments existing.</p>
-
-                </div>
-            </div>
-        {{/if}}
         <table>
             <thead>
                 <tr>
@@ -95,18 +83,12 @@
                     <input type="text" id="desc" name="Descripcion" placeholder="Manage Financial Operations" class="text-modal" required>
                 </div>
 
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="deptNumber">Department Number</label>
-                        <input type="text" id="deptNumber" name="idDepartamento" placeholder="101" class="text-modal" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="status">Status</label>
-                        <select name="Estado" class="text-modal option-modal" required>
-                            <option value="1" class="option-modal">1</option>
-                            <option value="0" class="option-modal">0</option>
-                         </select>
-                    </div>
+                <div class="form-group">
+                    <label for="status">Status</label>
+                    <select id="statusSelect" name="Estado" class="text-modal option-modal" required>
+                        <option value="1" class="option-modal">Active</option>
+                        <option value="0" class="option-modal">Inactive</option>
+                    </select>
                 </div>
 
                 <!-- Botón de enviar -->
