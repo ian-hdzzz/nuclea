@@ -36,9 +36,7 @@
     <table>
       <thead>
         <tr>
-          <th>ID</th>
-          <th>First Name</th>
-          <th>Last Name</th>
+          <th>Request of</th>
           <th>Type</th>
           <th>Start Date</th>
           <th>End Date</th>
@@ -48,30 +46,37 @@
         </tr>
       </thead>
       <tbody>
-        {{#each datos}}
-        <tr>
-          <td>{{idSolicitud}}</td>
-          <td>{{Nombre}}</td>
-          <td>{{Apellido}}</td>
-          <td>{{Tipo}}</td>
-          <td>{{formatDate Fecha_inicio}}</td>
-          <td>{{formatDate Fecha_fin}}</td>
-          <td>{{Descripcion}}</td>
-          <td>
-            <span class="{{#if (eq Aprobacion_L 'Aprobado')}}active{{else if (eq Aprobacion_L 'Rechazado')}}inactive{{else}}pending{{/if}}">
-              {{Aprobacion_L}}
-            </span>
-          </td>
-          <td>
-            <span class="{{#if (eq Aprobacion_A 'Aprobado')}}active{{else if (eq Aprobacion_A 'Rechazado')}}inactive{{else}}pending{{/if}}">
-              {{Aprobacion_A}}
-            </span>
-          </td>
-        </tr>
-        {{/each}}
+        {{#if datos.length}}
+          {{#each datos}}
+          <tr>
+            <td>{{Nombre}} {{Apellido}}</td>
+            <td>{{Tipo}}</td>
+            <td>{{formatDate Fecha_inicio}}</td>
+            <td>{{formatDate Fecha_fin}}</td>
+            <td>{{Descripcion}}</td>
+            <td>
+              <span class="{{#if (eq Aprobacion_L 'Aprobado')}}active{{else if (eq Aprobacion_L 'Rechazado')}}inactive{{else}}pending{{/if}}">
+                {{Aprobacion_L}}
+              </span>
+            </td>
+            <td>
+              <span class="{{#if (eq Aprobacion_A 'Aprobado')}}active{{else if (eq Aprobacion_A 'Rechazado')}}inactive{{else}}pending{{/if}}">
+                {{Aprobacion_A}}
+              </span>
+            </td>
+          </tr>
+          {{/each}}
+        {{else}}
+        
+          <tr class="empty-message">
+           
+          </tr>
+        
       </tbody>
-    </table>
 
+    </table>
+    <p style="text-align: center; margin-top: 20px;">No Request existing</p>
+    {{/if}}
     <!-- Modal -->
     <div id="modal" class="modal hidden">
       <div class="modal-content">
