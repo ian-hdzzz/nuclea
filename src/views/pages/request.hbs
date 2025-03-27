@@ -36,9 +36,7 @@
     <table>
       <thead>
         <tr>
-          <th>ID</th>
-          <th>First Name</th>
-          <th>Last Name</th>
+          <th>Request of</th>
           <th>Type</th>
           <th>Start Date</th>
           <th>End Date</th>
@@ -50,9 +48,7 @@
       <tbody>
         {{#each datos}}
         <tr>
-          <td>{{idSolicitud}}</td>
-          <td>{{Nombre}}</td>
-          <td>{{Apellido}}</td>
+          <td>{{Nombre}} {{Apellido}}</td>
           <td>{{Tipo}}</td>
           <td>{{formatDate Fecha_inicio}}</td>
           <td>{{formatDate Fecha_fin}}</td>
