@@ -122,3 +122,19 @@ body{
         z-index: 5;
     }
 }
+
+.login-container h1 {
+   
+    font-size: 32px; /* Ajusta según el tamaño deseado */
+    font-weight: 700; /* Negrita */
+    background: linear-gradient(to right, #4A6CF7, #6B8AFF);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    display: inline-block;
+}
+
+/* Opcional: Añadir efecto de brillo */
+.login-container h1:hover {
+    text-shadow: 0 0 10px rgba(74, 108, 247, 0.5);
+}
