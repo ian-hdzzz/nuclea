@@ -93,7 +93,7 @@ app.use(flash());
 
 // routes 
 
-// app.use(require('./routes'));
+app.use(require('./routes/index.routes'));
 app.use('/nuclea', require('./routes/authentication.routes'));
 app.use('/nuclea', require('./routes/dashboard.routes'));
 app.use('/nuclea', require('./routes/requests.routes'));
