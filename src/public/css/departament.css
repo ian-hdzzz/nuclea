@@ -275,3 +275,8 @@ th, td {
 .description2{
     text-align: center;
 }
+
+#statusSelect {
+    width: 100%;  
+    display: block; 
+}
