@@ -14,6 +14,7 @@ exports.getAuth = (req, res) => {
 };
 
 exports.postAuth = (req,res)=>{
+    console.log(req.body);
     Usuario.fetchOne(req.body.email).then(([rows, fieldData]) => {
         if (rows.length > 0) {
             bcrypt.compare(req.body.password, rows[0].Contrasena)

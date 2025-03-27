@@ -92,17 +92,17 @@ app.use(flash());
 
 
 // routes 
-app.use(require('./routes'));
-app.use('/nuclea', require('./routes/authentication'));
+// app.use(require('./routes'));
+app.use('/nuclea', require('./routes/authentication.routes'));
 app.use('/nuclea', require('./routes/dashboard.routes'));
-app.use('/nuclea', require('./routes/requests'));
-app.use('/nuclea', require('./routes/objectives'));
+app.use('/nuclea', require('./routes/requests.routes'));
+app.use('/nuclea', require('./routes/objectives.routes'));
 app.use('/nuclea', require('./routes/interview.routes'));
-app.use('/nuclea', require('./routes/reports'));
-app.use('/nuclea', require('./routes/admin'));
-app.use('/nuclea', require('./routes/profile'));
+app.use('/nuclea', require('./routes/reports.routes'));
+app.use('/nuclea', require('./routes/admin.routes'));
+app.use('/nuclea', require('./routes/profile.routes'));
 
-const departamentRoutes = require('./routes/departament');
+const departamentRoutes = require('./routes/departament.routes');
 app.use('/nuclea', departamentRoutes);
 
 const faltaAdministrativa = require('./routes/faltaAdministrativa.routes');
