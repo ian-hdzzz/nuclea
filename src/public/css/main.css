@@ -4,12 +4,12 @@
     box-sizing: border-box;
 }
 :root{
-    --color-bg:#0C1019;
+    --color-bg:#0B1019;
     --color-bg-secundario:#131721;
     --color-primario:#2762EA;
-    --color-primario:#1DA4FC;
-    --color-primario:#8360FE;
-    --color-iconos:#bebfbf98;
+    --color-secundario:#1DA4FC;
+    --color-terciario:#8360FE;
+    --color-iconos:#A1B0B9;
     --color-fuente:#fff;
 }
 body{

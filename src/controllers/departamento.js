@@ -6,6 +6,7 @@ exports.getDepartaments = (req, res) => {
         res.render('../views/pages/departament.hbs', { 
             datos: rows,
             csrfToken: req.csrfToken(),
+            title: 'Departaments',
         });
       })
       .catch((err) => {
