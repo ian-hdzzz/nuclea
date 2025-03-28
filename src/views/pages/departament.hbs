@@ -64,13 +64,12 @@
 
     <div id="modal" class="modal hidden">
         <div class="modal-content">
-            <!-- Botón de cerrar -->
+            
             <button id="closeModal" class="close-btn">✖</button>
 
             <h2 class="title-modal">Add Department</h2>
             <p class="description">Fill in the required details to register this Department</p>
 
-            <!-- Formulario -->
             <form id="departmentForm" method="POST" action="/nuclea/departament">
             <input type="hidden" name="_csrf" value="{{csrfToken}}">
                 <div class="form-group">
@@ -91,7 +90,6 @@
                     </select>
                 </div>
 
-                <!-- Botón de enviar -->
                 <input type="submit" class="btn-submit" value="Add Department">
             </form>
         </div>
