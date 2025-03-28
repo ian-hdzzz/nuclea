@@ -29,6 +29,16 @@ VALUES (
 )`, [this.id,this.tipo,this.fecha_i ,this.fecha_f,this.descripcion]);
 }
   // Método para obtener todas las solicitudes
+  static fetchDays(idUsuario){
+   return db.execute(`SELECT dias_vaciones
+    FROM Usuarios
+    WHERE idUsuario=?;`,[idUsuario])
+  }
+  static updateDays(id, dias_restantes){
+    return db.execute(`UPDATE Usuarios
+    SET  dias_vaciones = ?  -- Cambia el valor según lo que necesites
+    WHERE idUsuario = ?; `,[dias_restantes,id])
+  }
   static fetchAll() {
     return db.execute(`
       SELECT 
