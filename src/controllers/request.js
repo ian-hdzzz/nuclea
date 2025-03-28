@@ -34,16 +34,64 @@ exports.postRequest = (request, response,next) => {
   const nombreUsuario = request.session.nombre; // Para mostrar en el mensaje
 
   const requests = new Request(sessionId, request.body.Tipo, request.body.Fecha_inicio, request.body.Fecha_fin,request.body.Descripcion);
-  requests.save()
-      .then(() => {
-          request.session.info = `Solicitud de ${nombreUsuario} guardado.`;
-          response.redirect('/nuclea/request');
-      })
-      .catch((err) => {
-        console.error('Error al guardar la solicitud:', err.message);
-        console.error(err);
-        response.status(500).send('Error al obtener los datos');
-      });
+  
+  if(request.body.Tipo==='Vacaciones'){
+    const fechaInicio = new Date(request.body.Fecha_inicio);
+    const fechaFin = new Date(request.body.Fecha_fin);
+
+    // Calcular la diferencia en milisegundos y convertirla a días
+    const totalDias = (fechaFin - fechaInicio) / (1000 * 60 * 60 * 24) + 1; // +1 para incluir ambos días
+
+    Request.fetchDays(sessionId).then(([diasrestantes, FB])=>{
+      const dias_restantes=diasrestantes[0].dias_vaciones;
+      console.log(dias_restantes);
+      const dias = dias_restantes-totalDias
+      if(dias>=0){
+        requests.save()
+        .then(() => {
+            Request.updateDays(sessionId,dias)
+            .then(()=>{
+              request.session.info = `Solicitud de ${nombreUsuario} guardado.`;
+              response.redirect('/nuclea/request');
+              console.log('Se guardó correctamente');
+            })
+            .catch((err) => {
+              console.error('Error al guardar la solicitud:', err.message);
+              console.error(err);
+              response.status(500).send('Error al obtener los datos');
+            });
+            
+        })
+        .catch((err) => {
+          console.error('Error al guardar la solicitud:', err.message);
+          console.error(err);
+          response.status(500).send('Error al obtener los datos');
+        });
+      }else {
+        console.log(`No se pudo guardar la solicitud, te quedan ${dias_restantes}`)
+        response.redirect('/nuclea/request');
+      }
+    }).catch((err)=> {
+      console.error('Error al guardar la solicitud:', err.message);
+      console.error(err);
+      response.status(500).send('Error al obtener los datos');
+    });
+
+  }else{
+    requests.save()
+  
+    .then(() => {
+        request.session.info = `Solicitud de ${nombreUsuario} guardado.`;
+        response.redirect('/nuclea/request');
+    })
+    .catch((err) => {
+      console.error('Error al guardar la solicitud:', err.message);
+      console.error(err);
+      response.status(500).send('Error al obtener los datos');
+    });
+  }
+  
+
 };
 
 
