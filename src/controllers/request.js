@@ -35,7 +35,7 @@ exports.postRequest = (request, response,next) => {
 
   const requests = new Request(sessionId, request.body.Tipo, request.body.Fecha_inicio, request.body.Fecha_fin,request.body.Descripcion);
   
-  if(request.body.Tipo==='Vacaciones'){
+  if(request.body.Tipo==='Vacations'){
     const fechaInicio = new Date(request.body.Fecha_inicio);
     const fechaFin = new Date(request.body.Fecha_fin);
 
