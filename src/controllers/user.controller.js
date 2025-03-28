@@ -88,13 +88,17 @@ exports.post_users = (request, response, next) => {
             return Role.asign(usuarioId, idRol);
         })
         .then(() => {
-            if (Array.isArray(request.body.departamentos)) {
-                const departamentosPromises = request.body.departamentos.map(deptId => {
-                    const asignacion = new Usuario(null, null, null, null, null, null, null, null, null, null, null, null, usuarioId, deptId, new Date());
-                    return asignacion.assignment();
-                });
-                return Promise.all(departamentosPromises);
-            }
+            // Asegurar que request.body.departamentos sea un array
+            const departamentos = Array.isArray(request.body.departamentos) 
+                ? request.body.departamentos 
+                : [request.body.departamentos];
+        
+            const departamentosPromises = departamentos.map(deptId => {
+                const asignacion = new Usuario(null, null, null, null, null, null, null, null, null, null, null, null, usuarioId, deptId, new Date());
+                return asignacion.assignment();
+            });
+        
+            return Promise.all(departamentosPromises);
         })
         .then(() => {
             response.redirect('/nuclea/users');
