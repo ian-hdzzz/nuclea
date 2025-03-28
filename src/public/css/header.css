@@ -5,7 +5,7 @@
     align-items: center;
     gap: 20px;
     width: 100%;
-    box-shadow: 0px 1px 1px rgba(255, 255, 255, 0.046);
+    box-shadow: 0px 1px 1px rgba(255, 255, 255, 0.065);
     background: var(--color-bg);
     margin: 0;
     margin-bottom: 20px;
