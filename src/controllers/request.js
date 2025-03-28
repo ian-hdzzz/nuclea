@@ -49,18 +49,9 @@ exports.postRequest = (request, response,next) => {
       if(dias>=0){
         requests.save()
         .then(() => {
-            Request.updateDays(sessionId,dias)
-            .then(()=>{
-              request.session.info = `Solicitud de ${nombreUsuario} guardado.`;
-              response.redirect('/nuclea/request');
-              console.log('Se guardó correctamente');
-            })
-            .catch((err) => {
-              console.error('Error al guardar la solicitud:', err.message);
-              console.error(err);
-              response.status(500).send('Error al obtener los datos');
-            });
-            
+          request.session.info = `Solicitud de ${nombreUsuario} guardado.`;
+          response.redirect('/nuclea/request');
+          console.log('Se guardó correctamente');            
         })
         .catch((err) => {
           console.error('Error al guardar la solicitud:', err.message);
