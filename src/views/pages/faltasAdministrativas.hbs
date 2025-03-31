@@ -61,6 +61,14 @@
           <td>
             <div class="dropdown">
               <button class="action-btn">Actions</button>
+              <div class="dropdown-content">
+                <button class="edit-btn"  onclick="editOffense('{{id}}')">
+                  <i class="fa-solid fa-pen-to-square"></i> Edit
+                </button>
+                <button class="delete-btn" onclick="deleteOffense('{{id}}')">
+                  <i class="fa-solid fa-trash"></i> Delete
+                </button>
+              </div>
             </div>
           </td>
         </tr>
