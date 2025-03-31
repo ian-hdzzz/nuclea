@@ -4,10 +4,19 @@ const Role = require('../models/role.model');
 const Usuario = require('../models/usuario.model');
 const crypto = require('crypto');
 const Dept = require('../models/departament.model');
+const nodemailer = require('nodemailer');
 
 function generateRandomPassword(length = 10) {
     return crypto.randomBytes(length).toString('hex').slice(0, length);
 }
+
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASSWORD
+    }
+});
 
 
 exports.get_users = (req, res, next) => {
@@ -28,6 +37,8 @@ exports.get_users = (req, res, next) => {
                     noUsers : nousers,
                     title: 'Users',
                 })
+                console.log(process.env.EMAIL_USER);
+                console.log(process.env.EMAIL_PASSWORD);
                 }).catch((err)=>{
                     console.error('Error fetching Departments:', err);
                     res.status(500).send('Internal Server Error');
@@ -50,6 +61,9 @@ exports.post_users = (request, response, next) => {
     console.log("Datos recibidos en POST /users:", request.body);
 
     const action = request.body.action; // Obtener el valor del campo oculto
+    const userEmail = request.body.email_us; // Usamos email_us
+    const userPassword = request.body.password
+    
 
     if (!request.body.password) {
         console.error("Error: La contraseña es undefined.");
@@ -99,6 +113,25 @@ exports.post_users = (request, response, next) => {
             });
         
             return Promise.all(departamentosPromises);
+        })
+        .then(()=>{
+            console.log("Enviando correo a:", userEmail); // Agregamos un log para depuración
+            const mailOptions = {
+                from: '"Nuclea App" <flowitdb@gmail.com>',
+                to: userEmail,
+                subject: 'Login Credentials',
+                html: `
+                    <h2>!Registration Succesful!</h2>
+                    <p>Here are your login credentials:</p>
+                    <ul>
+                        <li><strong>Email:</strong> ${userEmail}</li>
+                        <li><strong>Password:</strong> ${userPassword}</li>
+                    </ul>
+                    <p>Please store this information securely and do not share it with anyone.</p>
+                `
+            };
+
+            return transporter.sendMail(mailOptions);
         })
         .then(() => {
             response.redirect('/nuclea/users');
