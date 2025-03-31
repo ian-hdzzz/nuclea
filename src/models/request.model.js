@@ -58,4 +58,24 @@ VALUES (
     `);
     
   }
+  static fetchPersonal(id) {
+    return db.execute(`
+      SELECT 
+        s.idSolicitud,
+        u.Nombre,
+        u.Apellidos AS Apellido,
+        s.Tipo,
+        s.Fecha_inicio,
+        s.Fecha_fin,
+        s.Descripcion,
+        s.Aprobacion_L,
+        s.Fecha_aprob_L,
+        s.Aprobacion_A,
+        s.Fecha_aprob_A
+      FROM Solicitudes s
+      JOIN Usuarios u ON s.idUsuario = u.idUsuario
+      WHERE u.idUsuario=?;
+    `,[id]);
+    
+  }
 };

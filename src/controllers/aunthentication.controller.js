@@ -31,6 +31,16 @@ exports.postAuth = (req, res) => {
               req.session.pais = rows[0].Pais;
               req.session.calle = rows[0].Calle;              
               req.session.isLoggedIn = true;
+              Usuario.getPrivilegios(rows[0].idUsuario).then(([privilegios, fieldData]) => {
+                req.session.privilegios = [];
+                for(let privilegio of privilegios) {
+                    req.session.privilegios.push(privilegio);
+                }
+                console.log(req.session.privilegios);
+              }).catch((error) => {
+                console.log(error);
+              });
+
               Usuario.fetchDeptSession(req.session.email).then(([deps,fd])=>{
                 req.session.departamentos=deps[0].Departamentos;
                 return req.session.save(err =>{
