@@ -119,15 +119,15 @@ module.exports = class Usuario {
     }
   }
 
-  static getPrivilegios(username) {
+  static getPrivilegios(idusuario) {
     return db.execute(
-      `SELECT p.nombre 
-            FROM privilegios p, rol_privilegio rp, roles r, 
-                usuario_rol ur, usuarios u
-            WHERE p.id=rp.privilegio_id AND rp.rol_id=r.id 
-                AND r.id=ur.rol_id AND ur.usuario_id=u.id 
-                AND u.username=?`,
-      [username]
+      `SELECT p.Nombre_privilegio 
+            FROM Privilegios p, Rol_Privilegios rp, Roles r, 
+                User_Rol ur, Usuarios u
+            WHERE p.idPrivilegio=rp.idPrivilegio AND rp.idRol=r.idRol 
+                AND r.idRol=ur.idRol AND ur.idUsuario=u.idUsuario
+                AND u.idUsuario=?;`,
+      [idusuario]
     );
   }
 };
