@@ -4,7 +4,7 @@ const AuthController = require('../controllers/aunthentication.controller');
 const isLoggedIn = require('../util/isLoggedIn');
 
 //SignUp
-router.get('/signup', isLoggedIn, AuthController.getAuth);
-router.post('/signup',isLoggedIn, AuthController.postAuth);
+router.get('/', isLoggedIn, AuthController.getAuth);
+router.post('/',isLoggedIn, AuthController.postAuth);
 
 module.exports =  router;

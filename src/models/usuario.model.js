@@ -1,11 +1,8 @@
-// eslint-disable-next-line no-undef
 const db = require("../util/database");
 const bcrypt = require("bcryptjs");
-const passport = require("passport");
-const GoogleStrategy = require('passport-google-oauth20').Strategy;
 
 module.exports = class Usuario {
-  //Constructor de la clase. Sirve para crear un nuevo objeto, y en Ã©l se definen las propiedades del modelo
+  //Constructor de la clase. Sirve para crear un nuevo objeto, y en él se definen las propiedades del modelo
   constructor(
     my_name,
     my_lastname,
@@ -40,7 +37,7 @@ module.exports = class Usuario {
     this.date = my_date;
   }
 
-  //Este mÃ©todo servirÃ¡ para guardar de manera persistente el nuevo objeto.
+  //Este método servirá para guardar de manera persistente el nuevo objeto.
   save() {
     return bcrypt
       .hash(this.password, 12)
@@ -77,7 +74,7 @@ module.exports = class Usuario {
     );
   }
 
-  //Este mÃ©todo servirÃ¡ para devolver los objetos del almacenamiento persistente.
+  //Este método servirá para devolver los objetos del almacenamiento persistente.
   static fetchAll() {
     return db.execute("SELECT * FROM Usuarios");
   }
@@ -164,40 +161,3 @@ module.exports = class Usuario {
       });
   }
 };
-// Configure Google Strategy
-passport.use(new GoogleStrategy({
-  clientID: process.env.GOOGLE_CLIENT_ID,
-  clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-  callbackURL: "/auth/google/callback"
-},
-function(accessToken, refreshToken, profile, done) {
-  Usuario.findOrCreateGoogleUser({
-    email: profile.emails[0].value,
-    given_name: profile.name.givenName || profile.displayName.split(' ')[0],
-    family_name: profile.name.familyName || profile.displayName.split(' ').slice(1).join(' ')
-  })
-  .then(user => {
-    return done(null, user);
-  })
-  .catch(err => {
-    return done(err, null);
-  });
-}
-));
-
-// Serialize and deserialize user
-passport.serializeUser((user, done) => {
-done(null, user.idUsuario);
-});
-
-passport.deserializeUser((id, done) => {
-db.execute("SELECT * FROM Usuarios WHERE idUsuario = ?", [id])
-  .then(([users]) => {
-    if (users.length > 0) {
-      done(null, users[0]);
-    } else {
-      done(new Error('User not found'), null);
-    }
-  })
-  .catch(err => done(err, null));
-});
