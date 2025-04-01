@@ -30,24 +30,28 @@ exports.get_fa = (req, res, next) => {
 };
 
 exports.post_agregar_fa = (req, res, next) => {
-    console.log(req.body);
     const archivo = req.file ? req.file.filename : null;
-
-    const falta = new Falta(
-        req.body.idUsu,
-        req.body.fecha,
-        req.body.motivo,
-        archivo
-    );
-
-    falta.save()
-        .then(() => {
-            res.redirect('/nuclea/faltasAdministrativas');
-        })
-        .catch((error) => {
-            console.error("Error al asignar falta:", error);
-            res.status(500).send('Error registrando falta administrativa');
-        });
+    if(req.body.modal=="modal1"){
+        const falta = new Falta(
+            req.body.idUsu,
+            req.body.fecha,
+            req.body.motivo,
+            archivo
+        );
+    
+        falta.save()
+            .then(() => {
+                res.redirect('/nuclea/faltasAdministrativas');
+            })
+            .catch((error) => {
+                console.error("Error al asignar falta:", error);
+                res.status(500).send('Error registrando falta administrativa');
+            });
+    }
+    else if (req.body.modal=="modal2"){
+        console.log("Modal2");
+    }
+    
 };
 
 exports.get_delete = (req, res, next) => {
@@ -56,4 +60,50 @@ exports.get_delete = (req, res, next) => {
     }).catch((error)=>{
         console.log(error)
     })
+};
+
+exports.get_update = (req, res, next) => {
+    Falta.fetchFAI(req.params.idFalta)
+        .then(([faltas, fD]) => {
+            Usuario.fetchAll()
+                .then(([rows, fieldData]) => {
+                    const noFaltas = faltas.length === 0;
+
+                    res.render('../views/pages/editarFalta.hbs', {
+                        usuariosfa: rows,
+                        csrfToken: req.csrfToken(),
+                        falta: faltas[0],
+                        noFaltas: noFaltas,
+                        title: 'Administrative offenses'
+                    });
+                    console.log(faltas)
+                })
+                .catch((err) => {
+                    console.error('Error fetching Users:', err);
+                    res.status(500).send('Internal Server Error');
+                });
+        })
+        .catch((err) => {
+            console.error('Error fetching Administrative offenses:', err);
+            res.status(500).send('Internal Server Error');
+        });
+}
+
+exports.post_update = (req, res, next) => {
+    const idFalta = req.params.idFalta;
+    const idUsuario = req.body.idUsu || null;
+    const fecha = req.body.fecha || null;
+    const motivo = req.body.motivo || null;
+    const archivo = req.file?.filename ?? req.body.archivoActual ?? null;
+
+    console.log("Valores enviados a Update:", { idFalta, idUsuario, fecha, motivo, archivo });
+
+    Falta.Update(idFalta, idUsuario, fecha, motivo, archivo)
+        .then(() => {
+            res.redirect('/nuclea/faltasAdministrativas');
+        })
+        .catch((error) => {
+            console.error("Error al actualizar:", error);
+            res.status(500).send("Error actualizando");
+        });
 };
