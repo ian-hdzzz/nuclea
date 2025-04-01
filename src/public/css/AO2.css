@@ -1,0 +1,79 @@
+/* General */
+body {
+    background-color: #0c1019;
+    color: #fff;
+    font-family: "Radio Canada", sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+/* Encabezado */
+header {
+    background-color: #2a2a2a;
+    padding: 15px;
+    text-align: center;
+}
+
+.header-container h1 {
+    font-size: 24px;
+    color: white;
+    margin: 0;
+}
+
+/* Modal */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7); /* Fondo oscuro */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: #151720;
+    padding: 25px;
+    border-radius: 12px;
+    width: 400px;
+    max-width: 90%;
+    text-align: center;
+    box-shadow: 3px 3px 15px rgba(46, 82, 227, 0.5);
+}
+
+/* Formulario dentro del modal */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+form input[type="text"],
+form input[type="date"],
+form textarea,
+form select,
+form input[type="file"] {
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    background-color: #222;
+    color: white;
+    font-size: 16px;
+}
+
+form button {
+    background-color: #2762ea;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+form button:hover {
+    background-color: #4162f0;
+}

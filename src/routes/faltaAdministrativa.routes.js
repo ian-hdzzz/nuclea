@@ -8,6 +8,8 @@ const isAuth = require('../util/is-auth');
 router.get('/', isAuth, faltas_controller.get_fa);
 router.post('/', isAuth, faltas_controller.post_agregar_fa);
 router.get('/delete/:idFalta', faltas_controller.get_delete);
+router.get('/update/:idFalta',faltas_controller.get_update)
+router.post('/update/:idFalta',faltas_controller.post_update)
 
 
 module.exports = router;
