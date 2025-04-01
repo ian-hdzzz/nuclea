@@ -43,6 +43,7 @@
             <th>Description</th>
             <th>Leader Approval</th>
             <th>Admin Approval</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -71,6 +72,19 @@
                   {{else}}Pending
                   {{/if}}
                 </span>
+              </td>
+              <td>
+                <div class="dropdown">
+                  <button class="action-btn">Actions</button>
+                  <div class="dropdown-content">
+                    <button class="edit-btn" onclick="editRequest('{{id}}')">
+                      <i class="fa-solid fa-pen-to-square"></i> Edit
+                    </button>
+                    <button class="delete-btn" onclick="location.href='/nuclea/request/delete/{{id}}'">
+                      <i class="fa-solid fa-trash"></i> Delete
+                    </button>
+                  </div>
+                </div>
               </td>
             </tr>
             {{/each}}
