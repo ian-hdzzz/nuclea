@@ -145,20 +145,9 @@ exports.post_users = (request, response, next) => {
 
 
 exports.get_logout = (request, response, next) => {
-    request.logout((err) => {
-      if (err) {
-        return next(err);
-      }
-      // Eliminar cookies de sesión
-    response.clearCookie('connect.sid');  // 'connect.sid' es la cookie de sesión predeterminada en Express
-    // Si tienes otras cookies personalizadas, puedes eliminarlas de manera similar
-    // response.clearCookie('nombreCookie');
-
-    // Destruir la sesión
     request.session.destroy(() => {
-      // Redirigir después de eliminar las cookies
-      response.redirect('/nuclea/signup'); // Opcional, para cerrar sesión de Google también
+        //Este código se ejecuta cuando la sesión se elimina.
+        response.redirect('/nuclea/signup');
     });
-    });
-  };
+};
 
