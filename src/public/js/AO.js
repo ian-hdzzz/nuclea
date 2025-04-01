@@ -93,3 +93,27 @@ document.addEventListener("DOMContentLoaded", () => {
     })
   })
   
+  document.addEventListener("DOMContentLoaded", () => {
+    const modal2 = document.getElementById("modal2");
+    const closeModal2 = document.getElementById("closeModal2");
+    const editButtons = document.querySelectorAll(".edit-btn");
+
+    // Abrir el modal de edición al hacer clic en "Edit"
+    editButtons.forEach(button => {
+        button.addEventListener("click", () => {
+            modal2.classList.remove("hidden");
+        });
+    });
+
+    // Cerrar el modal cuando se haga clic en la "X"
+    closeModal2.addEventListener("click", () => {
+        modal2.classList.add("hidden");
+    });
+
+    // Cerrar el modal si se hace clic fuera de él
+    modal2.addEventListener("click", (e) => {
+        if (e.target === modal2) {
+            modal2.classList.add("hidden");
+        }
+    });
+});
