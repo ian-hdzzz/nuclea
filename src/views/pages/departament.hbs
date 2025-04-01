@@ -56,6 +56,15 @@
                     <td>
                         <div class="dropdown">
                             <button class="action-btn">Actions</button>
+                            <div class="dropdown-content">
+                                <button class="edit-btn"  onclick="location.href='/nuclea/departament/update/{{idDepartamento}}'">
+                                  <i class="fa-solid fa-pen-to-square"></i> Edit
+                                </button>
+                                <button class="delete-btn" onclick="location.href='/nuclea/departament/delete/{{idDepartamento}}'">
+                                  <i class="fa-solid fa-trash"></i> Delete
+                                </button>
+
+              </div>
                         </div>
                     </td>
                 </tr>

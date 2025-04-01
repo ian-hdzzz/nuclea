@@ -41,3 +41,47 @@ exports.getDepartaments = (req, res) => {
         });
 };
 
+exports.get_delete = (req, res, next) => {
+  console.log(req.body)
+  Departament.deleteA(req.params.idDepartamento).then(()=>{
+      res.redirect('/nuclea/departament')
+  }).catch((error)=>{
+      console.log(error)
+  })
+};
+
+exports.get_update = (req, res, next) => {
+  Departament.fetchFAI(req.params.idDepartamento)
+      .then(([depas, fD]) => {
+  
+                  res.render('../views/pages/editarDep.hbs', {
+                      csrfToken: req.csrfToken(),
+                      datos: depas[0],
+                      title: 'Administrative offenses'
+                  });
+                  console.log(depas)
+              })
+              .catch((err) => {
+                  console.error('Error fetching Users:', err);
+                  res.status(500).send('Internal Server Error');
+              });
+      };
+
+
+exports.post_update = (req, res, next) => {
+  const idDepartamento = req.params.idDepartamento;
+  const nombre = req.body.Nombre_departamento || null;
+  const descripcion = req.body.Descripcion || null;
+  const estado = req.body.Estado || null;
+
+  console.log("Valores enviados a Update:", { idDepartamento, nombre,descripcion, estado });
+
+  Departament.Update(idDepartamento, nombre,descripcion, estado)
+      .then(() => {
+          res.redirect('/nuclea/departament');
+      })
+      .catch((error) => {
+          console.error("Error al actualizar:", error);
+          res.status(500).send("Error actualizando");
+      });
+};
