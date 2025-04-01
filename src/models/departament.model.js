@@ -25,6 +25,12 @@ module.exports = class Departament {
         return db.execute('SELECT * FROM Departamentos');
     }
 
+    static deleteA(idDepartamento){
+            return db.execute(`
+                DELETE FROM Departamentos WHERE idDepartamento = ?;
+            `,[idDepartamento])
+        }
+
     static fetchDept(){
         return db.execute('SELECT * FROM Departamentos'); //Para el controlador de Usuarios
     }
