@@ -104,7 +104,7 @@ app.use(flash());
 
 // routes 
 app.use(require('./routes/index.routes'));
-app.use('/', require('./routes/authentication.routes'));
+app.use('/nuclea', require('./routes/authentication.routes'));
 app.use('/nuclea', require('./routes/dashboard.routes'));
 app.use('/nuclea', require('./routes/requests.routes'));
 app.use('/nuclea', require('./routes/objectives.routes'));
@@ -112,9 +112,16 @@ app.use('/nuclea', require('./routes/interview.routes'));
 app.use('/nuclea', require('./routes/reports.routes'));
 app.use('/nuclea', require('./routes/admin.routes'));
 app.use('/nuclea', require('./routes/profile.routes'));
-app.use('/nuclea', require('./routes/departament.routes'));
-app.use('/nuclea/faltasAdministrativas', require('./routes/faltaAdministrativa.routes'));
-app.use('/nuclea/users', require('./routes/users.routes'));
+
+
+const departamentRoutes = require('./routes/departament.routes');
+app.use('/nuclea', departamentRoutes);
+
+const faltaAdministrativa = require('./routes/faltaAdministrativa.routes');
+app.use('/nuclea/faltasAdministrativas', faltaAdministrativa);
+
+const users = require('./routes/users.routes');
+app.use('/nuclea/users', users);
 
 // public
 app.use(express.static(path.join(__dirname, 'public')));
