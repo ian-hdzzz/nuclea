@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Department Management</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="/css/AO2.css"> <!-- Cambié a editarFalta.css -->
+</head>
+<body>
+
+  <!-- Encabezado -->
+  <header>
+    <div class="header-container">
+      <h1>Gestión de Departamentos</h1>
+    </div>
+  </header>
+  <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Department Management</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="/css/AO.css">
+</head>
+<body>
+  <div class="top-container">
+    <nav class="nav-bar">
+      <div class="first-container">
+        <div class="views">Views</div>
+        <div class="search-container">
+          <input type="text" placeholder="Search..." class="input-search">
+          <i class="fa-solid fa-magnifying-glass search-icon"></i>
+        </div>
+      </div>
+      <div class="second-container">
+        <div>
+          <i class="fa-solid fa-bell hidden" ></i>
+        </div>
+        <div>
+          <i class="fa-solid fa-user hidden"></i>
+        </div>
+      </div>
+    </nav>
+  </div>
+  <div class="content">
+    <div class="nav-content">
+      <h2>Administrative offenses</h2>
+      <input type="button" value="Add Administrative offense" id="openModal" class="add-btn" 
+             style="padding-right: 15px; padding-left: 15px; width:auto;">
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Assigned to</th>
+          <th>Reason</th>
+          <th>Date</th>
+          <th>File</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each datos}}
+        <tr>
+          <td>{{Nombre}} {{Apellidos}}</td>
+          <td>{{Motivo}}</td>
+          <td>{{formatDate Fecha_asignacion_falta}}</td>
+          <td>
+            {{#if archivo}}
+              <a href="/uploads/{{archivo}}" target="_blank" class="pdf-link">
+                <i class="fa-solid fa-file-pdf"></i> Open PDF
+              </a>
+            {{else}}
+              Sin archivo
+            {{/if}}
+          </td>
+          <td>
+            <div class="dropdown">
+              <button class="action-btn">Actions</button>
+              <div class="dropdown-content">
+                <button class="edit-btn"  onclick="location.href='/nuclea/faltasAdministrativas/update/{{idFalta}}'">
+                  <i class="fa-solid fa-pen-to-square"></i> Edit
+                </button>
+                <button class="delete-btn" onclick="location.href='/nuclea/faltasAdministrativas/delete/{{idFalta}}'">
+                  <i class="fa-solid fa-trash"></i> Delete
+                </button>
+
+              </div>
+            </div>
+          </td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+    {{#if noFaltas}}
+      <p style="text-align: center; margin-top: 20px;">No administrative offenses existing</p>
+    {{/if}}
+  </div>
+
+  <div id="modal" class="modal">
+        <div class="modal-content">
+            
+            <button id="closeModal" class="close-btn">✖</button>
+
+            <h2 class="title-modal">Add Department</h2>
+            <p class="description">Fill in the required details to register this Department</p>
+
+            <form id="departmentForm" method="POST" action="/nuclea/departament/update/{{datos.idDepartamento}}">
+            <input type="hidden" name="_csrf" value="{{csrfToken}}">
+                <div class="form-group">
+                    <label for="deptName">Department Name</label>
+                    <input type="text" id="deptName" name="Nombre_departamento" placeholder="Finance" class="text-modal" value="{{datos.Nombre_departamento}}"required>
+                </div>
+
+                <div class="form-group">
+                    <label for="desc">Description</label>
+                    <input type="text" id="desc" name="Descripcion" placeholder="Manage Financial Operations" class="text-modal" value="{{datos.Descripcion}}"required>
+                </div>
+
+                <div class="form-group">
+                    <label for="status">Status</label>
+                    <select id="statusSelect" name="Estado" class="text-modal option-modal" required>
+                        <option value="1" class="option-modal" {{#if (eq datos.Estado "1")}}selected{{/if}}>Active</option>
+                        <option value="0" class="option-modal" {{#if (eq datos.Estado "0")}}selected{{/if}}>Inactive</option>
+                    </select>
+                </div>
+
+                <input type="submit" class="btn-submit" value="EDIT Department">
+            </form>
+        </div>
+    </div>
+
+
+    </div>
+
+  <script src="/js/AO.js"></script>
+</body>
+</html>
+
+  
+  
+
+  <script src="/js/AO.js"></script>
+</body>
+</html>

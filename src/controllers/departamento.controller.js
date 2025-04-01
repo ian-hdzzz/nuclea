@@ -50,44 +50,34 @@ exports.get_delete = (req, res, next) => {
 };
 
 exports.get_update = (req, res, next) => {
-  Falta.fetchFAI(req.params.idFalta)
-      .then(([faltas, fD]) => {
-          Usuario.fetchAll()
-              .then(([rows, fieldData]) => {
-                  const noFaltas = faltas.length === 0;
-
-                  res.render('../views/pages/editarFalta.hbs', {
-                      usuariosfa: rows,
+  Departament.fetchFAI(req.params.idDepartamento)
+      .then(([depas, fD]) => {
+  
+                  res.render('../views/pages/editarDep.hbs', {
                       csrfToken: req.csrfToken(),
-                      falta: faltas[0],
-                      noFaltas: noFaltas,
+                      datos: depas[0],
                       title: 'Administrative offenses'
                   });
-                  console.log(faltas)
+                  console.log(depas)
               })
               .catch((err) => {
                   console.error('Error fetching Users:', err);
                   res.status(500).send('Internal Server Error');
               });
-      })
-      .catch((err) => {
-          console.error('Error fetching Administrative offenses:', err);
-          res.status(500).send('Internal Server Error');
-      });
-}
+      };
+
 
 exports.post_update = (req, res, next) => {
-  const idFalta = req.params.idFalta;
-  const idUsuario = req.body.idUsu || null;
-  const fecha = req.body.fecha || null;
-  const motivo = req.body.motivo || null;
-  const archivo = req.file?.filename ?? req.body.archivoActual ?? null;
+  const idDepartamento = req.params.idDepartamento;
+  const nombre = req.body.Nombre_departamento || null;
+  const descripcion = req.body.Descripcion || null;
+  const estado = req.body.Estado || null;
 
-  console.log("Valores enviados a Update:", { idFalta, idUsuario, fecha, motivo, archivo });
+  console.log("Valores enviados a Update:", { idDepartamento, nombre,descripcion, estado });
 
-  Falta.Update(idFalta, idUsuario, fecha, motivo, archivo)
+  Departament.Update(idDepartamento, nombre,descripcion, estado)
       .then(() => {
-          res.redirect('/nuclea/faltasAdministrativas');
+          res.redirect('/nuclea/departament');
       })
       .catch((error) => {
           console.error("Error al actualizar:", error);
