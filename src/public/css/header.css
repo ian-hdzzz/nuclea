@@ -2,6 +2,7 @@
   .navbar{
     padding: 20px 40px;
     display: flex;
+    justify-content: space-between;
     align-items: center;
     gap: 20px;
     width: 100%;
@@ -11,6 +12,16 @@
     margin-bottom: 20px;
   
   }
+  .view{
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  .icons{
+    margin-right: 20px;
+    color: #fff;
+  }
+
   .navbar h1{
     font-size: 2rem;
 
@@ -25,9 +36,19 @@
       align-items: center;
       margin-left: 70px;
   }
-  .navbar i{
+  .icon-container > i{
     font-size: 1.8rem;
     background: linear-gradient(45deg, var(--color-secundario), var(--color-primario)); 
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent; /
   }
+
+  .icons a{
+    margin: 20px;
+    color: #fff;
+    font-size: 1.4rem;  
+  }
+  /* .icons > i{
+    font-size: .8rem;
+    color: #fff;
+  } */

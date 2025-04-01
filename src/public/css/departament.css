@@ -102,17 +102,17 @@ h2{
     cursor: pointer;
     color: #fff;
     font-size: 1rem;
-    width: 135px;
+    width: auto;
     height: 50px;
-    border-radius: 12px;
-    transform: translateY(-15%);
+    border-radius: 16px;
     background: linear-gradient(to right, var(--color-primario) 0%, var(--color-secundario)100%);
     border: none;
-    padding: 5px 10px;
+    padding: 5px 15px;
     display: flex;
     justify-content: space-evenly;
     align-items: center;
     gap: 7px;
+    transition: transform 0.3s ease-in-out;
 }
 
 .add-btn{
@@ -120,11 +120,12 @@ h2{
     border: none;
     color: #fff;
     font-size: 1rem;
+    cursor: pointer;
+}
+.add-btn-container:hover{
+    transform: scale(1.01);
 }
 
-.add-btn:hover{
-    opacity: 0.7;
-}
 
 table {
     font-family: 'Montserrat',sans-serif;
