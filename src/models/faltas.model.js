@@ -33,6 +33,15 @@ module.exports = class Falta {
         return db.execute('SELECT * FROM personajes WHERE id=?', [id]);
     }
 
+    static Update(idFalta, idUsuario, fecha, motivo, archivo) {
+        return db.execute(
+            `UPDATE Faltas_administrativas 
+             SET idUsuario = ?, Fecha_asignacion_falta = ?, Motivo = ?, archivo = ?
+             WHERE idFalta = ?`,
+            [idUsuario, fecha, motivo, archivo, idFalta]
+        );
+    }
+
     static fetch(id) {
         if (id) {
             return this.fetchOne(id);

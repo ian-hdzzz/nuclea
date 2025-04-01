@@ -1,4 +1,21 @@
 <!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Department Management</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="/css/AO2.css"> <!-- Cambié a editarFalta.css -->
+</head>
+<body>
+
+  <!-- Encabezado -->
+  <header>
+    <div class="header-container">
+      <h1>Gestión de Departamentos</h1>
+    </div>
+  </header>
+  <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -81,15 +98,17 @@
     {{/if}}
   </div>
 
-  <div id="modal" class="modal hidden">
+  <div id="modal" class="modal">
     <div class="modal-content">
       <button id="closeModal" class="close-btn">✖</button>
       <h2 class="title-modal">Add Administrative Offense</h2>
       <p class="description">Fill in the required details to <br>assign an Administrative Offense</p>
       <br>
-      <form action="/nuclea/faltasAdministrativas" id="form-falta" method="POST" enctype="multipart/form-data">
+      <form action="/nuclea/faltasAdministrativas/update/{{idFalta}}" method="POST" enctype="multipart/form-data">
+      
        <input type="hidden" name="modal" value="modal1">
         <input type="hidden" name="_csrf" value="{{csrfToken}}">
+        <input type="hidden" name="idFalta" value="{{falta.idFalta}}">
 
         <div class="form-group">
           <label for="usuario" class="label">Find collaborator:</label>
@@ -147,6 +166,13 @@
       </form>
     </div>
   </div>
+
+  <script src="/js/AO.js"></script>
+</body>
+</html>
+
+  
+  
 
   <script src="/js/AO.js"></script>
 </body>
