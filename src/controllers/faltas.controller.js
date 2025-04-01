@@ -15,6 +15,7 @@ exports.get_fa = (req, res, next) => {
                         noFaltas: noFaltas,
                         title: 'Administrative offenses',
                         iconClass: 'fa-solid fa-triangle-exclamation',
+                        privilegios: req.session.privilegios || [],
                     });
                 })
                 .catch((err) => {
