@@ -1,22 +1,24 @@
+// Load environment variables first
+require('dotenv').config();
+
 const express = require('express');
 const session = require('express-session');
-const morgan  = require('morgan');
+const morgan = require('morgan');
 const path = require('path');
-const  { create, engine } = require('express-handlebars');
+const { create } = require('express-handlebars');
 const helpers = require('./lib/helpers');
 const { json } = require('stream/consumers');
 const flash = require('connect-flash');
 const bodyParser = require('body-parser');
 const multer = require('multer');
-const passport = require("passport");
+const passport = require('./util/passport'); // Import configured passport
+
 // initialitations
 const app = express();
 
 // settings
-require('dotenv').config();
 app.set('port', process.env.PORT || 4000);
 app.set('views', path.join(__dirname, 'views'));
-
 
 const exphbs = create({
     defaultLayout: 'main',
@@ -24,7 +26,7 @@ const exphbs = create({
     partialsDir: path.join(__dirname, 'views', 'partials'),
     extname: '.hbs',
     helpers: helpers
-  });
+});
 
 app.engine('.hbs', exphbs.engine); 
 app.set('view engine', '.hbs');
@@ -35,14 +37,14 @@ app.use(express.json());
 app.use(express.urlencoded({extended:false}));
 app.use(express.static('public'));
 app.use(session({
-    secret: 'mi string secreto que debe ser un string aleatorio muy largo, no como éste', 
-    resave: false, //La sesión no se guardará en cada petición, sino sólo se guardará si algo cambió 
-    saveUninitialized: false, //Asegura que no se guarde una sesión para una petición que no lo necesita
+    secret: process.env.SESSION_SECRET || 'mi string secreto que debe ser un string aleatorio muy largo, no como éste', 
+    resave: false,
+    saveUninitialized: false,
 }));
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Googe authentication
+// Google authentication routes
 app.get('/auth/google', (req, res, next) => {
   passport.authenticate('google', { 
     scope: ['profile', 'email'],
@@ -51,18 +53,29 @@ app.get('/auth/google', (req, res, next) => {
 });
 
 app.get('/auth/google/callback', 
-  passport.authenticate('google', { failureRedirect: '/nuclea/signup' }),
+  passport.authenticate('google', { failureRedirect: 'https://www.youtube.com/watch?v=eThEZejP2b8' }),
   (req, res) => {
-    // Después de la autenticación exitosa, redirigir
-    res.redirect('https://www.youtube.com/watch?v=uqUVQ2tW3SY');
-
-    // Si estás en el contexto de un popup, manda un mensaje a la ventana principal para cerrarlo
-    if (window.opener) {
-      window.opener.postMessage({ authSuccess: true }, '*');
+    // Check if state indicates this is a popup
+    const isPopup = req.query.state && req.query.state.includes('popup=true');
+    
+    if (isPopup) {
+      // Return HTML that will close the popup and notify the parent window
+      res.send(`
+        <html>
+          <body>
+            <script>
+              window.opener.postMessage({ authSuccess: true }, '*');
+              window.close();
+            </script>
+          </body>
+        </html>
+      `);
+    } else {
+      // Normal redirect flow
+      res.redirect('https://www.youtube.com/watch?v=eThEZejP2b8'); // Or wherever you want to redirect after login
     }
   }
 );
-
 
 app.use(bodyParser.urlencoded({extended: false}));
 
@@ -80,16 +93,6 @@ const fileStorage = multer.diskStorage({
     },
 });
 
-/*
-const fileFilter = (request, file, callback) => {
-    if (file.mimetype == 'application/pdf') {
-            callback(null, true);
-    } else {
-            callback(null, false);
-    }
-}
-*/
-
 app.use(multer({ storage: fileStorage}).single('archivo')); 
 
 const csrf = require('csurf');
@@ -98,20 +101,10 @@ app.use(csrfProtection);
 
 // global variables
 app.use(flash());
-// app.use((req, res, next) => {
-//     res.locals.message = req.flash('message');
-//     res.locals.success = req.flash('success');
-//     res.locals.user = req.user;
-//     res.locals.currentPath = req.path
-//     next();
-// });
-// test data
-
 
 // routes 
-
 app.use(require('./routes/index.routes'));
-app.use('/nuclea', require('./routes/authentication.routes'));
+app.use('/', require('./routes/authentication.routes'));
 app.use('/nuclea', require('./routes/dashboard.routes'));
 app.use('/nuclea', require('./routes/requests.routes'));
 app.use('/nuclea', require('./routes/objectives.routes'));
@@ -129,4 +122,4 @@ app.use(express.static(path.join(__dirname, 'public')));
 // starting the server 
 app.listen(app.get('port'), () => {
     console.log('Server on port', app.get('port'));
-})
+});
