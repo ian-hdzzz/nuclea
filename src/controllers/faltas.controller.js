@@ -47,3 +47,11 @@ exports.post_agregar_fa = (req, res, next) => {
             res.status(500).send('Error registrando falta administrativa');
         });
 };
+
+exports.get_delete = (req, res, next) => {
+    Falta.deleteA(req.params.idFalta).then(()=>{
+        res.redirect('/nuclea/faltasAdministrativas')
+    }).catch((error)=>{
+        console.log(error)
+    })
+};

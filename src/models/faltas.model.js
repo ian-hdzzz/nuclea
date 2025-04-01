@@ -24,7 +24,11 @@ module.exports = class Falta {
             JOIN Usuarios u ON fa.idUsuario = u.idUsuario
         `);
     }
-
+    static deleteA(idFalta){
+        return db.execute(`
+            DELETE FROM Faltas_administrativas WHERE idFalta = ?;
+        `,[idFalta])
+    }
     static fetchOne(id) {
         return db.execute('SELECT * FROM personajes WHERE id=?', [id]);
     }
