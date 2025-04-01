@@ -4,8 +4,13 @@ const DiasFeriados = require('../models/diasferiados.model');
 
 exports.getRequests = (req, res) => {
   DiasFeriados.fetchAll()
-    .then(([diasf,fD]) => {
-      Request.fetchAll()
+  .then(([diasf,fD]) => {
+    let canViewPersonal = false;
+    for (let privilegio of req.session.privilegios) {
+  
+      if (privilegio.Nombre_privilegio == 'Consultar solicitudes propias') {
+        canViewPersonal = true;
+        Request.fetchPersonal(req.session.idUsuario)
         .then(([rows]) => {
           res.render('pages/request', {
             datos: rows,
@@ -17,10 +22,32 @@ exports.getRequests = (req, res) => {
             diasferiados: diasf
           });
         })
-        .catch((err) => {
+        .catch((err)=>{
           console.error('Error al cargar las solicitudes:', err);
           res.status(500).send('Error al obtener los datos');
+        })
+      }
+      
+    }
+    if(!canViewPersonal){
+      Request.fetchAll()
+      .then(([rows]) => {
+        res.render('pages/request', {
+          datos: rows,
+          csrfToken: req.csrfToken(),
+          sessionId: req.session.idUsuario,
+          nombreUsuario: req.session.nombre,
+          apellidosUsuario: req.session.apellidos,
+          title: 'Request',
+          diasferiados: diasf
         });
+      })
+      .catch((err) => {
+        console.error('Error al cargar las solicitudes:', err);
+        res.status(500).send('Error al obtener los datos');
+      });
+
+    }
   }).catch((err) => {
     console.error('Error fetching the holidays:', err);
     res.status(500).send('Internal Server Error');
