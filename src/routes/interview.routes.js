@@ -1,6 +1,6 @@
 const express = require('express');
 const OneToOneController = require('../controllers/oneToOne.controller');
-
+const isAuth = require('../util/is-auth')
 const router = express.Router();
 
 router.get('/one', OneToOneController.getOneToOne);

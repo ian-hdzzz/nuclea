@@ -96,20 +96,31 @@ h2{
     font-size: 30px;
 }
 
-.add-btn{
+
+.add-btn-container{
+    display: flex;
     cursor: pointer;
     color: #fff;
-    font-size: 18px;
-    width: 158px;
+    font-size: 1rem;
+    width: 135px;
     height: 50px;
-    border-radius: 2rem;
+    border-radius: 12px;
     transform: translateY(-15%);
-    background: linear-gradient(to right, #2762ea 0%,#4162f0 29%, #8061fd 100%);
+    background: linear-gradient(to right, var(--color-primario) 0%, var(--color-secundario)100%);
     border: none;
-    box-shadow: 3px 3px 15px rgba(46, 82, 227, 0.515);
-    margin-right: 10px;
+    padding: 5px 10px;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    gap: 7px;
 }
 
+.add-btn{
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 1rem;
+}
 table {
     font-family: 'Montserrat',sans-serif;
     width: 100%;
@@ -121,23 +132,39 @@ th, td {
     text-align: center;
 }
 
+.status, .actions{
+    margin-left: 50px;
+}
 .active{
+    display: flex;
     cursor: auto;
     align-items: center;
-    padding: 4px 20px;
-    background: #63d754;
+    padding: 4px 15px;
+    background: #12392B;
     box-sizing: border-box;
-    font-size: 18px;
+    font-size: .85rem;
     border-radius: 2rem;
+    color: #22C55F;
+
+}
+.dot{
+    background: #22C55F;
+    border-radius: 50%;  
+    width: 7px;  
+    height: 7px;
+    margin-right: 8px;
+    padding: 2px;
+
 }
 
 .action-btn{
     cursor: pointer;
-    padding: 10px 25px;
-    background: linear-gradient(to right, #2762ea 0%,#4162f0 29%, #8061fd 100%);
-    color: #fff;
-    border-radius: 2rem;border: none;
-    box-shadow: 3px 3px 5px rgba(46, 82, 227, 0.515);
+    padding: 6px 20px;
+    background: linear-gradient(to right, #2762ea6e 0%, #1da3fc6d 100%);
+    box-sizing: border-box;
+    border-radius: 2rem;
+    border: none;
+    font-size: .87rem;
 }
 
 
