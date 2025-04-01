@@ -104,65 +104,43 @@
       <h2 class="title-modal">Add Administrative Offense</h2>
       <p class="description">Fill in the required details to <br>assign an Administrative Offense</p>
       <br>
-      <form action="/nuclea/faltasAdministrativas/update/{{idFalta}}" method="POST" enctype="multipart/form-data">
-      
-       <input type="hidden" name="modal" value="modal1">
+      <form action="/nuclea/faltasAdministrativas/update/{{falta.idFalta}}" method="POST" enctype="multipart/form-data">
         <input type="hidden" name="_csrf" value="{{csrfToken}}">
         <input type="hidden" name="idFalta" value="{{falta.idFalta}}">
 
         <div class="form-group">
-          <label for="usuario" class="label">Find collaborator:</label>
-          <select class="text-modal" id="idUsu" name="idUsu" required
-                  oninvalid="this.setCustomValidity('Please select a collaborator')" 
-                  onchange="this.setCustomValidity('')">
-            <option value="">- Select User -</option>
-            {{#each usuariosfa}}
-            <option value="{{idUsuario}}">{{Nombre}} {{Apellidos}}</option>
-            {{/each}}
-          </select>
-        </div>
-
-        <div class="form-row">
-          <div class="form-group form-date date-modal">
-            <label for="fecha" class="label">Date</label>
-            <input
-              class="text-modal"
-              type="date"
-              placeholder="dd/mm/yy"
-              id="fecha"
-              name="fecha"
-              required
-              oninvalid="this.setCustomValidity('Please select a date')" 
-              onchange="this.setCustomValidity('')"
-              style="width: auto;"
-            />
-          </div>
+            <label for="idUsu">Find collaborator:</label>
+            <select id="idUsu" name="idUsu" required>
+                <option value="">- Select User -</option>
+                {{#each usuariosfa}}
+                    <option value="{{idUsuario}}" {{#if (eq idUsuario ../falta.idUsuario)}}selected{{/if}}>
+                        {{Nombre}} {{Apellidos}}
+                    </option>
+                {{/each}}
+            </select>
         </div>
 
         <div class="form-group">
-          <label for="motivo" class="label">Reason</label>
-          <input
-            class="text-modal"
-            type="text"
-            placeholder=""
-            id="motivo"
-            name="motivo"
-            required
-            oninvalid="this.setCustomValidity('Please remember to write a reason')"
-            oninput="this.setCustomValidity('')"
-          />
+            <label for="fecha">Date</label>
+            <input type="date" id="fecha" name="fecha" value="{{formatDate2 falta.Fecha_asignacion_falta}}"  required>
         </div>
 
         <div class="form-group">
-          <label for="fecha" class="label">Add file</label>
-          <input 
-            type="file" 
-            id="archivo" 
-            name="archivo" 
-            accept=".pdf"
-            class="text-modal">
+            <label for="motivo">Reason</label>
+            <input type="text" id="motivo" name="motivo" value="{{falta.Motivo}}" required>
         </div>
-        <input type="submit" class="btn-submit" value="Add Administrative Offense">
+
+        <div class="form-group">
+            <label for="archivo">Current File</label>
+            {{#if falta.archivo}}
+                <p>Archivo actual: <a href="/uploads/{{falta.archivo}}" target="_blank">Ver archivo</a></p>
+            {{else}}
+                <p>No file uploaded</p>
+            {{/if}}
+            <input type="file" id="archivo" name="archivo" accept=".pdf">
+        </div>
+        <input type="hidden" name="archivoActual" value="{{falta.archivo}}">
+        <input type="submit" class="btn-submit" value="Update Administrative Offense">
       </form>
     </div>
   </div>

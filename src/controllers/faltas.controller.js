@@ -28,7 +28,6 @@ exports.get_fa = (req, res, next) => {
 };
 
 exports.post_agregar_fa = (req, res, next) => {
-    console.log(req.body);
     const archivo = req.file ? req.file.filename : null;
     if(req.body.modal=="modal1"){
         const falta = new Falta(
@@ -62,7 +61,7 @@ exports.get_delete = (req, res, next) => {
 };
 
 exports.get_update = (req, res, next) => {
-    Falta.fetchFA()
+    Falta.fetchFAI(req.params.idFalta)
         .then(([faltas, fD]) => {
             Usuario.fetchAll()
                 .then(([rows, fieldData]) => {
@@ -71,10 +70,11 @@ exports.get_update = (req, res, next) => {
                     res.render('../views/pages/editarFalta.hbs', {
                         usuariosfa: rows,
                         csrfToken: req.csrfToken(),
-                        falta: faltas,
+                        falta: faltas[0],
                         noFaltas: noFaltas,
                         title: 'Administrative offenses'
                     });
+                    console.log(faltas)
                 })
                 .catch((err) => {
                     console.error('Error fetching Users:', err);
@@ -88,11 +88,15 @@ exports.get_update = (req, res, next) => {
 }
 
 exports.post_update = (req, res, next) => {
-    const idFalta = req.params.idFalta;  // Usar el parámetro de la URL
-    console.log(idFalta)
-    const archivo = req.file ? req.file.filename : req.body.archivoActual;  // Conservar archivo actual si no hay nuevo
+    const idFalta = req.params.idFalta;
+    const idUsuario = req.body.idUsu || null;
+    const fecha = req.body.fecha || null;
+    const motivo = req.body.motivo || null;
+    const archivo = req.file?.filename ?? req.body.archivoActual ?? null;
 
-    Falta.Update(idFalta, req.body.idUsu, req.body.fecha, req.body.motivo, archivo)
+    console.log("Valores enviados a Update:", { idFalta, idUsuario, fecha, motivo, archivo });
+
+    Falta.Update(idFalta, idUsuario, fecha, motivo, archivo)
         .then(() => {
             res.redirect('/nuclea/faltasAdministrativas');
         })
