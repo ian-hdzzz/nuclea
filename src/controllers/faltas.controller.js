@@ -13,7 +13,8 @@ exports.get_fa = (req, res, next) => {
                         csrfToken: req.csrfToken(),
                         faltas: faltas,
                         noFaltas: noFaltas,
-                        title: 'Administrative offenses'
+                        title: 'Administrative offenses',
+                        iconClass: 'fa-solid fa-triangle-exclamation',
                     });
                 })
                 .catch((err) => {

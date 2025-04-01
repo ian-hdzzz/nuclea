@@ -8,7 +8,8 @@ const router = express.Router();
 router.get('/admin', isAuth, (req, res) => {
   res.render('./pages/admin', {
     title: 'Admin',
-    csrfToken: req.csrfToken()
+    csrfToken: req.csrfToken(),
+    iconClass: 'fa-solid fa-user-tie',
   });
 });
 

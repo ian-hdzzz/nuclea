@@ -35,7 +35,8 @@ exports.get_users = (req, res, next) => {
                     tempPassword: tempPassword,
                     deptos:dept,
                     noUsers : nousers,
-                    title: 'Users',
+                    title: 'Collaborators',
+                    iconClass:'fa-solid fa-people-group'
                 })
                 console.log(process.env.EMAIL_USER);
                 console.log(process.env.EMAIL_PASSWORD);
@@ -156,7 +157,7 @@ exports.get_logout = (request, response, next) => {
     // Destruir la sesión
     request.session.destroy(() => {
       // Redirigir después de eliminar las cookies
-      response.redirect('/signup'); // Opcional, para cerrar sesión de Google también
+      response.redirect('/nuclea/signup'); // Opcional, para cerrar sesión de Google también
     });
     });
   };

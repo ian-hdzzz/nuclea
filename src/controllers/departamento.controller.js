@@ -8,6 +8,7 @@ exports.getDepartaments = (req, res) => {
             datos: rows,
             csrfToken: req.csrfToken(),
             title: 'Departaments',
+            iconClass: 'fa-solid fa-building',
         });
         }
         else{

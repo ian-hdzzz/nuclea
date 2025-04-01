@@ -1,9 +1,9 @@
 // eslint-disable-next-line no-undef
 const db = require("../util/database");
-// eslint-disable-next-line no-undef
 const bcrypt = require("bcryptjs");
+const passport = require("passport");
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
 
-// eslint-disable-next-line no-undef
 module.exports = class Usuario {
   //Constructor de la clase. Sirve para crear un nuevo objeto, y en Ã©l se definen las propiedades del modelo
   constructor(
@@ -130,4 +130,74 @@ module.exports = class Usuario {
       [idusuario]
     );
   }
+
+  static findOrCreateGoogleUser(googleProfile) {
+    return db.execute("SELECT * FROM Usuarios WHERE Correo_electronico = ?", [googleProfile.email])
+      .then(([users]) => {
+        if (users.length > 0) {
+          return users[0]; // Return existing user
+        } else {
+          // Create new user with Google profile data
+          const newUser = new Usuario(
+            googleProfile.given_name,
+            googleProfile.family_name,
+            googleProfile.email,
+            '', // country
+            '', // city
+            '', // street
+            'remoto', // default model
+            'google-auth', // password placeholder
+            'activo', // default status
+            new Date(), // start_date
+            null, // end_date
+            0, // dvacaciones
+            null,
+            null,
+            null
+          );
+          return newUser.save()
+            .then(() => {
+              return this.fetchOne(googleProfile.email)
+                .then(([users]) => users[0]);
+            });
+        }
+      });
+  }
 };
+// Configure Google Strategy
+passport.use(new GoogleStrategy({
+  clientID: process.env.GOOGLE_CLIENT_ID,
+  clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+  callbackURL: "/auth/google/callback"
+},
+function(accessToken, refreshToken, profile, done) {
+  Usuario.findOrCreateGoogleUser({
+    email: profile.emails[0].value,
+    given_name: profile.name.givenName || profile.displayName.split(' ')[0],
+    family_name: profile.name.familyName || profile.displayName.split(' ').slice(1).join(' ')
+  })
+  .then(user => {
+    return done(null, user);
+  })
+  .catch(err => {
+    return done(err, null);
+  });
+}
+));
+
+// Serialize and deserialize user
+passport.serializeUser((user, done) => {
+done(null, user.idUsuario);
+});
+
+passport.deserializeUser((id, done) => {
+db.execute("SELECT * FROM Usuarios WHERE idUsuario = ?", [id])
+  .then(([users]) => {
+    if (users.length > 0) {
+      done(null, users[0]);
+    } else {
+      done(new Error('User not found'), null);
+    }
+  })
+  .catch(err => done(err, null));
+});

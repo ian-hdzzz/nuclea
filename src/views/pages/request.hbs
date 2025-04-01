@@ -7,6 +7,9 @@
   <link rel="stylesheet" href="/css/request.css" />
 </head>
 <body>
+  <div class="request-container">
+
+
   <div class="top-container">
     <nav class="nav-bar">
       <div class="first-container">
@@ -16,21 +19,16 @@
           <i class="fa-solid fa-magnifying-glass search-icon"></i>
         </div>
       </div>
-      <div class="second-container">
-        <div class="notification">
-          <i class="fa-solid fa-bell"></i>
-        </div>
-        <div class="perfil">
-          <i class="fa-solid fa-user"></i>
-        </div>
-      </div>
     </nav>
   </div>
 
   <div class="content">
   <div class="nav-content">
     <h2>Absences Management</h2>
+    <div class="add-btn-container" id="openModal">
+    <i class="fa-regular fa-square-plus"></i>
     <input type="button" value="Add Request" class="add-btn" id="openModal">
+    </div>
   </div>
 
   <div class="table-holidays-wrapper">
@@ -57,7 +55,8 @@
               <td>{{formatDate Fecha_fin}}</td>
               <td>{{Descripcion}}</td>
               <td>
-                <span class="{{#if (eq Aprobacion_L 'Aprobado')}}active{{else if (eq Aprobacion_L 'Rechazado')}}inactive{{else}}pending{{/if}}">
+                <span class=" vacation-status {{#if (eq Aprobacion_L 'Aprobado')}}active{{else if (eq Aprobacion_L 'Rechazado')}}inactive{{else}}pending{{/if}}">
+                <div class="dot"></div>
                   {{#if (eq Aprobacion_L 'Aprobado')}}Approved
                   {{else if (eq Aprobacion_L 'Rechazado')}}Rejected
                   {{else}}Pending
@@ -65,7 +64,8 @@
                 </span>
               </td>
               <td>
-                <span class="{{#if (eq Aprobacion_A 'Aprobado')}}active{{else if (eq Aprobacion_A 'Rechazado')}}inactive{{else}}pending{{/if}}">
+                <span class=" vacation-status {{#if (eq Aprobacion_A 'Aprobado')}}active{{else if (eq Aprobacion_A 'Rechazado')}}inactive{{else}}pending{{/if}}">
+                <div class="dot"></div>
                   {{#if (eq Aprobacion_A 'Aprobado')}}Approved
                   {{else if (eq Aprobacion_A 'Rechazado')}}Rejected
                   {{else}}Pending
@@ -94,9 +94,10 @@
         </thead>
         <tbody>
           {{#each diasferiados}}
-          <tr>
-            <td>{{Nombre_asueto}}</td>
-            <td>{{formatDate Fecha_asueto}}</td>
+          <tr class="holiday-row">
+            
+            <td class="day"><div class="icon-circle"><i class="fa-regular fa-calendar"></i></div> <div class="nombre">{{Nombre_asueto}}</div></td>
+            <td class="fecha">{{formatDate Fecha_asueto}}</td>
           </tr>
           {{/each}}
         </tbody>
@@ -153,7 +154,7 @@
       </div>
     </div>
   </div>
-
+  </div>
   <script src="/js/addRequest.js"></script>
 </body>
 </html>
