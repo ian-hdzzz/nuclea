@@ -183,7 +183,9 @@
         {{!-- <h1 class="gradient-text">HRMS Management System</h1> --}}
         <h1 class="title">Sign In to your Account</h1>
         <p class="subtitle">Welcome back! please enter your detail</p>
-        
+        {{#if error}}
+            <div class="alert alert-danger">{{error}}</div>
+        {{/if}}
         <form method="POST" id="authenticationForm" action="/nuclea/signup">
             <div class="field">
                 <div class="control has-icons-left">
@@ -275,5 +277,14 @@ function openGoogleAuth() {
     }
 });
 }
+document.addEventListener("DOMContentLoaded", function() {
+    const errorMessage = document.getElementById("error-message");
+    if (errorMessage) {
+      setTimeout(() => {
+        errorMessage.style.opacity = "0";
+        setTimeout(() => errorMessage.remove(), 500); // Eliminar el mensaje después de la animación
+      }, 3000);
+    }
+  });
 </script>
 </html>

@@ -13,12 +13,12 @@ exports.getAuth = (req, res) => {
     hideContainer: true,
     csrfToken: req.csrfToken(),
     failed,
+    error: req.flash("error")
   });
 };
 
 // Modificar postAuth para usar Passport
 exports.postAuth = (req, res, next) => {
-  // El enfoque existente se mantiene, pero ahora se usa Passport para la sesión
   Usuario.fetchOne(req.body.email)
     .then(([rows, fieldData]) => {
       if (rows.length > 0) {
@@ -26,61 +26,55 @@ exports.postAuth = (req, res, next) => {
           .compare(req.body.password, rows[0].Contrasena)
           .then((doMatch) => {
             if (doMatch) {
-              // En lugar de configurar manualmente la sesión, usamos req.login de Passport
               req.login(rows[0], (err) => {
                 if (err) {
                   console.log(err);
+                  req.flash("error", "Error en la autenticación. Inténtalo de nuevo.");
                   return next(err);
                 }
-                
-                // Ahora establecemos la información de sesión adicional que necesitas
+
                 req.session.idUsuario = rows[0].idUsuario;
                 req.session.nombre = rows[0].Nombre;
                 req.session.apellidos = rows[0].Apellidos;
                 req.session.email = rows[0].Correo_electronico;
-                req.session.registration = rows[0].Fecha_inicio_colab;
-                req.session.ciudad = rows[0].Ciudad;
-                req.session.pais = rows[0].Pais;
-                req.session.calle = rows[0].Calle;
                 req.session.isLoggedIn = true;
-                
+
                 Usuario.getPrivilegios(rows[0].idUsuario)
-                  .then(([privilegios, fieldData]) => {
-                    req.session.privilegios = [];
-                    for (let privilegio of privilegios) {
-                      req.session.privilegios.push(privilegio);
-                    }
-                    console.log(req.session.privilegios);
+                  .then(([privilegios]) => {
+                    req.session.privilegios = privilegios.map((p) => p);
+                    return Usuario.fetchDeptSession(req.session.email);
                   })
-                  .catch((error) => {
-                    console.log(error);
-                  });
-                
-                Usuario.fetchDeptSession(req.session.email)
-                  .then(([deps, fd]) => {
+                  .then(([deps]) => {
                     req.session.departamentos = deps[0].Departamentos;
-                    return req.session.save((err) => {
+                    req.session.save((err) => {
                       res.redirect("/nuclea/dashboard");
                     });
                   })
                   .catch((error) => {
                     console.log(error);
+                    req.flash("error", "Error al obtener privilegios.");
+                    res.redirect("/nuclea/signup");
                   });
               });
             } else {
-              req.session.failed = true;
+              req.flash("error", "Contraseña incorrecta.");
               res.redirect("/nuclea/signup");
             }
           })
           .catch((error) => {
             console.log(error);
+            req.flash("error", "Ocurrió un error. Inténtalo más tarde.");
+            res.redirect("/nuclea/signup");
           });
       } else {
+        req.flash("error", "Correo electrónico no registrado.");
         res.redirect("/nuclea/signup");
       }
     })
     .catch((error) => {
       console.log(error);
+      req.flash("error", "Error en la base de datos.");
+      res.redirect("/nuclea/signup");
     });
 };
 
@@ -100,6 +94,7 @@ exports.getGoogleCallback = (req, res, next) => {
     
     if (!user) {
       console.log("Autenticación fallida:", info);
+      // req.flash('error', 'Authentication failed. Please try again.');
       req.session.failed = true;
       return res.send('<script>window.opener.postMessage({ authSuccess: false }, "*"); window.close();</script>');
     }
@@ -108,6 +103,7 @@ exports.getGoogleCallback = (req, res, next) => {
     req.login(user.dbUser || user, (err) => {
       if (err) {
         console.error("Error en login:", err);
+        // req.flash('error', 'Login error. Please try again.');
         return res.send('<script>window.opener.postMessage({ authSuccess: false }, "*"); window.close();</script>');
       }
       
