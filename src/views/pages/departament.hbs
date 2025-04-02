@@ -16,21 +16,18 @@
                     <i class="fa-solid fa-magnifying-glass search-icon"></i>
                 </div>
             </div>
-            <div class="second-container">
-                <div class="notification">
-                    <i class="fa-solid fa-bell"></i>
-                </div>
-                <div class="perfil">
-                    <i class="fa-solid fa-user"></i>
-                </div>
-            </div>
+            
         </nav>
     </div>
 
     <div class="content">
         <div class="nav-content">
-            <h2>Departament Management</h2>
-            <input type="button" value="Add Dept" class="add-btn" id="openModal">
+            <h2>Users Managment</h2>
+            <div class="add-btn-container" id="openModal">
+                <i class="fa-regular fa-square-plus"></i>
+                <input type="button" value="Add Department" class="add-btn">
+                <!-- Botón de enviar <input type="button" value="Assign user to Dep" id="openModal2" class="add-btn"> -->
+            </div>
         </div>
         <table>
             <thead>
@@ -48,10 +45,26 @@
                     <td>{{idDepartamento}}</td>
                     <td>{{Nombre_departamento}}</td>
                     <td>{{Descripcion}}</td>
-                    <td><span class="{{#if Estado}}active{{else}}inactive{{/if}}">{{#if Estado}}Active{{else}}Inactive{{/if}}</span></td>
+                    <td class="state">
+                        <span class="{{#if Estado}}active{{else}}inactive{{/if}}"><div class="dot"></div>
+                            {{#if Estado}}
+                            Active
+                            {{else}}
+                            Inactive
+                            {{/if}}
+                        </span></td>
                     <td>
                         <div class="dropdown">
                             <button class="action-btn">Actions</button>
+                            <div class="dropdown-content">
+                                <button class="edit-btn"  onclick="location.href='/nuclea/departament/update/{{idDepartamento}}'">
+                                  <i class="fa-solid fa-pen-to-square"></i> Edit
+                                </button>
+                                <button class="delete-btn" onclick="location.href='/nuclea/departament/delete/{{idDepartamento}}'">
+                                  <i class="fa-solid fa-trash"></i> Delete
+                                </button>
+
+              </div>
                         </div>
                     </td>
                 </tr>
