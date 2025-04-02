@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="/css/holiday.css">
+</head>
+<body>
+    <div class="top-container">
+        <nav class="nav-bar">
+            <div class="first-container">
+                <div class="views">Views</div>
+                <div class="search-container">
+                    <input type="text" placeholder="Search..." class="input-search">
+                    <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                </div>
+            </div>
+            
+        </nav>
+    </div>
+    <div class="content">
+        <div class="nav-content">
+            <h2>Holidays</h2>
+            <div class="add-btn-container" id="openModal">
+                <i class="fa-regular fa-square-plus"></i>
+                <input type="button" value="Add Holiday" class="add-btn">
+                <!-- Botón de enviar <input type="button" value="Assign user to Dep" id="openModal2" class="add-btn"> -->
+            </div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each datosh}}
+                <tr>
+                    <td>{{Nombre_asueto}}</td>
+                    <td>{{formatDate Fecha_asueto}}</td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="action-btn">Actions</button>
+                            <div class="dropdown-content">
+                                <button class="edit-btn"  onclick="location.href='/nuclea/departament/update/{{idDepartamento}}'">
+                                  <i class="fa-solid fa-pen-to-square"></i> Edit
+                                </button>
+                                <button class="delete-btn" onclick="location.href='/nuclea/departament/delete/{{idDepartamento}}'">
+                                  <i class="fa-solid fa-trash"></i> Delete
+                                </button>
+
+              </div>
+                        </div>
+                    </td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+        {{#if error}}
+            <p style="text-align: center; margin-top: 20px;">No departaments existing</p>
+        {{/if}}
+
+    <div id="modal" class="modal hidden">
+        <div class="modal-content">
+            
+            <button id="closeModal" class="close-btn">✖</button>
+
+            <h2 class="title-modal">Add Holiday</h2>
+            <p class="description">Fill in the required details to register a Holiday</p>
+
+            <form id="holidayForm" method="POST" action="/nuclea/holiday">
+            <input type="hidden" name="_csrf" value="{{csrfToken}}">
+                <div class="form-group">
+                    <label for="deptName">Holiday Name</label>
+                    <input type="text" id="holiName" name="Nombre_holiday" placeholder="Christmas" class="text-modal" required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group form-date date-modal">
+                        <label for="fecha" class="label">Date</label>
+                        <input
+                        class="text-modal"
+                        type="date"
+                        placeholder="dd/mm/yy"
+                        id="fecha"
+                        name="fecha"
+                        required
+                        oninvalid="this.setCustomValidity('Please select a date')" 
+                        onchange="this.setCustomValidity('')"
+                        style="width: auto;"
+                        />
+                    </div>
+                </div>
+
+                <input type="submit" class="btn-submit" value="Add Holiday">
+            </form>
+        </div>
+    </div>
+
+
+    </div>
+
+
+    <script src="/js/addDepartament.js"></script>
+</body>
+</html>
