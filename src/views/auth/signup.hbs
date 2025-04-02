@@ -183,7 +183,9 @@
         {{!-- <h1 class="gradient-text">HRMS Management System</h1> --}}
         <h1 class="title">Sign In to your Account</h1>
         <p class="subtitle">Welcome back! please enter your detail</p>
-        
+        {{#if error}}
+            <div class="alert alert-danger">{{error}}</div>
+        {{/if}}
         <form method="POST" id="authenticationForm" action="/nuclea/signup">
             <div class="field">
                 <div class="control has-icons-left">
@@ -257,37 +259,32 @@
 {{!-- Google auth --}}
 <script>
 function openGoogleAuth() {
-  // Guarda la URL actual
-  const currentPage = window.location.href;
-  sessionStorage.setItem('redirectAfterAuth', currentPage);
-  
-  // Configura la ventana emergente (popup)
   const width = 500, height = 600;
   const left = (screen.width - width) / 2;
   const top = (screen.height - height) / 2;
-  
-  const authWindow = window.open(
-    `/auth/google?popup=true`, // URL de autenticación
-    "GoogleAuth", 
-    `width=${width},height=${height},top=${top},left=${left},scrollbars=yes`
-  );
-  
-  // Agrega un listener para el evento 'message'
-  window.addEventListener('message', function(event) {
-    if (event.data && event.data.authSuccess) {
-      console.log("Autenticación exitosa, recargando página...");
-      window.location.reload(); // Recarga la página en la que estaba
 
-      // Cierra la ventana emergente si sigue abierta
-      if (authWindow && !authWindow.closed) {
-        try {
-          authWindow.close();
-        } catch (e) {
-          console.error("No se pudo cerrar la ventana emergente:", e);
-        }
-      }
+  const authWindow = window.open(
+    `/nuclea/auth/google?popup=true`, 
+    "GoogleAuth",
+    `width=${width},height=${height},top=${top},scrollbars=yes`
+  );
+
+  window.addEventListener("message", (event) => {
+    if (event.data.authSuccess === false) {
+        window.location.href = "/nuclea/signup"; // Redirige al login
+    } else if (event.data.authSuccess === true) {
+        window.location.href = "/nuclea/dashboard"; // Redirige al dashboard
     }
-  }, false);
+});
 }
+document.addEventListener("DOMContentLoaded", function() {
+    const errorMessage = document.getElementById("error-message");
+    if (errorMessage) {
+      setTimeout(() => {
+        errorMessage.style.opacity = "0";
+        setTimeout(() => errorMessage.remove(), 500); // Eliminar el mensaje después de la animación
+      }, 3000);
+    }
+  });
 </script>
 </html>
