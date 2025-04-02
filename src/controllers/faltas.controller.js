@@ -105,27 +105,34 @@ exports.get_delete = (req, res, next) => {
 };
 
 exports.get_update = (req, res, next) => {
-    Falta.fetchFAI(req.params.idFalta)
+    Falta.fetchFA()
         .then(([faltas, fD]) => {
-            Usuario.fetchAll()
-                .then(([rows, fieldData]) => {
-                    const noFaltas = faltas.length === 0;
+            Falta.fetchFAI(req.params.idFalta)
+                .then(([falta, fD]) => {
+                    Usuario.fetchAll()
+                        .then(([rows, fieldData]) => {
+                            const noFaltas = faltas.length === 0;
 
-                    res.render('../views/pages/editarFalta.hbs', {
-                        usuariosfa: rows,
-                        csrfToken: req.csrfToken(),
-                        falta: faltas[0],
-                        noFaltas: noFaltas,
-                        title: 'Administrative offenses'
-                    });
-                    console.log(faltas)
+                            res.render('../views/pages/editarFalta.hbs', {
+                                usuariosfa: rows,
+                                csrfToken: req.csrfToken(),
+                                faltass: faltas,
+                                falta: falta[0],
+                                noFaltas: noFaltas,
+                                title: 'Administrative offenses'
+                            });
+                            console.log(falta)
+                        })
+                        .catch((err) => {
+                            console.error('Error fetching Users:', err);
+                            res.status(500).send('Internal Server Error');
+                        });
                 })
                 .catch((err) => {
-                    console.error('Error fetching Users:', err);
+                    console.error('Error fetching Administrative offenses:', err);
                     res.status(500).send('Internal Server Error');
                 });
-        })
-        .catch((err) => {
+        }).catch((err) => {
             console.error('Error fetching Administrative offenses:', err);
             res.status(500).send('Internal Server Error');
         });
