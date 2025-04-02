@@ -200,13 +200,15 @@
       }
     }
     
-    static getPrivilegios(idUsuario) {
+    static getPrivilegios(idusuario) {
       return db.execute(
         `SELECT p.Nombre_privilegio 
-         FROM Privilegios p 
-         JOIN Usuarios_Privilegios up ON p.idPrivilegio = up.idPrivilegio 
-         WHERE up.idUsuario = ?`,
-        [idUsuario]  // Aquí usas el parámetro recibido por la función
+              FROM Privilegios p, Rol_Privilegios rp, Roles r, 
+                  User_Rol ur, Usuarios u
+              WHERE p.idPrivilegio=rp.idPrivilegio AND rp.idRol=r.idRol 
+                  AND r.idRol=ur.idRol AND ur.idUsuario=u.idUsuario
+                  AND u.idUsuario=?;`,
+        [idusuario]
       );
     }
   };
