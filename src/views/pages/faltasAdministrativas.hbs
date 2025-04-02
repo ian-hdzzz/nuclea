@@ -30,8 +30,12 @@
   <div class="content">
     <div class="nav-content">
       <h2>Administrative offenses</h2>
-      <input type="button" value="Add Administrative offense" id="openModal" class="add-btn" 
-             style="padding-right: 15px; padding-left: 15px; width:auto;">
+      {{#each privilegios}}
+        {{#if (eq this.Nombre_privilegio "addAO")}}
+          <input type="button" value="Add Administrative offense" id="openModal" class="add-btn" 
+          style="padding-right: 15px; padding-left: 15px; width:auto;">
+        {{/if}}
+      {{/each}}
     </div>
     <table>
       <thead>
@@ -40,7 +44,12 @@
           <th>Reason</th>
           <th>Date</th>
           <th>File</th>
-          <th>Actions</th>
+          {{#each privilegios}}
+            {{#if (eq this.Nombre_privilegio "addAO")}}
+              <th>Actions</th>
+            {{/if}}
+          {{/each}}
+
         </tr>
       </thead>
       <tbody>
@@ -58,20 +67,24 @@
               Sin archivo
             {{/if}}
           </td>
-          <td>
-            <div class="dropdown">
-              <button class="action-btn">Actions</button>
-              <div class="dropdown-content">
-                <button class="edit-btn"  onclick="location.href='/nuclea/faltasAdministrativas/update/{{idFalta}}'">
-                  <i class="fa-solid fa-pen-to-square"></i> Edit
-                </button>
-                <button class="delete-btn" onclick="location.href='/nuclea/faltasAdministrativas/delete/{{idFalta}}'">
-                  <i class="fa-solid fa-trash"></i> Delete
-                </button>
+          {{#each ../privilegios}}
+            {{#if (eq this.Nombre_privilegio "addAO")}}
+              <td>
+                <div class="dropdown">
+                  <button class="action-btn">Actions</button>
+                  <div class="dropdown-content">
+                    <button class="edit-btn"  onclick="location.href='/nuclea/faltasAdministrativas/update/{{../idFalta}}'">
+                      <i class="fa-solid fa-pen-to-square"></i> Edit
+                    </button>
+                    <button class="delete-btn" onclick="location.href='/nuclea/faltasAdministrativas/delete/{{../idFalta}}'">
+                      <i class="fa-solid fa-trash"></i> Delete
+                    </button>
 
-              </div>
-            </div>
-          </td>
+                  </div>
+                </div>
+              </td>
+            {{/if}}
+          {{/each}}
         </tr>
         {{/each}}
       </tbody>
