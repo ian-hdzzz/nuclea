@@ -92,6 +92,9 @@ app.use('/nuclea/faltasAdministrativas', faltaAdministrativa);
 const users = require('./routes/users.routes');
 app.use('/nuclea/users', users);
 
+const holidayRoutes = require('./routes/holiday.routes');
+app.use('/nuclea/holiday', holidayRoutes);
+
 // public
 app.use(express.static(path.join(__dirname, 'public')));
 
