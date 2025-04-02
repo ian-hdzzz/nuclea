@@ -1,10 +1,14 @@
+// routes/authentication.routes.js (actualizar el archivo existente)
 const express = require('express');
 const router = express.Router();
-const AuthController = require('../controllers/aunthentication.controller');
-const isLoggedIn = require('../util/isLoggedIn');
+const authController = require('../controllers/aunthentication.controller');
 
-//SignUp
-router.get('/', isLoggedIn, AuthController.getAuth);
-router.post('/',isLoggedIn, AuthController.postAuth);
+// Rutas existentes de autenticación local
+router.get('/signup', authController.getAuth);
+router.post('/signup', authController.postAuth);
 
-module.exports =  router;
+// Actualizar la ruta de logout si existe
+router.get('/logout', authController.getLogout);    
+
+
+module.exports = router;
