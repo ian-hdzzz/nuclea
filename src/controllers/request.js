@@ -6,10 +6,17 @@ exports.getRequests = (req, res) => {
   DiasFeriados.fetchAll()
   .then(([diasf,fD]) => {
     let canViewPersonal = false;
+    let canApprove = false; //Variable verificar si usuario puede aprobar solicitudes
     for (let privilegio of req.session.privilegios) {
   
       if (privilegio.Nombre_privilegio == 'Consultar solicitudes propias') {
         canViewPersonal = true;
+      }
+      if (privilegio.Nombre_privilegio == 'Acepta Deniega solicitud'){
+        canApprove = true;
+      }
+      
+      if (canViewPersonal) {
         Request.fetchPersonal(req.session.idUsuario)
         .then(([rows]) => {
           res.render('pages/request', {
@@ -19,7 +26,8 @@ exports.getRequests = (req, res) => {
             nombreUsuario: req.session.nombre,
             apellidosUsuario: req.session.apellidos,
             title: 'Request',
-            diasferiados: diasf
+            diasferiados: diasf,
+            puedeAceptar: canApprove
           });
         })
         .catch((err)=>{
@@ -39,7 +47,8 @@ exports.getRequests = (req, res) => {
           nombreUsuario: req.session.nombre,
           apellidosUsuario: req.session.apellidos,
           title: 'Request',
-          diasferiados: diasf
+          diasferiados: diasf,
+          puedeAceptar: canApprove
         });
       })
       .catch((err) => {
@@ -110,6 +119,46 @@ exports.postRequest = (request, response,next) => {
   }
   
 
+};
+
+// Método para aprobar una solicitud
+exports.approveRequest = (req, res) => {
+  const solicitudId = req.params.id;
+  const usuario = req.session.idUsuario;
+
+  db.execute(
+    `UPDATE Solicitudes 
+     SET Aprobacion_L = 'Aprobado', Fecha_aprob_L = NOW() 
+     WHERE idSolicitud = ?`,
+    [solicitudId]
+  )
+  .then(() => {
+    res.redirect('/nuclea/request');
+  })
+  .catch((err) => {
+    console.error('Error al aprobar la solicitud:', err);
+    res.status(500).send('Error interno');
+  });
+};
+
+// Método para rechazar una solicitud
+exports.rejectRequest = (req, res) => {
+  const solicitudId = req.params.id;
+  const usuario = req.session.idUsuario;
+
+  db.execute(
+    `UPDATE Solicitudes 
+     SET Aprobacion_L = 'Rechazado', Fecha_aprob_L = NOW() 
+     WHERE idSolicitud = ?`,
+    [solicitudId]
+  )
+  .then(() => {
+    res.redirect('/nuclea/request');
+  })
+  .catch((err) => {
+    console.error('Error al rechazar la solicitud:', err);
+    res.status(500).send('Error interno');
+  });
 };
 
 
