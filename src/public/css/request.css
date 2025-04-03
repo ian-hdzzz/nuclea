@@ -497,3 +497,24 @@ th {
     transform: scale(1.03);
   }
   
+  /* Botón de aprobar */
+.dropdown-content button.approve-btn {
+    color: rgba(34, 197, 94, 0.9); /* Verde */
+    border: 1px solid transparent;
+    transition: all 0.3s ease-in-out;
+}
+.dropdown-content button.approve-btn:hover {
+    border-color: rgba(34, 197, 94, 0.9);
+    background-color: rgba(34, 197, 94, 0.1);
+}
+
+/* Botón de rechazar */
+.dropdown-content button.reject-btn {
+    color: rgba(239, 68, 68, 0.9); /* Rojo */
+    border: 1px solid transparent;
+    transition: all 0.3s ease-in-out;
+}
+.dropdown-content button.reject-btn:hover {
+    border-color: rgba(239, 68, 68, 0.9);
+    background-color: rgba(239, 68, 68, 0.1);
+}
