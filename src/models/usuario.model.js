@@ -22,8 +22,7 @@
       my_dept,
       my_date,
       my_google_id = null,
-      my_google_token = null,
-      my_company 
+      my_google_token = null
     ) {
       this.name = my_name;
       this.lastname = my_lastname;
@@ -42,7 +41,6 @@
       this.date = my_date;
       this.google_id = my_google_id;
       this.google_token = my_google_token;
-      this.company = my_company
     }
     
     //Este método servirá para guardar de manera persistente el nuevo objeto.
@@ -150,9 +148,9 @@
     
     assignment() {
       return db.execute(
-          `INSERT INTO Pertenece (idUsuario, idDepartamento, idEmpresa)
-          VALUES (?,?,?)`,
-          [this.user, this.dept, this.company]
+        `INSERT INTO Pertenece (idUsuario, idDepartamento, Fecha_asignacion)
+        VALUES (?,?,?)`,
+        [this.user, this.dept, this.date]
       );
     }
     
