@@ -73,16 +73,25 @@
                     {{/if}}
                   </span>
                 </td>
-                <td>
-                  <div class="dropdown">
+                <td> <!-- Dropdown Actions con RBAC -->
+                  <div class="dropdown"> 
                     <button class="action-btn">Actions</button>
                     <div class="dropdown-content">
-                      <button class="edit-btn" onclick="editRequest('{{idSolicitud}}')">
-                        <i class="fa-solid fa-pen-to-square"></i> Edit
-                      </button>
-                      <button class="delete-btn" onclick="confirmDelete('{{idSolicitud}}')">
-                        <i class="fa-solid fa-trash"></i> Delete
-                      </button>
+                      {{#if ../puedeAceptar}}
+                        <button class="approve-btn" onclick="approveRequest('{{idSolicitud}}')">
+                          <i class="fa-solid fa-check"></i> Approve
+                        </button>
+                        <button class="reject-btn" onclick="rejectRequest('{{idSolicitud}}')">
+                          <i class="fa-solid fa-xmark"></i> Reject
+                        </button>
+                      {{else}}
+                        <button class="edit-btn" onclick="editRequest('{{idSolicitud}}')">
+                          <i class="fa-solid fa-pen-to-square"></i> Edit
+                        </button>
+                        <button class="delete-btn" onclick="confirmDelete('{{idSolicitud}}')">
+                          <i class="fa-solid fa-trash"></i> Delete
+                        </button>
+                      {{/if}}
                     </div>
                   </div>
                 </td>
@@ -171,5 +180,6 @@
   </div>
   <script src="/js/addRequest.js"></script>
   <script src="/js/delete.js"></script>
+  <script src="/js/approve.js"></script>
 </body>
 </html>

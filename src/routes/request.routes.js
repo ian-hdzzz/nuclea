@@ -6,4 +6,7 @@ const requestController = require('../controllers/request');
 // Ruta GET para mostrar solicitudes
 router.get('/request', isAuth,requestController.getRequests);
 router.post('/request', isAuth,requestController.postRequest);
+
+router.post('/request/:id/approve', isAuth, requestController.approveRequest); 
+router.post('/request/:id/reject', isAuth, requestController.rejectRequest);
 module.exports = router;

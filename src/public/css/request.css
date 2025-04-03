@@ -12,7 +12,7 @@ body {
     color: #fff;
 }
 .request-container {
-    width: calc(100% - 80px);
+    width: calc(100% - 20px);
     display: flex;
     flex-direction: column;
     margin-left: 90px;
@@ -141,6 +141,21 @@ th, td {
     padding: 2px;
 
 }
+
+/* Estilo del punto según el estado */
+.vacation-status.pending .dot {
+    background-color: #f99b03; /* naranja */
+  }
+  
+  .vacation-status.active .dot {
+    background-color: #22c55e; /* verde suave */
+  }
+  
+  .vacation-status.inactive .dot {
+    background-color: #ff5151; /* rojo suave */
+  }
+  
+
 .pending {
     background-color: #f39d1250;
     color: #f99b03;
@@ -306,6 +321,7 @@ th {
     width: 80%;
     font-family: 'Montserrat', sans-serif;
     font-size: .9rem;
+    flex: 0 0 270px;
 }
 
 
@@ -340,23 +356,23 @@ th {
     justify-content: space-between;
     align-items: flex-start;
     gap: 40px;
-    margin-top: 20px;
-    flex-wrap: wrap;
+    margin-top: 30px;
+    flex-wrap: nowrap;
+    width: 100%;
+    max-width: 100%;
 }
 
 .table-holidays-container table {
     flex: 1 1 70%;
 }
 
-.holidays-box {
-    flex: 0 0 270px;
-}
+
 
 .table-holidays-wrapper {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    gap: 20px;
+    gap: 30px;
     margin-top: 30px;
     flex-wrap: nowrap;
     width: 100%;
@@ -367,15 +383,11 @@ th {
 .table-container {
     font-size: .9rem;
     width: 60%;
-    flex: 1;
+    flex: 1 1 75%;
     overflow-x: auto;
 }
 
-/* Holidays box ya está bien definido */
-.holidays-box {
 
-    flex: 0 0 270px;
-}
 
 .icon-circle{
     border-radius: 50%;
@@ -497,3 +509,24 @@ th {
     transform: scale(1.03);
   }
   
+  /* Botón de aprobar */
+.dropdown-content button.approve-btn {
+    color: rgba(34, 197, 94, 0.9); /* Verde */
+    border: 1px solid transparent;
+    transition: all 0.3s ease-in-out;
+}
+.dropdown-content button.approve-btn:hover {
+    border-color: rgba(34, 197, 94, 0.9);
+    background-color: rgba(34, 197, 94, 0.1);
+}
+
+/* Botón de rechazar */
+.dropdown-content button.reject-btn {
+    color: rgba(239, 68, 68, 0.9); /* Rojo */
+    border: 1px solid transparent;
+    transition: all 0.3s ease-in-out;
+}
+.dropdown-content button.reject-btn:hover {
+    border-color: rgba(239, 68, 68, 0.9);
+    background-color: rgba(239, 68, 68, 0.1);
+}
