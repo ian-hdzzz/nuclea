@@ -1,6 +1,7 @@
 const db = require('../util/database');
 const Request = require('../models/request.model');
 const DiasFeriados = require('../models/diasferiados.model');
+const Usuario = require('../models/usuario.model');
 
 exports.getRequests = (req, res) => {
   DiasFeriados.fetchAll()
@@ -121,44 +122,42 @@ exports.postRequest = (request, response,next) => {
 
 };
 
-// Método para aprobar una solicitud
+//Método para aprobar una solicitud
 exports.approveRequest = (req, res) => {
   const solicitudId = req.params.id;
-  const usuario = req.session.idUsuario;
+  const usuarioId = req.session.idUsuario;
 
-  db.execute(
-    `UPDATE Solicitudes 
-     SET Aprobacion_L = 'Aprobado', Fecha_aprob_L = NOW() 
-     WHERE idSolicitud = ?`,
-    [solicitudId]
-  )
-  .then(() => {
-    res.redirect('/nuclea/request');
-  })
-  .catch((err) => {
-    console.error('Error al aprobar la solicitud:', err);
-    res.status(500).send('Error interno');
-  });
+  Usuario.getRolById(usuarioId)
+    .then(([result]) => {
+      const rol = result[0]?.idRol;
+      if (!rol) return res.status(403).send('Rol no encontrado');
+
+      return Request.approveSolicitud(solicitudId, rol);
+    })
+    .then(() => res.redirect('/nuclea/request'))
+    .catch((err) => {
+      console.error('Error al aprobar la solicitud:', err);
+      res.status(500).send('Error interno');
+    });
 };
 
-// Método para rechazar una solicitud
+//Método para rechazar una solicitud
 exports.rejectRequest = (req, res) => {
   const solicitudId = req.params.id;
-  const usuario = req.session.idUsuario;
+  const usuarioId = req.session.idUsuario;
 
-  db.execute(
-    `UPDATE Solicitudes 
-     SET Aprobacion_L = 'Rechazado', Fecha_aprob_L = NOW() 
-     WHERE idSolicitud = ?`,
-    [solicitudId]
-  )
-  .then(() => {
-    res.redirect('/nuclea/request');
-  })
-  .catch((err) => {
-    console.error('Error al rechazar la solicitud:', err);
-    res.status(500).send('Error interno');
-  });
+  Usuario.getRolById(usuarioId)
+    .then(([result]) => {
+      const rol = result[0]?.idRol;
+      if (!rol) return res.status(403).send('Rol no encontrado');
+
+      return Request.rejectSolicitud(solicitudId, rol);
+    })
+    .then(() => res.redirect('/nuclea/request'))
+    .catch((err) => {
+      console.error('Error al rechazar la solicitud:', err);
+      res.status(500).send('Error interno');
+    });
 };
 
 
