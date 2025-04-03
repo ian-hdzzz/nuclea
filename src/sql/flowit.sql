@@ -168,3 +168,49 @@ CREATE TABLE DiasFeriados (
     Fecha_asueto DATE,
     FOREIGN KEY (idUsuario_A) REFERENCES Usuarios(idUsuario)
 );
+ALTER TABLE Reuniones
+DROP COLUMN De_que_orgulloso_mes_pasado,
+DROP COLUMN Estas_preocupado_decepcionado_estresado,
+DROP COLUMN Que_trabajando,
+DROP COLUMN Meta_mes,
+DROP COLUMN Carga_trabajo,
+DROP COLUMN Salud_fisica,
+DROP COLUMN Reconocimiento,
+DROP COLUMN Salud_emocional,
+DROP COLUMN Equilibrio_trabajo_vida;
+
+-- Tabla de respuestas abiertas
+CREATE TABLE Respuestas_Abiertas (
+    idRespuestaAbierta BIGINT(20) AUTO_INCREMENT PRIMARY KEY,
+    idReuniones BIGINT(20),
+    pregunta VARCHAR(255) NOT NULL,
+    respuesta TEXT NULL,
+    FOREIGN KEY (idReunion) REFERENCES Reuniones(idReunion) ON DELETE CASCADE
+);
+
+ALTER TABLE preguntas_abiertas
+ADD COLUMN descripcion TEXT AFTER pregunta;
+
+-- Tabla de respuestas cerradas
+CREATE TABLE Respuestas_Cerradas (
+    idRespuestaCerrada BIGINT(20) AUTO_INCREMENT PRIMARY KEY,
+    idReuniones BIGINT(20),
+    pregunta VARCHAR(255) NOT NULL,
+    respuesta INT(11) NOT NULL CHECK (respuesta BETWEEN 1 AND 5),
+    FOREIGN KEY (idReunion) REFERENCES Reuniones(idReunion) ON DELETE CASCADE
+);
+
+DELIMITER //
+
+CREATE TRIGGER insertar_preguntas_default AFTER INSERT ON Reuniones
+FOR EACH ROW
+BEGIN
+    -- Inserta las 4 preguntas predefinidas para cada nueva reunión
+    INSERT INTO preguntas_abiertas (idReunion, pregunta, descripcion) VALUES 
+    (NEW.idReunion, 'What are you proud of from the past month?', 'Identify personal or team achievements and progress.'),
+    (NEW.idReunion, 'Are you worried, disappointed, or stressed?', 'Evaluate factors that may be affecting employee satisfaction.'),
+    (NEW.idReunion, 'What are you currently working on?', 'Understand the current activities of each team member.'),
+    (NEW.idReunion, 'What will your goal be for the month?', 'Define short-term objectives and align them with the team vision.');
+END //
+
+DELIMITER ;
