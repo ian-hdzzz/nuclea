@@ -7,13 +7,16 @@ const { json } = require('stream/consumers');
 const flash = require('connect-flash');
 const session = require('express-session');
 const passport = require('./util/passport'); // Importar configuración de Passport
+const helmet = require('helmet'); // Importar helmet
+const compression = require('compression'); // Importar compression
 
 // initialitations
 const app = express();
 
 // settings
 require('dotenv').config();
-app.set('port', process.env.PORT || 4000);
+
+app.set('port', process.env.PORT || 4002);
 app.set('views', path.join(__dirname, 'views'));
 const exphbs = create({
     defaultLayout: 'main',
@@ -28,8 +31,11 @@ app.set('view engine', '.hbs');
 // middlewares
 app.use(morgan('dev'));
 app.use(express.json());
-app.use(express.urlencoded({extended:false}));
+app.use(express.urlencoded({ extended: false }));
 app.use(express.static('public'));
+
+app.use(helmet()); // Seguridad con Helmet
+app.use(compression()); // Compresión de respuestas
 
 // Configuración de la sesión
 app.use(session({
@@ -42,9 +48,8 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-
 const bodyParser = require('body-parser');
-app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.urlencoded({ extended: false }));
 
 const multer = require('multer');
 const fileStorage = multer.diskStorage({
@@ -57,7 +62,7 @@ const fileStorage = multer.diskStorage({
     },
 });
 
-app.use(multer({ storage: fileStorage}).single('archivo')); 
+app.use(multer({ storage: fileStorage }).single('archivo')); 
 
 const csrf = require('csurf');
 const csrfProtection = csrf();
