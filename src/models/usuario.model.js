@@ -213,4 +213,12 @@
         [idusuario]
       );
     }
+
+    static getRolById(idUsuario) {
+      return db.execute(`
+        SELECT idRol 
+        FROM User_Rol 
+        WHERE idUsuario = ?
+      `, [idUsuario]);
+    }   
   };
