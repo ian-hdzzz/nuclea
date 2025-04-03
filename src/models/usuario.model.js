@@ -201,6 +201,12 @@
         return this.fetchAll();
       }
     }
+
+    static async deleteA(idUsuario) {
+      await db.execute(`DELETE FROM User_Rol WHERE idUsuario = ?`, [idUsuario]);
+      await db.execute(`DELETE FROM Pertenece WHERE idUsuario = ?`, [idUsuario]);
+      return db.execute(`DELETE FROM Usuarios WHERE idUsuario = ?`, [idUsuario]);
+  }
     
     static getPrivilegios(idusuario) {
       return db.execute(
@@ -214,3 +220,5 @@
       );
     }
   };
+
+  

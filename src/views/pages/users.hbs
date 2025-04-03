@@ -1,66 +1,4 @@
-{{!-- 
-            <tbody>
-                {{#each usuarios}}
-                <tr>
-                    <td>{{Nombre}}</td>
-                    <td>Dept despues</td>
-                    <td>{{formatDate Fecha_inicio_colab}}</td>
-                    <td>{{Modalidad}}</td>
-                    <td>{{Ciudad}}</td>
-                    <td>{{Estatus}}</span></td>
-                    <td>
-                        <div class="dropdown">
-                            <button class="action-btn">Actions</button>
-                        </div>
-                    </td>
-                </tr>
-                {{/each}}
-            </tbody>
-        </table>
-    </div>
 
-<div id="modal-fa" class="modal">
-  <div class="modal-background"></div>
-  <div class="modal-card">
-    <header class="modal-card-head">
-      <p class="modal-card-title">Add user</p>
-      <button class="delete" aria-label="close"></button>
-    </header>
-    <section class="modal-card-body">
-      <form action="/nuclea/users" id="form-user" method="POST">
-        <input type="hidden" name="_csrf" value="{{csrfToken}}">
-        <label for="name_us" class="label">Employee Names</label>
-        <input
-          class="input is-primary"
-          type="text"
-          placeholder="Names"
-          id="name_us"
-          name="name_us"
-          required
-        />
-        <br><br>
-        <br><br>
-        <label for="passw" class="label">Password</label>
-        <input
-          class="input is-primary"
-          type="text"
-          placeholder="password"
-          id="passw"
-          name="passw"
-          value="{{tempPassword}}"
-          readonly
-        />
-        <br><br>
-        <label for="role" class="label">Select role:</label>
-          <div class="select is-primary">
-            <select id="role" name="role">
-              {{#each rols}}
-                <option value="{{idRol}}">{{Nombre_rol}}</option>
-              {{/each}}
-            </select>
-          </div>
-        <br><br>
- --}}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -124,6 +62,14 @@
                     <td>
                         <div class="dropdown">
                             <button class="action-btn">Actions</button>
+                            <div class="dropdown-content">
+                                <button class="edit-btn"  onclick="location.href='/nuclea/users/update/{{idUsuario}}'">
+                                  <i class="fa-solid fa-pen-to-square"></i> Edit
+                                </button>
+                                <button class="delete-btn" onclick="location.href='/nuclea/users/delete/{{idUsuario}}'">
+                                  <i class="fa-solid fa-trash"></i> Delete
+                                </button>
+                            </div>
                         </div>
                     </td>
                 </tr>
@@ -290,55 +236,6 @@
           </form>
         </div>
 
-
-     <!-- modal para asignar usuario a departamento
-    <div id="modal2" class="modal hidden">
-        <div class="modal-content">
-
-             Botón de cerrar
-            <button id="closeModal2" class="close-btn">✖</button>
-
-            <h2 class="title-modal">Asign user to department</h2>
-            <p class="description">Fill in the required details to asign a user to a department</p>
-
-             Campos
-              <form action="/nuclea/users" id="form-user" method="POST">
-              <input type="hidden" name="action" value="assign">
-              <input type="hidden" name="_csrf" value="{{csrfToken}}">
-                <div class="form-group">
-                    <label for="status">Choose user</label>
-                    <select name="ch_user" class="text-modal" required>
-                        <option value="">- Select User -</option>
-                      {{#each usuarios}}
-                        <option value="{{idUsuario}}">{{Nombre}}</option>
-                      {{/each}}
-                    </select>
-                </div>
-
-
-                <div class="form-group">
-                    <label for="status">Choose Departament</label>
-                    <select name="ch_dept" class="text-modal" required>
-                        <option value="">- Select Departament -</option>
-                      {{#each deptos}}
-                        <option value="{{idDepartamento}}">{{Nombre_departamento}}</option>
-                      {{/each}}
-                    </select>
-                </div>
-
-                <div class="form-group form-date">
-                    <label>Assignment Date</label>
-                    <input type="date" class="text-modal date-modal" name="ch_date" required
-                    oninvalid="this.setCustomValidity('Please select a date')" 
-                    onchange="this.setCustomValidity('')">
-                </div>
-                
-            Botón de enviar
-            <input type="submit" class="btn-submit" value="Assign Users">
-        </div>
-      </form>
-    </div>
-    -->
 
     
     </div>

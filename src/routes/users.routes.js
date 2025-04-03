@@ -7,5 +7,6 @@ const isAuth = require('../util/is-auth')
 router.get('/',isAuth,users_controller.get_users)
 router.post('/',isAuth,users_controller.post_users)
 router.get('/logout',users_controller.get_logout)
+router.get('/delete/:idUsuario',users_controller.get_delete);
 
 module.exports =  router;  
