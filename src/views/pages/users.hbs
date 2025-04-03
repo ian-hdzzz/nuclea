@@ -235,27 +235,22 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="status">Select Company</label>
-                    <select class="text-modal" name="company" required
-                        oninvalid="this.setCustomValidity('Please select a Company')" 
-                        onchange="this.setCustomValidity('')">
-                        <option value="">- Select a Company -</option>
-                      {{#each emps}}
-                        <option value="{{idEmpresa}}">{{Nombre_empresa}}</option>
-                      {{/each}}
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="status">Select Department</label>
-                    <select class="text-modal" name="depa" required
-                        oninvalid="this.setCustomValidity('Please select a Department')" 
-                        onchange="this.setCustomValidity('')">
-                        <option value="">- Select a Department -</option>
-                      {{#each deptos}}
-                        <option value="{{idDepartamento}}">{{Nombre_departamento}}</option>
-                      {{/each}}
-                    </select>
+                    <label>Choose Department(s)</label>
+                    {{#each deptos}}
+                        <div>
+                            <label for="dept{{idDepartamento}}">
+                                <input type="checkbox" 
+                                id="dept{{idDepartamento}}" 
+                                name="departamentos" 
+                                value="{{idDepartamento}}"
+                                class="department-check"
+                                {{#if @first}}checked{{/if}}>
+                                {{Nombre_departamento}}
+                            </label>
+                            
+                            
+                        </div>
+                    {{/each}}
                 </div>
 
                 <div class="form-group">

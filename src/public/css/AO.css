@@ -340,13 +340,3 @@ input[type="checkbox"] {
     margin-right: 8px;
     width: 16px;
 }
-
-.notification.is-success {
-    background-color: #d4edda;
-    color: #155724;
-    padding: 10px;
-    border-radius: 5px;
-    border: 1px solid #c3e6cb;
-    width: 80%;
-    text-align: center;
-  }
