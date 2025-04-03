@@ -88,7 +88,6 @@ exports.post_agregar_fa = (req, res, next) => {
     
         falta.save()
             .then(() => {
-                request.session.info = `Addministrative offense saved.`;
                 res.redirect('/nuclea/faltasAdministrativas');
             })
             .catch((error) => {
