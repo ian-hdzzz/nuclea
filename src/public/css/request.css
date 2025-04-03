@@ -141,6 +141,21 @@ th, td {
     padding: 2px;
 
 }
+
+/* Estilo del punto según el estado */
+.vacation-status.pending .dot {
+    background-color: #f99b03; /* naranja */
+  }
+  
+  .vacation-status.active .dot {
+    background-color: #22c55e; /* verde suave */
+  }
+  
+  .vacation-status.inactive .dot {
+    background-color: #ff5151; /* rojo suave */
+  }
+  
+
 .pending {
     background-color: #f39d1250;
     color: #f99b03;
