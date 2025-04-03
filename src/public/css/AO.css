@@ -348,5 +348,5 @@ input[type="checkbox"] {
     border-radius: 5px;
     border: 1px solid #c3e6cb;
     width: 80%;
-    text-align: center; /* Centra el texto */
+    text-align: center;
   }
