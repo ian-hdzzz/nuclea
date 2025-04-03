@@ -147,3 +147,13 @@ exports.get_logout = (request, response, next) => {
     });
 };
 
+
+exports.get_delete = (req, res, next) => {
+    console.log(req.body)
+    Usuario.deleteA(req.params.idUsuario).then(()=>{
+        res.redirect('/nuclea/users')
+    }).catch((error)=>{
+        console.log(error)
+    })
+  };
+
