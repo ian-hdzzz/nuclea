@@ -8,7 +8,6 @@ const flash = require('connect-flash');
 const session = require('express-session');
 const passport = require('./util/passport'); // Importar configuración de Passport
 const helmet = require('helmet'); // Importar helmet
-const compression = require('compression'); // Importar compression
 
 // initialitations
 const app = express();
@@ -35,7 +34,6 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.static('public'));
 
 app.use(helmet()); // Seguridad con Helmet
-app.use(compression()); // Compresión de respuestas
 
 // Configuración de la sesión
 app.use(session({
