@@ -12,7 +12,7 @@ body {
     color: #fff;
 }
 .request-container {
-    width: calc(100% - 80px);
+    width: calc(100% - 20px);
     display: flex;
     flex-direction: column;
     margin-left: 90px;
@@ -321,6 +321,7 @@ th {
     width: 80%;
     font-family: 'Montserrat', sans-serif;
     font-size: .9rem;
+    flex: 0 0 270px;
 }
 
 
@@ -355,23 +356,23 @@ th {
     justify-content: space-between;
     align-items: flex-start;
     gap: 40px;
-    margin-top: 20px;
-    flex-wrap: wrap;
+    margin-top: 30px;
+    flex-wrap: nowrap;
+    width: 100%;
+    max-width: 100%;
 }
 
 .table-holidays-container table {
     flex: 1 1 70%;
 }
 
-.holidays-box {
-    flex: 0 0 270px;
-}
+
 
 .table-holidays-wrapper {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    gap: 20px;
+    gap: 30px;
     margin-top: 30px;
     flex-wrap: nowrap;
     width: 100%;
@@ -382,15 +383,11 @@ th {
 .table-container {
     font-size: .9rem;
     width: 60%;
-    flex: 1;
+    flex: 1 1 75%;
     overflow-x: auto;
 }
 
-/* Holidays box ya está bien definido */
-.holidays-box {
 
-    flex: 0 0 270px;
-}
 
 .icon-circle{
     border-radius: 50%;
