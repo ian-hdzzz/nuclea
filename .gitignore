@@ -1,3 +1,4 @@
 node_modules
 .env
 src/views/pages/awsCommands.sh
+src/views/pages/awsCommands.sh
