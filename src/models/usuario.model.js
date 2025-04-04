@@ -237,6 +237,19 @@
         FROM User_Rol 
         WHERE idUsuario = ?
       `, [idUsuario]);
-    }   
+    }
+    
+    static getcollabsdept(iduser) {
+      return db.execute(`
+        SELECT u.*
+        FROM Usuarios u 
+        JOIN Pertenece p ON u.idUsuario = p.idUsuario 
+        WHERE p.idDepartamento = (
+         SELECT p2.idDepartamento 
+         FROM Pertenece p2 
+         JOIN Usuarios u2 ON p2.idUsuario = u2.idUsuario WHERE u2.idUsuario = ? );
+      `, [iduser]);
+    }
+
   };
 
