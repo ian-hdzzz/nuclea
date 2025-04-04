@@ -1,7 +1,4 @@
 node_modules
 .env
-<<<<<<< HEAD
-=======
 src/views/pages/awsCommands.sh
 src/views/pages/awsCommands.sh
->>>>>>> 3153feb8e7263923259ef31d6dbfdf77339479a6

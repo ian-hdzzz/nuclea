@@ -83,10 +83,7 @@ app.use('/nuclea', require('./routes/dashboard.routes'));
 app.use('/nuclea', require('./routes/request.routes'));
 app.use('/nuclea', require('./routes/objectives.routes'));
 app.use('/nuclea', require('./routes/interview.routes'));
-<<<<<<< HEAD
-=======
 app.use('/nuclea', require('./routes/one.routes'));
->>>>>>> 3153feb8e7263923259ef31d6dbfdf77339479a6
 app.use('/nuclea', require('./routes/reports.routes'));
 app.use('/nuclea', require('./routes/admin.routes'));
 app.use('/nuclea', require('./routes/profile.routes'));
