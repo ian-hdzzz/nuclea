@@ -83,6 +83,10 @@ app.use('/nuclea', require('./routes/dashboard.routes'));
 app.use('/nuclea', require('./routes/request.routes'));
 app.use('/nuclea', require('./routes/objectives.routes'));
 app.use('/nuclea', require('./routes/interview.routes'));
+<<<<<<< HEAD
+=======
+app.use('/nuclea', require('./routes/one.routes'));
+>>>>>>> 3153feb8e7263923259ef31d6dbfdf77339479a6
 app.use('/nuclea', require('./routes/reports.routes'));
 app.use('/nuclea', require('./routes/admin.routes'));
 app.use('/nuclea', require('./routes/profile.routes'));
@@ -100,6 +104,6 @@ app.use('/nuclea/holiday', holidayRoutes);
 app.use(express.static(path.join(__dirname, 'public')));
 
 // starting the server 
-app.listen(app.get('port'), () => {
+app.listen(app.get('port'),'0.0.0.0', () => {
     console.log('Server on port', app.get('port'));
 });

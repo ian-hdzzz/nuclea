@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /* Gradient text effect */
 .container-one{
   display: flex;
@@ -282,4 +283,120 @@ textarea:focus {
 .contact-name {
   font-size: 16px;
   font-weight: 500;
+=======
+:root {
+  --bg-dark: #0A0E17;
+  --card-bg: #131A27;
+  --border-color: #1E2433;
+  --text-primary: #FFFFFF;
+  --text-secondary: #6B7280;
+  --accent-blue: #4A6CF7;
+}
+
+
+
+.one-container {
+  display: grid;
+  grid-template-areas:
+    "empezar graph graph"
+    "search graph graph"
+    "tableCollab tableCollab tableCollab"
+    "tableCollab tableCollab tableCollab";
+
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: auto auto 1fr 1fr;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-left: 80px;
+  gap: 2rem;
+}
+
+.empezarInterview {
+  margin: 50px auto;
+  display: flex;
+  gap: 60px;
+  justify-content: center;
+}
+
+.card {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 30px;
+  width: 300px;
+  text-align: left;
+  transition: all 0.3s ease;
+  height: 20%;
+}
+
+.card:hover {
+  border-color: var(--accent-blue);
+  box-shadow: 0 0 15px rgba(74, 108, 247, 0.2);
+}
+
+.card h3 {
+  margin-bottom: 15px;
+  font-size: 20px;
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.card p {
+  color: var(--color-iconos);
+  margin-bottom: 20px;
+  font-weight: 500;
+}
+
+.card .btn {
+  color: var(--accent-blue);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+}
+
+.card .btn:hover {
+  text-decoration: underline;
+}
+
+.card.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.search {
+  grid-area: search;
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 30px;
+  text-align: left;
+  transition: all 0.3s ease;
+  width: 100%;
+  height: 100%;
+}
+.graph{
+  grid-area: graph;
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 30px;
+  text-align: left;
+  transition: all 0.3s ease;
+  width: 100%;
+  height: 100%;
+}
+.tableCollab {
+  grid-area: tableCollab ;
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 30px;
+  text-align: left;
+  transition: all 0.3s ease;
+  width: 100%;
+  height: 100%;
+>>>>>>> 3153feb8e7263923259ef31d6dbfdf77339479a6
 }

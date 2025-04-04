@@ -3,11 +3,8 @@ const OneToOneController = require('../controllers/oneToOne.controller');
 const isAuth = require('../util/is-auth')
 const router = express.Router();
 
-<<<<<<< HEAD
 router.get('/one', OneToOneController.getOneToOne);
-=======
-router.get('/interview', OneToOneController.getInterview);
->>>>>>> 3153feb8e7263923259ef31d6dbfdf77339479a6
+
 // router.post('/one/submit', OneToOneController.submitOneToOneInterview);
 
 module.exports = router;
