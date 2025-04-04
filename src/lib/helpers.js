@@ -20,5 +20,12 @@ module.exports = {
 
     eq: function(a, b) {
       return a === b;
-    }
+    },
+
+    hasPrivilege: function (privilegios, nombre, options) {
+      if (!Array.isArray(privilegios)) return options.inverse(this);
+      const tiene = privilegios.some(p => p.Nombre_privilegio === nombre);
+      return tiene ? options.fn(this) : options.inverse(this);
+  }
+
 };

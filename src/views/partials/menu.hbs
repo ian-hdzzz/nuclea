@@ -9,8 +9,22 @@
             <li><a href="/nuclea/request" class="tooltip {{#if (eq currentPath '/nuclea/dashboard')}}active{{/if}}"><i class="fa-solid fa-plane-up"></i><span class="tooltip-text">Vacation Requests</span></a></li>
             <li><a href="/nuclea/one" class="tooltip {{#if (eq currentPath '/nuclea/dashboard')}}active{{/if}}"><i class="fa-solid fa-people-arrows"></i><span class="tooltip-text">One-to-one</span></a></li>
             <li><a href="/nuclea/reports" class="tooltip {{#if (eq currentPath '/nuclea/dashboard')}}active{{/if}}"><i class="fa-solid fa-clipboard-list"></i><span class="tooltip-text">Reports</span></a></li>
-            <li><a href="/nuclea/faltasAdministrativas" class="tooltip {{#if (eq currentPath '/nuclea/dashboard')}}active{{/if}}"><i class="fa-solid fa-triangle-exclamation"></i><span class="tooltip-text">Administrative Offenses</span></a></li>
-            <li><a href="/nuclea/admin" class="tooltip {{#if (eq currentPath '/nuclea/dashboard')}}active{{/if}}"><i class="fa-solid fa-user-tie"></i><span class="tooltip-text">Admin</span></a></li>
+            {{#hasPrivilege privilegios "addAO"}}
+                <li>
+                    <a href="/nuclea/faltasAdministrativas" class="tooltip {{#if (eq currentPath '/nuclea/faltasAdministrativas')}}active{{/if}}">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                        <span class="tooltip-text">Administrative Offenses</span>
+                    </a>
+                </li>
+            {{/hasPrivilege}}
+            {{#hasPrivilege privilegios "viewAdmin"}}
+                <li>
+                    <a href="/nuclea/admin" class="tooltip {{#if (eq currentPath '/nuclea/admin')}}active{{/if}}">
+                    <i class="fa-solid fa-user-tie"></i>
+                    <span class="tooltip-text">Admin</span>
+                    </a>
+                </li>
+            {{/hasPrivilege}}
         </ul>
     </div>
     <div class="user">
