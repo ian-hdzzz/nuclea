@@ -7,6 +7,10 @@ exports.get_fa = (req, res, next) => {
     console.log('privilegios session', req.session.privilegios)
     let privilegiostot = req.session.privilegios
     console.log(privilegiostot)
+    const mensaje = req.session.info || '';
+     if (req.session.info) {
+         req.session.info = '';
+     }
     
     for (let privilegio of privilegiostot) {
         if (privilegio.Nombre_privilegio == 'addAO') {
@@ -25,6 +29,7 @@ exports.get_fa = (req, res, next) => {
                                 noFaltas: noFaltas,
                                 title: 'Administrative offenses',
                                 iconClass: 'fa-solid fa-triangle-exclamation',
+                                info: mensaje,
                                 privilegios: req.session.privilegios || [],
                             });
                         })
@@ -83,6 +88,7 @@ exports.post_agregar_fa = (req, res, next) => {
     
         falta.save()
             .then(() => {
+                req.session.info = `Addministrative offense saved.`;
                 res.redirect('/nuclea/faltasAdministrativas');
             })
             .catch((error) => {
