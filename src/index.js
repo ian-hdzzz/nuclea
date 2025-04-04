@@ -13,7 +13,7 @@ const app = express();
 
 // settings
 require('dotenv').config();
-app.set('port', process.env.PORT || 4000);
+app.set('port', process.env.PORT || 4002);
 app.set('views', path.join(__dirname, 'views'));
 const exphbs = create({
     defaultLayout: 'main',
@@ -71,6 +71,7 @@ app.use((req, res, next) => {
     res.locals.message = req.flash('message');
     res.locals.error = req.flash('error');
     res.locals.success = req.flash('success');
+    res.locals.privilegios = req.session.privilegios || [];
     next();
 });
 
