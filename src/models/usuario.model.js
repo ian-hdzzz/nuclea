@@ -188,6 +188,19 @@
       ]);
     }
     
+    static fetchbyId(idUsuario) {
+      return db.execute(`
+        SELECT
+          u.*,
+          GROUP_CONCAT(d.Nombre_departamento SEPARATOR ', ') AS Departamentos
+        FROM Usuarios u
+        LEFT JOIN Pertenece p ON u.idUsuario = p.idUsuario
+        LEFT JOIN Departamentos d ON p.idDepartamento = d.idDepartamento
+        WHERE u.idUsuario = ?
+        GROUP BY u.idUsuario;
+      `, [idUsuario]);
+    }
+    
     static fetchOneByGoogleId(googleId) {
       return db.execute("SELECT * FROM Usuarios WHERE google_id=?", [googleId]);
     }
@@ -226,3 +239,4 @@
       `, [idUsuario]);
     }   
   };
+
