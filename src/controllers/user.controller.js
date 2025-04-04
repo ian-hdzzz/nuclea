@@ -127,3 +127,37 @@ exports.get_delete = (req, res, next) => {
     })
   };
 
+  exports.get_view = (req, res, next) => {
+    console.log(req.params.idUsuario);
+    Usuario.fetchbyId(req.params.idUsuario)
+        .then(([rows, fieldData]) => {
+            console.log(rows[0]);
+            req.session.nombre = rows[0].Nombre;
+            req.session.apellidos = rows[0].Apellidos;
+            req.session.correo = rows[0].Correo_electronico;
+            req.session.ciudad = rows[0].Ciudad;
+            req.session.pais = rows[0].Pais;
+            req.session.calle = rows[0].Calle;
+            req.session.departamentos = rows[0].Departamentos;
+            req.session.registration = rows[0].Fecha_inicio_colab;
+            res.render('../views/pages/profile.hbs', {
+                csrfToken: req.csrfToken(),
+                usuario: rows[0],
+                title: 'View User',
+                nombre: req.session.nombre,
+                apellidos: req.session.apellidos,
+                pais: req.session.pais,
+                ciudad: req.session.ciudad,
+                calle: req.session.calle,
+                departamentos: req.session.departamentos,
+                email: req.session.correo,
+                registration: req.session.registration,
+
+            });
+        }) // Cierra el .then() correctamente
+        .catch(err => {
+            console.error(err);
+            res.status(500).send("Error al obtener el usuario");
+        }); // Manejo de errores opcional
+}; // Cierre correcto de la función
+
