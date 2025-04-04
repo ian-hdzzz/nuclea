@@ -326,7 +326,7 @@ input[type=checkbox] {
   }
   
   .dropdown-content.show {
-    max-height: 100px; /* Adjust based on your content */
+    max-height: 140px; 
     opacity: 1;
   }
   
@@ -348,19 +348,19 @@ input[type=checkbox] {
 /* Botón de eliminar */
 .dropdown-content button.delete-btn {
     color: rgba(176, 20, 6, 0.8);
-    border: 1px solid transparent; /* Define un borde transparente por defecto */
+    border: 1px solid transparent; 
     transition: all 0.3s ease-in-out;
 }
 
 .dropdown-content button.delete-btn:hover {
-    border-color: rgba(176, 20, 6, 0.8); /* Cambia el color del borde al hacer hover */
-    background-color: rgba(176, 20, 6, 0.1); /* Agrega un efecto de fondo sutil */
+    border-color: rgba(176, 20, 6, 0.8); 
+    background-color: rgba(176, 20, 6, 0.1); 
 }
 
 /* Botón de editar */
 .dropdown-content button.edit-btn {
     color: rgba(72, 150, 195, 0.8);
-    border: 1px solid transparent; /* Define un borde transparente por defecto */
+    border: 1px solid transparent; 
     transition: all 0.3s ease-in-out;
 }
 
@@ -373,4 +373,15 @@ input[type=checkbox] {
 .dropdown-content button i {
     margin-right: 8px;
     width: 16px;
+}
+
+.dropdown-content button.view-btn {
+    color: rgba(72, 205, 95, 0.622);
+    border: 1px solid transparent; 
+    transition: all 0.3s ease-in-out;
+}
+
+.dropdown-content button.view-btn:hover {
+    border-color: rgba(48, 155, 100, 0.8); 
+    background-color: rgba(6, 176, 46, 0.1); 
 }
