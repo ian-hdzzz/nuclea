@@ -9,6 +9,7 @@
             <li><a href="/nuclea/request" class="tooltip {{#if (eq currentPath '/nuclea/dashboard')}}active{{/if}}"><i class="fa-solid fa-plane-up"></i><span class="tooltip-text">Vacation Requests</span></a></li>
             <li><a href="/nuclea/one" class="tooltip {{#if (eq currentPath '/nuclea/dashboard')}}active{{/if}}"><i class="fa-solid fa-people-arrows"></i><span class="tooltip-text">One-to-one</span></a></li>
             <li><a href="/nuclea/reports" class="tooltip {{#if (eq currentPath '/nuclea/dashboard')}}active{{/if}}"><i class="fa-solid fa-clipboard-list"></i><span class="tooltip-text">Reports</span></a></li>
+            <li><a href="/nuclea/viewcollabs" class="tooltip {{#if (eq currentPath '/nuclea/dashboard')}}active{{/if}}"><i class="fa fa-users"></i></i><span class="tooltip-text">Department <br> Collaborators</span></a></li>
             {{#hasPrivilege privilegios "addAO"}}
                 <li>
                     <a href="/nuclea/faltasAdministrativas" class="tooltip {{#if (eq currentPath '/nuclea/faltasAdministrativas')}}active{{/if}}">

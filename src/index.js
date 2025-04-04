@@ -93,6 +93,9 @@ app.use('/nuclea/faltasAdministrativas', faltaAdministrativa);
 const users = require('./routes/users.routes');
 app.use('/nuclea/users', users);
 
+const viewcollabs = require('./routes/viewcollabs.routes');
+app.use('/nuclea/viewcollabs', viewcollabs);
+
 const holidayRoutes = require('./routes/holiday.routes');
 app.use('/nuclea/holiday', holidayRoutes);
 
