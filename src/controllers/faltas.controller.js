@@ -93,7 +93,8 @@ exports.post_agregar_fa = (req, res, next) => {
             })
             .catch((error) => {
                 console.error("Error al asignar falta:", error);
-                res.status(500).send('Error registrando falta administrativa');
+                req.session.info = `Error registering Addministrative offense.`;
+                res.status(500).send('Internal server error');
             });
     }
     else if (req.body.modal=="modal2"){
