@@ -1,31 +1,3 @@
-<<<<<<< HEAD
-* {
-  box-sizing: border-box;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #0c1019;
-}
-
-body {
-  margin: 0;
-  padding: 0;
-  background-color: #0c1019;
-  color: #eee;
-}
-
-.container {
-  
-  display: flex;
-  flex-direction: column;
-  max-width: 1200px;
-  margin: 20px auto;
- 
-  border-radius: 10px;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
-  
-}
-
-=======
 
 .dashboard-container {
   display: flex;
@@ -47,96 +19,10 @@ body {
 h2{
   color: #fff;
 }
->>>>>>> 3153feb8e7263923259ef31d6dbfdf77339479a6
 .profile-header {
   display: flex;
   flex-direction: column;
   align-items: center;
-<<<<<<< HEAD
-  padding: 30px 20px;
-  position: relative;
-  margin-bottom: 200px;
-  width: 50%;
-}
-
-.profile-image-container {
-  position: relative;
-  margin-bottom: 20px;
-}
-
-.profile-image {
-  width: 200px;
-  height: 250px;
-  
- 
-
-}
-
-.edit-button {
-  position: absolute;
-  bottom: 4px;
-  right: -4px;
-  width: 40px;
-  height: 40px;
-  
-  
-  cursor: pointer;
- 
-}
-
-.profile-name {
-  font-size: 24px;
-  font-weight: 600;
-  margin-bottom: 5px;
-  border-radius: 8px;
-  text-align: center;
-  background-color:  #4D67BD;
-  padding-left: 10px;
-  padding-right: 10px;
-}
-
-.profile-info {
-  width: 100%;
-  padding: 20px;
-
-}
-
-.info-section {
-  margin-bottom: 25px;
-}
-
-.info-label {
-  font-size: 14px;
-  color: #777;
-  margin-bottom: 5px;
-  font-size:x-large;
-}
-
-.info-value {
-  font-size:x-large;
-  padding: 20px 0;
-  border-radius: 8px;
-  text-align: center;
-  background-color: #141720;
-}
-
-@media (min-width: 768px) {
-  .container {
-      flex-direction: row;
-  }
-  
-  .profile-header {
-      width: 50%;
-      
-      border-bottom: none;
-      justify-content: center;
-  }
-  
-  .profile-info {
-      flex: 1;
-  }
-}
-=======
   margin-bottom: 30px;
   padding-bottom: 20px;
 }
@@ -398,4 +284,3 @@ h2{
       width: 100%;
   }
 }
->>>>>>> 3153feb8e7263923259ef31d6dbfdf77339479a6
