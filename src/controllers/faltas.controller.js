@@ -11,6 +11,11 @@ exports.get_fa = (req, res, next) => {
      if (req.session.info) {
          req.session.info = '';
      }
+
+     const mensajeerror = req.session.errorAO || '';
+     if (req.session.errorAO) {
+        req.session.errorAO = '';
+     }
     
     for (let privilegio of privilegiostot) {
         if (privilegio.Nombre_privilegio == 'addAO') {
@@ -30,6 +35,7 @@ exports.get_fa = (req, res, next) => {
                                 title: 'Administrative offenses',
                                 iconClass: 'fa-solid fa-triangle-exclamation',
                                 info: mensaje,
+                                error: mensajeerror,
                                 privilegios: req.session.privilegios || [],
                             });
                         })
@@ -92,9 +98,9 @@ exports.post_agregar_fa = (req, res, next) => {
                 res.redirect('/nuclea/faltasAdministrativas');
             })
             .catch((error) => {
-                console.error("Error al asignar falta:", error);
-                req.session.info = `Error registering Addministrative offense.`;
-                res.status(500).send('Internal server error');
+                req.session.errorAO = `Error registering Addministrative offense.`;
+                res.redirect('/nuclea/faltasAdministrativas');
+                res.status(500);
             });
     }
     else if (req.body.modal=="modal2"){
@@ -152,10 +158,12 @@ exports.post_update = (req, res, next) => {
 
     Falta.Update(idFalta, req.body.idUsu, req.body.fecha, req.body.motivo, archivo)
         .then(() => {
+            req.session.info = `Addministrative offense updated.`;
             res.redirect('/nuclea/faltasAdministrativas');
         })
         .catch((error) => {
-            console.error("Error al actualizar:", error);
-            res.status(500).send("Error actualizando");
+            req.session.errorAO = `Error registering Addministrative offense.`;
+            res.redirect('/nuclea/faltasAdministrativas');
+            res.status(500);
         });
 };

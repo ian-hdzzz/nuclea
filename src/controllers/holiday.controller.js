@@ -1,6 +1,15 @@
 const Holiday = require('../models/holiday.model');
 
 exports.get_Holiday = (req, res) => {
+    const mensaje = req.session.info || '';
+    if (req.session.info) {
+        req.session.info = '';
+    }
+
+    const mensajeerror = req.session.errorHOLI || '';
+    if (req.session.errorHOLI) {
+      req.session.errorHOLI = '';
+    }
     Holiday.fetchAll()
       .then(([rows, fieldData]) => {
         if(rows.length>0){
@@ -17,6 +26,8 @@ exports.get_Holiday = (req, res) => {
             datosh: rows,
             csrfToken: req.csrfToken(),
             error:error,
+            info: mensaje,
+            merror: mensajeerror,
         });
         }
         
@@ -39,6 +50,12 @@ exports.post_agregar_holiday = (request, response, next) => {
     const holiday = new Holiday(Nombre_holiday, fecha);
 
     holiday.save()
-        .then(() => response.redirect('/nuclea/holiday'))
-        .catch((error) => console.error('Error al guardar holiday:', error));
+        .then(() => {
+          request.session.info = `Holiday saved correctly.`;
+          response.redirect('/nuclea/holiday')})
+        .catch((error) => {
+          req.session.errorHOLI = `Error registering Holiday.`;
+          res.redirect('/nuclea/holiday');
+          res.status(500);
+        });
 };

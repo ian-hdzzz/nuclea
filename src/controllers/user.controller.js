@@ -22,6 +22,16 @@ exports.get_users = async (req, res, next) => {
         const nousers = all.length === 0;
         const tempPassword = generateRandomPassword();
 
+        const mensaje = req.session.info || '';
+        if (req.session.info) {
+            req.session.info = '';
+        }
+
+        const mensajeerror = req.session.errorUSU || '';
+        if (req.session.errorUSU) {
+            req.session.errorUSU = '';
+        }
+
         res.render('../views/pages/users.hbs', {
             rols: roles,
             csrfToken: req.csrfToken(),
@@ -30,6 +40,8 @@ exports.get_users = async (req, res, next) => {
             deptos,
             noUsers: nousers,
             emps: emp,
+            info: mensaje,
+            error: mensajeerror,
             title: 'Users',
         });
     } catch (err) {
@@ -115,11 +127,13 @@ exports.post_users = (request, response, next) => {
             return asignacion.assignment();
         })
         .then(() => {
+            request.session.info = `User registered correcly`;
             response.redirect('/nuclea/users');
         })
         .catch((error) => {
-            console.error("Error en post_users (register):", error);
-            response.status(500).send("Internal Server Error");
+            request.session.errorUSU = `Error registering user.`;
+            response.redirect('/nuclea/users');
+            response.status(500);
         });
 };
 

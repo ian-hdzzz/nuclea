@@ -385,3 +385,24 @@ input[type=checkbox] {
     border-color: rgba(48, 155, 100, 0.8); 
     background-color: rgba(6, 176, 46, 0.1); 
 }
+
+.notification.is-success {
+    background-color: #d4edda;
+    color: #155724;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #c3e6cb;
+    width: 80%;
+    text-align: center; /* Centra el texto */
+    text-align: center;
+}
+
+.notification.is-danger {
+    background-color: #f8d7da; /* Rojo claro */
+    color: #721c24; /* Rojo oscuro para el texto */
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #f5c6cb; /* Borde rojo */
+    width: 80%;
+    text-align: center; /* Centra el texto */
+}
