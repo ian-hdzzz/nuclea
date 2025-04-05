@@ -4,57 +4,55 @@ const Role = require('../models/role.model');
 const Usuario = require('../models/usuario.model');
 const crypto = require('crypto');
 const Dept = require('../models/departament.model');
+const Empresa = require('../models/empresa.model');
 
 function generateRandomPassword(length = 10) {
     return crypto.randomBytes(length).toString('hex').slice(0, length);
 }
 
 
-exports.get_users = (req, res, next) => {
+exports.get_users = async (req, res, next) => {
+    try {
+        const [emp] = await Empresa.fetchAll();
+        const [roles] = await Role.fetchAll();
+        const [usuarios] = await Usuario.fetchAll();
+        const [deptos] = await Dept.fetchDept();
+        const [all] = await Usuario.fetchDeptAll();
 
-    Role.fetchAll().then(([roles, fD])=>{
-        console.log("Roles obtenidos:", roles)
-        Usuario.fetchAll().then(([rows, fieldData])=>{
-            Dept.fetchDept().then(([dept,FD])=>{
-                Usuario.fetchDeptAll().then(([all,FiDA])=>{
-                    const nousers = all.length === 0;
-                    const tempPassword = generateRandomPassword();
-                    res.render('../views/pages/users.hbs',{
-                    rols:roles,
-                    csrfToken: req.csrfToken(),
-                    usuarios: all,
-                    tempPassword: tempPassword,
-                    deptos:dept,
-                    noUsers : nousers,
-                    title: 'Users',
-                })
-                }).catch((err)=>{
-                    console.error('Error fetching Departments:', err);
-                    res.status(500).send('Internal Server Error');
-                });
-            }).catch((err)=>{
-                console.error('Error fetching departments:', err);
-                res.status(500).send('Internal Server Error');
-            });
-        }).catch((err)=>{
-            console.error('Error fetching users:', err);
-            res.status(500).send('Internal Server Error');
+        const nousers = all.length === 0;
+        const tempPassword = generateRandomPassword();
+
+        res.render('../views/pages/users.hbs', {
+            rols: roles,
+            csrfToken: req.csrfToken(),
+            usuarios: all,
+            tempPassword,
+            deptos,
+            noUsers: nousers,
+            emps: emp,
+            title: 'Users',
         });
-    }).catch((err)=>{
-        console.error('Error fetching Roles:', err);
+    } catch (err) {
+        console.error('Error en get_users:', err);
         res.status(500).send('Internal Server Error');
-    })
+    }
 };
+
 
 exports.post_users = (request, response, next) => {
     console.log("Datos recibidos en POST /users:", request.body);
 
-    const action = request.body.action; // Obtener el valor del campo oculto
+    const action = request.body.action;
 
     if (!request.body.password) {
         console.error("Error: La contraseña es undefined.");
         return response.status(400).send("Error: Falta la contraseña.");
     }
+
+    const deptId = request.body.depa ?? null;
+    const empresaId = request.body.company ?? null;
+
+    console.log("Valores extraídos:", { deptId, empresaId }); // <-- Verifica que no sean undefined aquí
 
     const usua = new Usuario(
         request.body.name_us,
@@ -71,6 +69,9 @@ exports.post_users = (request, response, next) => {
         request.body.dias_vacaciones,
         null,
         null,
+        null,
+        null,
+        null,
         null
     );
 
@@ -85,20 +86,33 @@ exports.post_users = (request, response, next) => {
             console.log("Usuario insertado con ID:", usuarioId);
 
             const idRol = request.body.role;
-            return Role.asign(usuarioId, idRol);
+            return Role.asign(usuarioId, idRol).then(() => usuarioId);
         })
-        .then(() => {
-            // Asegurar que request.body.departamentos sea un array
-            const departamentos = Array.isArray(request.body.departamentos) 
-                ? request.body.departamentos 
-                : [request.body.departamentos];
-        
-            const departamentosPromises = departamentos.map(deptId => {
-                const asignacion = new Usuario(null, null, null, null, null, null, null, null, null, null, null, null, usuarioId, deptId, new Date());
-                return asignacion.assignment();
-            });
-        
-            return Promise.all(departamentosPromises);
+        .then((usuarioId) => { 
+            console.log("Valores antes de llamar a assignment():", { usuarioId, deptId, empresaId });
+
+            const asignacion = new Usuario(
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                usuarioId,
+                deptId,
+                null,
+                null,
+                null,
+                empresaId 
+            )
+
+            return asignacion.assignment();
         })
         .then(() => {
             response.redirect('/nuclea/users');

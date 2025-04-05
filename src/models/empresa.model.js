@@ -1,6 +1,6 @@
 // eslint-disable-next-line no-undef
 const db = require('../util/database');
-
+ 
 // eslint-disable-next-line no-undef
 module.exports = class Empresa {
 
