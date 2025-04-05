@@ -2,7 +2,11 @@ const Departament = require('../models/departament.model');
 const Empresa = require('../models/empresa.model');
 const { asign } = require('../models/role.model');
 
+
 exports.getDepartaments = (req, res) => {
+  const mensaje = req.session.info || null;
+  const error = req.session.error || null;
+  req.session.info = null;
   Empresa.fetchAll()
     .then(([emp, fieldData]) => {
       Departament.fetchAll()
@@ -11,6 +15,8 @@ exports.getDepartaments = (req, res) => {
             .then(([rowsDepa, fieldData]) => {
               if (rows.length > 0) {
                 res.render('../views/pages/departament.hbs', { 
+                  info: mensaje,
+                  error: error,
                   datos: rowsDepa,
                   emps: emp,
                   csrfToken: req.csrfToken(),
@@ -46,21 +52,22 @@ exports.getDepartaments = (req, res) => {
         
     
 
-exports.post_agregar_dep = (request, response, next) => {
-    console.log(request.body);
+exports.post_agregar_dep = (req, res, next) => {
+    console.log(req.body);
 
-    const empresaId = request.body.company ?? null;
+    const empresaId = req.body.company ?? null;
     
     // Crear el nuevo departamento
     const falta = new Departament(
-        request.body.Nombre_departamento,
-        request.body.Descripcion,
-        request.body.Estado
+        req.body.Nombre_departamento,
+        req.body.Descripcion,
+        req.body.Estado
     );
 
     falta.save()
         .then(([result]) => {
             let depaId = result.insertId;
+            console.log("ID del departamento insertado:", depaId);
 
             // Asignar el departamento a la empresa
             const asignacion = new Departament(
@@ -70,11 +77,13 @@ exports.post_agregar_dep = (request, response, next) => {
             return asignacion.assign();
         })
         .then(() => {
-            response.redirect('/nuclea/departament');
+          req.session.info = "Departament saved successfully";
+          res.redirect('/nuclea/departament');
         })
         .catch((error) => {
+            req.session.error = "Faild to save departament";
             console.log(error);
-            response.status(500).send("Error al agregar el departamento.");
+            res.status(500).send("Error al agregar el departamento.");
         });
 };
 
