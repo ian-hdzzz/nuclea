@@ -58,4 +58,21 @@ exports.post_agregar_holiday = (request, response, next) => {
           res.redirect('/nuclea/holiday');
           res.status(500);
         });
+
+
+
+};
+
+
+exports.get_search_holiday = (req, res) => {
+  const name = req.query.name || ''; 
+
+  Holiday.search(name)
+      .then(([rows]) => {
+          res.json(rows); // Siempre devuelve JSON
+      })
+      .catch((error) => {
+          console.error('Error:', error);
+          res.status(500).json({ error: 'Internal Server Error' });
+      });
 };

@@ -24,4 +24,15 @@ module.exports = class Holiday {
         return db.execute('SELECT * FROM DiasFeriados');
     }
 
+    static search(name) {
+        if (name) {
+            // Búsqueda con filtro
+            return db.execute(
+                'SELECT * FROM DiasFeriados WHERE Nombre_asueto LIKE ?', 
+                [`%${name}%`]
+            );
+        } else {
+            return db.execute('SELECT * FROM DiasFeriados'); 
+        }
+    }
 }

@@ -45,6 +45,7 @@ app.use(passport.session());
 
 const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.json());
 
 const multer = require('multer');
 const fileStorage = multer.diskStorage({
