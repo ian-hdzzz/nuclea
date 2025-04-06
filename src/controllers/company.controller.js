@@ -1,4 +1,4 @@
-const Company = require('../models/holiday.model');
+const Company = require('../models/empresa.model');
 
 /**
  * Renderiza la página de holidays con los datos de empresas.
@@ -22,7 +22,7 @@ exports.get_company = (req, res) => {
           res.render('../views/pages/company.hbs', {
             datosh: empresas,
             csrfToken: req.csrfToken(),
-            title: 'Holidays',
+            title: 'Companies',
             info: mensaje,
             merror: mensajeerror,
           });
@@ -52,23 +52,16 @@ exports.get_company = (req, res) => {
  */
 exports.post_agregar_company = (request, response, next) => {
   console.log(request.body);
-  const {Coname, Coestado} = request.body;
-
-  if (!Coname || !Coestado) {
-    console.error('Error: al enviar el formulario.');
-    return response.status(400).send('Datos inválidos');
-  }
-
-  const company = new Company(Coname, Coestado);
+  const company = new Company(request.body.Nombre_company, request.body.status_company);
 
   company.save()
       .then(() => {
         request.session.info = 'Company saved correctly.';
-        response.redirect('/nuclea/holiday');
+        response.redirect('/nuclea/company');
       })
       .catch((error) => {
         request.session.errorCO = 'Error registering Company.';
-        request.redirect('/nuclea/holiday');
-        request.status(500);
+        response.redirect('/nuclea/company');
+        response.status(500);
       });
 };

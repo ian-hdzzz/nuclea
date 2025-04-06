@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="/css/company.css">
+    <link rel="stylesheet" href="/css/AO.css">
 </head>
 <body>
     <div class="top-container">
@@ -45,8 +45,7 @@
         <div class="nav-content">
             <h2>Companies</h2>
             <div class="add-btn-container" id="openModal">
-                <i class="fa-regular fa-square-plus"></i>
-                <input type="button" value="Add Holiday" class="add-btn">
+                <input type="button" value="Add Company" class="add-btn">
             </div>
         </div>
         <table>
@@ -60,25 +59,24 @@
             <tbody>
                 {{#each datosh}}
                 <tr>
-                    <td>{{Nombre_asueto}}</td>
+                    <td>{{Nombre_empresa}}</td>
                     <td class="state">
-                        {{#if Estatus}}
-                          <span class="active"> <div class="dot"></div>Active</span>
+                        {{#if Estado}}
+                          <span class="active"></div>Active</span>
                         {{else}}
-                          <span class="inactive"> <div class="dot"></div>Inactive</span>
+                          <span class="inactive"></div>Inactive</span>
                         {{/if}}</td>
                     <td>
                         <div class="dropdown">
-                            <button class="action-btn">Actions</button>
-                            <div class="dropdown-content">
-                                <button class="edit-btn"  onclick="location.href='/nuclea/departament/update/{{idDepartamento}}'">
-                                  <i class="fa-solid fa-pen-to-square"></i> Edit
-                                </button>
-                                <button class="delete-btn" onclick="location.href='/nuclea/departament/delete/{{idDepartamento}}'">
-                                  <i class="fa-solid fa-trash"></i> Delete
-                                </button>
+                        <button class="action-btn">Actions</button>
+                        <div class="dropdown-content">
+                            <button class="edit-btn"  onclick="location.href='/nuclea/faltasAdministrativas/update/{{../idFalta}}'">
+                            <i class="fa-solid fa-pen-to-square"></i> Edit
+                            </button>
+                            <button class="delete-btn" onclick="location.href='/nuclea/faltasAdministrativas/delete/{{../idFalta}}'">
+                            <i class="fa-solid fa-trash"></i> Delete
+                            </button>
 
-              </div>
                         </div>
                     </td>
                 </tr>
@@ -101,14 +99,14 @@
             <input type="hidden" name="_csrf" value="{{csrfToken}}">
                 <div class="form-group">
                     <label for="deptName">Company Name</label>
-                    <input type="text" id="holiName" name="Nombre_holiday" placeholder="Christmas" class="text-modal" required
+                    <input type="text" id="holiName" name="Nombre_company" placeholder="Nuclea" class="text-modal" required
                     oninvalid="this.setCustomValidity('Please remember to write the company name')"
                     oninput="this.setCustomValidity('')">
                 </div>
 
                 <div class="form-group">
                     <label>Status</label>
-                    <select  class="text-modal" name="status_us" required
+                    <select  class="text-modal" name="status_company" required
                         oninvalid="this.setCustomValidity('Please select a Status')" 
                         onchange="this.setCustomValidity('')">
                         <option value="">- Select a Status -</option>
