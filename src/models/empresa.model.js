@@ -13,8 +13,8 @@ module.exports = class Empresa {
     //Este método servirá para guardar de manera persistente el nuevo objeto. 
     save() {
         return db.execute(
-            'INSERT INTO Empresa (Nombre_departamento, Estado) VALUES (?, ?)',
-            [this.nombre, this.descripcion, this.estado]
+            'INSERT INTO Empresa (Nombre_empresa, Estado) VALUES (?, ?)',
+            [this.nombre, this.estado]
         );
         
     }

@@ -101,6 +101,9 @@ app.use('/nuclea/viewcollabs', viewcollabs);
 const holidayRoutes = require('./routes/holiday.routes');
 app.use('/nuclea/holiday', holidayRoutes);
 
+const companyRoutes = require('./routes/company.routes');
+app.use('/nuclea/company', companyRoutes);
+
 // public
 app.use(express.static(path.join(__dirname, 'public')));
 
