@@ -160,7 +160,25 @@ exports.rejectRequest = (req, res) => {
     });
 };
 
+exports.editRequest = (req, res) => {
+  const idSolicitud = req.params.id;
+  const { Tipo, Fecha_inicio, Fecha_fin, Descripcion } = req.body;
 
+  db.execute(`
+    UPDATE Solicitudes
+    SET Tipo = ?, Fecha_inicio = ?, Fecha_fin = ?, Descripcion = ?,
+        Aprobacion_L = 'Pendiente', Fecha_aprob_L = NULL,
+        Aprobacion_A = 'Pendiente', Fecha_aprob_A = NULL
+    WHERE idSolicitud = ?
+  `, [Tipo, Fecha_inicio, Fecha_fin, Descripcion, idSolicitud])
+    .then(() => {
+      res.redirect('/nuclea/request');
+    })
+    .catch(err => {
+      console.error('Error al editar la solicitud:', err);
+      res.status(500).send('Error interno');
+    });
+};
 
 /* 
 

@@ -40,7 +40,7 @@
               <th>Type</th>
               <th>Start Date</th>
               <th>End Date</th>
-              <th>Description</th>
+              <th class="descripcion-columna">Description</th>
               <th>Leader Approval</th>
               <th>Admin Approval</th>
               <th>Actions</th>
@@ -49,12 +49,18 @@
           <tbody>
             {{#if datos.length}}
               {{#each datos}}
-              <tr>
+              <tr
+                data-id="{{idSolicitud}}" 
+                data-tipo="{{'Tipo'}}" 
+                data-fecha-inicio="{{Fecha_inicio}}" 
+                data-fecha-fin="{{Fecha_fin}}" 
+                data-descripcion="{{Descripcion}}"
+              >
                 <td>{{Nombre}} {{Apellido}}</td>
                 <td>{{Tipo}}</td>
                 <td>{{formatDate Fecha_inicio}}</td>
                 <td>{{formatDate Fecha_fin}}</td>
-                <td>{{Descripcion}}</td>
+               <td class="descripcion-columna">{{Descripcion}}</td>
                 <td>
                   <span class=" vacation-status {{#if (eq Aprobacion_L 'Aprobado')}}active{{else if (eq Aprobacion_L 'Rechazado')}}inactive{{else}}pending{{/if}}">
                   <div class="dot"></div>
@@ -97,6 +103,11 @@
                 </td>
               </tr>
               {{/each}}
+              <!-- Registro vacio para aparecer menu de actions-->
+              <tr class="table-spacer-row">
+                <td class="height-spacer" colspan="8"></td>
+              </tr>
+              
             {{else}}
               <tr>
                 <td colspan="7" class="empty-message">No requests available</td>
@@ -145,14 +156,14 @@
               <label for="Tipo">Type</label>
               <select id="Tipo" name="Tipo" class="text-modal" required>
                 <option value="">Select a type</option>
-                <option value="Vacaciones">Vacations</option>
-                <option value="Permiso médico">Medical leave</option>
-                <option value="Capacitación">Training</option>
-                <option value="Día personal">Personal day</option>
-                <option value="Trabajo remoto">Remote work</option>
-                <option value="Emergencia familiar">Family emergency</option>
-                <option value="Asuntos legales">Legal matters</option>
-                <option value="Permiso académico">Academic leave</option>
+                <option value="Vacations">Vacations</option>
+                <option value="Medical leave">Medical leave</option>
+                <option value="Training">Training</option>
+                <option value="Personal day">Personal day</option>
+                <option value="Remote work">Remote work</option>
+                <option value="Family emergency">Family emergency</option>
+                <option value="Legal matters">Legal matters</option>
+                <option value="Academic leave">Academic leave</option>
               </select>
             </div>
 
@@ -176,10 +187,53 @@
           </form>
         </div>
       </div>
+      
+      <!-- Modal Edit-->
+      <div id="editModal" class="modal hidden">
+        <div class="modal-content">
+          <button id="closeEditModal" class="close-btn">✖</button>
+          <h2 class="title-modal">Edit Request</h2>
+          <form id="editForm" method="POST">
+            <input type="hidden" name="_csrf" value="{{csrfToken}}" />
+            <div class="form-group">
+              <label>Type</label>
+              <select name="Tipo" class="text-modal" required>
+                <option value="">Select a type</option>
+                <option value="Vacations">Vacations</option>
+                <option value="Medical leave">Medical leave</option>
+                <option value="Training">Training</option>
+                <option value="Personal day">Personal day</option>
+                <option value="Remote work">Remote work</option>
+                <option value="Family emergency">Family emergency</option>
+                <option value="Legal matters">Legal matters</option>
+                <option value="Academic leave">Academic leave</option>
+              </select>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Start Date</label>
+                <input type="date" name="Fecha_inicio" class="text-modal" required />
+              </div>
+              <div class="form-group">
+                <label>End Date</label>
+                <input type="date" name="Fecha_fin" class="text-modal" required />
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Description</label>
+              <input type="text" name="Descripcion" class="text-modal" required />
+            </div>
+            <input type="submit" class="btn-submit" value="Update Request" />
+          </form>
+        </div>
+      </div>
+
     </div>
   </div>
   <script src="/js/addRequest.js"></script>
   <script src="/js/delete.js"></script>
   <script src="/js/approve.js"></script>
+  <script src="/js/editRequest.js"></script>
+
 </body>
 </html>

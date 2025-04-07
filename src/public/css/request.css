@@ -10,9 +10,10 @@
 body {
     background-color: #0c1019;
     color: #fff;
+    font-family: 'Montserrat', sans-serif;
 }
 .request-container {
-    width: calc(100% - 20px);
+    width: calc(100% - 10px);
     display: flex;
     flex-direction: column;
     margin-left: 90px;
@@ -385,6 +386,9 @@ th {
     width: 60%;
     flex: 1 1 75%;
     overflow-x: auto;
+    overflow-y: visible; /* <- permite que los dropdowns crezcan hacia abajo */
+    position: relative; /* <- necesario para posicionamiento absoluto interno */
+    z-index: auto; /* <- asegura que la tabla esté por debajo de los dropdowns */
 }
 
 
@@ -514,6 +518,7 @@ th {
     color: rgba(34, 197, 94, 0.9); /* Verde */
     border: 1px solid transparent;
     transition: all 0.3s ease-in-out;
+    font-size: small;
 }
 .dropdown-content button.approve-btn:hover {
     border-color: rgba(34, 197, 94, 0.9);
@@ -530,3 +535,24 @@ th {
     border-color: rgba(239, 68, 68, 0.9);
     background-color: rgba(239, 68, 68, 0.1);
 }
+
+td.descripcion-columna, th.descripcion-columna {
+    max-width: 108px;   /* Ajusta según el diseño */
+    word-wrap: break-word;
+    white-space: normal;
+    font-size: 14px;
+  }
+  
+/* Espacio fantasma al final de la tabla para dropdown */
+.table-spacer-row {
+    height: 80px;
+    background: transparent;
+    border: none;
+  }
+
+.height-spacer {
+    height: 90px; /* Puedes ajustar este valor: 40px, 60px, etc. */
+    border: none; /* Opcional, evita línea gris abajo */
+    background: transparent; /* Opcional, evita color de fondo */
+    padding: 0;
+  }
