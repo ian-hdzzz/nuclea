@@ -49,7 +49,7 @@ exports.getRequests = (req, res) => {
       
     }
     if(!canViewPersonal){
-      Request.fetchPersonal()
+      Request.fetchPersonal(req.session.idUsuario)
       .then(([rows]) => {
         res.render('pages/request', {
           datos: rows,
