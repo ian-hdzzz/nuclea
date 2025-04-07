@@ -19,9 +19,28 @@ module.exports = class Holiday {
         
     }
 
+     static deleteA(idDiaFeriado){
+                return db.execute(`
+                    DELETE FROM DiasFeriados WHERE idDiaFeriado = ?;
+                `,[idDiaFeriado])
+            }
+    
+
     //Este método servirá para devolver los objetos del almacenamiento persistente.
     static fetchAll() {
         return db.execute('SELECT * FROM DiasFeriados');
     }
 
+    static search(name) {
+        if (name) {
+            // Búsqueda con filtro
+            return db.execute(
+                'SELECT * FROM DiasFeriados WHERE Nombre_asueto LIKE ?', 
+                [`%${name}%`]
+            );
+        } else {
+            return db.execute('SELECT * FROM DiasFeriados'); 
+        }
+    }
 }
+

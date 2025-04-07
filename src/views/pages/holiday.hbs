@@ -12,13 +12,35 @@
             <div class="first-container">
                 <div class="views">Views</div>
                 <div class="search-container">
-                    <input type="text" placeholder="Search..." class="input-search">
+                    <input type="text" placeholder="Search..." class="input-search" id="search-input">
                     <i class="fa-solid fa-magnifying-glass search-icon"></i>
                 </div>
             </div>
             
         </nav>
     </div>
+    {{#if info}}
+        <div "top-container">
+        <div class="nav-bar">
+            <div class="first-container">
+            <div class="notification is-success">
+                {{info}}
+            </div>
+            </div>
+        </div>
+        </div>
+    {{/if}}
+    {{#if error}}
+        <div "top-container">
+        <div class="nav-bar">
+            <div class="first-container">
+            <div class="notification is-danger">
+                {{error}}
+            </div>
+            </div>
+        </div>
+        </div>
+    {{/if}}
     <div class="content">
         <div class="nav-content">
             <h2>Holidays</h2>
@@ -45,10 +67,10 @@
                         <div class="dropdown">
                             <button class="action-btn">Actions</button>
                             <div class="dropdown-content">
-                                <button class="edit-btn"  onclick="location.href='/nuclea/departament/update/{{idDepartamento}}'">
+                                <button class="edit-btn"  onclick="location.href='/nuclea/holiday/update/{{idDiaFeriado}}'">
                                   <i class="fa-solid fa-pen-to-square"></i> Edit
                                 </button>
-                                <button class="delete-btn" onclick="location.href='/nuclea/departament/delete/{{idDepartamento}}'">
+                                <button class="delete-btn" onclick="location.href='/nuclea/holiday/delete/{{idDiaFeriado}}'">
                                   <i class="fa-solid fa-trash"></i> Delete
                                 </button>
 
@@ -104,6 +126,6 @@
     </div>
 
 
-    <script src="/js/addDepartament.js"></script>
+    <script src="/js/holidays.js"></script>
 </body>
 </html>

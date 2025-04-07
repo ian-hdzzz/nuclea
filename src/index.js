@@ -45,6 +45,7 @@ app.use(passport.session());
 
 const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.json());
 
 const multer = require('multer');
 const fileStorage = multer.diskStorage({
@@ -94,8 +95,14 @@ app.use('/nuclea/faltasAdministrativas', faltaAdministrativa);
 const users = require('./routes/users.routes');
 app.use('/nuclea/users', users);
 
+const viewcollabs = require('./routes/viewcollabs.routes');
+app.use('/nuclea/viewcollabs', viewcollabs);
+
 const holidayRoutes = require('./routes/holiday.routes');
 app.use('/nuclea/holiday', holidayRoutes);
+
+const companyRoutes = require('./routes/company.routes');
+app.use('/nuclea/company', companyRoutes);
 
 // public
 app.use(express.static(path.join(__dirname, 'public')));

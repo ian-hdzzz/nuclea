@@ -1,0 +1,58 @@
+@startuml
+actor Usuario
+boundary "company.routes" as S
+boundary "company.hbs" as V
+control "company.controller" as C
+entity Company 
+entity "empresa.model" as MU
+database "mysql" as DB
+
+
+' Flujo GET inicial para ver la vista
+activate Usuario
+Usuario -> S: HTTP GET /nuclea/company
+deactivate Usuario
+activate S
+S -> C: get_company(req, res)
+deactivate S
+activate C
+C ->> MU: fetchAll()
+activate MU
+MU ->> DB: db.execute(SELECT * FROM Empresa)
+activate DB
+DB -->> MU: empresas
+deactivate DB
+MU -->> C: empresas
+deactivate MU
+C -> V: res.render('CompanysAdministrativas.hbs', empresas )
+deactivate C
+activate V
+V -> Usuario: HTML
+deactivate V
+
+' Nota: El usuario interactúa con la vista
+note over Usuario: llena el form de registro y lo envia
+
+' Flujo POST para registrar la Company
+activate Usuario
+Usuario -> S: HTTP POST /nuclea/company
+deactivate Usuario
+activate S
+S -> C: post_agregar_company(req,res)
+deactivate S
+activate C
+C -> Company**: new Empresa(Coname , Coestado)
+activate Company
+C ->> Company: save()
+Company -> DB: db.execute('INSERT INTO Empresa (Nombre_empresa, Estado) VALUES (?, ?)',[this.nombre, this.estado]);
+activate DB
+DB --> Company: Query OK
+deactivate DB
+Company -->> C: Promesa
+deactivate Company
+C -> S: res.redirect('/nuclea/company')
+deactivate C
+activate S
+S --> Usuario: Redirección
+deactivate S
+@enduml
