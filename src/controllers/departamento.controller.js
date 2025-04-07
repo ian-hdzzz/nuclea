@@ -97,12 +97,17 @@ exports.get_delete = (req, res, next) => {
 };
 
 exports.get_update = (req, res, next) => {
-  Departament.fetchFAI(req.params.idDepartamento)
+  Empresa.fetchAll().then(([emp,fieldData]) => {
+    Departament.fetchAll().then(([rows,fieldData])=>{
+      Departament.fetchAllDepa().then(([rowsDepa,fieldData])=>{
+        Departament.fetchFAI(req.params.idDepartamento)
       .then(([depas, fD]) => {
   
                   res.render('../views/pages/editarDep.hbs', {
                       csrfToken: req.csrfToken(),
+                      emp:emp,
                       datos: depas[0],
+                      emps:rowsDepa,
                       title: 'Administrative offenses'
                   });
                   console.log(depas)
@@ -111,7 +116,11 @@ exports.get_update = (req, res, next) => {
                   console.error('Error fetching Users:', err);
                   res.status(500).send('Internal Server Error');
               });
-      };
+      })
+    })
+  })
+  
+};
 
 
 exports.post_update = (req, res, next) => {
@@ -119,10 +128,11 @@ exports.post_update = (req, res, next) => {
   const nombre = req.body.Nombre_departamento || null;
   const descripcion = req.body.Descripcion || null;
   const estado = req.body.Estado || null;
+  const idEmpresa = req.body.company || null; // Obtener el id de la empresa desde el formulario
 
-  console.log("Valores enviados a Update:", { idDepartamento, nombre,descripcion, estado });
+  console.log("Valores enviados a Update:", { idDepartamento, nombre,descripcion, estado,idEmpresa});
 
-  Departament.Update(idDepartamento, nombre,descripcion, estado)
+  Departament.Update(idDepartamento, nombre,descripcion, estado, idEmpresa)
       .then(() => {
           res.redirect('/nuclea/departament');
       })

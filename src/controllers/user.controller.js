@@ -193,3 +193,46 @@ exports.get_delete = (req, res, next) => {
         }); // Manejo de errores opcional
 }; // Cierre correcto de la función
 
+exports.get_update = async (req, res, next) => {
+    try {
+        const { idUsuario } = req.params; // Obtener idUsuario de los parámetros
+        const [emp] = await Empresa.fetchAll();
+        const [roles] = await Role.fetchAll();
+        const [usuarios] = await Usuario.fetchAll();
+        const [deptos] = await Dept.fetchDept();
+
+        // Consulta para obtener los detalles del usuario con departamentos, roles y empresa
+        const [usuarioDetails] = await Usuario.fetchUserDetails(idUsuario);
+
+        const nousers = usuarios.length === 0;
+        const tempPassword = generateRandomPassword();
+
+        const mensaje = req.session.info || '';
+        if (req.session.info) {
+            req.session.info = '';
+        }
+
+        const mensajeerror = req.session.errorUSU || '';
+        if (req.session.errorUSU) {
+            req.session.errorUSU = '';
+        }
+
+        console.log(usuarioDetails); // Verifica que usuarioDetails tenga datos
+
+        res.render('../views/pages/editarUsers.hbs', {
+            rols: roles,
+            csrfToken: req.csrfToken(),
+            usuarioDetails:usuarioDetails[0], 
+            tempPassword,
+            deptos,
+            noUsers: nousers,
+            emps: emp,
+            info: mensaje,
+            error: mensajeerror,
+            title: 'Users',
+        });
+    } catch (err) {
+        console.error('Error en get_users:', err);
+        res.status(500).send('Internal Server Error');
+    }
+}

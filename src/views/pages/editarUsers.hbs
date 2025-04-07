@@ -1,0 +1,274 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Department Management</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="/css/users.css">
+</head>
+<body>
+
+
+    <div class="top-container">
+        <nav class="nav-bar">
+            <div class="first-container">
+                <div class="views">Views</div>
+                <div class="search-container">
+                    <input type="text" placeholder="Search..." class="input-search">
+                    <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                </div>
+            </div>
+        </nav>
+    </div>
+    {{#if info}}
+        <div "top-container">
+        <div class="nav-bar">
+            <div class="first-container">
+            <div class="notification is-success">
+                {{info}}
+            </div>
+            </div>
+        </div>
+        </div>
+    {{/if}}
+    {{#if error}}
+        <div "top-container">
+        <div class="nav-bar">
+            <div class="first-container">
+            <div class="notification is-danger">
+                {{error}}
+            </div>
+            </div>
+        </div>
+        </div>
+    {{/if}}
+    <div class="content">
+        <div class="nav-content">
+            <h2>Users Managment</h2>
+            <div class="add-btn-container">
+                <i class="fa-regular fa-square-plus"></i>
+                <input type="button" value="Add Users" id="openModal" class="add-btn">
+                <!-- Botón de enviar <input type="button" value="Assign user to Dep" id="openModal2" class="add-btn"> -->
+            </div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Dept</th>
+                    <th>Start Date</th>
+                    <th>Working Model</th>
+                    <th>City</th>
+                    <th class="status">Status</th>
+                    <th class="actions">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+              {{#each usuarios}}
+                <tr>
+                    <td>{{Nombre}} {{Apellidos}}</td>
+                    <td>{{Departamentos}}</td>
+                    <td>{{formatDate Fecha_inicio_colab}}</td>
+                    <td>{{Modalidad}}</td>
+                    <td>{{Ciudad}}</td>
+                    <td class="state">
+                        {{#if Estatus}}
+                       
+                          <span class="active"> <div class="dot"></div>Active</span>
+                        {{else}}
+                          <span class="inactive"> <div class="dot"></div>Inactive</span>
+                        {{/if}}</td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="action-btn">Actions</button>
+                            <div class="dropdown-content">
+                                <button class="edit-btn"  onclick="location.href='/nuclea/users/update/{{idUsuario}}'">
+                                  <i class="fa-solid fa-pen-to-square"></i> Edit
+                                </button>
+                                <button class="delete-btn" onclick="location.href='/nuclea/users/delete/{{idUsuario}}'">
+                                  <i class="fa-solid fa-trash"></i> Delete
+                                </button>
+                                <button class="view-btn" onclick="location.href='/nuclea/users/view/{{idUsuario}}'">
+                                  <i class="fa-solid fa-circle-user"></i> View 
+                                </button>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+              {{/each}}
+            </tbody>
+        </table>
+        {{#if noUsers}}
+        <p style="text-align: center; margin-top: 20px;">No Users existing</p>
+        {{/if}}
+
+        <!-- MODAL -->
+    <div id="modal" class="modal">
+    <div class="modal-content">
+        <!-- Botón de cerrar -->
+        <button id="closeModal" class="close-btn">✖</button>
+
+        <h2 class="title-modal">Add Users</h2>
+        <p class="description">Fill in the required details to recall this Users</p>
+
+        <!-- Campos -->
+        <form action="/nuclea/users" id="form-user" method="POST">
+            <input type="hidden" name="action" value="register"> <!-- Campo oculto -->
+            <input type="hidden" name="_csrf" value="{{csrfToken}}">
+            
+            <div class="form-group">
+                <label>Employee Names</label>
+                <input type="text" placeholder="Jacob" class="text-modal" name="name_us" value="{{usuarioDetails.Nombre}}" required
+                    oninvalid="this.setCustomValidity('Please remember to write the user names')"
+                    oninput="this.setCustomValidity('')">
+            </div>
+
+            <div class="form-group">
+                <label>Last Name</label>
+                <input type="text" placeholder="Espejel" class="text-modal" name="lastname_us" value="{{usuarioDetails.Apellidos}}"required
+                    oninvalid="this.setCustomValidity('Please remember to write the user last name')"
+                    oninput="this.setCustomValidity('')">
+            </div>
+            
+            <div class="form-group">
+                <label>Email</label>
+                <input type="text" placeholder="jacob@nuclea.com" class="text-modal" name="email_us" value="{{usuarioDetails.Correo_electronico}}"required
+                    oninvalid="this.setCustomValidity('Please remember to write the user email')"
+                    oninput="this.setCustomValidity('')">
+            </div>
+
+            <div class="form-group">
+                <label>Country</label>
+                <input type="text" placeholder="Mexico" class="text-modal" name="country_us" value="{{usuarioDetails.Pais}}"required
+                    oninvalid="this.setCustomValidity('Please remember to write the user country')"
+                    oninput="this.setCustomValidity('')">
+            </div>
+
+            <div class="form-group">
+                <label>City </label>
+                <input type="text" placeholder="Queretaro" class="text-modal" name="city_us" value="{{usuarioDetails.Ciudad}}"required
+                    oninvalid="this.setCustomValidity('Please remember to write the user city')"
+                    oninput="this.setCustomValidity('')">
+            </div>
+
+            <div class="form-group">
+                <label>Street</label>
+                <input type="text" placeholder="Las Praderas 123" class="text-modal" name="street_us" value="{{usuarioDetails.Calle}}" required
+                    oninvalid="this.setCustomValidity('Please remember to write the user street')"
+                    oninput="this.setCustomValidity('')">
+            </div>
+
+            <div class="form-group">
+                <label for="status">Working Model</label>
+                <select class="text-modal" name="model_us" value="{{usuarioDetails.Modalidad}}"required
+                    oninvalid="this.setCustomValidity('Please select a working model')" 
+                    onchange="this.setCustomValidity('')">
+                    <option value="On-Site-Work">On-site-work</option>
+                    <option value="Hybrid Work">Hybrid work</option>
+                    <option value="Remote Work">Remote Work</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Vacation Days</label>
+                <input 
+                    type="number" 
+                    placeholder="Enter vacation days" 
+                    class="text-modal" 
+                    name="dias_vacaciones"
+                    required
+                    min="0"
+                    max="12"
+                    oninvalid="this.setCustomValidity('Please enter a number of vacation days between 0 and 12')"
+                    oninput="this.setCustomValidity('')"
+                    onkeydown="if(['e', 'E', '+', '-', '.'].includes(event.key)){ event.preventDefault(); }"
+                    value="{{usuarioDetails.dias_vaciones}}"
+                />
+            </div>
+
+
+            <div class="form-group">
+                <label for="status">Select Role</label>
+                <select class="text-modal" name="role" required
+                    oninvalid="this.setCustomValidity('Please select a Role')" 
+                    onchange="this.setCustomValidity('')">
+                    <option value="">- Select a User Rol -</option>
+                    {{#each rols}}
+                        <option value="{{idRol}}">{{Nombre_rol}}</option>
+                    {{/each}}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="status">Select Company</label>
+                <select class="text-modal" name="company" required
+                    oninvalid="this.setCustomValidity('Please select a Company')" 
+                    onchange="this.setCustomValidity('')">
+                    <option value="">- Select a Company -</option>
+                    {{#each emps}}
+                        <option value="{{idEmpresa}}">{{Nombre_empresa}}</option>
+                    {{/each}}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="status">Select Department</label>
+                <select class="text-modal" name="depa" required
+                    oninvalid="this.setCustomValidity('Please select a Department')" 
+                    onchange="this.setCustomValidity('')">
+                    <option value="">- Select a Department -</option>
+                    {{#each deptos}}
+                        <option value="{{idDepartamento}}">{{Nombre_departamento}}</option>
+                    {{/each}}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Status</label>
+                <select class="text-modal" name="status_us" required
+                    oninvalid="this.setCustomValidity('Please select a Status')" 
+                    onchange="this.setCustomValidity('')">
+                    <option value="">- Select a Status -</option>
+                    <option value="1">Active</option>
+                    <option value="0">Inactive</option>
+                </select>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group form-date">
+                    <label>Start Date</label>
+                    <input type="date" class="text-modal date-modal" name="start_date" required
+                    oninvalid="this.setCustomValidity('Please select a date')" 
+                    onchange="this.setCustomValidity('')">
+                </div>
+
+                <div class="form-group form-date">
+                    <label>End Date</label>
+                    <input type="date" class="text-modal date-modal" name="end_date">
+                </div>
+            </div>
+
+            <!-- Botón de enviar -->
+            <input type="submit" class="btn-submit" value="Add Users">
+
+        </form>
+    </div>
+</div>
+
+<script src="/js/users.js"></script>
+
+</body>
+</html>
+
+
+
+    
+    </div>
+    </div>
+
+    <script src="/js/users.js"></script>
+
+</body>
+</html>

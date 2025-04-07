@@ -34,12 +34,16 @@ module.exports = class Departament {
             `,[idDepartamento])
         }
 
-    static fetchFAI(idDepartamento) {
+        static fetchFAI(idDepartamento) {
             return db.execute(`
-                SELECT * from Departamentos
-                WHERE idDepartamento = ?;
-            `,[idDepartamento]);
+                SELECT d.*, e.idEmpresa, e.Nombre_empresa
+                FROM Departamentos d
+                JOIN PerteneceDepa pd ON d.idDepartamento = pd.idDepartamento
+                JOIN Empresa e ON pd.idEmpresa = e.idEmpresa
+                WHERE d.idDepartamento = ?;
+            `, [idDepartamento]);
         }
+        
 
     static fetchDept(){
         return db.execute('SELECT * FROM Departamentos'); //Para el controlador de Usuarios
@@ -70,14 +74,21 @@ module.exports = class Departament {
         return db.execute('SELECT * FROM personajes WHERE id=?', [id]);
     }
 
-    static Update(idDepartamento, nombre, descripcion, estado) {
-            return db.execute(
-                `UPDATE Departamentos 
-                 SET idDepartamento = ?, Nombre_departamento = ?, Descripcion = ?, Estado = ?
-                 WHERE idDepartamento = ?`,
-                [idDepartamento, nombre, descripcion, estado,idDepartamento]
-            );
-        }
+    static async Update(idDepartamento, nombre, descripcion, estado, idEmpresa) {
+        await db.execute(
+            `UPDATE Departamentos 
+             SET Nombre_departamento = ?, Descripcion = ?, Estado = ?
+             WHERE idDepartamento = ?`,
+            [nombre, descripcion, estado, idDepartamento]
+        );
+    
+        await db.execute(
+            `UPDATE PerteneceDepa 
+             SET idEmpresa = ?
+             WHERE idDepartamento = ?`,
+            [idEmpresa, idDepartamento]
+        );
+    }
 
     static fetch(id) {
         if (id) {

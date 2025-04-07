@@ -222,6 +222,27 @@
       await db.execute(`DELETE FROM Pertenece WHERE idUsuario = ?`, [idUsuario]);
       return db.execute(`DELETE FROM Usuarios WHERE idUsuario = ?`, [idUsuario]);
   }
+
+  static fetchUserDetails(idUsuario) {
+    return db.execute(`
+          SELECT 
+          u.*, 
+          GROUP_CONCAT(DISTINCT d.Nombre_departamento SEPARATOR ', ') AS Departamentos,
+          GROUP_CONCAT(DISTINCT r.Nombre_rol SEPARATOR ', ') AS Roles,
+          GROUP_CONCAT(DISTINCT e.Nombre_empresa SEPARATOR ', ') AS Empresas
+      FROM Usuarios u
+      LEFT JOIN Pertenece p ON u.idUsuario = p.idUsuario
+      LEFT JOIN Departamentos d ON p.idDepartamento = d.idDepartamento
+      LEFT JOIN PerteneceDepa pd ON p.idDepartamento = pd.idDepartamento
+      LEFT JOIN Empresa e ON pd.idEmpresa = e.idEmpresa
+      LEFT JOIN User_Rol ur ON u.idUsuario = ur.idUsuario
+      LEFT JOIN Roles r ON ur.idRol = r.idRol
+      WHERE u.idUsuario = ?
+      GROUP BY u.idUsuario;
+
+    `, [idUsuario]);
+}
+  
     
     static getPrivilegios(idusuario) {
       return db.execute(
