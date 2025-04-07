@@ -170,7 +170,7 @@ exports.get_delete = (req, res, next) => {
             req.session.active = rows[0].Estatus;
             req.session.departamentos = rows[0].Departamentos;
             req.session.registration = rows[0].Fecha_inicio_colab;
-            res.render('../views/pages/profile.hbs', {
+            res.render('../views/pages/profile2.hbs', {
                 csrfToken: req.csrfToken(),
                 usuario: rows[0],
                 title: 'View User',
