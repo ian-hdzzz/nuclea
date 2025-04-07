@@ -21,6 +21,14 @@ module.exports = {
     return a === b;
   },
 
+  and: function (a, b) {
+    return a && b;
+  },
+
+  or: function (a, b) {
+    return a || b;
+  },
+
   hasPrivilege: function (privilegios, nombre, options) {
     if (!Array.isArray(privilegios)) return options.inverse(this);
     const tiene = privilegios.some(p => p.Nombre_privilegio === nombre);

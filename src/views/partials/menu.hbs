@@ -6,7 +6,7 @@
     </div>
         <ul>
             <li><a href="/nuclea/dashboard" class="tooltip {{#if (eq currentPath '/nuclea/dashboard')}}active{{/if}}" ><i class="fa-solid fa-house"></i><span class="tooltip-text">Dashboard</span></a></li>
-            <li><a href="/nuclea/request" class="tooltip {{#if (eq currentPath '/nuclea/dashboard')}}active{{/if}}"><i class="fa-solid fa-plane-up"></i><span class="tooltip-text">Vacation Requests</span></a></li>
+            <li><a href="/nuclea/request/personal" class="tooltip {{#if (eq currentPath '/nuclea/dashboard')}}active{{/if}}"><i class="fa-solid fa-plane-up"></i><span class="tooltip-text">Vacation Requests</span></a></li>
             <li><a href="/nuclea/one" class="tooltip {{#if (eq currentPath '/nuclea/dashboard')}}active{{/if}}"><i class="fa-solid fa-people-arrows"></i><span class="tooltip-text">One-to-one</span></a></li> 
             {{#hasPrivilege privilegios "viewcollabs"}}
                 <li>

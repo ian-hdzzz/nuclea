@@ -134,7 +134,7 @@ exports.approveRequest = (req, res) => {
 
       return Request.approveSolicitud(solicitudId, rol);
     })
-    .then(() => res.redirect('/nuclea/request'))
+    .then(() => res.redirect('/nuclea/request/approval'))
     .catch((err) => {
       console.error('Error al aprobar la solicitud:', err);
       res.status(500).send('Error interno');
@@ -153,7 +153,7 @@ exports.rejectRequest = (req, res) => {
 
       return Request.rejectSolicitud(solicitudId, rol);
     })
-    .then(() => res.redirect('/nuclea/request'))
+    .then(() => res.redirect('/nuclea/request/approval'))
     .catch((err) => {
       console.error('Error al rechazar la solicitud:', err);
       res.status(500).send('Error interno');
@@ -172,7 +172,7 @@ exports.editRequest = (req, res) => {
     WHERE idSolicitud = ?
   `, [Tipo, Fecha_inicio, Fecha_fin, Descripcion, idSolicitud])
     .then(() => {
-      res.redirect('/nuclea/request');
+      res.redirect('/nuclea/request/personal');
     })
     .catch(err => {
       console.error('Error al editar la solicitud:', err);
@@ -276,14 +276,14 @@ exports.getRequestsPersonal = (req, res) => {
   .then(([diasf,fD]) => {
         Request.fetchPersonal(req.session.idUsuario)
         .then(([rows]) => {
-          res.render('pages/requestpersonal', {
+          res.render('pages/request', {
             datos: rows,
             csrfToken: req.csrfToken(),
             sessionId: req.session.idUsuario,
             nombreUsuario: req.session.nombre,
             apellidosUsuario: req.session.apellidos,
             title: 'Request',
-            diasferiados: diasf,
+            diasferiados: diasf
           });
         })
         .catch((err)=>{

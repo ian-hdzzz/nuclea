@@ -25,6 +25,15 @@
     <div class="content">
     <div class="nav-content">
       <h2>Absences Management</h2>
+      <div class="add-btn-container" id="openModal">
+      <i class="fa-regular fa-square-plus"></i>
+      <input type="button" value="Add Request" class="add-btn" id="openModal">
+      </div>
+
+      <div onclick="location.href='/nuclea/request/personal'" class="add-btn-container" >
+      <i class="fa-regular fa-square-plus"></i>
+      <input type="button" value="Personal requests" class="add-btn">
+      </div>
     </div>
 
     <div class="table-holidays-wrapper">
@@ -36,7 +45,7 @@
               <th>Type</th>
               <th>Start Date</th>
               <th>End Date</th>
-              <th>Description</th>
+              <th class="descripcion-columna">Description</th>
               <th>Leader Approval</th>
               <th>Admin Approval</th>
               <th>Actions</th>
@@ -45,12 +54,18 @@
           <tbody>
             {{#if datos.length}}
               {{#each datos}}
-              <tr>
+              <tr
+                data-id="{{idSolicitud}}" 
+                data-tipo="{{'Tipo'}}" 
+                data-fecha-inicio="{{formatDate2 Fecha_inicio}}" 
+                data-fecha-fin="{{formatDate2 Fecha_fin}}" 
+                data-descripcion="{{Descripcion}}"
+              >
                 <td>{{Nombre}} {{Apellido}}</td>
                 <td>{{Tipo}}</td>
                 <td>{{formatDate Fecha_inicio}}</td>
                 <td>{{formatDate Fecha_fin}}</td>
-                <td>{{Descripcion}}</td>
+               <td class="descripcion-columna">{{Descripcion}}</td>
                 <td>
                   <span class=" vacation-status {{#if (eq Aprobacion_L 'Aprobado')}}active{{else if (eq Aprobacion_L 'Rechazado')}}inactive{{else}}pending{{/if}}">
                   <div class="dot"></div>
@@ -69,30 +84,40 @@
                     {{/if}}
                   </span>
                 </td>
-                <td> <!-- Dropdown Actions con RBAC -->
-                  <div class="dropdown"> 
-                    <button class="action-btn">Actions</button>
-                    <div class="dropdown-content">
-                      {{#if ../puedeAceptar}}
-                        <button class="approve-btn" onclick="approveRequest('{{idSolicitud}}')">
-                          <i class="fa-solid fa-check"></i> Approve
-                        </button>
-                        <button class="reject-btn" onclick="rejectRequest('{{idSolicitud}}')">
-                          <i class="fa-solid fa-xmark"></i> Reject
-                        </button>
-                      {{else}}
-                        <button class="edit-btn" onclick="editRequest('{{idSolicitud}}')">
-                          <i class="fa-solid fa-pen-to-square"></i> Edit
-                        </button>
-                        <button class="delete-btn" onclick="confirmDelete('{{idSolicitud}}')">
-                          <i class="fa-solid fa-trash"></i> Delete
-                        </button>
+                <td>
+                  {{#if (or 
+                          (and (eq Aprobacion_A 'Aprobado') (eq Aprobacion_L 'Aprobado')) 
+                          (and (eq Aprobacion_A 'Rechazado') (eq Aprobacion_L 'Rechazado'))
+                        )}}
+                    <span class="vacation-status {{#if (eq Aprobacion_A 'Aprobado')}}active{{else if (eq Aprobacion_A 'Rechazado')}}inactive{{/if}}">
+                      <div class="dot"></div>
+                      {{#if (eq Aprobacion_A 'Aprobado')}}Approved
+                      {{else if (eq Aprobacion_A 'Rechazado')}}Rejected
                       {{/if}}
+                    </span>
+                  {{else}}
+                    <div class="dropdown"> 
+                      <button class="action-btn">Actions</button>
+                      <div class="dropdown-content">
+                        {{#if ../puedeAceptar}}
+                          <button class="approve-btn" onclick="approveRequest('{{idSolicitud}}')">
+                            <i class="fa-solid fa-check"></i> Approve
+                          </button>
+                          <button class="reject-btn" onclick="rejectRequest('{{idSolicitud}}')">
+                            <i class="fa-solid fa-xmark"></i> Reject
+                          </button>
+                        {{/if}}
+                      </div>
                     </div>
-                  </div>
+                  {{/if}}
                 </td>
               </tr>
               {{/each}}
+              <!-- Registro vacio para aparecer menu de actions-->
+              <tr class="table-spacer-row">
+                <td class="height-spacer" colspan="8"></td>
+              </tr>
+              
             {{else}}
               <tr>
                 <td colspan="7" class="empty-message">No requests available</td>
@@ -120,14 +145,14 @@
               <label for="Tipo">Type</label>
               <select id="Tipo" name="Tipo" class="text-modal" required>
                 <option value="">Select a type</option>
-                <option value="Vacaciones">Vacations</option>
-                <option value="Permiso médico">Medical leave</option>
-                <option value="Capacitación">Training</option>
-                <option value="Día personal">Personal day</option>
-                <option value="Trabajo remoto">Remote work</option>
-                <option value="Emergencia familiar">Family emergency</option>
-                <option value="Asuntos legales">Legal matters</option>
-                <option value="Permiso académico">Academic leave</option>
+                <option value="Vacations">Vacations</option>
+                <option value="Medical leave">Medical leave</option>
+                <option value="Training">Training</option>
+                <option value="Personal day">Personal day</option>
+                <option value="Remote work">Remote work</option>
+                <option value="Family emergency">Family emergency</option>
+                <option value="Legal matters">Legal matters</option>
+                <option value="Academic leave">Academic leave</option>
               </select>
             </div>
 
@@ -151,11 +176,53 @@
           </form>
         </div>
       </div>
+      
+      <!-- Modal Edit-->
+      <div id="editModal" class="modal hidden">
+        <div class="modal-content">
+          <button id="closeEditModal" class="close-btn">✖</button>
+          <h2 class="title-modal">Edit Request</h2>
+          <form id="editForm" method="POST">
+            <input type="hidden" name="_csrf" value="{{csrfToken}}" />
+            <div class="form-group">
+              <label>Type</label>
+              <select name="Tipo" class="text-modal" required>
+                <option value="">Select a type</option>
+                <option value="Vacations">Vacations</option>
+                <option value="Medical leave">Medical leave</option>
+                <option value="Training">Training</option>
+                <option value="Personal day">Personal day</option>
+                <option value="Remote work">Remote work</option>
+                <option value="Family emergency">Family emergency</option>
+                <option value="Legal matters">Legal matters</option>
+                <option value="Academic leave">Academic leave</option>
+              </select>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Start Date</label>
+                <input type="date" name="Fecha_inicio" class="text-modal" required />
+              </div>
+              <div class="form-group">
+                <label>End Date</label>
+                <input type="date" name="Fecha_fin" class="text-modal" required />
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Description</label>
+              <input type="text" name="Descripcion" class="text-modal" required />
+            </div>
+            <input type="submit" class="btn-submit" value="Update Request" />
+          </form>
+        </div>
+      </div>
+
     </div>
   </div>
-  <script src="/js/ActionRequest.js"></script>
   <script src="/js/addRequest.js"></script>
   <script src="/js/delete.js"></script>
   <script src="/js/approve.js"></script>
+  <script src="/js/editRequest.js"></script>
+
 </body>
 </html>

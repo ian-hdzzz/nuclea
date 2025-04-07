@@ -29,6 +29,11 @@
       <i class="fa-regular fa-square-plus"></i>
       <input type="button" value="Add Request" class="add-btn" id="openModal">
       </div>
+
+      <div onclick="location.href='/nuclea/request/approval'" class="add-btn-container" >
+      <i class="fa-regular fa-square-plus"></i>
+      <input type="button" value="Approve requests" class="add-btn">
+      </div>
     </div>
 
     <div class="table-holidays-wrapper">
@@ -52,8 +57,8 @@
               <tr
                 data-id="{{idSolicitud}}" 
                 data-tipo="{{'Tipo'}}" 
-                data-fecha-inicio="{{Fecha_inicio}}" 
-                data-fecha-fin="{{Fecha_fin}}" 
+                data-fecha-inicio="{{formatDate2 Fecha_inicio}}" 
+                data-fecha-fin="{{formatDate2 Fecha_fin}}" 
                 data-descripcion="{{Descripcion}}"
               >
                 <td>{{Nombre}} {{Apellido}}</td>

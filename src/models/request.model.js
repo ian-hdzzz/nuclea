@@ -120,9 +120,9 @@ module.exports.approveSolicitud = (idSolicitud, rol) => {
 // Rechazar solicitud según el rol
 module.exports.rejectSolicitud = (idSolicitud, rol) => {
   if (rol === 2) {
-    return db.execute(`UPDATE Solicitudes SET Aprobacion_L = 'Rechazado', Fecha_aprob_L = NOW() WHERE idSolicitud = ?`, [idSolicitud]);
+    return db.execute(`UPDATE Solicitudes SET Aprobacion_L = 'Rechazado', Fecha_aprob_L = NOW(), Aprobacion_A = 'Rechazado', Fecha_aprob_A = NOW() WHERE idSolicitud = ?`, [idSolicitud]);
   } else if (rol === 1) {
-    return db.execute(`UPDATE Solicitudes SET Aprobacion_A = 'Rechazado', Fecha_aprob_A = NOW() WHERE idSolicitud = ?`, [idSolicitud]);
+    return db.execute(`UPDATE Solicitudes SET Aprobacion_A = 'Rechazado', Fecha_aprob_A = NOW(), Aprobacion_L = 'Rechazado', Fecha_aprob_L = NOW() WHERE idSolicitud = ?`, [idSolicitud]);
   } else {
     return Promise.reject(new Error('No autorizado'));
   }
