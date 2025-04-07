@@ -7,6 +7,11 @@ const requestController = require('../controllers/request');
 router.get('/request', isAuth,requestController.getRequests);
 router.post('/request', isAuth,requestController.postRequest);
 
+
+router.get('/request/personal', isAuth,requestController.getRequestsPersonal);
+router.post('/request/personal', isAuth,requestController.postRequest);
+
+router.get('/request/approval', isAuth, requestController.getRequestsapr);
 router.post('/request/:id/approve', isAuth, requestController.approveRequest); 
 router.post('/request/:id/reject', isAuth, requestController.rejectRequest);
 module.exports = router;

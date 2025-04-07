@@ -190,3 +190,85 @@ exports.postRequest = async (req, res) => {
   }
 };
  */
+
+exports.getRequestsapr = (req, res) => {
+  let encontrado = false; // Variable para saber si encontramos el privilegio 'addAO'
+  console.log('privilegios session', req.session.privilegios)
+  let privilegiostot = req.session.privilegios
+  console.log(privilegiostot)
+  for (let privilegio of privilegiostot) {
+    if (privilegio.Nombre_privilegio == 'viewcollabs') {
+      DiasFeriados.fetchAll()
+      .then(([diasf,fD]) => {
+          Request.fetchAll()
+          .then(([rows]) => {
+            res.render('pages/requestadmin', {
+              datos: rows,
+              csrfToken: req.csrfToken(),
+              sessionId: req.session.idUsuario,
+              nombreUsuario: req.session.nombre,
+              apellidosUsuario: req.session.apellidos,
+              title: 'Request',
+              diasferiados: diasf,
+            });
+          })
+          .catch((err) => {
+            console.error('Error al cargar las solicitudes:', err);
+            res.status(500).send('Error al obtener los datos');
+          });
+      }).catch((err) => {
+        console.error('Error fetching the holidays:', err);
+        res.status(500).send('Internal Server Error');
+      });
+    return
+    }
+
+    DiasFeriados.fetchAll()
+    .then(([diasf,fD]) => {
+        Request.fetchAll()
+        .then(([rows]) => {
+          res.render('pages/requestadmin', {
+            datos: rows,
+            csrfToken: req.csrfToken(),
+            sessionId: req.session.idUsuario,
+            nombreUsuario: req.session.nombre,
+            apellidosUsuario: req.session.apellidos,
+            title: 'Request',
+            diasferiados: diasf,
+          });
+        })
+        .catch((err) => {
+          console.error('Error al cargar las solicitudes:', err);
+          res.status(500).send('Error al obtener los datos');
+        });
+    }).catch((err) => {
+      console.error('Error fetching the holidays:', err);
+      res.status(500).send('Internal Server Error');
+    });
+};
+
+};  
+exports.getRequestsPersonal = (req, res) => {
+  DiasFeriados.fetchAll()
+  .then(([diasf,fD]) => {
+        Request.fetchPersonal(req.session.idUsuario)
+        .then(([rows]) => {
+          res.render('pages/requestpersonal', {
+            datos: rows,
+            csrfToken: req.csrfToken(),
+            sessionId: req.session.idUsuario,
+            nombreUsuario: req.session.nombre,
+            apellidosUsuario: req.session.apellidos,
+            title: 'Request',
+            diasferiados: diasf,
+          });
+        })
+        .catch((err)=>{
+          console.error('Error al cargar las solicitudes:', err);
+          res.status(500).send('Error al obtener los datos');
+        })
+  }).catch((err) => {
+    console.error('Error fetching the holidays:', err);
+    res.status(500).send('Internal Server Error');
+  });
+};
