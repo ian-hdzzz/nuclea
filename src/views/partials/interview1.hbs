@@ -1,17 +1,24 @@
-<div class="interview1">
-            <div class="indicator">
-                <p>Question 1 of 5</p>
-            </div>
-            <div class="question">
-                <h1>What are you proud of from the past month?</h1>
-                <p>Identify personal achievements or team accomplishments.</p>
-            </div>
-            <textarea name="mensaje" rows="4" cols="50" placeholder="Type your answer here..."></textarea>
-            <div class="buttons">
-                <button class="btn btn-secondary" type="button"><i class="fa-solid fa-caret-left"></i>Previous</button>
-            <button id="next-btn" class="btn btn-primary" type="button">Next<i class="fa-solid fa-caret-right"></i></button>
-            </div>
-            <div class="progress-bar">
-                <div class="progress"></div>
-            </div>
-</div>
+<form id="interviewForm" action="/nuclea/interview/{{contacts.id}}" method="POST">
+<input type="hidden" name="_csrf" value="{{csrfToken}}">
+  <div class="interview1">
+    <div class="indicator">
+      <p>Question <span id="questionNumber">1</span> of <span id="totalQuestions">4</span></p>
+    </div>
+    <div class="question">
+      <h1 id="questionTitle"></h1>
+      <p id="questionDescription"></p>
+    </div>
+    <!-- Use an ID for the current question being answered -->
+    <input type="hidden" id="currentQuestionId" name="questionId" value="">
+    <textarea id="responseText" name="respuesta" rows="4" cols="50" placeholder="Type your answer here..."></textarea>
+    <div class="buttons">
+      <button class="btn btn-secondary" type="button"><i class="fa-solid fa-caret-left"></i>Previous</button>
+      <button id="next-btn" class="btn btn-primary" type="button">Next<i class="fa-solid fa-caret-right"></i></button>
+      <!-- Add a submit button that will be displayed only on the last question -->
+      <button id="submit-btn" class="btn btn-primary" type="submit" style="display: none;">Next Survey<i class="fa-solid fa-check"></i></button>
+    </div>
+    <div class="progress-bar">
+      <div class="progress"></div>
+    </div>
+  </div>
+</form>

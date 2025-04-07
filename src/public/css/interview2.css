@@ -74,11 +74,6 @@ body {
     pointer-events: none;
   }
   
-  .chart-container {
-    width: 80%;
-    height: 80%;
-    margin: 30px auto;
-  }
   .button-container {
     display: flex;
     justify-content: space-between;
@@ -112,8 +107,4 @@ body {
     background-color: #2563eb;
   }
   
-  /* Estilos específicos para el gráfico de radar */
-  canvas#radar-chart {
-    width: 100% !important;
-    height: 100% !important;
-  }
+ 

@@ -20,7 +20,7 @@ const exphbs = create({
     layoutsDir: path.join(__dirname, 'views', 'pages'),
     partialsDir: path.join(__dirname, 'views', 'partials'),
     extname: '.hbs',
-    helpers: helpers
+    helpers: require('./lib/helpers'),
 });
 app.engine('.hbs', exphbs.engine); 
 app.set('view engine', '.hbs');
@@ -84,6 +84,7 @@ app.use('/nuclea', require('./routes/dashboard.routes'));
 app.use('/nuclea', require('./routes/request.routes'));
 app.use('/nuclea', require('./routes/objectives.routes'));
 app.use('/nuclea', require('./routes/interview.routes'));
+app.use('/nuclea', require('./routes/search.routes'));
 app.use('/nuclea', require('./routes/one.routes'));
 app.use('/nuclea', require('./routes/reports.routes'));
 app.use('/nuclea', require('./routes/admin.routes'));

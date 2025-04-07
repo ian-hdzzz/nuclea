@@ -5,15 +5,17 @@
 
 <div class="container-one">
     <div class="container-questions">
+      {{#if employee}}
         <div class="header">
             <div class="photo">
-                <p>I</p>
+                <p>{{employee.initial}}</p>
             </div>
             <div class="profile">
-                <h1>Ian Hernández</h1>
+                <h1>{{employee.Nombre}}  {{employee.Apellidos}}</h1>
                 <p>Software Department</p>
             </div>
         </div>
+        {{/if}}
         <div class="survey-container" id="survey-container">
             <div id="interview1">
                 {{> interview1 }}
@@ -29,7 +31,7 @@
              <h3 className="text-lg font-medium mb-4 text-white">Employee Information</h3>
              <div class="target">
                 <p class="label">Name:</p>
-                <p class="description">Ian</p>
+                <p class="description">{{employee.Nombre}}  {{employee.Apellidos}}</p>
               </div>
              <div class="target">
                 <p class="label">Department:</p>
@@ -37,49 +39,21 @@
               </div>
              <div class="target">
                 <p class="label">Time in the company:</p>
-                <p class="description">2 years</p>
+                <p class="description">{{employee.timeInCompany}}</p>
               </div>
              <div class="target">
                 <p class="label">Administrative faults:</p>
                 <p class="description">None</p>
               </div>
         </div>
-        <div class="search">
-            <h3 className="text-lg font-medium mb-4 text-white">Search employee</h3>
-             <div class="search-bar">
-                <input type="text" placeholder="Buscar..." class="search-input">
-            </div>
+
             
-            <div class="contact-item active">
-                <div class="contact-avatar active" >J</div>
-                <div class="contact-name">Jacob Espejel</div>
-            </div>
-            
-            <div class="contact-item">
-                <div class="contact-avatar">I</div>
-                <div class="contact-name">Ian Hernández</div>
-            </div>
-            
-            <div class="contact-item">
-                <div class="contact-avatar" >Á</div>
-                <div class="contact-name">Ángel Rolón</div>
-            </div>
-            
-            <div class="contact-item">
-                <div class="contact-avatar" >O</div>
-                <div class="contact-name">Omar Emilio</div>
-            </div>
-            
-            <div class="contact-item">
-                <div class="contact-avatar">S</div>
-                <div class="contact-name">Sebastian Osorio</div>
-            </div>
-            </div>
     </div>
 </div>
 <script>
 let currentQuestion = 1;
 const totalQuestions = 4;
+const responses = {}; // Object to store responses for each question
 
 function updateProgressBar() {
   const progressElement = document.querySelector('.progress');
@@ -94,30 +68,14 @@ document.addEventListener('DOMContentLoaded', function () {
   const questionTitle = document.querySelector('.question h1');
   const questionDescription = document.querySelector('.question p');
   const textarea = document.querySelector('textarea');
+  const form = document.getElementById('interviewForm');
 
-  const questions = [
-    {
-      title: "What are you proud of from the past month?",
-      description: "Identify personal achievements or team accomplishments."
-    },
-    {
-      title: "Are you worried, disappointed, or stressed?",
-      description: "Assess factors that may be affecting employee satisfaction."
-    },
-    {
-      title: "What are you currently working on?",
-      description: "Understand each team member’s current activities."
-    },
-    {
-      title: "What will be your goal for the month?",
-      description: "Set short-term objectives and align them with the team’s vision."
-    }
-  ];
+  const questions = {{{json preguntasAbiertas}}};
 
   function updateQuestion() {
     questionIndicator.textContent = `Question ${currentQuestion} of ${totalQuestions}`;
-    questionTitle.textContent = questions[currentQuestion - 1].title;
-    questionDescription.textContent = questions[currentQuestion - 1].description;
+    questionTitle.textContent = questions[currentQuestion - 1].pregunta;
+    questionDescription.textContent = questions[currentQuestion - 1].descripcion;
     updateProgressBar();
 
     if (currentQuestion === totalQuestions) {
@@ -129,37 +87,102 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 
- nextButton.addEventListener('click', function () {
-  if (nextButton.classList.contains('final-step')) {
-    // Oculta interview1 y muestra interview2
-    document.getElementById('interview1').style.display = 'none';
-    document.getElementById('interview2').style.display = 'block';
-    return; // evita seguir avanzando preguntas
-  }
+  nextButton.addEventListener('click', function () {
+    // Save current response
+    responses[questions[currentQuestion - 1].idPreguntaAbierta] = textarea.value;
+    
+    if (nextButton.classList.contains('final-step')) {
+      // Save all responses before moving to the next survey
+      saveResponses();
+      
+      // Show the second interview form
+      document.getElementById('interview1').style.display = 'none';
+      document.getElementById('interview2').style.display = 'block';
+      return;
+    }
 
-  if (currentQuestion < totalQuestions) {
-    currentQuestion++;
-    updateQuestion();
-    textarea.value = '';
-  }
-});
-
-  prevButton.addEventListener('click', function () {
-    if (currentQuestion > 1) {
-      currentQuestion--;
+    if (currentQuestion < totalQuestions) {
+      currentQuestion++;
       updateQuestion();
-      textarea.value = '';
+      textarea.value = responses[questions[currentQuestion - 1].idPreguntaAbierta] || '';
     }
   });
 
-  updateQuestion(); // Inicializa pregunta y progreso
-});
-const goBackButton = document.getElementById('go-back-btn');
+  prevButton.addEventListener('click', function () {
+    // Save current response
+    responses[questions[currentQuestion - 1].idPreguntaAbierta] = textarea.value;
+    
+    if (currentQuestion > 1) {
+      currentQuestion--;
+      updateQuestion();
+      textarea.value = responses[questions[currentQuestion - 1].idPreguntaAbierta] || '';
+    }
+  });
+  
+  function saveResponses() {
+    // Create form data object
+    const formData = new FormData();
+    
+    // Add all responses
+    for (const [questionId, response] of Object.entries(responses)) {
+      formData.append(`respuestas[${questionId}]`, response);
+    }
+    
+    // Add user ID from the URL
+    const userId = window.location.pathname.split('/').pop();
+    formData.append('idUsuario', userId);
+    
+    // Send data using fetch API
+    fetch('/nuclea/interview/' + userId, {
+      method: 'POST',
+      body: formData
+    })
+    .then(response => response.json())
+    .catch(error => {
+      console.error('Error saving responses:', error);
+    });
+  }
 
-goBackButton.addEventListener('click', () => {
-  document.getElementById('interview2').style.display = 'none';
-  document.getElementById('interview1').style.display = 'block';
-  currentQuestion = totalQuestions; // si quieres que regrese al paso final
-  updateQuestion();
+  updateQuestion(); // Initialize question and progress
+});
+
+// Add event listener for the save button in the second form
+document.getElementById('save-button').addEventListener('click', function() {
+  const selectInputs = document.querySelectorAll('#interview2 select');
+  const closedResponses = {};
+  
+  selectInputs.forEach(select => {
+    closedResponses[select.id] = select.value;
+  });
+  
+  // Create form data
+  const formData = new FormData();
+  
+  // Add all closed question responses
+  for (const [questionName, value] of Object.entries(closedResponses)) {
+    formData.append(`closedResponses[${questionName}]`, value);
+  }
+  
+  // Add user ID from the URL
+  const userId = window.location.pathname.split('/').pop();
+  formData.append('idUsuario', userId);
+  
+  // Send data
+  fetch('/nuclea/interview/closed/' + userId, {
+    method: 'POST',
+    body: formData
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      alert('Evaluación guardada exitosamente');
+      window.location.href = '/nuclea/dashboard'; // Redirect to dashboard
+    } else {
+      alert('Error al guardar la evaluación');
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+  });
 });
 </script>
