@@ -161,11 +161,13 @@ exports.get_delete = (req, res, next) => {
         .then(([rows, fieldData]) => {
             console.log(rows[0]);
             req.session.nombre = rows[0].Nombre;
+            req.session.id = rows[0].idUsuario;
             req.session.apellidos = rows[0].Apellidos;
             req.session.correo = rows[0].Correo_electronico;
             req.session.ciudad = rows[0].Ciudad;
             req.session.pais = rows[0].Pais;
             req.session.calle = rows[0].Calle;
+            req.session.active = rows[0].Estatus;
             req.session.departamentos = rows[0].Departamentos;
             req.session.registration = rows[0].Fecha_inicio_colab;
             res.render('../views/pages/profile.hbs', {
@@ -173,10 +175,12 @@ exports.get_delete = (req, res, next) => {
                 usuario: rows[0],
                 title: 'View User',
                 nombre: req.session.nombre,
+                id:req.session.id,
                 apellidos: req.session.apellidos,
                 pais: req.session.pais,
                 ciudad: req.session.ciudad,
                 calle: req.session.calle,
+                estado:req.session.active,
                 departamentos: req.session.departamentos,
                 email: req.session.correo,
                 registration: req.session.registration,
