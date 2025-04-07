@@ -1,0 +1,165 @@
+
+<head>
+    <link rel="stylesheet" href="/css/interview.css">
+</head>
+
+<div class="container-one">
+    <div class="container-questions">
+        <div class="header">
+            <div class="photo">
+                <p>I</p>
+            </div>
+            <div class="profile">
+                <h1>Ian Hernández</h1>
+                <p>Software Department</p>
+            </div>
+        </div>
+        <div class="survey-container" id="survey-container">
+            <div id="interview1">
+                {{> interview1 }}
+            </div>
+
+            <div id="interview2" style="display: none;">
+                {{> interview2 }}
+            </div>
+        </div>
+    </div>
+    <div class="sidebar">
+        <div class="user-data">
+             <h3 className="text-lg font-medium mb-4 text-white">Employee Information</h3>
+             <div class="target">
+                <p class="label">Name:</p>
+                <p class="description">Ian</p>
+              </div>
+             <div class="target">
+                <p class="label">Department:</p>
+                <p class="description">Engineering</p>
+              </div>
+             <div class="target">
+                <p class="label">Time in the company:</p>
+                <p class="description">2 years</p>
+              </div>
+             <div class="target">
+                <p class="label">Administrative faults:</p>
+                <p class="description">None</p>
+              </div>
+        </div>
+        <div class="search">
+            <h3 className="text-lg font-medium mb-4 text-white">Search employee</h3>
+             <div class="search-bar">
+                <input type="text" placeholder="Buscar..." class="search-input">
+            </div>
+            
+            <div class="contact-item active">
+                <div class="contact-avatar active" >J</div>
+                <div class="contact-name">Jacob Espejel</div>
+            </div>
+            
+            <div class="contact-item">
+                <div class="contact-avatar">I</div>
+                <div class="contact-name">Ian Hernández</div>
+            </div>
+            
+            <div class="contact-item">
+                <div class="contact-avatar" >Á</div>
+                <div class="contact-name">Ángel Rolón</div>
+            </div>
+            
+            <div class="contact-item">
+                <div class="contact-avatar" >O</div>
+                <div class="contact-name">Omar Emilio</div>
+            </div>
+            
+            <div class="contact-item">
+                <div class="contact-avatar">S</div>
+                <div class="contact-name">Sebastian Osorio</div>
+            </div>
+            </div>
+    </div>
+</div>
+<script>
+let currentQuestion = 1;
+const totalQuestions = 4;
+
+function updateProgressBar() {
+  const progressElement = document.querySelector('.progress');
+  const progressPercentage = (currentQuestion / totalQuestions) * 100;
+  progressElement.style.width = `${progressPercentage}%`;
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+  const nextButton = document.getElementById('next-btn');
+  const prevButton = document.querySelector('.btn-secondary');
+  const questionIndicator = document.querySelector('.indicator p');
+  const questionTitle = document.querySelector('.question h1');
+  const questionDescription = document.querySelector('.question p');
+  const textarea = document.querySelector('textarea');
+
+  const questions = [
+    {
+      title: "What are you proud of from the past month?",
+      description: "Identify personal achievements or team accomplishments."
+    },
+    {
+      title: "Are you worried, disappointed, or stressed?",
+      description: "Assess factors that may be affecting employee satisfaction."
+    },
+    {
+      title: "What are you currently working on?",
+      description: "Understand each team member’s current activities."
+    },
+    {
+      title: "What will be your goal for the month?",
+      description: "Set short-term objectives and align them with the team’s vision."
+    }
+  ];
+
+  function updateQuestion() {
+    questionIndicator.textContent = `Question ${currentQuestion} of ${totalQuestions}`;
+    questionTitle.textContent = questions[currentQuestion - 1].title;
+    questionDescription.textContent = questions[currentQuestion - 1].description;
+    updateProgressBar();
+
+    if (currentQuestion === totalQuestions) {
+      nextButton.innerHTML = 'Next Survey<i class="fa-solid fa-caret-right"></i>';
+      nextButton.classList.add('final-step');
+    } else {
+      nextButton.innerHTML = 'Next<i class="fa-solid fa-caret-right"></i>';
+      nextButton.classList.remove('final-step');
+    }
+  }
+
+ nextButton.addEventListener('click', function () {
+  if (nextButton.classList.contains('final-step')) {
+    // Oculta interview1 y muestra interview2
+    document.getElementById('interview1').style.display = 'none';
+    document.getElementById('interview2').style.display = 'block';
+    return; // evita seguir avanzando preguntas
+  }
+
+  if (currentQuestion < totalQuestions) {
+    currentQuestion++;
+    updateQuestion();
+    textarea.value = '';
+  }
+});
+
+  prevButton.addEventListener('click', function () {
+    if (currentQuestion > 1) {
+      currentQuestion--;
+      updateQuestion();
+      textarea.value = '';
+    }
+  });
+
+  updateQuestion(); // Inicializa pregunta y progreso
+});
+const goBackButton = document.getElementById('go-back-btn');
+
+goBackButton.addEventListener('click', () => {
+  document.getElementById('interview2').style.display = 'none';
+  document.getElementById('interview1').style.display = 'block';
+  currentQuestion = totalQuestions; // si quieres que regrese al paso final
+  updateQuestion();
+});
+</script>
