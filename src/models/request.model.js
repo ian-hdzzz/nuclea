@@ -78,6 +78,31 @@ VALUES (
     `,[id]);
     
   }
+
+  static requestcollabs(id) {
+    return db.execute(`
+      SELECT 
+        s.idSolicitud, 
+        u.Nombre, 
+        u.Apellidos AS Apellido, 
+        s.Tipo, 
+        s.Fecha_inicio, 
+        s.Fecha_fin, 
+        s.Descripcion,
+        s.Aprobacion_L,
+        s.Fecha_aprob_L,
+        s.Aprobacion_A,
+        s.Fecha_aprob_A
+      FROM Solicitudes s 
+      JOIN Usuarios u ON s.idUsuario = u.idUsuario 
+      JOIN Pertenece p ON u.idUsuario = p.idUsuario 
+      WHERE p.idDepartamento = (
+        SELECT p2.idDepartamento 
+        FROM Pertenece p2 
+        WHERE p2.idUsuario = ?
+      );
+    `, [id]);
+  }
 };
 
 // Aprobar solicitud según el rol

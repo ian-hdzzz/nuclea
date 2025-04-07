@@ -210,6 +210,7 @@ exports.getRequestsapr = (req, res) => {
               apellidosUsuario: req.session.apellidos,
               title: 'Request',
               diasferiados: diasf,
+              puedeAceptar: true
             });
           })
           .catch((err) => {
@@ -225,7 +226,7 @@ exports.getRequestsapr = (req, res) => {
 
     DiasFeriados.fetchAll()
     .then(([diasf,fD]) => {
-        Request.fetchAll()
+        Request.requestcollabs(req.session.idUsuario)
         .then(([rows]) => {
           res.render('pages/requestadmin', {
             datos: rows,
@@ -235,6 +236,7 @@ exports.getRequestsapr = (req, res) => {
             apellidosUsuario: req.session.apellidos,
             title: 'Request',
             diasferiados: diasf,
+            puedeAceptar: true
           });
         })
         .catch((err) => {
