@@ -296,7 +296,57 @@ exports.getRequestsPersonal = (req, res) => {
   });
 };
 
-exports.deleteRequest=(req,res)=>{
-  console.log("Este es el valor desde controllers");
-  console.log(req.params.id);
-}
+exports.deleteRequest = (req, res) => {
+  Request.Delete(req.params.idSolicitud);
+  let canViewPersonal = false;
+  let canApprove = false;
+  for (let privilegio of req.session.privilegios) {
+  
+      if (privilegio.Nombre_privilegio == 'Consultar solicitudes propias') {
+        canViewPersonal = true;
+      }
+      if (privilegio.Nombre_privilegio == 'Acepta Deniega solicitud'){
+        canApprove = true;
+      }
+      
+      if (canViewPersonal) {
+        Request.fetchPersonal(req.session.idUsuario)
+        .then(([rows]) => {
+          res.status(200).json( {
+            datos: rows,
+            csrfToken: req.csrfToken(),
+            sessionId: req.session.idUsuario,
+            nombreUsuario: req.session.nombre,
+            apellidosUsuario: req.session.apellidos,
+            title: 'Request',
+            puedeAceptar: canApprove
+          });
+        })
+        .catch((err)=>{
+          console.error('Error al cargar las solicitudes:', err);
+          res.status(500).send('Error al obtener los datos');
+        })
+      }
+      
+    }
+    if(!canViewPersonal){
+      Request.fetchAll()
+      .then(([rows]) => {
+        res.status(200).json({
+          datos: rows,
+          csrfToken: req.csrfToken(),
+          sessionId: req.session.idUsuario,
+          nombreUsuario: req.session.nombre,
+          apellidosUsuario: req.session.apellidos,
+          title: 'Request',
+          puedeAceptar: canApprove
+        });
+      })
+      .catch((err) => {
+        console.error('Error al cargar las solicitudes:', err);
+        res.status(500).json('Error al obtener los datos');
+      });
+
+    }
+
+};

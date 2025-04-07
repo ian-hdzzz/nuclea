@@ -78,7 +78,9 @@ VALUES (
     `,[id]);
     
   }
-
+  static Delete(id){
+    return db.execute(`DELETE FROM Solicitudes WHERE idSolicitud=?`,[id]);
+  }
   static requestcollabs(id) {
     return db.execute(`
       SELECT 

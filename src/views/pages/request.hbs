@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
   <link rel="stylesheet" href="/css/request.css" />
+  <meta name="csrf-token" content="{{csrfToken}}">
 </head>
 <body>
   <div class="request-container">
@@ -32,7 +33,7 @@
     </div>
 
     <div class="table-holidays-wrapper">
-      <div class="table-container">
+      <div class="table-container" id="table-container">
         <table>
           <thead>
             <tr>
@@ -82,7 +83,7 @@
                 <td> <!-- Dropdown Actions con RBAC -->
                   <div class="dropdown"> 
                     <button class="action-btn">Actions</button>
-                    <div class="dropdown-content">
+                    <div class="dropdown-content" id="dropdown-content">
                       {{#if ../puedeAceptar}}
                         <button class="approve-btn" onclick="approveRequest('{{idSolicitud}}')">
                           <i class="fa-solid fa-check"></i> Approve
