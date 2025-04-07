@@ -32,4 +32,12 @@ module.exports = class Empresa {
   static fetchAll() {
     return db.execute('SELECT * FROM Empresa');
   }
+
+
+   static deleteA(idEmpresa){
+              return db.execute(`
+                  DELETE FROM Empresa WHERE idEmpresa = ?;
+              `,[idEmpresa])
+          }
+  
 };

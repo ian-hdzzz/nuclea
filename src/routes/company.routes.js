@@ -7,5 +7,6 @@ const canviewAdmin = require('../util/canviewAdmin');
 // Define routes
 router.get('/', isAuth, canviewAdmin, companyController.get_company);
 router.post('/', isAuth, canviewAdmin, companyController.post_agregar_company);
+router.get('/delete/:idEmpresa', isAuth, canviewAdmin, companyController.get_delete);
 
 module.exports = router;

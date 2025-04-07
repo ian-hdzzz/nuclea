@@ -19,6 +19,13 @@ module.exports = class Holiday {
         
     }
 
+     static deleteA(idDiaFeriado){
+                return db.execute(`
+                    DELETE FROM DiasFeriados WHERE idDiaFeriado = ?;
+                `,[idDiaFeriado])
+            }
+    
+
     //Este método servirá para devolver los objetos del almacenamiento persistente.
     static fetchAll() {
         return db.execute('SELECT * FROM DiasFeriados');
@@ -36,3 +43,4 @@ module.exports = class Holiday {
         }
     }
 }
+

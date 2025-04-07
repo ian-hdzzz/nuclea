@@ -62,7 +62,14 @@ exports.post_agregar_holiday = (request, response, next) => {
 
 
 };
-
+exports.get_delete = (req, res, next) => {
+  console.log(req.body)
+  Holiday.deleteA(req.params.idDiaFeriado).then(()=>{
+      res.redirect('/nuclea/holiday')
+  }).catch((error)=>{
+      console.log(error)
+  })
+};
 
 exports.get_search_holiday = (req, res) => {
   const name = req.query.name || ''; 

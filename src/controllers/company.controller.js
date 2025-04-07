@@ -64,4 +64,14 @@ exports.post_agregar_company = (request, response, next) => {
         response.redirect('/nuclea/company');
         response.status(500);
       });
+
+};
+
+exports.get_delete = (req, res, next) => {
+  console.log(req.body)
+  Company.deleteA(req.params.idEmpresa).then(()=>{
+      res.redirect('/nuclea/company')
+  }).catch((error)=>{
+      console.log(error)
+  })
 };
