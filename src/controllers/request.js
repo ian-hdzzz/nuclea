@@ -295,3 +295,8 @@ exports.getRequestsPersonal = (req, res) => {
     res.status(500).send('Internal Server Error');
   });
 };
+
+exports.deleteRequest=(req,res)=>{
+  console.log("Este es el valor desde controllers");
+  console.log(req.params.id);
+}

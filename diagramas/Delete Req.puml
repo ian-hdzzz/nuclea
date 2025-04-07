@@ -27,7 +27,7 @@ deactivate sql
 Request.model-->>request.js:Promesa
 deactivate Request.model
 alt Privilegio=Consultar solicitudes propias
-    request.js->>Request.model: Request.fetchPersonal(req.session.idUsuario)
+    request.js->>Request.model: fetchPersonal(req.session.idUsuario)
     activate Request.model
     Request.model->>sql:execute(SELECT s.idSolicitud, u.Nombre, u.Apellidos \n AS Apellido, s.Tipo, s.Fecha_inicio, s.Fecha_fin, s.Descripcion, s.Aprobacion_L,\n s.Fecha_aprob_L, s.Aprobacion_A, s.Fecha_aprob_A \nFROM Solicitudes s JOIN Usuarios u ON s.idUsuario = u.idUsuario \nWHERE u.idUsuario=?; `,[id])'
     activate sql
@@ -36,7 +36,7 @@ alt Privilegio=Consultar solicitudes propias
     Request.model-->>request.js:Promesa
     deactivate Request.model
 else 
-    request.js->>Request.model: Request.fetchAll()
+    request.js->>Request.model: fetchAll()
     activate Request.model
     Request.model->>sql:execute(`SELECT s.idSolicitud, u.Nombre, u.Apellidos AS Apellido,\n s.Tipo, s.Fecha_inicio, s.Fecha_fin, s.Descripcion, s.Aprobacion_L,\n s.Fecha_aprob_L, s.Aprobacion_A, s.Fecha_aprob_A \nFROM Solicitudes s JOIN Usuarios u ON s.idUsuario = u.idUsuario`)
     activate sql
