@@ -8,7 +8,7 @@ router.get('/request', isAuth,requestController.getRequests);
 router.post('/request', isAuth,requestController.postRequest);
 
 
-router.get('/request/personal', isAuth,requestController.getRequestsPersonal);
+router.get('/request/personal', isAuth,requestController.getRequests);
 router.post('/request/personal', isAuth,requestController.postRequest);
 
 router.get('/request/approval', isAuth, requestController.getRequestsapr);

@@ -21,6 +21,28 @@
         </div>
       </nav>
     </div>
+    {{#if info}}
+     <div "top-container">
+       <div class="nav-bar">
+         <div class="first-container">
+           <div class="notification is-success">
+             {{info}}
+           </div>
+         </div>
+       </div>
+     </div>
+  {{/if}}
+  {{#if error}}
+     <div "top-container">
+       <div class="nav-bar">
+         <div class="first-container">
+           <div class="notification is-danger">
+             {{error}}
+           </div>
+         </div>
+       </div>
+     </div>
+  {{/if}}
 
     <div class="content">
     <div class="nav-content">

@@ -104,17 +104,85 @@ VALUES (
     `, [id]);
   }
 
+  static fetchrequestI(id) {
+    return db.execute(`
+      SELECT 
+        s.idSolicitud,
+        u.Nombre,
+        u.Apellidos AS Apellido,
+        s.Tipo,
+        s.Fecha_inicio,
+        s.Fecha_fin,
+        s.Descripcion,
+        s.Aprobacion_L,
+        s.Fecha_aprob_L,
+        s.Aprobacion_A,
+        s.Fecha_aprob_A
+      FROM Solicitudes s
+      WHERE s.idSolicitud=?;
+    `,[id]);
+    
+  }
+
 };
 
 // Aprobar solicitud según el rol
-module.exports.approveSolicitud = (idSolicitud, rol) => {
+module.exports.approveSolicitud = async (idSolicitud, rol) => {
+  const db = require('../util/database');
+
+  // Aprobar según rol
   if (rol === 2) {
-    return db.execute(`UPDATE Solicitudes SET Aprobacion_L = 'Aprobado', Fecha_aprob_L = NOW() WHERE idSolicitud = ?`, [idSolicitud]);
+    await db.execute(`
+      UPDATE Solicitudes 
+      SET Aprobacion_L = 'Aprobado', Fecha_aprob_L = NOW() 
+      WHERE idSolicitud = ?`, [idSolicitud]);
   } else if (rol === 1) {
-    return db.execute(`UPDATE Solicitudes SET Aprobacion_A = 'Aprobado', Fecha_aprob_A = NOW() WHERE idSolicitud = ?`, [idSolicitud]);
+    await db.execute(`
+      UPDATE Solicitudes 
+      SET Aprobacion_A = 'Aprobado', Fecha_aprob_A = NOW() 
+      WHERE idSolicitud = ?`, [idSolicitud]);
   } else {
     return Promise.reject(new Error('No autorizado'));
   }
+
+  // Verificar si ambas aprobaciones están dadas y aún no se ha procesado
+  const [solicitud] = await db.execute(`
+    SELECT idUsuario, Aprobacion_L, Aprobacion_A, Fecha_inicio, Fecha_fin
+    FROM Solicitudes 
+    WHERE idSolicitud = ?`, [idSolicitud]);
+
+  const s = solicitud[0];
+
+  if (
+    s.Aprobacion_L === 'Aprobado' &&
+    s.Aprobacion_A === 'Aprobado' 
+  ) {
+    const fechaInicio = new Date(s.Fecha_inicio);
+    console.log('fechaInicio', fechaInicio)
+    const fechaFin = new Date(s.Fecha_fin);
+    console.log('fechafinal', fechaFin)
+
+    const diasSolicitados = Math.ceil((fechaFin - fechaInicio) / (1000 * 60 * 60 * 24)) + 1;
+    console.log('diasSolicitados', diasSolicitados)
+    // Obtener días restantes del usuario
+    const [usuario] = await db.execute(`
+      SELECT dias_vaciones 
+      FROM Usuarios 
+      WHERE idUsuario = ?`, [s.idUsuario]);
+    const u = usuario[0];
+    console.log('dias_vaciones', u.dias_vaciones)
+
+    const diasfinales = u.dias_vaciones - diasSolicitados;
+    console.log('diasfinales', diasfinales)
+    // Restar días
+    await db.execute(`
+      UPDATE Usuarios 
+      SET dias_vaciones = ? 
+      WHERE idUsuario = ?`, [diasfinales, s.idUsuario]);
+
+  }
+
+  return;
 };
 
 // Rechazar solicitud según el rol

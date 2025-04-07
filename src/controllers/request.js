@@ -4,6 +4,15 @@ const DiasFeriados = require('../models/diasferiados.model');
 const Usuario = require('../models/usuario.model');
 
 exports.getRequests = (req, res) => {
+  const mensaje = req.session.info || '';
+     if (req.session.info) {
+         req.session.info = '';
+     }
+
+     const mensajeerror = req.session.errorRE || '';
+     if (req.session.errorRE) {
+        req.session.errorRE = '';
+     }
   DiasFeriados.fetchAll()
   .then(([diasf,fD]) => {
     let canViewPersonal = false;
@@ -28,7 +37,8 @@ exports.getRequests = (req, res) => {
             apellidosUsuario: req.session.apellidos,
             title: 'Request',
             diasferiados: diasf,
-            puedeAceptar: canApprove
+            info: mensaje,
+            error: mensajeerror,
           });
         })
         .catch((err)=>{
@@ -39,7 +49,7 @@ exports.getRequests = (req, res) => {
       
     }
     if(!canViewPersonal){
-      Request.fetchAll()
+      Request.fetchPersonal()
       .then(([rows]) => {
         res.render('pages/request', {
           datos: rows,
@@ -49,7 +59,8 @@ exports.getRequests = (req, res) => {
           apellidosUsuario: req.session.apellidos,
           title: 'Request',
           diasferiados: diasf,
-          puedeAceptar: canApprove
+          info: mensaje,
+          error: mensajeerror,
         });
       })
       .catch((err) => {
@@ -86,23 +97,25 @@ exports.postRequest = (request, response,next) => {
       if(dias>=0){
         requests.save()
         .then(() => {
-          request.session.info = `Solicitud de ${nombreUsuario} guardado.`;
-          response.redirect('/nuclea/request');
+          request.session.info = `Request from ${nombreUsuario} saved.`;
+          response.redirect('/nuclea/request/personal');
           console.log('Se guardó correctamente');            
         })
         .catch((err) => {
-          console.error('Error al guardar la solicitud:', err.message);
+          request.session.errorRE = `Error registering request.`;
           console.error(err);
-          response.status(500).send('Error al obtener los datos');
+          response.redirect('/nuclea/request/personal');
+          response.status(500);
         });
       }else {
-        console.log(`No se pudo guardar la solicitud, te quedan ${dias_restantes}`)
-        response.redirect('/nuclea/request');
+        request.session.errorRE = `Could not register request, vacation days left ${dias_restantes}`;
+        response.redirect('/nuclea/request/personal');
       }
     }).catch((err)=> {
-      console.error('Error al guardar la solicitud:', err.message);
+      reqquest.session.errorRE = `Error registering request.`;
       console.error(err);
-      response.status(500).send('Error al obtener los datos');
+      response.redirect('/nuclea/request/personal');
+      response.status(500);
     });
 
   }else{
@@ -110,7 +123,7 @@ exports.postRequest = (request, response,next) => {
   
     .then(() => {
         request.session.info = `Solicitud de ${nombreUsuario} guardado.`;
-        response.redirect('/nuclea/request');
+        response.redirect('/nuclea/request/personal');
     })
     .catch((err) => {
       console.error('Error al guardar la solicitud:', err.message);
@@ -122,7 +135,6 @@ exports.postRequest = (request, response,next) => {
 
 };
 
-//Método para aprobar una solicitud
 exports.approveRequest = (req, res) => {
   const solicitudId = req.params.id;
   const usuarioId = req.session.idUsuario;
