@@ -9,16 +9,15 @@ function confirmDelete(idSolicitud) {
             }
         })
         .then(res => {
-            if (res.ok) {
-                alert("Request deleted successfully.");
-                location.reload(); // Recarga la página o actualiza la lista si es necesario
-            } else {
-                alert("Error deleting request.");
-            }
+            return res.json();
+        })
+        
+        .then(data => {
+            
         })
         .catch(error => {
             console.error("Error:", error);
             alert("An error occurred.");
         });
-    }
+    } 
 }
