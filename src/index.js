@@ -84,7 +84,7 @@ app.use((req, res, next) => {
 // Rutas
 app.use(require('./routes/index.routes'));
 app.use('/nuclea', require('./routes/authentication.routes'));
-app.use('/nuclea', require('./routes/google.routes'));
+app.use(require('./routes/google.routes'));
 app.use('/nuclea', require('./routes/dashboard.routes'));
 app.use('/nuclea', require('./routes/request.routes'));
 app.use('/nuclea', require('./routes/objectives.routes'));
