@@ -321,6 +321,7 @@ exports.getRequestsPersonal = (req, res) => {
     console.error('Error fetching the holidays:', err);
     res.status(500).send('Internal Server Error');
   });
+}
 };
 
 
