@@ -290,26 +290,35 @@ exports.getRequestsapr = (req, res) => {
 };
 
 exports.getRequestsPersonal = (req, res) => {
+  const privilegios = req.session.privilegios || [];
+  for (let privilegio of req.session.privilegios) {
+
+    if (privilegio.Nombre_privilegio == 'Acepta Deniega solicitud'){
+      canApprove = true;
+    }
+
   DiasFeriados.fetchAll()
-  .then(([diasf,fD]) => {
-        Request.fetchPersonal(req.session.idUsuario)
+    .then(([diasf, fD]) => {
+      Request.fetchPersonal(req.session.idUsuario)
         .then(([rows]) => {
-          res.render('pages/request', {
+          res.render('pages/requestpersonal', {
             datos: rows,
             csrfToken: req.csrfToken(),
             sessionId: req.session.idUsuario,
             nombreUsuario: req.session.nombre,
             apellidosUsuario: req.session.apellidos,
             title: 'Request',
-            diasferiados: diasf
+            diasferiados: diasf,
+            puedeAceptar: canApprove
           });
         })
-        .catch((err)=>{
+        .catch((err) => {
           console.error('Error al cargar las solicitudes:', err);
           res.status(500).send('Error al obtener los datos');
-        })
-  }).catch((err) => {
-    console.error('Error fetching the holidays:', err);
-    res.status(500).send('Internal Server Error');
-  });
-};
+        });
+    })
+    .catch((err) => {
+      console.error('Error fetching the holidays:', err);
+      res.status(500).send('Internal Server Error');
+    });
+}};
