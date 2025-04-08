@@ -276,5 +276,90 @@
       `, [iduser]);
     }
 
+    static async update(
+      Nombre, 
+      Apellidos, 
+      Correo_electronico,
+      Fecha_inicio_colab, 
+      Fecha_vencimiento_colab, 
+      Ciudad, 
+      Pais, 
+      Calle, 
+      Modalidad, 
+      Estatus, 
+      dias_vaciones, 
+      idUsuario, 
+      idRol, 
+      idDepartamento, 
+      idEmpresa
+    ) {
+      const connection = await db.getConnection();
+      try {
+        await connection.beginTransaction();
+    
+        // 1. Actualizar Usuarios
+        await connection.execute(
+          `UPDATE Usuarios 
+           SET 
+             Nombre = ?,
+             Apellidos = ?,
+             Correo_electronico = ?,
+             Fecha_inicio_colab = ?,
+             Fecha_vencimiento_colab = ?,
+             Ciudad = ?,
+             Pais = ?,
+             Calle = ?,
+             Modalidad = ?,
+             Estatus = ?,
+             dias_vaciones = ?
+           WHERE idUsuario = ?`,
+          [
+            Nombre,
+            Apellidos,
+            Correo_electronico,
+            Fecha_inicio_colab,
+            Fecha_vencimiento_colab,
+            Ciudad,
+            Pais,
+            Calle,
+            Modalidad,
+            Estatus,
+            dias_vaciones,
+            idUsuario
+          ]
+        );
+    
+        // 2. Actualizar User_Rol
+        await connection.execute(
+          `UPDATE User_Rol 
+           SET idRol = ? 
+           WHERE idUsuario = ?`,
+          [idRol, idUsuario]
+        );
+    
+        // 3. Actualizar Pertenece (Departamento)
+        await connection.execute(
+          `UPDATE Pertenece 
+           SET idDepartamento = ? 
+           WHERE idUsuario = ?`,
+          [idDepartamento, idUsuario]
+        );
+    
+        // 4. Actualizar PerteneceDepa (Empresa)
+        await connection.execute(
+          `UPDATE PerteneceDepa 
+           SET idEmpresa = ? 
+           WHERE idDepartamento = ?`,
+          [idEmpresa, idDepartamento]
+        );
+    
+        await connection.commit();
+      } catch (error) {
+        await connection.rollback();
+        throw error;
+      } finally {
+        connection.release();
+      }
+    }
   };
 

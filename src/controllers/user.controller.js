@@ -203,10 +203,13 @@ exports.get_update = async (req, res, next) => {
 
         // Consulta para obtener los detalles del usuario con departamentos, roles y empresa
         const [usuarioDetails] = await Usuario.fetchUserDetails(idUsuario);
-
+        const usuario = usuarioDetails[0];
         const nousers = usuarios.length === 0;
         const tempPassword = generateRandomPassword();
 
+        usuario.PrimerDepartamento = usuario.Departamentos?.split(',')[0].trim();
+        usuario.PrimerRol = usuario.Roles?.split(',')[0].trim();
+        usuario.PrimerEmpresa = usuario.Empresas?.split(',')[0].trim();
         const mensaje = req.session.info || '';
         if (req.session.info) {
             req.session.info = '';
@@ -217,12 +220,11 @@ exports.get_update = async (req, res, next) => {
             req.session.errorUSU = '';
         }
 
-        console.log(usuarioDetails); // Verifica que usuarioDetails tenga datos
-
+        console.log(usuario);
         res.render('../views/pages/editarUsers.hbs', {
             rols: roles,
             csrfToken: req.csrfToken(),
-            usuarioDetails:usuarioDetails[0], 
+            usuarioDetails:usuario, 
             tempPassword,
             deptos,
             noUsers: nousers,
@@ -236,3 +238,49 @@ exports.get_update = async (req, res, next) => {
         res.status(500).send('Internal Server Error');
     }
 }
+
+
+exports.post_update = async (req, res, next) => {
+    try {
+        const idUsuario = req.params.idUsuario; // Asegúrate de que la ruta tenga :idUsuario
+        const {
+            name_us: nombre,
+            lastname_us: apellidos,
+            email_us: correo,
+            country_us: pais,
+            city_us: ciudad,
+            street_us: calle,
+            model_us: modalidad,
+            dias_vacaciones: dias_vaciones,
+            role: idRol,
+            company: idEmpresa,
+            depa: idDepartamento,
+            status_us: estatus,
+            start_date: fecha_inicio_colab,
+            end_date: fecha_vencimiento_colab
+        } = req.body;
+
+        await Usuario.update(
+            nombre,
+            apellidos,
+            correo,
+            fecha_inicio_colab,
+            fecha_vencimiento_colab,
+            ciudad,
+            pais,
+            calle,
+            modalidad,
+            estatus,
+            dias_vaciones,
+            idUsuario, // ¡Posición correcta!
+            idRol,
+            idDepartamento,
+            idEmpresa
+        );
+
+        res.redirect('/nuclea/users');
+    } catch (error) {
+        console.error("Error al actualizar usuario:", error);
+        res.status(500).send("Error interno del servidor");
+    }
+};
