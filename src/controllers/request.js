@@ -222,43 +222,51 @@ exports.postRequest = async (req, res) => {
  */
 
 exports.getRequestsapr = (req, res) => {
+  // Verificamos si el usuario tiene el privilegio requerido
+  const privilegios = req.session.privilegios || [];
+  const puedeAceptar = privilegios.some(p => p.Nombre_privilegio === 'Acepta Deniega solicitud');
+
+  if (!puedeAceptar) {
+    return res.redirect('/nuclea/request/personal');
+  }
+
   let encontrado = false; // Variable para saber si encontramos el privilegio 'addAO'
-  console.log('privilegios session', req.session.privilegios)
-  let privilegiostot = req.session.privilegios
-  console.log(privilegiostot)
+  console.log('privilegios session', req.session.privilegios);
+  let privilegiostot = req.session.privilegios;
+  console.log(privilegiostot);
+
   for (let privilegio of privilegiostot) {
     if (privilegio.Nombre_privilegio == 'viewcollabs') {
       DiasFeriados.fetchAll()
-      .then(([diasf,fD]) => {
+        .then(([diasf, fD]) => {
           Request.requestcollabs(req.session.idUsuario)
-          .then(([rows]) => {
-            res.render('pages/requestadmin', {
-              datos: rows,
-              csrfToken: req.csrfToken(),
-              sessionId: req.session.idUsuario,
-              nombreUsuario: req.session.nombre,
-              apellidosUsuario: req.session.apellidos,
-              title: 'Request',
-              diasferiados: diasf,
-              puedeAceptar: true
+            .then(([rows]) => {
+              res.render('pages/requestadmin', {
+                datos: rows,
+                csrfToken: req.csrfToken(),
+                sessionId: req.session.idUsuario,
+                nombreUsuario: req.session.nombre,
+                apellidosUsuario: req.session.apellidos,
+                title: 'Request',
+                diasferiados: diasf,
+                puedeAceptar: true
+              });
+            })
+            .catch((err) => {
+              console.error('Error al cargar las solicitudes:', err);
+              res.status(500).send('Error al obtener los datos');
             });
-          })
-          .catch((err) => {
-            console.error('Error al cargar las solicitudes:', err);
-            res.status(500).send('Error al obtener los datos');
-          });
-      }).catch((err) => {
-        console.error('Error fetching the holidays:', err);
-        res.status(500).send('Internal Server Error');
-      });
-    return
+        }).catch((err) => {
+          console.error('Error fetching the holidays:', err);
+          res.status(500).send('Internal Server Error');
+        });
+      return;
     }
+  };
 
-  };  
-
-    DiasFeriados.fetchAll()
-    .then(([diasf,fD]) => {
-        Request.fetchAll()
+  DiasFeriados.fetchAll()
+    .then(([diasf, fD]) => {
+      Request.fetchAll()
         .then(([rows]) => {
           res.render('pages/requestadmin', {
             datos: rows,
@@ -279,9 +287,7 @@ exports.getRequestsapr = (req, res) => {
       console.error('Error fetching the holidays:', err);
       res.status(500).send('Internal Server Error');
     });
-  
-
-};  
+};
 
 exports.getRequestsPersonal = (req, res) => {
   DiasFeriados.fetchAll()

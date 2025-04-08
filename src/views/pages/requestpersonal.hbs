@@ -9,7 +9,6 @@
 <body>
   <div class="request-container">
 
-
     <div class="top-container">
       <nav class="nav-bar">
         <div class="first-container">
@@ -19,6 +18,12 @@
             <i class="fa-solid fa-magnifying-glass search-icon"></i>
           </div>
         </div>
+        {{#if puedeAceptar}}
+        <a href="/nuclea/request/approval" class="add-btn-container">
+          <i class="fa-solid fa-circle-check"></i>
+          <span>Approve requests</span>
+        </a>
+        {{/if}}
       </nav>
     </div>
 
@@ -26,8 +31,8 @@
     <div class="nav-content">
       <h2>Absences Management</h2>
       <div class="add-btn-container" id="openModal">
-      <i class="fa-regular fa-square-plus"></i>
-      <input type="button" value="Add Request" class="add-btn" id="openModal">
+        <i class="fa-regular fa-square-plus"></i>
+        <input type="button" value="Add Request" class="add-btn" id="openModal">
       </div>
     </div>
 
@@ -88,15 +93,13 @@
           <h3 class="holidays-title">Holidays</h3>
         </div>
         <table>
-          <thead>
-            <tr>
-            </tr>
-          </thead>
           <tbody>
             {{#each diasferiados}}
             <tr class="holiday-row">
-              
-              <td class="day"><div class="icon-circle"><i class="fa-regular fa-calendar"></i></div> <div class="nombre">{{Nombre_asueto}}</div></td>
+              <td class="day">
+                <div class="icon-circle"><i class="fa-regular fa-calendar"></i></div>
+                <div class="nombre">{{Nombre_asueto}}</div>
+              </td>
               <td class="fecha">{{formatDate Fecha_asueto}}</td>
             </tr>
             {{/each}}
@@ -105,53 +108,50 @@
       </div>
     </div>
 
+    <!-- Modal -->
+    <div id="modal" class="modal hidden">
+      <div class="modal-content">
+        <button id="closeModal" class="close-btn">✖</button>
+        <h2 class="title-modal">New Request</h2>
+        <p class="description">Hi {{nombreUsuario}} {{apellidosUsuario}}, fill the form to create a request</p>
 
-                    
-      <!-- Modal -->
-      <div id="modal" class="modal hidden">
-        <div class="modal-content">
-          <button id="closeModal" class="close-btn">✖</button>
-          <h2 class="title-modal">New Request</h2>
-          <p class="description">Hi {{nombreUsuario}} {{apellidosUsuario}}, fill the form to create a request</p>
+        <form method="POST" action="/nuclea/request">
+          <input type="hidden" name="_csrf" value="{{csrfToken}}">
+          <input type="hidden" name="idUsuario" value="{{sessionId}}">
 
-          <form method="POST" action="/nuclea/request">
-            <input type="hidden" name="_csrf" value="{{csrfToken}}">
-            <input type="hidden" name="idUsuario" value="{{sessionId}}">
+          <div class="form-group">
+            <label for="Tipo">Type</label>
+            <select id="Tipo" name="Tipo" class="text-modal" required>
+              <option value="">Select a type</option>
+              <option value="Vacaciones">Vacations</option>
+              <option value="Permiso médico">Medical leave</option>
+              <option value="Capacitación">Training</option>
+              <option value="Día personal">Personal day</option>
+              <option value="Trabajo remoto">Remote work</option>
+              <option value="Emergencia familiar">Family emergency</option>
+              <option value="Asuntos legales">Legal matters</option>
+              <option value="Permiso académico">Academic leave</option>
+            </select>
+          </div>
 
+          <div class="form-row">
             <div class="form-group">
-              <label for="Tipo">Type</label>
-              <select id="Tipo" name="Tipo" class="text-modal" required>
-                <option value="">Select a type</option>
-                <option value="Vacaciones">Vacations</option>
-                <option value="Permiso médico">Medical leave</option>
-                <option value="Capacitación">Training</option>
-                <option value="Día personal">Personal day</option>
-                <option value="Trabajo remoto">Remote work</option>
-                <option value="Emergencia familiar">Family emergency</option>
-                <option value="Asuntos legales">Legal matters</option>
-                <option value="Permiso académico">Academic leave</option>
-              </select>
+              <label for="Fecha_inicio">Start Date</label>
+              <input type="date" id="Fecha_inicio" name="Fecha_inicio" class="text-modal" required>
             </div>
-
-            <div class="form-row">
-              <div class="form-group">
-                <label for="Fecha_inicio">Start Date</label>
-                <input type="date" id="Fecha_inicio" name="Fecha_inicio" class="text-modal" required>
-              </div>
-              <div class="form-group">
-                <label for="Fecha_fin">End Date</label>
-                <input type="date" id="Fecha_fin" name="Fecha_fin" class="text-modal" required>
-              </div>
-            </div>
-
             <div class="form-group">
-              <label for="Descripcion">Description</label>
-              <input type="text" id="Descripcion" name="Descripcion" placeholder="Spring Break" class="text-modal" required>
+              <label for="Fecha_fin">End Date</label>
+              <input type="date" id="Fecha_fin" name="Fecha_fin" class="text-modal" required>
             </div>
+          </div>
 
-            <input type="submit" class="btn-submit" value="Submit Request">
-          </form>
-        </div>
+          <div class="form-group">
+            <label for="Descripcion">Description</label>
+            <input type="text" id="Descripcion" name="Descripcion" placeholder="Spring Break" class="text-modal" required>
+          </div>
+
+          <input type="submit" class="btn-submit" value="Submit Request">
+        </form>
       </div>
     </div>
   </div>
