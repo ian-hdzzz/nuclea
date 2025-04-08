@@ -1,4 +1,5 @@
 const mysql = require('mysql2');
+require('dotenv').config();
 
 const pool = mysql.createPool({
   host: process.env.DB_HOST,  // Reemplaza con tu usuario de AlwaysData
@@ -10,4 +11,13 @@ const pool = mysql.createPool({
   queueLimit: 0
 });
 
-module.exports = pool.promise(); // Usamos .promise() para manejar Promesas
+pool.getConnection((err, connection) => {
+  if (err) {
+      console.error('Database connection error:', err);
+  } else {
+      console.log('Successfully connected to the database');
+      connection.release();
+  }
+});
+
+module.exports = pool.promise(); // Usamos .promise() para manejar Promesass
