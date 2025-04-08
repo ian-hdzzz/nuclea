@@ -11,7 +11,7 @@
   <div class="top-container">
     <nav class="nav-bar">
       <div class="first-container">
-        <div class="views">Views</div>
+        <div class="hidden"></div>
         <div class="search-container">
           <input type="text" placeholder="Search..." class="input-search">
           <i class="fa-solid fa-magnifying-glass search-icon"></i>
@@ -54,8 +54,11 @@
       <h2>Administrative offenses</h2>
       {{#each privilegios}}
         {{#if (eq this.Nombre_privilegio "addAO")}}
-          <input type="button" value="Add Administrative offense" id="openModal" class="add-btn" 
-          style="padding-right: 15px; padding-left: 15px; width:auto;">
+          <div class="add-btn-container" id="openModal">
+                <i class="fa-regular fa-square-plus"></i>
+                <input type="button" value="Add Administrative offense" id="openModal" class="add-btn">
+                <!-- Botón de enviar <input type="button" value="Assign user to Dep" id="openModal2" class="add-btn"> -->
+          </div>
         {{/if}}
       {{/each}}
     </div>
