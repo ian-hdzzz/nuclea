@@ -307,3 +307,47 @@ exports.getRequestsPersonal = (req, res) => {
     res.status(500).send('Internal Server Error');
   });
 };
+
+
+
+
+exports.deleteRequest = (req, res) => {
+  const mensaje = req.session.info || '';
+     if (req.session.info) {
+         req.session.info = '';
+     }
+
+     const mensajeerror = req.session.errorRE || '';
+     if (req.session.errorRE) {
+        req.session.errorRE = '';
+     }
+  Request.Delete(req.params.idSolicitud).then(()=>{
+    console.log("Solicitud eliminada correctamente");
+    Request.fetchPersonal(req.session.idUsuario)
+    .then(([rows,fD]) => {
+      res.status(200).json({
+        datos: rows,
+        csrfToken: req.csrfToken(),
+        sessionId: req.session.idUsuario,
+        nombreUsuario: req.session.nombre,
+        apellidosUsuario: req.session.apellidos,
+        title: 'Request',
+        info: mensaje,
+        error: mensajeerror,
+      });
+    })
+    .catch((err)=>{
+      console.error('Error al cargar las solicitudes:', err);
+      res.status(500).send('Error al obtener los datos');
+    })
+
+
+  }).catch((err) => {
+    console.error('Error al eliminar la solicitud o cargar datos:', err);
+    res.status(500).send('Error al procesar la solicitud');
+  }); 
+
+};
+
+
+

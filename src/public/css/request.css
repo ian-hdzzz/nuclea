@@ -381,7 +381,7 @@ th {
 
 
 /* Asegura que la tabla ocupe el espacio necesario */
-.table-container {
+#table-container {
     font-size: .9rem;
     width: 60%;
     flex: 1 1 75%;

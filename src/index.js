@@ -36,6 +36,11 @@ app.use(session({
     secret: 'mi string secreto que debe ser un string aleatorio muy largo, no como éste', 
     resave: false,
     saveUninitialized: false,
+    cookie: {
+        httpOnly: true,
+        secure: false, // en producción pon esto en true con HTTPS
+        maxAge: 3600000
+      }
 }));
 
 // Inicializar Passport
