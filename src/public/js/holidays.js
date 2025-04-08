@@ -70,7 +70,57 @@ function updateResults(data) {
                     </div>
                 </td>
             `;
+            // ========== DROPDOWN ========== //
+            const actionButtons2 = document.querySelectorAll(".action-btn");
+              
+            actionButtons2.forEach((btn) => {
+              btn.addEventListener("click", (e) => {
+                e.stopPropagation();
+                document.querySelectorAll(".dropdown-content").forEach((content) => {
+                  if (content !== btn.nextElementSibling) {
+                    content.classList.remove("show");
+                  }
+                });
+          
+                const dropdown = btn.nextElementSibling;
+                if (dropdown) {
+                  dropdown.classList.toggle("show");
+                }
+              });
+            });
+          
+            window.addEventListener("click", () => {
+              document.querySelectorAll(".dropdown-content").forEach((content) => {
+                content.classList.remove("show");
+              });
+            });
             tbody.appendChild(row);
+            // ========== DROPDOWN ========== //
+            const actionButtons = document.querySelectorAll(".action-btn");
+              
+            actionButtons.forEach((btn) => {
+              btn.addEventListener("click", (e) => {
+                e.stopPropagation();
+                document.querySelectorAll(".dropdown-content").forEach((content) => {
+                  if (content !== btn.nextElementSibling) {
+                    content.classList.remove("show");
+                  }
+                });
+          
+                const dropdown = btn.nextElementSibling;
+                if (dropdown) {
+                  dropdown.classList.toggle("show");
+                }
+              });
+            });
+          
+            window.addEventListener("click", () => {
+              document.querySelectorAll(".dropdown-content").forEach((content) => {
+                content.classList.remove("show");
+              });
+            });
+          
+          //-------------------------------Fin-------------------------------
         });
     } else {
         const row = document.createElement('tr');

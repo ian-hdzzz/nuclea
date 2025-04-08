@@ -75,3 +75,55 @@ exports.get_delete = (req, res, next) => {
       console.log(error)
   })
 };
+
+
+exports.get_update = (req, res, next) => {
+  Falta.fetchFA()
+      .then(([faltas, fD]) => {
+          Falta.fetchFAI(req.params.idFalta)
+              .then(([falta, fD]) => {
+                  Usuario.fetchAll()
+                      .then(([rows, fieldData]) => {
+                          const noFaltas = faltas.length === 0;
+
+                          res.render('../views/pages/editarFalta.hbs', {
+                              usuariosfa: rows,
+                              csrfToken: req.csrfToken(),
+                              faltass: faltas,
+                              falta: falta[0],
+                              noFaltas: noFaltas,
+                              title: 'Administrative offenses'
+                          });
+                          console.log(falta)
+                      })
+                      .catch((err) => {
+                          console.error('Error fetching Users:', err);
+                          res.status(500).send('Internal Server Error');
+                      });
+              })
+              .catch((err) => {
+                  console.error('Error fetching Administrative offenses:', err);
+                  res.status(500).send('Internal Server Error');
+              });
+      }).catch((err) => {
+          console.error('Error fetching Administrative offenses:', err);
+          res.status(500).send('Internal Server Error');
+      });
+}
+
+exports.post_update = (req, res, next) => {
+  const idFalta = req.params.idFalta;  // Usar el parámetro de la URL
+  console.log(idFalta)
+  const archivo = req.file ? req.file.filename : req.body.archivoActual;  // Conservar archivo actual si no hay nuevo
+
+  Falta.Update(idFalta, req.body.idUsu, req.body.fecha, req.body.motivo, archivo)
+      .then(() => {
+          req.session.info = `Addministrative offense updated.`;
+          res.redirect('/nuclea/faltasAdministrativas');
+      })
+      .catch((error) => {
+          req.session.errorAO = `Error registering Addministrative offense.`;
+          res.redirect('/nuclea/faltasAdministrativas');
+          res.status(500);
+      });
+};
