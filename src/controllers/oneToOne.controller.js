@@ -59,6 +59,7 @@ exports.getInterview = async (req, res) => {
             preguntasCerradas,
             employee,
             csrfToken: req.csrfToken(),
+            departamento: req.session.departamento || [],
         });
     } catch (error) {
         console.error('Error al obtener preguntas:', error);
