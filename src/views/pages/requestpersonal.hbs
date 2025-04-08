@@ -15,10 +15,15 @@
           <div class="views">Views</div>
           <div class="search-container">
             <input type="text" placeholder="Search..." class="input-search" />
-            <i class="fa-solid fa-magnifying-glass search-icon"></i>
+            <i class="fa-solid fa-magnifying-glass search-icon"></i>git 
           </div>
         </div>
-
+          {{#if canApprove}}
+            <a href="/nuclea/request/approval" class="add-btn-container">
+              <i class="fa-solid fa-circle-check"></i>
+              <span>Approve requests</span>
+            </a>
+          {{/if}}
       </nav>
     </div>
 

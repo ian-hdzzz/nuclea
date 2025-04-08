@@ -39,6 +39,7 @@ exports.getRequests = (req, res) => {
             diasferiados: diasf,
             info: mensaje,
             error: mensajeerror,
+            canApprove
           });
         })
         .catch((err)=>{
@@ -61,6 +62,7 @@ exports.getRequests = (req, res) => {
           diasferiados: diasf,
           info: mensaje,
           error: mensajeerror,
+          canApprove
         });
       })
       .catch((err) => {
@@ -309,7 +311,6 @@ exports.getRequestsPersonal = (req, res) => {
             apellidosUsuario: req.session.apellidos,
             title: 'Request',
             diasferiados: diasf,
-            puedeAceptar: canApprove
           });
         })
         .catch((err) => {

@@ -52,10 +52,12 @@
       <input type="button" value="Add Request" class="add-btn" id="openModal">
       </div>
 
+      {{#if canApprove}}
       <div onclick="location.href='/nuclea/request/approval'" class="add-btn-container" >
-      <i class="fa-regular fa-square-plus"></i>
-      <input type="button" value="Approve requests" class="add-btn">
+        <i class="fa-regular fa-square-plus"></i>
+        <input type="button" value="Approve requests" class="add-btn">
       </div>
+      {{/if}}
     </div>
 
     <div class="table-holidays-wrapper">
