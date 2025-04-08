@@ -72,11 +72,11 @@ function confirmDeleteReq(idSolicitud) {
                         <td>
                         <span class=" vacation-status `;
                     if(dato.Aprobacion_L=='Aprobado'){
-                        html_container+=`active`;
+                        html_container+=`active"`;
                     }else if(dato.Aprobacion_L=='Rechazado'){
-                        html_container+=`inactive`;
+                        html_container+=`inactive"`;
                     }else{
-                        html_container+=`pending`;
+                        html_container+=`pending"`;
                     }
                     html_container+=`<div class="dot"></div>`;
                     
@@ -90,15 +90,15 @@ function confirmDeleteReq(idSolicitud) {
                     html_container+=` </span>
                         </td>
                         <td>
-                        <span class=" vacation-status` ;
+                        <span class=" vacation-status ` ;
                     
 
                     if(dato.Aprobacion_A=='Aprobado'){
-                        html_container+=`active`;
+                        html_container+=`active"`;
                     }else if(dato.Aprobacion_A=='Rechazado'){
-                        html_container+=`inactive`;
+                        html_container+=`inactive"`;
                     }else{
-                        html_container+=`pending`;
+                        html_container+=`pending"`;
                     }
                     html_container+=`<div class="dot"></div>`;
                     
@@ -116,7 +116,7 @@ function confirmDeleteReq(idSolicitud) {
                         <div class="dropdown"> 
                         <button class="action-btn">Actions</button>
                         <div class="dropdown-content">`; 
-                    //{{#if ../puedeAceptar}}
+                    /* //{{#if ../puedeAceptar}}
                     html_container+=`<button class="approve-btn" onclick="approveRequest('${dato.idSolicitud}')">
                         <i class="fa-solid fa-check"></i> Approve
                         </button>
@@ -124,7 +124,7 @@ function confirmDeleteReq(idSolicitud) {
                         <i class="fa-solid fa-xmark"></i> Reject
                         </button>`;
                     
-                    //{{else}}
+                    //{{else}} */
                    html_container+=`
                         <button class="edit-btn" onclick="editRequest('${dato.idSolicitud}')">
                           <i class="fa-solid fa-pen-to-square"></i> Edit
@@ -140,7 +140,7 @@ function confirmDeleteReq(idSolicitud) {
                         </td>
                     </tr>`;
 
-            }else{
+            } else {
                 html_container+=`<tr>
                 <td colspan="7" class="empty-message">No requests available</td>
               </tr>`;
@@ -150,7 +150,36 @@ function confirmDeleteReq(idSolicitud) {
                 </div>`;
             let tabla =document.getElementById('table-container');
             tabla.innerHTML=html_container;
+            //---------------------------------Para que funcione el drop---------------------
+
+
             
+                // ========== DROPDOWN ========== //
+                const actionButtons = document.querySelectorAll(".action-btn");
+              
+                actionButtons.forEach((btn) => {
+                  btn.addEventListener("click", (e) => {
+                    e.stopPropagation();
+                    document.querySelectorAll(".dropdown-content").forEach((content) => {
+                      if (content !== btn.nextElementSibling) {
+                        content.classList.remove("show");
+                      }
+                    });
+              
+                    const dropdown = btn.nextElementSibling;
+                    if (dropdown) {
+                      dropdown.classList.toggle("show");
+                    }
+                  });
+                });
+              
+                window.addEventListener("click", () => {
+                  document.querySelectorAll(".dropdown-content").forEach((content) => {
+                    content.classList.remove("show");
+                  });
+                });
+              
+              //-------------------------------Fin-------------------------------
         })
         .catch(error => {
             console.error("Error:", error);
