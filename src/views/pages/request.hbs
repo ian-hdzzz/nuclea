@@ -46,18 +46,24 @@
   {{/if}}
 
     <div class="content">
-    <div class="nav-content">
-      <h2>Absences Management</h2>
-      <div class="add-btn-container" id="openModal">
-      <i class="fa-regular fa-square-plus"></i>
-      <input type="button" value="Add Request" class="add-btn" id="openModal">
-      </div>
 
-      <div onclick="location.href='/nuclea/request/approval'" class="add-btn-container" >
-      <i class="fa-regular fa-square-plus"></i>
-      <input type="button" value="Approve requests" class="add-btn">
-      </div>
-    </div>
+      <div class="nav-content">
+        <h2>Absences Management</h2>
+        <!--Botones Add y Approval-->
+          <div class="btns-wrapper">
+            <div class="add-btn-container" id="openModal">
+              <i class="fa-regular fa-square-plus"></i>
+              <input type="button" value="Add Request" class="add-btn" id="openModal">
+            </div>
+
+            {{#if canApprove}}
+              <div onclick="location.href='/nuclea/request/approval'" class="add-btn-container" >
+                <i class="fa-regular fa-square-plus"></i>
+                <input type="button" value="Approve requests" class="add-btn">
+              </div>
+            {{/if}}
+            </div>
+          </div>
 
     <div class="table-holidays-wrapper">
       <div class="table-container" id="table-container">
@@ -131,11 +137,11 @@
                 </td>
               </tr>
               {{/each}}
-              <!-- Registro vacio para aparecer menu de actions-->
+              <!-- Registro vacio para aparecer menu de actions
               <tr class="table-spacer-row">
                 <td class="height-spacer" colspan="8"></td>
               </tr>
-              
+              -->
             {{else}}
               <tr>
                 <td colspan="7" class="empty-message">No requests available</td>
