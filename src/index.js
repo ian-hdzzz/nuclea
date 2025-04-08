@@ -55,7 +55,7 @@ app.use(bodyParser.json());
 const multer = require('multer');
 const fileStorage = multer.diskStorage({
     destination: (request, file, callback) => {
-        const uploadPath = path.join(__dirname, 'public/uploads');
+        const uploadPath = path.join(__dirname, 'public/Uploads');
         callback(null, uploadPath);
     },
     filename: (request, file, callback) => {
