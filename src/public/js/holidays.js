@@ -71,27 +71,6 @@ function updateResults(data) {
                 </td>
             `;
             tbody.appendChild(row);
-            // Dropdown functionality for action buttons
-            const actionButtons = document.querySelectorAll(".action-btn")
-            
-            actionButtons.forEach((button) => {
-            button.addEventListener("click", function (e) {
-                e.stopPropagation()
-
-                // Close all other dropdowns first
-                document.querySelectorAll(".dropdown-content").forEach((content) => {
-                if (content !== this.parentElement.querySelector(".dropdown-content")) {
-                    content.classList.remove("show")
-                }
-                })
-
-                // Toggle the current dropdown
-                const dropdownContent = this.parentElement.querySelector(".dropdown-content")
-                if (dropdownContent) {
-                dropdownContent.classList.toggle("show")
-                }
-            })
-            })
         });
     } else {
         const row = document.createElement('tr');
