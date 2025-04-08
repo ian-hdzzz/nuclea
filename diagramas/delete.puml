@@ -1,0 +1,59 @@
+@startuml
+ actor navegador
+ entity delete
+ boundary confirmDeleteReq
+ boundary request.routes.js
+ control request.js
+ entity Request.model
+ database sql
+ activate navegador
+ navegador->delete
+ deactivate navegador
+ activate delete
+ delete->confirmDeleteReq
+ deactivate delete
+ activate confirmDeleteReq
+ confirmDeleteReq->>request.routes.js:DELETE(/nuclea/request/delete/id)
+ activate request.routes.js
+ request.routes.js->request.js:Delete(req,res)
+ deactivate request.routes.js
+ activate request.js
+ request.js->>Request.model:Delete(req.params.id)
+ activate Request.model
+ Request.model->>sql:execute('DELETE FROM Solicitudes WHERE idSolicitud=?',[id])
+ activate sql
+ sql-->>Request.model:Query OK
+ deactivate sql
+ Request.model-->>request.js:Promesa
+ deactivate Request.model
+ alt Privilegio=Consultar solicitudes propias
+ request.js->>Request.model: fetchPersonal(req.session.idUsuario)
+     activate Request.model
+     Request.model->>sql:execute(SELECT s.idSolicitud, u.Nombre, u.Apellidos \n AS Apellido, s.Tipo, s.Fecha_inicio, s.Fecha_fin, s.Descripcion, s.Aprobacion_L,\n s.Fecha_aprob_L, s.Aprobacion_A, s.Fecha_aprob_A \nFROM Solicitudes s JOIN Usuarios u ON s.idUsuario = u.idUsuario \nWHERE u.idUsuario=?; `,[id])'
+     activate sql
+     sql-->>Request.model:Query OK
+     deactivate sql
+     Request.model-->>request.js:Promesa
+     deactivate Request.model
+ else 
+ request.js->>Request.model: fetchAll()
+     activate Request.model
+     Request.model->>sql:execute(`SELECT s.idSolicitud, u.Nombre, u.Apellidos AS Apellido,\n s.Tipo, s.Fecha_inicio, s.Fecha_fin, s.Descripcion, s.Aprobacion_L,\n s.Fecha_aprob_L, s.Aprobacion_A, s.Fecha_aprob_A \nFROM Solicitudes s JOIN Usuarios u ON s.idUsuario = u.idUsuario`)
+     activate sql
+     sql-->>Request.model:Query OK
+     deactivate sql
+     Request.model-->>request.js:Promesa
+     deactivate Request.model
+ end
+ 
+ request.js-->>confirmDeleteReq:return res.JSON
+ deactivate request.js
+ confirmDeleteReq->>confirmDeleteReq:Data res.JSON()
+ 
+ confirmDeleteReq->navegador:HTML
+ deactivate confirmDeleteReq
+ activate navegador
+ deactivate navegador
+ 
+ 
+ @enduml
