@@ -29,8 +29,16 @@ exports.getRequests = (req, res) => {
       if (canViewPersonal) {
         Request.fetchPersonal(req.session.idUsuario)
         .then(([rows]) => {
+          // Revisar cada solicitud y ajustar los campos si no son Vacations
+            const processedRows = rows.map(row => {
+              if (row.Tipo !== 'Vacations') {
+                row.Aprobacion_L = 'NULL';
+                row.Aprobacion_A = 'NULL';
+              }
+              return row;
+              });
           res.render('pages/request', {
-            datos: rows,
+            datos: processedRows,
             csrfToken: req.csrfToken(),
             sessionId: req.session.idUsuario,
             nombreUsuario: req.session.nombre,
@@ -243,8 +251,9 @@ exports.getRequestsapr = (req, res) => {
         .then(([diasf, fD]) => {
           Request.requestcollabs(req.session.idUsuario)
             .then(([rows]) => {
+              const vacationRequests = rows.filter(row => row.Tipo === 'Vacations'); //Filtrar solo por vacaciones
               res.render('pages/requestadmin', {
-                datos: rows,
+                datos: vacationRequests,
                 csrfToken: req.csrfToken(),
                 sessionId: req.session.idUsuario,
                 nombreUsuario: req.session.nombre,
@@ -270,8 +279,9 @@ exports.getRequestsapr = (req, res) => {
     .then(([diasf, fD]) => {
       Request.fetchAll()
         .then(([rows]) => {
+          const vacationRequests = rows.filter(row => row.Tipo === 'Vacations'); //Filtrar solo por vacaciones
           res.render('pages/requestadmin', {
-            datos: rows,
+            datos: vacationRequests,
             csrfToken: req.csrfToken(),
             sessionId: req.session.idUsuario,
             nombreUsuario: req.session.nombre,

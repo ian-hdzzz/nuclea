@@ -96,23 +96,32 @@
                 <td>{{formatDate Fecha_fin}}</td>
                <td class="descripcion-columna">{{Descripcion}}</td>
                 <td>
-                  <span class=" vacation-status {{#if (eq Aprobacion_L 'Aprobado')}}active{{else if (eq Aprobacion_L 'Rechazado')}}inactive{{else}}pending{{/if}}">
-                  <div class="dot"></div>
-                    {{#if (eq Aprobacion_L 'Aprobado')}}Approved
-                    {{else if (eq Aprobacion_L 'Rechazado')}}Rejected
-                    {{else}}Pending
-                    {{/if}}
-                  </span>
+                  {{#if (eq Tipo "Vacations")}}
+                    <span class=" vacation-status {{#if (eq Aprobacion_L 'Aprobado')}}active{{else if (eq Aprobacion_L 'Rechazado')}}inactive{{else}}pending{{/if}}">
+                      <div class="dot"></div>
+                      {{#if (eq Aprobacion_L 'Aprobado')}}Approved
+                      {{else if (eq Aprobacion_L 'Rechazado')}}Rejected
+                      {{else}}Pending
+                      {{/if}}
+                    </span>
+                  {{else}}
+                   <span class="vacation-status">N/A</span>
+                  {{/if}}
                 </td>
                 <td>
-                  <span class=" vacation-status {{#if (eq Aprobacion_A 'Aprobado')}}active{{else if (eq Aprobacion_A 'Rechazado')}}inactive{{else}}pending{{/if}}">
-                  <div class="dot"></div>
-                    {{#if (eq Aprobacion_A 'Aprobado')}}Approved
-                    {{else if (eq Aprobacion_A 'Rechazado')}}Rejected
-                    {{else}}Pending
-                    {{/if}}
-                  </span>
+                  {{#if (eq Tipo "Vacations")}}
+                    <span class=" vacation-status {{#if (eq Aprobacion_A 'Aprobado')}}active{{else if (eq Aprobacion_A 'Rechazado')}}inactive{{else}}pending{{/if}}">
+                      <div class="dot"></div>
+                      {{#if (eq Aprobacion_A 'Aprobado')}}Approved
+                      {{else if (eq Aprobacion_A 'Rechazado')}}Rejected
+                      {{else}}Pending
+                      {{/if}}
+                    </span>
+                  {{else}}
+                    <span class="vacation-status">N/A</span>
+                  {{/if}}
                 </td>
+
                 <td> <!-- Dropdown Actions con RBAC -->
                   <div class="dropdown"> 
                     <button class="action-btn">Actions</button>
