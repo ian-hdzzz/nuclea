@@ -11,6 +11,7 @@ router.get('/logout',users_controller.get_logout)
 router.get('/update/:idUsuario',users_controller.get_update);
 router.get('/delete/:idUsuario',users_controller.get_delete);
 router.get('/view/:idUsuario',users_controller.get_view);
+router.post('/update/:idUsuario',users_controller.post_update);
 
 
 module.exports =  router;  
