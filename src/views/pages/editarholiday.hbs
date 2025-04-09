@@ -95,7 +95,7 @@
             <h2 class="title-modal">Add Holiday</h2>
             <p class="description">Fill in the required details to register a Holiday</p>
 
-            <form id="holidayForm" method="POST" action="/nuclea/holiday">
+            <form id="holidayForm" method="POST" action="/nuclea/holiday/update/{{diai.idDiaFeriado}}">
             <input type="hidden" name="_csrf" value="{{csrfToken}}">
                 <div class="form-group">
                     <label for="deptName">Holiday Name</label>
