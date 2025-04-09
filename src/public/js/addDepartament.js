@@ -75,3 +75,38 @@ modal2.addEventListener("click", (e) => {
     }
 });
 });
+
+// Seleccionar el input de búsqueda
+const searchInput = document.getElementById('search-input');
+
+// Función debounce para optimizar las peticiones
+function debounce(func, timeout = 300) {
+    let timer;
+    return (...args) => {
+        clearTimeout(timer);
+        timer = setTimeout(() => { func.apply(this, args); }, timeout);
+    };
+}
+
+// Función principal de búsqueda
+const handleSearch = debounce(() => {
+    const query = searchInput.value.trim();
+    
+    // Realizar petición AJAX
+    fetch(`/nuclea/departament/search?name=${encodeURIComponent(query)}`, {
+        method: 'GET',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'Accept': 'application/json'
+        }
+    })
+    .then(response => {
+        if (!response.ok) throw new Error('Error en la respuesta');
+        return response.json();
+    })
+    .then(data => updateResults(data))
+    .catch(error => {
+        console.error('Error:', error);
+        showError('Error al realizar la búsqueda');
+    });
+});

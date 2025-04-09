@@ -1,6 +1,5 @@
 const Departament = require('../models/departament.model');
 const Empresa = require('../models/empresa.model');
-const { asign } = require('../models/role.model');
 
 
 exports.getDepartaments = (req, res) => {
@@ -8,11 +7,11 @@ exports.getDepartaments = (req, res) => {
   const error = req.session.error || null;
   req.session.info = null;
   Empresa.fetchAll()
-    .then(([emp, fieldData]) => {
+    .then(([emp]) => {
       Departament.fetchAll()
-        .then(([rows, fieldData]) => {
+        .then(([rows]) => {
           Departament.fetchAllDepa()
-            .then(([rowsDepa, fieldData]) => {
+            .then(([rowsDepa]) => {
               if (rows.length > 0) {
                 res.render('../views/pages/departament.hbs', { 
                   info: mensaje,
@@ -97,15 +96,16 @@ exports.get_delete = (req, res, next) => {
 };
 
 exports.get_update = (req, res, next) => {
-  Empresa.fetchAll().then(([emp,fieldData]) => {
-    Departament.fetchAll().then(([rows,fieldData])=>{
-      Departament.fetchAllDepa().then(([rowsDepa,fieldData])=>{
+  Empresa.fetchAll().then(([emp]) => {
+    Departament.fetchAll().then(([rows])=>{
+      Departament.fetchAllDepa().then(([rowsDepa])=>{
         Departament.fetchFAI(req.params.idDepartamento)
-      .then(([depas, fD]) => {
+      .then(([depas]) => {
   
                   res.render('../views/pages/editarDep.hbs', {
                       csrfToken: req.csrfToken(),
                       emp:emp,
+                      depa:rows,
                       datos: depas[0],
                       emps:rowsDepa,
                       title: 'Administrative offenses'

@@ -12,7 +12,7 @@
             <div class="first-container">
                 <div class="views">Views</div>
                 <div class="search-container">
-                    <input type="text" placeholder="Search..." class="input-search">
+                    <input type="text" placeholder="Search..." class="input-search" id="search-input">
                     <i class="fa-solid fa-magnifying-glass search-icon"></i>
                 </div>
             </div>
@@ -127,8 +127,8 @@
                      <select class="text-modal" name="company" required
                          oninvalid="this.setCustomValidity('Please select a Company')" 
                          onchange="this.setCustomValidity('')">
-                         <option value="">- Select a Compan</option>
-                       {{#each datos}}
+                         <option value="">- Select a Company</option>
+                       {{#each emps}}
                          <option value="{{idEmpresa}}">{{Nombre_empresa}}</option>
                        {{/each}}
                      </select>
