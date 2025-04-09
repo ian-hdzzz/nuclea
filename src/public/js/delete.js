@@ -69,48 +69,63 @@ function confirmDeleteReq(idSolicitud) {
                         <td>${formatDate(dato.Fecha_inicio)}</td>
                         <td>${formatDate(dato.Fecha_fin)}</td>
                     <td class="descripcion-columna">${dato.Descripcion}</td>
-                        <td>
-                        <span class=" vacation-status `;
-                    if(dato.Aprobacion_L=='Aprobado'){
-                        html_container+=`active"`;
-                    }else if(dato.Aprobacion_L=='Rechazado'){
-                        html_container+=`inactive"`;
+                        <td>`;
+                    if(dato.Tipo == 'Vacations'){
+                        html_container+=`<span class=" vacation-status `;
+                        if(dato.Aprobacion_L=='Aprobado'){
+                            html_container+=`active"`;
+                        }else if(dato.Aprobacion_L=='Rechazado'){
+                            html_container+=`inactive"`;
+                        }else{
+                            html_container+=`pending"`;
+                        }
+                        html_container+=`<div class="dot"></div>`;
+                        if(dato.Aprobacion_L=='Aprobado'){
+                            html_container+=`Approved`;
+                        }else if(dato.Aprobacion_L=='Rechazado'){
+                            html_container+=`Rejected`;
+                        }else{
+                            html_container+=`Pending`;
+                        }
+                        html_container+=`</span>`;
                     }else{
-                        html_container+=`pending"`;
+                        html_container+=`<span class="vacation-status">N/A</span>`;
                     }
-                    html_container+=`<div class="dot"></div>`;
+                   
                     
-                    if(dato.Aprobacion_L=='Aprobado'){
-                        html_container+=`Approved`;
-                    }else if(dato.Aprobacion_L=='Rechazado'){
-                        html_container+=`Rejected`;
-                    }else{
-                        html_container+=`Pending`;
-                    }
-                    html_container+=` </span>
+                    
+                    html_container+=` 
                         </td>
-                        <td>
-                        <span class=" vacation-status ` ;
+                        <td>` ;
+                    if(dato.Tipo=='Vacations'){
+                        html_container+=`<span class=" vacation-status ` ;
+                        if(dato.Aprobacion_A=='Aprobado'){
+                            html_container+=`active"`;
+                        }else if(dato.Aprobacion_A=='Rechazado'){
+                            html_container+=`inactive"`;
+                        }else{
+                            html_container+=`pending"`;
+                        }
+                        html_container+=`<div class="dot"></div>`;
+                        if(dato.Aprobacion_A=='Aprobado'){
+                            html_container+=`Approved`;
+                        }else if(dato.Aprobacion_A=='Rechazado'){
+                            html_container+=`Rejected`;
+                        }else{
+                            html_container+=`Pending`;
+                        }
+                        html_container+=` </span>`; 
+                    
+                    }else{
+                        html_container+=`<span class="vacation-status">N/A</span>`;
+                    }
+                       
+
+                    
+                    
                     
 
-                    if(dato.Aprobacion_A=='Aprobado'){
-                        html_container+=`active"`;
-                    }else if(dato.Aprobacion_A=='Rechazado'){
-                        html_container+=`inactive"`;
-                    }else{
-                        html_container+=`pending"`;
-                    }
-                    html_container+=`<div class="dot"></div>`;
-                    
-                    if(dato.Aprobacion_A=='Aprobado'){
-                        html_container+=`Approved`;
-                    }else if(dato.Aprobacion_A=='Rechazado'){
-                        html_container+=`Rejected`;
-                    }else{
-                        html_container+=`Pending`;
-                    }
-
-                    html_container+=` </span>
+                    html_container+=` 
                         </td>
                         <td> 
                         <div class="dropdown"> 

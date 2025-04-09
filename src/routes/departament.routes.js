@@ -10,5 +10,5 @@ const express = require('express');
  router.get('/delete/:idDepartamento',departamentController.get_delete);
  router.get('/update/:idDepartamento',departamentController.get_update)
 router.post('/update/:idDepartamento',departamentController.post_update)
-
+router.get('/search', departamentController.searchDepartments)
  module.exports =  router;

@@ -98,4 +98,21 @@ module.exports = class Departament {
         }
     }
 
+    static searchByName(name) {
+        return db.execute(`
+            SELECT 
+                d.idDepartamento,
+                d.Nombre_departamento,
+                d.Descripcion,
+                d.Estado,
+                e.idEmpresa,
+                e.Nombre_empresa
+            FROM Departamentos d
+            JOIN PerteneceDepa pd ON d.idDepartamento = pd.idDepartamento
+            JOIN Empresa e ON pd.idEmpresa = e.idEmpresa
+            WHERE d.Nombre_departamento LIKE ?
+            ORDER BY d.idDepartamento ASC
+        `, [`%${name}%`]);
+    }
+
 }
