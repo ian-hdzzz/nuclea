@@ -16,6 +16,8 @@ exports.get_Holiday = (req, res) => {
           res.render('../views/pages/holiday.hbs', { 
             datosh: rows,
             csrfToken: req.csrfToken(),
+            error: mensajeerror,
+            info: mensaje,
             title: 'Holidays',
         });
         }
@@ -83,7 +85,7 @@ exports.get_update = (req, res, next) => {
                       datosh: dias,
                       diai: dia[0],
                       noFaltas: nodias,
-                      title: 'Administrative offenses'
+                      title: 'Holidays'
                   });
                   console.log(dia)
                       
@@ -104,12 +106,12 @@ exports.post_update = (req, res, next) => {
   const { Nombre_holiday, fecha } = req.body;
   Holiday.Update(idDia, Nombre_holiday, fecha)
       .then(() => {
-          req.session.info = `Addministrative offense updated.`;
-          res.redirect('/nuclea/faltasAdministrativas');
+          req.session.info = `Holiday updated correctly.`;
+          res.redirect('/nuclea/holiday');
       })
       .catch((error) => {
-          req.session.errorAO = `Error registering Addministrative offense.`;
-          res.redirect('/nuclea/faltasAdministrativas');
+          req.session.errorAO = `Error updating holiday.`;
+          res.redirect('/nuclea/holiday');
           res.status(500);
       });
 };

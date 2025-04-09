@@ -92,8 +92,8 @@
             
             <button id="closeModal" class="close-btn" onclick="window.location.href='/nuclea/holiday'">✖</button>
 
-            <h2 class="title-modal">Add Holiday</h2>
-            <p class="description">Fill in the required details to register a Holiday</p>
+            <h2 class="title-modal">Update Holiday</h2>
+            <p class="description">Fill in the required details to update a Holiday</p>
 
             <form id="holidayForm" method="POST" action="/nuclea/holiday/update/{{diai.idDiaFeriado}}">
             <input type="hidden" name="_csrf" value="{{csrfToken}}">
@@ -121,7 +121,7 @@
                     </div>
                 </div>
 
-                <input type="submit" class="btn-submit" value="Add Holiday">
+                <input type="submit" class="btn-submit" value="Update Holiday">
             </form>
         </div>
     </div>
