@@ -6,7 +6,7 @@ exports.getcollabsd = (req, res) => {
     Usuario.getcollabsdept(sessionId)
       .then(([rows, fieldData]) => {
           const nousers = rows.length === 0;
-          res.render('../views/pages/viewCollabs.hbs', { 
+          res.render('../views/pages/viewcollabs.hbs', { 
             datos: rows,
             csrfToken: req.csrfToken(),
             title: 'View Department Collaborators',
