@@ -80,10 +80,9 @@ exports.get_delete = (req, res, next) => {
 exports.get_update = (req, res, next) => {
   Company.fetchAll()
       .then(([companies, fD]) => {
-          Company.fetchOne(req.params.idDiaFeriado)
+          Company.fetchOne(req.params.idEmpresa)
               .then(([comp, fD]) => {
                   const nodias = companies.length === 0;
-
                   res.render('../views/pages/editarcompany.hbs', {
                       csrfToken: req.csrfToken(),
                       datosh: companies,
@@ -107,8 +106,8 @@ exports.get_update = (req, res, next) => {
 exports.post_update = (req, res, next) => {
   const idEmp = req.params.idEmpresa;  // Usar el parámetro de la URL
   console.log(idEmp)
-  const { Nombre_emp, estatus_emp } = req.body;
-  Company.Update(idEmp, Nombre_emp, estatus_emp)
+  const {  Nombre_company, status_company } = req.body;
+  Company.Update(idEmp, Nombre_company, status_company)
       .then(() => {
           req.session.info = `Company updated correctly.`;
           res.redirect('/nuclea/company');
