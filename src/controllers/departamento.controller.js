@@ -141,3 +141,18 @@ exports.post_update = (req, res, next) => {
           res.status(500).send("Error actualizando");
       });
 };
+
+
+
+exports.searchDepartments = (req, res) => {
+  const searchTerm = req.query.name || '';
+  
+  Departament.searchByName(searchTerm)
+      .then(([results]) => {
+          res.json(results);
+      })
+      .catch(error => {
+          console.error('Error en búsqueda:', error);
+          res.status(500).json({ error: 'Error al buscar departamentos' });
+      });
+};
