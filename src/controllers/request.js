@@ -1,26 +1,84 @@
 const db = require('../util/database');
 const Request = require('../models/request.model');
 const DiasFeriados = require('../models/diasferiados.model');
+const Usuario = require('../models/usuario.model');
 
 exports.getRequests = (req, res) => {
+  const mensaje = req.session.info || '';
+     if (req.session.info) {
+         req.session.info = '';
+     }
+
+     const mensajeerror = req.session.errorRE || '';
+     if (req.session.errorRE) {
+        req.session.errorRE = '';
+     }
   DiasFeriados.fetchAll()
-    .then(([diasf,fD]) => {
-      Request.fetchAll()
+  .then(([diasf,fD]) => {
+    let canViewPersonal = false;
+    let canApprove = false; //Variable verificar si usuario puede aprobar solicitudes
+    for (let privilegio of req.session.privilegios) {
+  
+      if (privilegio.Nombre_privilegio == 'Consultar solicitudes propias') {
+        canViewPersonal = true;
+      }
+      if (privilegio.Nombre_privilegio == 'Acepta Deniega solicitud'){
+        canApprove = true;
+      }
+      
+      if (canViewPersonal) {
+        Request.fetchPersonal(req.session.idUsuario)
         .then(([rows]) => {
+          // Revisar cada solicitud y ajustar los campos si no son Vacations
+            const processedRows = rows.map(row => {
+              if (row.Tipo !== 'Vacations') {
+                row.Aprobacion_L = 'NULL';
+                row.Aprobacion_A = 'NULL';
+              }
+              return row;
+              });
           res.render('pages/request', {
-            datos: rows,
+            datos: processedRows,
             csrfToken: req.csrfToken(),
             sessionId: req.session.idUsuario,
             nombreUsuario: req.session.nombre,
             apellidosUsuario: req.session.apellidos,
             title: 'Request',
-            diasferiados: diasf
+            diasferiados: diasf,
+            info: mensaje,
+            error: mensajeerror,
+            canApprove
           });
         })
-        .catch((err) => {
+        .catch((err)=>{
           console.error('Error al cargar las solicitudes:', err);
           res.status(500).send('Error al obtener los datos');
+        })
+      }
+      
+    }
+    if(!canViewPersonal){
+      Request.fetchPersonal(req.session.idUsuario)
+      .then(([rows]) => {
+        res.render('pages/request', {
+          datos: rows,
+          csrfToken: req.csrfToken(),
+          sessionId: req.session.idUsuario,
+          nombreUsuario: req.session.nombre,
+          apellidosUsuario: req.session.apellidos,
+          title: 'Request',
+          diasferiados: diasf,
+          info: mensaje,
+          error: mensajeerror,
+          canApprove
         });
+      })
+      .catch((err) => {
+        console.error('Error al cargar las solicitudes:', err);
+        res.status(500).send('Error al obtener los datos');
+      });
+
+    }
   }).catch((err) => {
     console.error('Error fetching the holidays:', err);
     res.status(500).send('Internal Server Error');
@@ -49,23 +107,25 @@ exports.postRequest = (request, response,next) => {
       if(dias>=0){
         requests.save()
         .then(() => {
-          request.session.info = `Solicitud de ${nombreUsuario} guardado.`;
-          response.redirect('/nuclea/request');
+          request.session.info = `Request from ${nombreUsuario} saved.`;
+          response.redirect('/nuclea/request/personal');
           console.log('Se guardó correctamente');            
         })
         .catch((err) => {
-          console.error('Error al guardar la solicitud:', err.message);
+          request.session.errorRE = `Error registering request.`;
           console.error(err);
-          response.status(500).send('Error al obtener los datos');
+          response.redirect('/nuclea/request/personal');
+          response.status(500);
         });
       }else {
-        console.log(`No se pudo guardar la solicitud, te quedan ${dias_restantes}`)
-        response.redirect('/nuclea/request');
+        request.session.errorRE = `Could not register request, vacation days left ${dias_restantes}`;
+        response.redirect('/nuclea/request/personal');
       }
     }).catch((err)=> {
-      console.error('Error al guardar la solicitud:', err.message);
+      reqquest.session.errorRE = `Error registering request.`;
       console.error(err);
-      response.status(500).send('Error al obtener los datos');
+      response.redirect('/nuclea/request/personal');
+      response.status(500);
     });
 
   }else{
@@ -73,7 +133,7 @@ exports.postRequest = (request, response,next) => {
   
     .then(() => {
         request.session.info = `Solicitud de ${nombreUsuario} guardado.`;
-        response.redirect('/nuclea/request');
+        response.redirect('/nuclea/request/personal');
     })
     .catch((err) => {
       console.error('Error al guardar la solicitud:', err.message);
@@ -85,7 +145,62 @@ exports.postRequest = (request, response,next) => {
 
 };
 
+exports.approveRequest = (req, res) => {
+  const solicitudId = req.params.id;
+  const usuarioId = req.session.idUsuario;
 
+  Usuario.getRolById(usuarioId)
+    .then(([result]) => {
+      const rol = result[0]?.idRol;
+      if (!rol) return res.status(403).send('Rol no encontrado');
+
+      return Request.approveSolicitud(solicitudId, rol);
+    })
+    .then(() => res.redirect('/nuclea/request/approval'))
+    .catch((err) => {
+      console.error('Error al aprobar la solicitud:', err);
+      res.status(500).send('Error interno');
+    });
+};
+
+//Método para rechazar una solicitud
+exports.rejectRequest = (req, res) => {
+  const solicitudId = req.params.id;
+  const usuarioId = req.session.idUsuario;
+
+  Usuario.getRolById(usuarioId)
+    .then(([result]) => {
+      const rol = result[0]?.idRol;
+      if (!rol) return res.status(403).send('Rol no encontrado');
+
+      return Request.rejectSolicitud(solicitudId, rol);
+    })
+    .then(() => res.redirect('/nuclea/request/approval'))
+    .catch((err) => {
+      console.error('Error al rechazar la solicitud:', err);
+      res.status(500).send('Error interno');
+    });
+};
+
+exports.editRequest = (req, res) => {
+  const idSolicitud = req.params.id;
+  const { Tipo, Fecha_inicio, Fecha_fin, Descripcion } = req.body;
+
+  db.execute(`
+    UPDATE Solicitudes
+    SET Tipo = ?, Fecha_inicio = ?, Fecha_fin = ?, Descripcion = ?,
+        Aprobacion_L = 'Pendiente', Fecha_aprob_L = NULL,
+        Aprobacion_A = 'Pendiente', Fecha_aprob_A = NULL
+    WHERE idSolicitud = ?
+  `, [Tipo, Fecha_inicio, Fecha_fin, Descripcion, idSolicitud])
+    .then(() => {
+      res.redirect('/nuclea/request/personal');
+    })
+    .catch(err => {
+      console.error('Error al editar la solicitud:', err);
+      res.status(500).send('Error interno');
+    });
+};
 
 /* 
 
@@ -115,3 +230,150 @@ exports.postRequest = async (req, res) => {
   }
 };
  */
+
+exports.getRequestsapr = (req, res) => {
+  // Verificamos si el usuario tiene el privilegio requerido
+  const privilegios = req.session.privilegios || [];
+  const puedeAceptar = privilegios.some(p => p.Nombre_privilegio === 'Acepta Deniega solicitud');
+
+  if (!puedeAceptar) {
+    return res.redirect('/nuclea/request/personal');
+  }
+
+  let encontrado = false; // Variable para saber si encontramos el privilegio 'addAO'
+  console.log('privilegios session', req.session.privilegios);
+  let privilegiostot = req.session.privilegios;
+  console.log(privilegiostot);
+
+  for (let privilegio of privilegiostot) {
+    if (privilegio.Nombre_privilegio == 'viewcollabs') {
+      DiasFeriados.fetchAll()
+        .then(([diasf, fD]) => {
+          Request.requestcollabs(req.session.idUsuario)
+            .then(([rows]) => {
+              const vacationRequests = rows.filter(row => row.Tipo === 'Vacations'); //Filtrar solo por vacaciones
+              res.render('pages/requestadmin', {
+                datos: vacationRequests,
+                csrfToken: req.csrfToken(),
+                sessionId: req.session.idUsuario,
+                nombreUsuario: req.session.nombre,
+                apellidosUsuario: req.session.apellidos,
+                title: 'Request',
+                diasferiados: diasf,
+                puedeAceptar: true
+              });
+            })
+            .catch((err) => {
+              console.error('Error al cargar las solicitudes:', err);
+              res.status(500).send('Error al obtener los datos');
+            });
+        }).catch((err) => {
+          console.error('Error fetching the holidays:', err);
+          res.status(500).send('Internal Server Error');
+        });
+      return;
+    }
+  };
+
+  DiasFeriados.fetchAll()
+    .then(([diasf, fD]) => {
+      Request.fetchAll()
+        .then(([rows]) => {
+          const vacationRequests = rows.filter(row => row.Tipo === 'Vacations'); //Filtrar solo por vacaciones
+          res.render('pages/requestadmin', {
+            datos: vacationRequests,
+            csrfToken: req.csrfToken(),
+            sessionId: req.session.idUsuario,
+            nombreUsuario: req.session.nombre,
+            apellidosUsuario: req.session.apellidos,
+            title: 'Request',
+            diasferiados: diasf,
+            puedeAceptar: true
+          });
+        })
+        .catch((err) => {
+          console.error('Error al cargar las solicitudes:', err);
+          res.status(500).send('Error al obtener los datos');
+        });
+    }).catch((err) => {
+      console.error('Error fetching the holidays:', err);
+      res.status(500).send('Internal Server Error');
+    });
+};
+
+exports.getRequestsPersonal = (req, res) => {
+  const privilegios = req.session.privilegios || [];
+  for (let privilegio of req.session.privilegios) {
+
+    if (privilegio.Nombre_privilegio == 'Acepta Deniega solicitud'){
+      canApprove = true;
+    }
+
+  DiasFeriados.fetchAll()
+    .then(([diasf, fD]) => {
+      Request.fetchPersonal(req.session.idUsuario)
+        .then(([rows]) => {
+          res.render('pages/requestpersonal', {
+            datos: rows,
+            csrfToken: req.csrfToken(),
+            sessionId: req.session.idUsuario,
+            nombreUsuario: req.session.nombre,
+            apellidosUsuario: req.session.apellidos,
+            title: 'Request',
+            diasferiados: diasf,
+          });
+        })
+        .catch((err) => {
+          console.error('Error al cargar las solicitudes:', err);
+          res.status(500).send('Error al obtener los datos');
+        })
+  }).catch((err) => {
+    console.error('Error fetching the holidays:', err);
+    res.status(500).send('Internal Server Error');
+  });
+}
+};
+
+
+
+
+exports.deleteRequest = (req, res) => {
+  const mensaje = req.session.info || '';
+     if (req.session.info) {
+         req.session.info = '';
+     }
+
+     const mensajeerror = req.session.errorRE || '';
+     if (req.session.errorRE) {
+        req.session.errorRE = '';
+     }
+  Request.Delete(req.params.idSolicitud).then(()=>{
+    console.log("Solicitud eliminada correctamente");
+    Request.fetchPersonal(req.session.idUsuario)
+    .then(([rows,fD]) => {
+      res.status(200).json({
+        datos: rows,
+        csrfToken: req.csrfToken(),
+        sessionId: req.session.idUsuario,
+        nombreUsuario: req.session.nombre,
+        apellidosUsuario: req.session.apellidos,
+        title: 'Request',
+        info: mensaje,
+        error: mensajeerror,
+      });
+    })
+    .catch((err)=>{
+      console.error('Error al cargar las solicitudes:', err);
+      res.status(500).send('Error al obtener los datos');
+    })
+
+
+  }).catch((err) => {
+    console.error('Error al eliminar la solicitud o cargar datos:', err);
+    res.status(500).send('Error al procesar la solicitud');
+  }); 
+
+};
+
+
+

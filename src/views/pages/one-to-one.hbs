@@ -3,53 +3,32 @@
     <link rel="stylesheet" href="/css/one-to-one.css">
 </head>
 
-<div class="container-one">
-    <div class="container-questions">
-        <div class="header">
-            <div class="photo">
-                <p>I</p>
-            </div>
-            <div class="profile">
-                <h1>Ian Hernández</h1>
-                <p>Software Department</p>
-            </div>
-        </div>
-        <div class="indicator">
-            <p>Question 1 of 5</p>
-        </div>
-        <div class="question">
-            <h1>What are you proud of from the past month?</h1>
-            <p>Identify personal achievements or team accomplishments.</p>
-        </div>
-        <textarea name="mensaje" rows="4" cols="50" placeholder="Type your answer here..."></textarea>
-        <div class="buttons">
-            <button class="btn btn-secondary" type="button"><i class="fa-solid fa-caret-left"></i>Previous</button>
-            <button class="btn btn-primary" type="button">Next<i class="fa-solid fa-caret-right"></i></button>
-        </div>
-         <div class="progress-bar">
-            <div class="progress"></div>
-        </div>
-    </div>
-    <div class="sidebar">
-        <div class="user-data">
-             <h3 className="text-lg font-medium mb-4 text-white">Employee Information</h3>
-             <div>
-                <p className="text-[#A1B0B9] text-sm">Name:</p>
-                <p>Ian</p>
+   <div class="one-container">
+    
+    {{> search 
+        title="Search employee" 
+        placeholder="Search..." 
+        searchId="employeeSearch"
+        searchType="users"
+        contacts=employees
+    }}
+      <div class="empezarInterview">
+          <div class="card" href="/nuclea/interview">
+              <h3>Interview</h3>
+              <p>Conduct and manage employee feedback sessions</p>
+              <div class="buttons">
+                <a href="/nuclea/interview/edit" class="btn ">Edit Questions </a>
+                <a href="/nuclea/interview" class="btn apply " id="applyInterviewBtn">Apply Interview →</a>
               </div>
-             <div>
-                <p className="text-[#A1B0B9] text-sm">Department:</p>
-                <p>{employ</p>
-              </div>
-             <div>
-                <p className="text-[#A1B0B9] text-sm">Time in the company:</p>
-                <p>2 years</p>
-              </div>
-             <div>
-                <p className="text-[#A1B0B9] text-sm">Administrative faults:</p>
-                <p>None</p>
-              </div>
-        </div>
-    </div>
-</div>
+          </div>
+      </div>
 
+      <div class="graph">
+        {{> graph }}    
+      </div>
+      <div class="tableCollab">
+
+      </div>
+
+ 
+   </div>

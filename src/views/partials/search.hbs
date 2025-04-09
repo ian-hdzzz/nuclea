@@ -1,0 +1,431 @@
+{{!-- views/partials/searchContacts.hbs --}}
+<style>
+.search {
+  grid-area: search;
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 30px;
+  text-align: left;
+  transition: all 0.3s ease;
+  width: 100%;
+  height: 100%;
+}
+
+/* search */
+.search h3{
+  color: var(--color-fuente);
+  font-weight: 600;
+  font-size: 1.3rem;
+  margin-left: 10px;
+  margin-bottom: 10px;
+}
+
+.search-bar {
+  padding: 15px;
+}
+
+.search-input {
+  width: 100%;
+  padding: 10px;
+  background-color: #0C1019;
+  border-radius: 5px;
+  font-size: 16px;
+  color: #fff;
+  outline: none;
+  margin-bottom: 10px;
+  border: 1px solid transparent; 
+  border-color: var(--accent-blue);
+}
+
+.search-input:focus {
+  box-shadow: 0 0 15px rgba(74, 108, 247, 0.2);
+}
+
+.contact-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 15px;
+  transition: background-color 0.2s;
+  color: #fff;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.contact-item:hover {
+  background-color: #252b3654;
+}
+
+.contact-avatar {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-weight: bold;
+  margin-right: 15px;
+  background: #1F2937;
+}
+
+.contact-item.active{
+  background: #151F37;
+}
+
+.contact-avatar.active{
+  background:#1da1f2;
+}
+
+.contact-name {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.contact-item.empty {
+  display: none;
+}
+
+.search-loader {
+  text-align: center;
+  padding: 15px;
+  display: none;
+}
+
+.search-no-results {
+  text-align: center;
+  padding: 15px;
+  color: #a0aec0;
+  display: none;
+}
+</style>
+
+<div class="search" id="search-container-{{searchId}}">
+    <h3 class="text-lg font-medium mb-4 text-white">{{title}}</h3>
+    <div class="search-bar">
+        <input type="text" placeholder="{{placeholder}}" class="search-input" id="{{searchId}}" data-search-type="{{searchType}}">
+    </div>
+    
+    <div class="search-loader">
+        <span>Buscando...</span>
+    </div>
+    
+    <div class="search-no-results">
+        No se encontraron resultados
+    </div>
+    
+    <div class="contact-items">
+        {{#if contacts}}
+        {{#each contacts}}
+            <div class="contact-item {{#if @first}}active{{/if}}" data-id="{{this.id}}">
+                <div class="contact-avatar {{#if @first}}active{{/if}}">{{this.initial}}</div>
+                <div class="contact-name">{{this.name}}</div>
+            </div>
+        {{/each}}
+    {{/if}}
+    </div>
+</div>
+
+{{!-- Script específico para este partial, incluido solo cuando se usa el partial --}}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchId = '{{searchId}}';
+    const searchInput = document.getElementById(searchId);
+    if (!searchInput) return;
+    
+    const searchContainer = document.getElementById(`search-container-${searchId}`);
+    const contactItemsContainer = searchContainer.querySelector('.contact-items');
+    const searchLoader = searchContainer.querySelector('.search-loader');
+    const noResults = searchContainer.querySelector('.search-no-results');
+    
+    // Limitar inicialmente a mostrar solo los primeros 3 contactos
+    const allContactItems = contactItemsContainer.querySelectorAll('.contact-item:not(.empty)');
+    allContactItems.forEach((item, index) => {
+        if(index >= 3) {
+            item.style.display = 'none';
+        }
+    });
+    
+    // Almacena la información original de contactos (limitada a 3)
+    const originalContacts = [];
+    contactItemsContainer.querySelectorAll('.contact-item').forEach((item, index) => {
+        if(item.classList.contains('empty')) return;
+        if(index >= 3) return; // Solo almacenar los primeros 3
+        
+        const nameElement = item.querySelector('.contact-name');
+        const avatarElement = item.querySelector('.contact-avatar');
+        const id = item.getAttribute('data-id');
+        
+        originalContacts.push({
+            id: id,
+            name: nameElement ? nameElement.textContent : '', // Asegúrate de que esto contiene el nombre completo
+            initial: avatarElement ? avatarElement.textContent : '',
+            element: item
+        });
+    });
+    
+    // Variable global para almacenar el ID seleccionado
+    let globalSelectedId = null;
+    
+    // Función para seleccionar un contacto
+    function selectContact(contactItem) {
+        if (!contactItem || contactItem.classList.contains('empty')) return;
+        
+        // Eliminar clase active de todos los contactos
+        contactItemsContainer.querySelectorAll('.contact-item').forEach(item => {
+            item.classList.remove('active');
+            const avatar = item.querySelector('.contact-avatar');
+            if (avatar) avatar.classList.remove('active');
+        });
+        
+        // Agregar clase active al contacto seleccionado
+        contactItem.classList.add('active');
+        const avatar = contactItem.querySelector('.contact-avatar');
+        if (avatar) avatar.classList.add('active');
+        
+        // Actualizar ID seleccionado
+        globalSelectedId = contactItem.getAttribute('data-id');
+        
+        // Emitir evento de selección
+        const selectedName = contactItem.querySelector('.contact-name').textContent;
+        
+        const event = new CustomEvent('contact-selected', {
+            bubbles: true,
+            detail: {
+                id: globalSelectedId,
+                name: selectedName,
+                searchId: searchId
+            }
+        });
+        
+        contactItem.dispatchEvent(event);
+    }
+    
+    // Event listener para click en contactos
+    contactItemsContainer.addEventListener('click', function(e) {
+        const contactItem = e.target.closest('.contact-item');
+        selectContact(contactItem);
+    });
+    
+    // Doble click para navegación directa
+    contactItemsContainer.addEventListener('dblclick', function(e) {
+        const contactItem = e.target.closest('.contact-item');
+        if (contactItem) {
+            const employeeId = contactItem.getAttribute('data-id');
+            if (employeeId) {
+                window.location.href = `/nuclea/interview?employee=${employeeId}`;
+            }
+        }
+    });
+    
+    // Variables para el debounce
+    let searchTimeout;
+    const debounceDelay = 300;
+    
+    // Función para realizar búsqueda con AJAX
+    searchInput.addEventListener('input', function() {
+        clearTimeout(searchTimeout);
+        
+        const searchTerm = this.value.toLowerCase().trim();
+        const searchType = this.getAttribute('data-search-type') || 'users';
+        
+        // Si no hay término de búsqueda, restaurar los contactos originales
+        if (!searchTerm) {
+            // Ocultar loader y mensaje de no resultados
+            searchLoader.style.display = 'none';
+            noResults.style.display = 'none';
+            
+            // Restaurar solo los 3 primeros contactos
+            contactItemsContainer.innerHTML = '';
+            originalContacts.slice(0, 3).forEach((contact, index) => {
+            const contactItem = document.createElement('div');
+            contactItem.className = `contact-item ${index === 0 ? 'active' : ''}`;
+            contactItem.setAttribute('data-id', contact.id);
+            
+            const avatar = document.createElement('div');
+            avatar.className = `contact-avatar ${index === 0 ? 'active' : ''}`;
+            avatar.textContent = contact.initial;
+            
+            const name = document.createElement('div');
+            name.className = 'contact-name';
+            // Asegurarse de que contact.name contiene el nombre completo
+            name.textContent = contact.name; // Esto debería incluir nombre y apellido
+            
+            contactItem.appendChild(avatar);
+            contactItem.appendChild(name);
+            contactItemsContainer.appendChild(contactItem);
+        });
+            
+            // Actualizar ID seleccionado
+            const firstItem = contactItemsContainer.querySelector('.contact-item');
+            if (firstItem) {
+                globalSelectedId = firstItem.getAttribute('data-id');
+                
+                // Emitir evento para el primer contacto seleccionado por defecto
+                firstItem.dispatchEvent(new CustomEvent('contact-selected', {
+                    bubbles: true,
+                    detail: {
+                        id: globalSelectedId,
+                        name: firstItem.querySelector('.contact-name').textContent,
+                        searchId: searchId
+                    }
+                }));
+            }
+            
+            return;
+        }
+        
+        // Configurar debounce para la búsqueda
+        searchTimeout = setTimeout(() => {
+            // Mostrar el loader y ocultar mensajes
+            searchLoader.style.display = 'block';
+            noResults.style.display = 'none';
+            
+            // Hacer la petición AJAX
+            fetch(`/nuclea/search?term=${encodeURIComponent(searchTerm)}&type=${searchType}`, {
+                headers: { 'Accept': 'application/json' }
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Ocultar loader
+                searchLoader.style.display = 'none';
+                
+                // Mostrar mensaje si no hay resultados
+                if (!data.contacts || data.contacts.length === 0) {
+                    noResults.style.display = 'block';
+                    contactItemsContainer.innerHTML = '';
+                    globalSelectedId = null;
+                    return;
+                }
+                
+                // Actualizar la lista de contactos (solo los 3 primeros)
+                contactItemsContainer.innerHTML = '';
+                const limitedContacts = data.contacts.slice(0, 3);
+                limitedContacts.forEach((contact, index) => {
+                    const contactItem = document.createElement('div');
+                    contactItem.className = `contact-item ${index === 0 ? 'active' : ''}`;
+                    contactItem.setAttribute('data-id', contact.id);
+                    
+                    const avatar = document.createElement('div');
+                    avatar.className = `contact-avatar ${index === 0 ? 'active' : ''}`;
+                    avatar.textContent = contact.initial;
+                    
+                    const name = document.createElement('div');
+                    name.className = 'contact-name';
+                    // Asegurarse de que contact.name contiene el nombre completo
+                    name.textContent = contact.name;
+                    
+                    contactItem.appendChild(avatar);
+                    contactItem.appendChild(name);
+                    contactItemsContainer.appendChild(contactItem);
+                });
+                
+                // Actualizar ID seleccionado
+                const firstItem = contactItemsContainer.querySelector('.contact-item');
+                if (firstItem) {
+                    globalSelectedId = firstItem.getAttribute('data-id');
+                    
+                    // Emitir evento para notificar al otro script
+                    firstItem.dispatchEvent(new CustomEvent('contact-selected', {
+                        bubbles: true,
+                        detail: {
+                            id: globalSelectedId,
+                            name: firstItem.querySelector('.contact-name').textContent,
+                            searchId: searchId
+                        }
+                    }));
+                }
+            })
+            .catch(error => {
+                console.error('Error en búsqueda:', error);
+                searchLoader.style.display = 'none';
+                noResults.style.display = 'block';
+                noResults.textContent = 'Error al buscar. Inténtalo de nuevo.';
+                globalSelectedId = null;
+            });
+        }, debounceDelay);
+    });
+    
+    // Soporte para navegación con teclado
+    document.addEventListener('keydown', function(e) {
+        const allItems = contactItemsContainer.querySelectorAll('.contact-item:not(.empty)');
+        if (!allItems.length) return;
+
+        let activeIndex = -1;
+        allItems.forEach((item, index) => {
+            if (item.classList.contains('active')) {
+                activeIndex = index;
+            }
+        });
+
+        if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            activeIndex = (activeIndex + 1) % allItems.length;
+            selectContact(allItems[activeIndex]);
+        } else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            activeIndex = (activeIndex - 1 + allItems.length) % allItems.length;
+            selectContact(allItems[activeIndex]);
+        } else if (e.key === 'Enter' && document.activeElement.tagName !== 'INPUT') {
+            const activeItem = contactItemsContainer.querySelector('.contact-item.active');
+            if (activeItem) {
+                e.preventDefault();
+                const employeeId = activeItem.getAttribute('data-id');
+                if (employeeId) {
+                    window.location.href = `/nuclea/interview?employee=${employeeId}`;
+                }
+            }
+        }
+    });
+});
+
+// Script para el botón Apply y navegación
+document.addEventListener('DOMContentLoaded', function() {
+    const applyBtn = document.querySelector('.btn.apply');
+    if (!applyBtn) return;
+    
+    let currentSelectedId = null;
+    
+    // Función para destacar el botón cuando se selecciona un usuario
+    function highlightApplyButton() {
+        applyBtn.classList.add('highlighted');
+        applyBtn.style.animation = 'pulse 1.5s infinite';
+    }
+    
+    // Función para quitar el destacado
+    function unhighlightApplyButton() {
+        applyBtn.classList.remove('highlighted');
+        applyBtn.style.animation = '';
+    }
+    
+    // Función para navegar a la página de entrevista con un ID de empleado
+    function navigateToInterview(employeeId) {
+        if (employeeId) {
+            window.location.href = `/nuclea/interview?employee=${employeeId}`;
+        } else {
+            alert('Por favor, selecciona un empleado primero');
+        }
+    }
+    
+    // Escuchar evento de selección de contacto
+    document.addEventListener('contact-selected', function(event) {
+        currentSelectedId = event.detail.id; // Corregido: usar event.detail.id
+        console.log("ID de usuario seleccionado:", currentSelectedId);
+        if (currentSelectedId) {
+            highlightApplyButton();
+        } else {
+            unhighlightApplyButton();
+        }
+    });
+    
+    // Redirección al hacer clic en el botón Apply Interview
+    applyBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        if (currentSelectedId) {
+            navigateToInterview(currentSelectedId);
+        } else {
+            alert('Por favor, selecciona un empleado primero');
+        }
+    });
+});
+</script>

@@ -1,0 +1,152 @@
+  <!DOCTYPE html>
+  <html lang="es">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Department Management</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="/css/departament.css">
+  </head>
+  <body>
+    <div class="top-container">
+      <nav class="nav-bar">
+        <div class="first-container">
+          <div class="views">Views</div>
+          <div class="search-container">
+            <input type="text" placeholder="Search..." class="input-search">
+            <i class="fa-solid fa-magnifying-glass search-icon"></i>
+          </div>
+        </div>
+      </nav>
+    </div>
+
+    {{#if info}}
+      <div class="top-container">
+        <div class="nav-bar">
+          <div class="first-container">
+            <div class="notification is-success">
+              {{info}}
+            </div>
+          </div>
+        </div>
+      </div>
+    {{/if}}
+
+    {{#if error}}
+      <div class="top-container">
+        <div class="nav-bar">
+          <div class="first-container">
+            <div class="notification is-danger">
+              {{error}}
+            </div>
+          </div>
+        </div>
+      </div>
+    {{/if}}
+
+    <div class="content">
+      <div class="nav-content">
+        <h2>Department Management</h2>
+        <div class="add-btn-container" id="openModal">
+          <i class="fa-regular fa-square-plus"></i>
+          <input type="button" value="Add Department" class="add-btn">
+        </div>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Department Name</th>
+            <th>Company Name</th>
+            <th>Description</th>
+            <th>State</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each emps}}
+          <tr>
+            <td>{{idDepartamento}}</td>
+            <td>{{Nombre_departamento}}</td>
+            <td>{{Empresa.Nombre_empresa}}</td> <!-- Asumiendo que haces populate de empresa -->
+            <td>{{Descripcion}}</td>
+            <td class="state">
+              <span class="{{#if Estado}}active{{else}}inactive{{/if}}">
+                <div class="dot"></div>
+                {{#if Estado}}Active{{else}}Inactive{{/if}}
+              </span>
+            </td>
+            <td>
+              <div class="dropdown">
+                <button class="action-btn">Actions</button>
+                <div class="dropdown-content">
+                  <button class="edit-btn" onclick="location.href='/nuclea/departament/update/{{idDepartamento}}'">
+                    <i class="fa-solid fa-pen-to-square"></i> Edit
+                  </button>
+                  <button class="delete-btn" onclick="location.href='/nuclea/departament/delete/{{idDepartamento}}'">
+                    <i class="fa-solid fa-trash"></i> Delete
+                  </button>
+                </div>
+              </div>
+            </td>
+          </tr>
+          {{/each}}
+        </tbody>
+      </table>
+
+      {{#unless emps.length}}
+        <p style="text-align: center; margin-top: 20px;">No departments existing</p>
+      {{/unless}}
+
+      <!-- Modal -->
+      <div id="modal" class="modal">
+        <div class="modal-content">
+          <button id="closeModal" class="close-btn">✖</button>
+          <h2 class="title-modal">Add Department</h2>
+          <p class="description">Fill in the required details to register this Department</p>
+
+          <form id="departmentForm" method="POST" action="/nuclea/departament/update/{{datos.idDepartamento}}">
+            <input type="hidden" name="_csrf" value="{{csrfToken}}">
+
+            <div class="form-group">
+              <label for="deptName">Department Name</label>
+              <input type="text" id="deptName" name="Nombre_departamento" class="text-modal" value="{{datos.Nombre_departamento}}" required>
+            </div>
+
+            <div class="form-group">
+              <label for="desc">Description</label>
+              <input type="text" id="desc" name="Descripcion" class="text-modal" value="{{datos.Descripcion}}" required>
+            </div>
+
+            <div class="form-group">
+              <label for="status">Select Company</label>
+              <select class="text-modal" name="company" required
+                oninvalid="this.setCustomValidity('Please select a Company')" 
+                onchange="this.setCustomValidity('')">
+                <option value="">- Select a Company -</option>
+                {{#each emp}}
+                  <option value="{{idEmpresa}}" {{#if (eq idEmpresa ../datos.idEmpresa)}}selected{{/if}}>
+                    {{Nombre_empresa}}
+                  </option>
+                {{/each}}
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="status">Status</label>
+              <select id="statusSelect" name="Estado" class="text-modal option-modal" required>
+                <option value="1" {{#if (eq datos.Estado "1")}}selected{{/if}}>Active</option>
+                <option value="0" {{#if (eq datos.Estado "0")}}selected{{/if}}>Inactive</option>
+              </select>
+            </div>
+
+            <input type="submit" class="btn-submit" value="EDIT Department">
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <script src="/js/addDepartament.js"></script>
+  </body>
+  </html>

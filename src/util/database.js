@@ -20,4 +20,4 @@ pool.getConnection((err, connection) => {
   }
 });
 
-module.exports = pool.promise(); // Usamos .promise() para manejar Promesass
+module.exports = pool.promise(); // Usamos .promise() para manejar Promesas

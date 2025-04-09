@@ -11,7 +11,7 @@
   <div class="top-container">
     <nav class="nav-bar">
       <div class="first-container">
-        <div class="views">Views</div>
+        <div class="hidden"></div>
         <div class="search-container">
           <input type="text" placeholder="Search..." class="input-search">
           <i class="fa-solid fa-magnifying-glass search-icon"></i>
@@ -27,11 +27,40 @@
       </div>
     </nav>
   </div>
+  {{#if info}}
+     <div "top-container">
+       <div class="nav-bar">
+         <div class="first-container">
+           <div class="notification is-success">
+             {{info}}
+           </div>
+         </div>
+       </div>
+     </div>
+  {{/if}}
+  {{#if error}}
+     <div "top-container">
+       <div class="nav-bar">
+         <div class="first-container">
+           <div class="notification is-danger">
+             {{error}}
+           </div>
+         </div>
+       </div>
+     </div>
+  {{/if}}
   <div class="content">
     <div class="nav-content">
       <h2>Administrative offenses</h2>
-      <input type="button" value="Add Administrative offense" id="openModal" class="add-btn" 
-             style="padding-right: 15px; padding-left: 15px; width:auto;">
+      {{#each privilegios}}
+        {{#if (eq this.Nombre_privilegio "addAO")}}
+          <div class="add-btn-container" id="openModal">
+                <i class="fa-regular fa-square-plus"></i>
+                <input type="button" value="Add Administrative offense" id="openModal" class="add-btn">
+                <!-- Botón de enviar <input type="button" value="Assign user to Dep" id="openModal2" class="add-btn"> -->
+          </div>
+        {{/if}}
+      {{/each}}
     </div>
     <table>
       <thead>
@@ -40,7 +69,12 @@
           <th>Reason</th>
           <th>Date</th>
           <th>File</th>
-          <th>Actions</th>
+          {{#each privilegios}}
+            {{#if (eq this.Nombre_privilegio "addAO")}}
+              <th>Actions</th>
+            {{/if}}
+          {{/each}}
+
         </tr>
       </thead>
       <tbody>
@@ -51,18 +85,31 @@
           <td>{{formatDate Fecha_asignacion_falta}}</td>
           <td>
             {{#if archivo}}
-              <a href="/uploads/{{archivo}}" target="_blank" class="pdf-link">
+              <a href="/Uploads/{{archivo}}" target="_blank" class="pdf-link">
                 <i class="fa-solid fa-file-pdf"></i> Open PDF
               </a>
             {{else}}
               Sin archivo
             {{/if}}
           </td>
-          <td>
-            <div class="dropdown">
-              <button class="action-btn">Actions</button>
-            </div>
-          </td>
+          {{#each ../privilegios}}
+            {{#if (eq this.Nombre_privilegio "addAO")}}
+              <td>
+                <div class="dropdown">
+                  <button class="action-btn">Actions</button>
+                  <div class="dropdown-content">
+                    <button class="edit-btn"  onclick="location.href='/nuclea/faltasAdministrativas/update/{{../idFalta}}'">
+                      <i class="fa-solid fa-pen-to-square"></i> Edit
+                    </button>
+                    <button class="delete-btn" onclick="location.href='/nuclea/faltasAdministrativas/delete/{{../idFalta}}'">
+                      <i class="fa-solid fa-trash"></i> Delete
+                    </button>
+
+                  </div>
+                </div>
+              </td>
+            {{/if}}
+          {{/each}}
         </tr>
         {{/each}}
       </tbody>
@@ -79,6 +126,7 @@
       <p class="description">Fill in the required details to <br>assign an Administrative Offense</p>
       <br>
       <form action="/nuclea/faltasAdministrativas" id="form-falta" method="POST" enctype="multipart/form-data">
+       <input type="hidden" name="modal" value="modal1">
         <input type="hidden" name="_csrf" value="{{csrfToken}}">
 
         <div class="form-group">

@@ -19,14 +19,45 @@ module.exports = class Falta {
     //Este método servirá para devolver los objetos del almacenamiento persistente.
     static fetchFA() {
         return db.execute(`
-            SELECT fa.idFalta, u.Nombre,u.Apellidos, fa.Motivo, fa.Fecha_asignacion_falta, fa.archivo
+            SELECT fa.idFalta, u.idUsuario, u.Nombre,u.Apellidos, fa.Motivo, fa.Fecha_asignacion_falta, fa.archivo
             FROM Faltas_administrativas fa 
             JOIN Usuarios u ON fa.idUsuario = u.idUsuario
         `);
     }
 
+    static fetchFAPER(idus) {
+        return db.execute(`
+            SELECT fa.idFalta, u.idUsuario, u.Nombre,u.Apellidos, fa.Motivo, fa.Fecha_asignacion_falta, fa.archivo
+            FROM Faltas_administrativas fa 
+            JOIN Usuarios u ON fa.idUsuario = u.idUsuario
+            WHERE u.idUsuario = ?;
+        `,[idus]);
+    }
+
+    static fetchFAI(idFalta) {
+        return db.execute(`
+            SELECT fa.idFalta, u.idUsuario, u.Nombre,u.Apellidos, fa.Motivo, fa.Fecha_asignacion_falta, fa.archivo
+            FROM Faltas_administrativas fa 
+            JOIN Usuarios u ON fa.idUsuario = u.idUsuario
+            WHERE idFalta = ?;
+        `,[idFalta]);
+    }
+    static deleteA(idFalta){
+        return db.execute(`
+            DELETE FROM Faltas_administrativas WHERE idFalta = ?;
+        `,[idFalta])
+    }
     static fetchOne(id) {
         return db.execute('SELECT * FROM personajes WHERE id=?', [id]);
+    }
+
+    static Update(idFalta, idUsuario, fecha, motivo, archivo) {
+        return db.execute(
+            `UPDATE Faltas_administrativas 
+             SET idUsuario = ?, Fecha_asignacion_falta = ?, Motivo = ?, archivo = ?
+             WHERE idFalta = ?`,
+            [idUsuario, fecha, motivo, archivo, idFalta]
+        );
     }
 
     static fetch(id) {

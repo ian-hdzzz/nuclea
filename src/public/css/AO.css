@@ -26,10 +26,11 @@ body{
     height: 50px;
 }
 .search-container{
+    margin-left: 100px;
     flex-grow: 0.7;
     background-color: #fff;
     padding: 4px;
-    border-radius: 0 8px 8px 0;
+    border-radius: 8px 8px 8px 8px;
 
 }
 
@@ -61,6 +62,7 @@ body{
 }
 
 .notification,.perfil{
+    margin-top: 20px;
     background: #253d90;
     padding: 10px 12px;
    border-radius: 50%;
@@ -68,7 +70,7 @@ body{
 }
 
 .second-container{
-    margin-left: -60px;
+    margin-left: -100px;
     display: flex;
     gap: 30px;
 }
@@ -96,19 +98,35 @@ h2{
     font-size: 30px;
 }
 
-.add-btn{
+.add-btn-container{
+    display: flex;
     cursor: pointer;
     color: #fff;
-    font-size: 18px;
-    width: 158px;
+    font-size: 1rem;
+    width: auto;
     height: 50px;
-    border-radius: 2rem;
-    transform: translateY(-15%);
-    background: linear-gradient(to right, #2762ea 0%,#4162f0 29%, #8061fd 100%);
+    border-radius: 16px;
+    background: linear-gradient(to right, var(--color-primario) 0%, var(--color-secundario)100%);
     border: none;
-    box-shadow: 3px 3px 15px rgba(46, 82, 227, 0.515);
-    margin-right: 10px;
+    padding: 5px 15px;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    gap: 7px;
+    transition: transform 0.3s ease-in-out;
 }
+
+.add-btn{
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 1rem;
+    cursor: pointer;
+}
+.add-btn-container:hover{
+    transform: scale(1.01);
+}
+
 
 table {
     font-family: 'Montserrat',sans-serif;
@@ -121,23 +139,50 @@ th, td {
     text-align: center;
 }
 
+
 .active{
+    display: flex;
+
     cursor: auto;
     align-items: center;
     padding: 4px 20px;
-    background: #63d754;
+    background: #12392B;
     box-sizing: border-box;
-    font-size: 18px;
+    font-size: .85rem;
     border-radius: 2rem;
+    color: #22C55F;
+
+}
+.dot{
+    background: #22C55F;
+    border-radius: 50%;  
+    width: 7px;  
+    height: 7px;
+    margin-right: 8px;
+    padding: 2px;
+
 }
 
 .action-btn{
     cursor: pointer;
-    padding: 10px 25px;
-    background: linear-gradient(to right, #2762ea 0%,#4162f0 29%, #8061fd 100%);
-    color: #fff;
-    border-radius: 2rem;border: none;
-    box-shadow: 3px 3px 5px rgba(46, 82, 227, 0.515);
+    padding: 6px 20px;
+    background: linear-gradient(to right, #2762ea6e 0%, #1da3fc6d 100%);
+    box-sizing: border-box;
+    border-radius: 2rem;
+    border: none;
+    font-size: .87rem;
+}
+
+
+.action-btn:hover{
+    opacity: 0.7;
+}
+
+.perfil{
+    height: 37px;
+}
+.notification{
+    height: 37px;
 }
 
 
@@ -145,7 +190,7 @@ th, td {
 .modal {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.699);
+    background: rgba(0, 0, 0, 0.838);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -154,12 +199,10 @@ th, td {
 /* Contenedor del modal */
 .modal-content {
     background: #151720;
-    padding: 25px;
+    padding: 20px;
     border-radius: 12px;
     width: 450px;
     position: relative;
-    overflow-y: auto; 
-    max-height: 70vh;
     text-align: left;
 }
 
@@ -206,7 +249,6 @@ th, td {
 .form-row {
     display: flex;
     gap: 10px;
-    width: 100%;
 }
 
 /* Botón de enviar */
@@ -242,29 +284,120 @@ th, td {
     color: rgba(0, 0, 0, 0.603);
 }
 
-
-.form-date{
-    flex-grow: 1;
+.option-modal{
+    width: 200px;
 }
 
-.date-modal{
+.error-icon {
+    font-size: 3rem;
+    color: red;
+    text-align: center;
+    margin-top: 10px;
+}
+
+.title-modal2{
+    text-align: center;
+    font-size: 3rem;
+}
+
+.description2{
+    text-align: center;
+}
+
+#statusSelect {
+    width: 100%;  
+    display: block; 
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+  }
+  
+  
+  .dropdown-content {
+    display: block;
+    position: absolute;
+    left: 0;
+    right: 0;
+    background: #151720;
+    min-width: 120px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    border-radius: 0 0 4px 4px;
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 0.3s ease-out;
+    opacity: 0;
+  }
+  
+  .dropdown-content.show {
+    max-height: 100px; /* Adjust based on your content */
+    opacity: 1;
+  }
+  
+  .dropdown-content button {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
     width: 100%;
-}
-
-.checkbox-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 16px;
-}
-
-.checkbox-item {
-    display: flex;
-    align-items: center;
-    gap: 8px; /* Espacio entre checkbox y label */
-    width: calc(33.33% - 16px); /* Para mostrar 3 columnas */
-    box-sizing: border-box;
-}
-
-input[type="checkbox"] {
+    text-align: left;
+    border: none;
+    background: none;
     cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease-in-out;
+    border-radius: 0.8rem;
+}
+
+/* Botón de eliminar */
+.dropdown-content button.delete-btn {
+    color: rgba(176, 20, 6, 0.8);
+    border: 1px solid transparent; /* Define un borde transparente por defecto */
+    transition: all 0.3s ease-in-out;
+}
+
+.dropdown-content button.delete-btn:hover {
+    border-color: rgba(176, 20, 6, 0.8); /* Cambia el color del borde al hacer hover */
+    background-color: rgba(176, 20, 6, 0.1); /* Agrega un efecto de fondo sutil */
+}
+
+/* Botón de editar */
+.dropdown-content button.edit-btn {
+    color: rgba(72, 150, 195, 0.8);
+    border: 1px solid transparent; /* Define un borde transparente por defecto */
+    transition: all 0.3s ease-in-out;
+}
+
+.dropdown-content button.edit-btn:hover {
+    border-color: rgba(72, 150, 195, 0.8); /* Cambia el color del borde al hacer hover */
+    background-color: rgba(6, 94, 176, 0.1); /* Agrega un efecto de fondo sutil */
+}
+
+/* Estilos para los íconos dentro de los botones */
+.dropdown-content button i {
+    margin-right: 8px;
+    width: 16px;
+}
+
+.notification.is-success {
+    background-color: #d4edda;
+    color: #155724;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #c3e6cb;
+    width: 80%;
+    text-align: center; /* Centra el texto */
+    text-align: center;
+}
+
+.notification.is-danger {
+    background-color: #f8d7da; /* Rojo claro */
+    color: #721c24; /* Rojo oscuro para el texto */
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #f5c6cb; /* Borde rojo */
+    width: 80%;
+    text-align: center; /* Centra el texto */
 }

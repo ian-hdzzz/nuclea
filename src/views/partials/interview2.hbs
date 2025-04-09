@@ -1,0 +1,41 @@
+
+<head>
+    <link rel="stylesheet" href="/css/interview2.css">
+</head>
+<!-- employee-evaluation.hbs -->
+
+
+<input type="hidden" name="_csrf" value="{{csrfToken}}">
+<div class="evaluation-container">
+  <h1>Evaluación del empleado</h1>
+  
+  <p class="evaluation-instruction">Evalúa del 1 al 5 los siguientes aspectos:</p>
+  {{#each preguntasCerradas}}
+  <div class="evaluation-field">
+    <label for="workload">{{pregunta}}</label>
+    <div class="select-wrapper">
+      <select id={{name}} name={{name}}>
+        <option value="1">1</option>
+        <option value="2" selected>2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+      </select>
+      <div class="select-arrow"></div>
+    </div>
+  </div>
+  {{/each}}
+  
+  <h2>Visualización de resultados</h2>
+  
+  {{> graph }}
+
+  <div class="button-container">
+
+    <button id="go-back-btn" class="btn btn-secondary" type="button"><i class="fa-solid fa-caret-left"></i>Go back</button>
+    <button id="save-button" class="btn btn-primary" >Guardar evaluación</button>
+  </div>
+</div>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>

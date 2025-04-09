@@ -9,5 +9,6 @@ exports.get_profile = (req, res, next)=>{
         calle: req.session.calle || [],
         departamentos: req.session.departamentos || [],
         title: 'Profile',
+        iconClass: 'fa-solid fa-user',
     });
 };

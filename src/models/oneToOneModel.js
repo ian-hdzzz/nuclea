@@ -3,12 +3,21 @@ const db = require('../util/database');
 class OneToOneModel {
   static async getEmployeeById(employeeId) {
     const [rows] = await db.execute(
-      'SELECT * FROM Usuarios WHERE idUsuario = ?', 
+      `
+          SELECT
+            u.*,
+            GROUP_CONCAT(d.Nombre_departamento SEPARATOR ', ') AS Departamentos
+          FROM Usuarios u
+          LEFT JOIN Pertenece p ON u.idUsuario = p.idUsuario
+          LEFT JOIN Departamentos d ON p.idDepartamento = d.idDepartamento
+          WHERE u.idUsuario = ?
+          GROUP BY u.idUsuario;
+        `
       [employeeId]
     );
     return rows[0];
   }
-
+ 
   static async saveOneToOneInterview(data) {
     const { 
       idUsuario, 
@@ -63,6 +72,22 @@ class OneToOneModel {
     );
     return rows;
   }
+  static async getOpenQuestions(){
+    const [openQuestions] = await db.execute(
+      'SELECT * FROM preguntas_abiertas WHERE es_default = 1'
+    );
+    return openQuestions;
+  }
+  static async getOptionQuestions(){
+    const [optionQuestions] = await db.execute(
+      'SELECT * FROM preguntas_cerradas WHERE es_default = 1'
+    );
+    return optionQuestions;
+  }
+
+  
+  
 }
+
 
 module.exports = OneToOneModel;
