@@ -54,9 +54,9 @@ exports.post_agregar_holiday = (request, response, next) => {
           request.session.info = `Holiday saved correctly.`;
           response.redirect('/nuclea/holiday')})
         .catch((error) => {
-          req.session.errorHOLI = `Error registering Holiday.`;
-          res.redirect('/nuclea/holiday');
-          res.status(500);
+          request.session.errorHOLI = `Error registering Holiday.`;
+          response.redirect('/nuclea/holiday');
+          response.status(500);
         });
 
 
@@ -69,6 +69,49 @@ exports.get_delete = (req, res, next) => {
   }).catch((error)=>{
       console.log(error)
   })
+};
+
+exports.get_update = (req, res, next) => {
+  Holiday.fetchALL()
+      .then(([dias, fD]) => {
+          Holiday.fetchFAI(req.params.idDiaFeriado)
+              .then(([dia, fD]) => {
+                  const nodias = dias.length === 0;
+
+                  res.render('../views/pages/editarFalta.hbs', {
+                      csrfToken: req.csrfToken(),
+                      faltass: dias,
+                      falta: dia[0],
+                      noFaltas: nodias,
+                      title: 'Administrative offenses'
+                  });
+                  console.log(dia)
+                      
+              })
+              .catch((err) => {
+                  console.error('Error fetching Holiday individual:', err);
+                  res.status(500).send('Internal Server Error');
+              });
+      }).catch((err) => {
+          console.error('Error fetching Holidays:', err);
+          res.status(500).send('Internal Server Error');
+      });
+}
+
+exports.post_update = (req, res, next) => {
+  const idDia = req.params.idDiaFeriado;  // Usar el parámetro de la URL
+  console.log(idDia)
+  const { Nombre_holiday, fecha } = req.body;
+  Holiday.Update(idDia, Nombre_holiday, fecha)
+      .then(() => {
+          req.session.info = `Addministrative offense updated.`;
+          res.redirect('/nuclea/faltasAdministrativas');
+      })
+      .catch((error) => {
+          req.session.errorAO = `Error registering Addministrative offense.`;
+          res.redirect('/nuclea/faltasAdministrativas');
+          res.status(500);
+      });
 };
 
 exports.get_search_holiday = (req, res) => {
