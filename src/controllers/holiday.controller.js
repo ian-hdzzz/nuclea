@@ -78,10 +78,10 @@ exports.get_update = (req, res, next) => {
               .then(([dia, fD]) => {
                   const nodias = dias.length === 0;
 
-                  res.render('../views/pages/editarFalta.hbs', {
+                  res.render('../views/pages/editarholiday.hbs', {
                       csrfToken: req.csrfToken(),
-                      faltass: dias,
-                      falta: dia[0],
+                      datosh: dias,
+                      diai: dia[0],
                       noFaltas: nodias,
                       title: 'Administrative offenses'
                   });
