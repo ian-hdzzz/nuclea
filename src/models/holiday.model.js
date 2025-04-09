@@ -31,6 +31,10 @@ module.exports = class Holiday {
         return db.execute('SELECT * FROM DiasFeriados');
     }
 
+    static fetchOne(id) {
+        return db.execute('SELECT * FROM DiasFeriados WHERE idDiaFeriado=?', [id]);
+    }
+    
     static search(name) {
         if (name) {
             // Búsqueda con filtro

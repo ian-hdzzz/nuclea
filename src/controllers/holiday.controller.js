@@ -72,9 +72,9 @@ exports.get_delete = (req, res, next) => {
 };
 
 exports.get_update = (req, res, next) => {
-  Holiday.fetchALL()
+  Holiday.fetchAll()
       .then(([dias, fD]) => {
-          Holiday.fetchFAI(req.params.idDiaFeriado)
+          Holiday.fetchOne(req.params.idDiaFeriado)
               .then(([dia, fD]) => {
                   const nodias = dias.length === 0;
 
