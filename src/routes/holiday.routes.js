@@ -8,5 +8,7 @@ const canviewAdmin = require('../util/canviewAdmin');
 router.get('/',isAuth,holidayController.get_Holiday);
 router.post('/',isAuth,holidayController.post_agregar_holiday)
 router.get('/delete/:idDiaFeriado',isAuth,holidayController.get_delete);
+router.get('/update/:idDiaFeriado',holidayController.get_update)
+router.post('/update/:idDiaFeriado',holidayController.post_update)
 router.get('/search',isAuth,holidayController.get_search_holiday);
 module.exports =  router;
