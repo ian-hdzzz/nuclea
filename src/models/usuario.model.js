@@ -264,7 +264,7 @@
       `, [idUsuario]);
     }
     
-    static getcollabsdept(iduser) {
+    static getCollabsDept(iduser) {
       return db.execute(`
         SELECT u.*
         FROM Usuarios u 

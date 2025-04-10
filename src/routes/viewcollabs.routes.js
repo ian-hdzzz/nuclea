@@ -5,7 +5,7 @@ const viewcollabsController = require('../controllers/viewcollabs.controller')
 const canviewAdmin = require('../util/canviewAdmin');
  
 // Definir rutas
-router.get('/',isAuth,viewcollabsController.getcollabsd);
+router.get('/',isAuth,viewcollabsController.getCollabsD);
 
 
  module.exports =  router;

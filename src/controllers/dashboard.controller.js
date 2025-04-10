@@ -6,7 +6,7 @@ exports.getDashboard = (req, res) => {
             title:'Dashboard', 
             iconClass:'fa-solid fa-house', 
             currentPath: req.path,
-            dias_restantes: rows[0].dias_vaciones
+            diasRestantes: rows[0].dias_vaciones
         }));
 
 };

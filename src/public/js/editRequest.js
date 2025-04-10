@@ -18,10 +18,10 @@ function editRequest(idSolicitud) {
     const form = document.getElementById("editForm");
   
     form.action = `/nuclea/request/${idSolicitud}/edit`;
-    form.Tipo.value = tipo;
-    form.Fecha_inicio.value = formatDate2(inicio);
-    form.Fecha_fin.value = formatDate2(fin);
-    form.Descripcion.value = descripcion;
+    form.tipo.value = tipo;
+    form.fechaInicio.value = formatDate2(inicio);
+    form.fechaFin.value = formatDate2(fin);
+    form.descripcion.value = descripcion;
   
     modal.classList.remove("hidden");
   }

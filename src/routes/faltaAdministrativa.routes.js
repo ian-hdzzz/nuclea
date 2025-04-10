@@ -1,15 +1,15 @@
 const express = require('express');
 const router = express.Router();
-const faltas_controller = require('../controllers/faltas.controller');
+const faltasController = require('../controllers/faltas.controller');
 const isAuth = require('../util/is-auth');
 
 // Definir rutas
 
-router.get('/', isAuth, faltas_controller.get_fa);
-router.post('/', isAuth, faltas_controller.post_agregar_fa);
-router.get('/delete/:idFalta', faltas_controller.get_delete);
-router.get('/update/:idFalta',faltas_controller.get_update)
-router.post('/update/:idFalta',faltas_controller.post_update)
+router.get('/', isAuth, faltasController.getFa);
+router.post('/', isAuth, faltasController.postAgregarFa);
+router.get('/delete/:idFalta', faltasController.getDelete);
+router.get('/update/:idFalta',faltasController.getUpdate)
+router.post('/update/:idFalta',faltasController.postUpdate)
 
 
 module.exports = router;

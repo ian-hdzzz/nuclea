@@ -6,9 +6,9 @@ const isAuth = require('../util/is-auth');
 const { Op } = require('sequelize');
 const router = express.Router();
 
-router.get('/interview', OneToOneController.getInterview, OneToOneController.searchEmployees, SearchController.renderEmployeeDetails, UserController.get_view);
+router.get('/interview', OneToOneController.getInterview, OneToOneController.searchEmployees, SearchController.renderEmployeeDetails, UserController.getView);
 router.get('/interview/edit', OneToOneController.getInterviewEdit);
-router.post('/interview/:id', OneToOneController.postInterview, UserController.get_view);
+router.post('/interview/:id', OneToOneController.postInterview, UserController.getView);
 router.post('/interview/closed/:id', OneToOneController.postClosedQuestions);
     
 

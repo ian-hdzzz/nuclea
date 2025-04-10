@@ -11,7 +11,7 @@ function generateRandomPassword(length = 10) {
 }
 
 
-exports.get_users = async (req, res, next) => {
+exports.getUsers = async (req, res, next) => {
     try {
         const [emp] = await Empresa.fetchAll();
         const [roles] = await Role.fetchAll();
@@ -27,9 +27,9 @@ exports.get_users = async (req, res, next) => {
             req.session.info = '';
         }
 
-        const mensajeerror = req.session.errorUSU || '';
-        if (req.session.errorUSU) {
-            req.session.errorUSU = '';
+        const mensajeError = req.session.errorUsu || '';
+        if (req.session.errorUsu) {
+            req.session.errorUsu = '';
         }
 
         res.render('../views/pages/users.hbs', {
@@ -41,7 +41,7 @@ exports.get_users = async (req, res, next) => {
             noUsers: nousers,
             emps: emp,
             info: mensaje,
-            error: mensajeerror,
+            error: mensajeError,
             title: 'Users',
         });
     } catch (err) {
@@ -51,7 +51,7 @@ exports.get_users = async (req, res, next) => {
 };
 
 
-exports.post_users = (request, response, next) => {
+exports.postUsers = (request, response, next) => {
     console.log("Datos recibidos en POST /users:", request.body);
 
     const action = request.body.action;
@@ -67,18 +67,18 @@ exports.post_users = (request, response, next) => {
     console.log("Valores extraídos:", { deptId, empresaId }); // <-- Verifica que no sean undefined aquí
 
     const usua = new Usuario(
-        request.body.name_us,
-        request.body.lastname_us,
-        request.body.email_us,
-        request.body.country_us,
-        request.body.city_us,
-        request.body.street_us,
-        request.body.model_us,
+        request.body.nameUs,
+        request.body.lastnameUs,
+        request.body.emailUs,
+        request.body.countryUs,
+        request.body.cityUs,
+        request.body.streetUs,
+        request.body.modelUs,
         request.body.password,
-        request.body.status_us,
-        request.body.start_date,
-        request.body.end_date,
-        request.body.dias_vacaciones,
+        request.body.statusUs,
+        request.body.startDate,
+        request.body.endDate,
+        request.body.diasVacaciones,
         null,
         null,
         null,
@@ -131,14 +131,14 @@ exports.post_users = (request, response, next) => {
             response.redirect('/nuclea/users');
         })
         .catch((error) => {
-            request.session.errorUSU = `Error registering user.`;
+            request.session.errorUsu = `Error registering user.`;
             response.redirect('/nuclea/users');
             response.status(500);
         });
 };
 
 
-exports.get_logout = (request, response, next) => {
+exports.getLogout = (request, response, next) => {
     request.session.destroy(() => {
         //Este código se ejecuta cuando la sesión se elimina.
         response.redirect('/nuclea/signup');
@@ -146,7 +146,7 @@ exports.get_logout = (request, response, next) => {
 };
 
 
-exports.get_delete = (req, res, next) => {
+exports.getDelete = (req, res, next) => {
     console.log(req.body)
     Usuario.deleteA(req.params.idUsuario).then(()=>{
         res.redirect('/nuclea/users')
@@ -155,10 +155,10 @@ exports.get_delete = (req, res, next) => {
     })
   };
 
-  exports.get_view = (req, res, next) => {
+  exports.getView = (req, res, next) => {
     console.log(req.params.idUsuario);
-    Usuario.fetchbyId(req.params.idUsuario)
-        .then(([rows, fieldData]) => {
+    Usuario.fetchById(req.params.idUsuario)
+        .then(([rows]) => {
             console.log(rows[0]);
             req.session.nombre = rows[0].Nombre;
             req.session.id = rows[0].idUsuario;
@@ -193,7 +193,7 @@ exports.get_delete = (req, res, next) => {
         }); // Manejo de errores opcional
 }; // Cierre correcto de la función
 
-exports.get_update = async (req, res, next) => {
+exports.getUpdate = async (req, res, next) => {
     try {
         const { idUsuario } = req.params; // Obtener idUsuario de los parámetros
         const [emp] = await Empresa.fetchAll();
@@ -215,9 +215,9 @@ exports.get_update = async (req, res, next) => {
             req.session.info = '';
         }
 
-        const mensajeerror = req.session.errorUSU || '';
-        if (req.session.errorUSU) {
-            req.session.errorUSU = '';
+        const mensajeError = req.session.errorUsu || '';
+        if (req.session.errorUsu) {
+            req.session.errorUsu = '';
         }
 
         console.log(usuario);
@@ -230,7 +230,7 @@ exports.get_update = async (req, res, next) => {
             noUsers: nousers,
             emps: emp,
             info: mensaje,
-            error: mensajeerror,
+            error: mensajeError,
             title: 'Users',
         });
     } catch (err) {
@@ -240,38 +240,38 @@ exports.get_update = async (req, res, next) => {
 }
 
 
-exports.post_update = async (req, res, next) => {
+exports.postUpdate = async (req, res, next) => {
     try {
         const idUsuario = req.params.idUsuario; // Asegúrate de que la ruta tenga :idUsuario
         const {
-            name_us: nombre,
-            lastname_us: apellidos,
-            email_us: correo,
-            country_us: pais,
-            city_us: ciudad,
-            street_us: calle,
-            model_us: modalidad,
-            dias_vacaciones: dias_vaciones,
+            nameUs: nombre,
+            lastnameUs: apellidos,
+            emailUs: correo,
+            countryUs: pais,
+            cityUs: ciudad,
+            streetUs: calle,
+            modelUs: modalidad,
+            diasVacaciones: diasVaciones,
             role: idRol,
             company: idEmpresa,
             depa: idDepartamento,
-            status_us: estatus,
-            start_date: fecha_inicio_colab,
-            end_date: fecha_vencimiento_colab
+            statusUs: estatus,
+            startDate: fechaInicioColab,
+            endDate: fechaVencimientoColab
         } = req.body;
 
         await Usuario.update(
             nombre,
             apellidos,
             correo,
-            fecha_inicio_colab,
-            fecha_vencimiento_colab,
+            fechaInicioColab,
+            fechaVencimientoColab,
             ciudad,
             pais,
             calle,
             modalidad,
             estatus,
-            dias_vaciones,
+            diasVaciones,
             idUsuario, // ¡Posición correcta!
             idRol,
             idDepartamento,

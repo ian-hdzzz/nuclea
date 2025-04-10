@@ -5,19 +5,19 @@ const Company = require('../models/empresa.model');
  * @param {Object} req - Objeto de solicitud Express
  * @param {Object} res - Objeto de respuesta Express
  */
-exports.get_company = (req, res) => {
+exports.getCompany = (req, res) => {
   const mensaje = req.session.info || '';
   if (req.session.info) {
     req.session.info = '';
   }
 
-  const mensajeerror = req.session.errorCO || '';
-  if (req.session.errorCO) {
-    req.session.errorCO = '';
+  const mensajeerror = req.session.errorCo || '';
+  if (req.session.errorCo) {
+    req.session.errorCo = '';
   }
   
   Company.fetchAll()
-      .then(([empresas, fieldData]) => {
+      .then(([empresas]) => {
         if (empresas.length > 0) {
           res.render('../views/pages/company.hbs', {
             datosh: empresas,
@@ -50,9 +50,9 @@ exports.get_company = (req, res) => {
  * @param {Object} response - Objeto de respuesta Express
  * @param {Function} next - Función middleware next de Express
  */
-exports.post_agregar_company = (request, response, next) => {
+exports.postAgregarCompany = (request, response, next) => {
   console.log(request.body);
-  const company = new Company(request.body.Nombre_company, request.body.status_company);
+  const company = new Company(request.body.nombreCompany, request.body.statusCompany);
 
   company.save()
       .then(() => {
@@ -60,14 +60,14 @@ exports.post_agregar_company = (request, response, next) => {
         response.redirect('/nuclea/company');
       })
       .catch((error) => {
-        request.session.errorCO = 'Error registering Company.';
+        request.session.errorCo = 'Error registering Company.';
         response.redirect('/nuclea/company');
         response.status(500);
       });
 
 };
 
-exports.get_delete = (req, res, next) => {
+exports.getDelete = (req, res, next) => {
   console.log(req.body)
   Company.deleteA(req.params.idEmpresa).then(()=>{
       res.redirect('/nuclea/company')
@@ -77,53 +77,44 @@ exports.get_delete = (req, res, next) => {
 };
 
 
-exports.get_update = (req, res, next) => {
-  Falta.fetchFA()
-      .then(([faltas, fD]) => {
-          Falta.fetchFAI(req.params.idFalta)
-              .then(([falta, fD]) => {
-                  Usuario.fetchAll()
-                      .then(([rows, fieldData]) => {
-                          const noFaltas = faltas.length === 0;
-
-                          res.render('../views/pages/editarFalta.hbs', {
-                              usuariosfa: rows,
-                              csrfToken: req.csrfToken(),
-                              faltass: faltas,
-                              falta: falta[0],
-                              noFaltas: noFaltas,
-                              title: 'Administrative offenses'
-                          });
-                          console.log(falta)
-                      })
-                      .catch((err) => {
-                          console.error('Error fetching Users:', err);
-                          res.status(500).send('Internal Server Error');
-                      });
+exports.getUpdate = (req, res, next) => {
+  Company.fetchAll()
+      .then(([companies]) => {
+          Company.fetchOne(req.params.idEmpresa)
+              .then(([comp]) => {
+                  const nodias = companies.length === 0;
+                  res.render('../views/pages/editarcompany.hbs', {
+                      csrfToken: req.csrfToken(),
+                      datosh: companies,
+                      comp: comp[0],
+                      noFaltas: nodias,
+                      title: 'Companies'
+                  });
+                  console.log(comp)
+                      
               })
               .catch((err) => {
-                  console.error('Error fetching Administrative offenses:', err);
+                  console.error('Error fetching individual company:', err);
                   res.status(500).send('Internal Server Error');
               });
       }).catch((err) => {
-          console.error('Error fetching Administrative offenses:', err);
+          console.error('Error fetching companies:', err);
           res.status(500).send('Internal Server Error');
       });
 }
 
-exports.post_update = (req, res, next) => {
-  const idFalta = req.params.idFalta;  // Usar el parámetro de la URL
-  console.log(idFalta)
-  const archivo = req.file ? req.file.filename : req.body.archivoActual;  // Conservar archivo actual si no hay nuevo
-
-  Falta.Update(idFalta, req.body.idUsu, req.body.fecha, req.body.motivo, archivo)
+exports.postUpdate = (req, res, next) => {
+  const idEmp = req.params.idEmpresa;  // Usar el parámetro de la URL
+  console.log(idEmp)
+  const {  nombreCompany, statusCompany } = req.body;
+  Company.Update(idEmp, nombreCompany, statusCompany)
       .then(() => {
-          req.session.info = `Addministrative offense updated.`;
-          res.redirect('/nuclea/faltasAdministrativas');
+          req.session.info = `Company updated correctly.`;
+          res.redirect('/nuclea/company');
       })
       .catch((error) => {
-          req.session.errorAO = `Error registering Addministrative offense.`;
-          res.redirect('/nuclea/faltasAdministrativas');
+          req.session.errorAO = `Error updating Company.`;
+          res.redirect('/nuclea/company');
           res.status(500);
       });
 };
