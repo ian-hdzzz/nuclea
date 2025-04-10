@@ -19,7 +19,7 @@ module.exports = class Holiday {
         
     }
 
-     static deleteA(idDiaFeriado){
+     static delete(idDiaFeriado){
                 return db.execute(`
                     DELETE FROM DiasFeriados WHERE idDiaFeriado = ?;
                 `,[idDiaFeriado])

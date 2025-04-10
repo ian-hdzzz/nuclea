@@ -209,3 +209,64 @@ function confirmDeleteReq(idSolicitud) {
         });
     }
 }
+
+
+function confirmDeleteHol(idDiaFeriado) {
+    console.log("------------Esta es el id solicitud----------");
+    console.log(idDiaFeriado);
+    const confirmed = confirm("Are you sure you want to delete this request?");
+    if (confirmed) {
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        
+        fetch(`/nuclea/holiday/delete/${idDiaFeriado}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-Token': csrfToken
+            },
+            credentials: 'include'
+        })
+        .then(result => {
+            return result.json();
+        })
+        .then(data => {
+            console.log(data);
+            let htmlContainer=``;
+            data.datosh.forEach(dato => {
+                htmlContainer+=`
+                <tr>
+                    <td>${dato.Nombre_asueto}</td>
+                    <td>${formatDate(dato.Fecha_asueto)}</td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="action-btn">Actions</button>
+                            <div class="dropdown-content">
+                                <button class="edit-btn"  onclick="location.href='/nuclea/holiday/update/${dato.idDiaFeriado}'">
+                                  <i class="fa-solid fa-pen-to-square"></i> Edit
+                                </button>
+                                <button class="delete-btn" onclick="confirmDeleteHol('${dato.idDiaFeriado}')">
+                                  <i class="fa-solid fa-trash"></i> Delete
+                                </button>
+
+                             </div>
+                        </div>
+                    </td>
+                </tr>`;
+                
+
+
+
+            })
+            htmlContainer+=``;
+
+            let tabla =document.getElementById('despliegue');
+            tabla.innerHTML=htmlContainer;
+
+           
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            alert("An error occurred.");
+        });
+    }
+}
