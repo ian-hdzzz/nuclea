@@ -17,6 +17,17 @@ exports.getRequests = (req, res) => {
   .then(([diasf,fD]) => {
     let canViewPersonal = false;
     let canApprove = false; //Variable verificar si usuario puede aprobar solicitudes
+
+    Usuario.getPrivilegios(req.session.idUsuario).then(([privilegios, fieldData]) => {
+      req.session.privilegios = [];
+      for(let privilegio of privilegios) {
+          req.session.privilegios.push(privilegio);
+      }
+      console.log(req.session.privilegios);
+    }).catch((error) => {
+      console.log(error);
+    });
+
     for (let privilegio of req.session.privilegios) {
   
       if (privilegio.Nombre_privilegio == 'Consultar solicitudes propias') {

@@ -12,6 +12,6 @@ router.get('/update/:idUsuario',users_controller.get_update);
 router.get('/delete/:idUsuario',users_controller.get_delete);
 router.get('/view/:idUsuario',users_controller.get_view);
 router.post('/update/:idUsuario',users_controller.post_update);
-
+router.get('/search', users_controller.searchUsers);
 
 module.exports =  router;  

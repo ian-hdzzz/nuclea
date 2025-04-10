@@ -284,3 +284,17 @@ exports.post_update = async (req, res, next) => {
         res.status(500).send("Error interno del servidor");
     }
 };
+
+// En tu controlador
+exports.searchUsers = (req, res) => {
+    const searchTerm = req.query.term || '';
+    
+    Usuario.searchByName(searchTerm)
+        .then(([results]) => {
+            res.json(results);
+        })
+        .catch(error => {
+            console.error('Error en búsqueda:', error);
+            res.status(500).json({ error: 'Error al buscar usuarios' });
+        });
+};
