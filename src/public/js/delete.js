@@ -218,7 +218,7 @@ function confirmDeleteHol(idDiaFeriado) {
     if (confirmed) {
         const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
         
-        fetch(`/nuclea/request/delete/${idDiaFeriado}`, {
+        fetch(`/nuclea/holiday/delete/${idDiaFeriado}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
@@ -231,6 +231,37 @@ function confirmDeleteHol(idDiaFeriado) {
         })
         .then(data => {
             console.log(data);
+            let htmlContainer=``;
+            data.datosh.forEach(dato => {
+                htmlContainer+=`
+                <tr>
+                    <td>${dato.Nombre_asueto}</td>
+                    <td>${formatDate(dato.Fecha_asueto)}</td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="action-btn">Actions</button>
+                            <div class="dropdown-content">
+                                <button class="edit-btn"  onclick="location.href='/nuclea/holiday/update/${dato.idDiaFeriado}'">
+                                  <i class="fa-solid fa-pen-to-square"></i> Edit
+                                </button>
+                                <button class="delete-btn" onclick="confirmDeleteHol('${dato.idDiaFeriado}')">
+                                  <i class="fa-solid fa-trash"></i> Delete
+                                </button>
+
+                             </div>
+                        </div>
+                    </td>
+                </tr>`;
+                
+
+
+
+            })
+            htmlContainer+=``;
+
+            let tabla =document.getElementById('despliegue');
+            tabla.innerHTML=htmlContainer;
+
            
         })
         .catch(error => {

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="/css/holiday.css">
+    <meta name="csrf-token" content="{{ csrfToken }}">
 </head>
 <body>
     <div class="top-container">
@@ -58,8 +59,10 @@
                     <th>Actions</th>
                 </tr>
             </thead>
-            <tbody>
-                {{#each datosh}}
+            
+            <tbody id="despliegue">
+            
+                    {{#each datosh}}
                 <tr>
                     <td>{{Nombre_asueto}}</td>
                     <td>{{formatDate Fecha_asueto}}</td>
@@ -68,18 +71,21 @@
                             <button class="action-btn">Actions</button>
                             <div class="dropdown-content">
                                 <button class="edit-btn"  onclick="location.href='/nuclea/holiday/update/{{idDiaFeriado}}'">
-                                  <i class="fa-solid fa-pen-to-square"></i> Edit
+                                <i class="fa-solid fa-pen-to-square"></i> Edit
                                 </button>
-                                <button class="delete-btn" onclick="location.href='/nuclea/holiday/delete/{{idDiaFeriado}}'">
-                                  <i class="fa-solid fa-trash"></i> Delete
+                                <button class="delete-btn" onclick="confirmDeleteHol('{{idDiaFeriado}}')">
+                                <i class="fa-solid fa-trash"></i> Delete
                                 </button>
 
-              </div>
+                            </div>
                         </div>
                     </td>
                 </tr>
                 {{/each}}
+
+
             </tbody>
+            
         </table>
         {{#if error}}
             <p style="text-align: center; margin-top: 20px;">No departaments existing</p>
@@ -127,5 +133,6 @@
 
 
     <script src="/js/holidays.js"></script>
+    <script src="/js/delete.js"></script>
 </body>
 </html>

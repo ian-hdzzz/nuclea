@@ -64,13 +64,55 @@ exports.postAgregarHoliday = (request, response, next) => {
 
 
 };
-exports.getDelete = (req, res, next) => {
-  console.log(req.body)
-  Holiday.deleteA(req.params.idDiaFeriado).then(()=>{
-      res.redirect('/nuclea/holiday')
-  }).catch((error)=>{
-      console.log(error)
-  })
+exports.deleteDelete = (req, res, next) => {
+  const mensaje = req.session.info || '';
+  if (req.session.info) {
+      req.session.info = '';
+  }
+
+  const mensajeerror = req.session.errorHoli || '';
+  if (req.session.errorHoli) {
+    req.session.errorHoli = '';
+  }
+  Holiday.delete(req.params.idDiaFeriado).then(()=>{
+    console.log("Solicitud eliminada correctamente");
+
+
+    Holiday.fetchAll()
+      .then(([rows]) => {
+        if(rows.length>0){
+          res.status(200).json({ 
+            datosh: rows,
+            csrfToken: req.csrfToken(),
+            error: mensajeerror,
+            info: mensaje,
+            title: 'Holidays',
+        });
+        }
+        else{
+          const error = req.session.error || true;
+          req.session.error = false;
+          res.status(200).json({ 
+            datosh: rows,
+            csrfToken: req.csrfToken(),
+            error:error,
+            info: mensaje,
+            merror: mensajeerror,
+        });
+        }
+        
+      })
+      .catch((err) => {
+        console.error('Error fetching departments:', err);
+        res.status(500).send('Internal Server Error');
+      });
+
+    })
+    .catch((err) => {
+      console.error('Error al eliminar la solicitud o cargar datos:', err);
+      res.status(500).send('Error al procesar la solicitud');
+    }); 
+  
 };
 
 exports.getUpdate = (req, res, next) => {
