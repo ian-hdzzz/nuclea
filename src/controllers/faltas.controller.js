@@ -110,8 +110,85 @@ exports.postAgregarFa = (req, res, next) => {
 };
 
 exports.getDelete = (req, res, next) => {
-    Falta.deleteA(req.params.idFalta).then(()=>{
-        res.redirect('/nuclea/faltasAdministrativas')
+    Falta.delete(req.params.idFalta)
+    .then(()=>{
+        let encontrado = false; // Variable para saber si encontramos el privilegio 'addAO'
+        console.log('privilegios session', req.session.privilegios)
+        let privilegiostot = req.session.privilegios
+        console.log(privilegiostot)
+        const mensaje = req.session.info || '';
+        if (req.session.info) {
+            req.session.info = '';
+        }
+
+        const mensajeerror = req.session.errorAO || '';
+        if (req.session.errorAO) {
+            req.session.errorAO = '';
+        }
+        for (let privilegio of privilegiostot) {
+            if (privilegio.Nombre_privilegio == 'addAO') {
+                encontrado = true;
+                // Si tiene privilegio 'addAO', mostramos todas las faltas administrativas
+                Falta.fetchFA()
+                    .then(([faltas]) => {
+                        Usuario.fetchAll()
+                            .then(([rows]) => {
+                                const noFaltas = faltas.length === 0;
+    
+                                return res.status(200).json({
+                                    usuariosfa: rows,
+                                    csrfToken: req.csrfToken(),
+                                    faltas: faltas,
+                                    noFaltas: noFaltas,
+                                    title: 'Administrative offenses',
+                                    iconClass: 'fa-solid fa-triangle-exclamation',
+                                    info: mensaje,
+                                    error: mensajeerror,
+                                    privilegios: req.session.privilegios || [],
+                                });
+                            })
+                            .catch((err) => {
+                                console.error('Error fetching Users:', err);
+                                res.status(500).send('Internal Server Error');
+                            });
+                    })
+                    .catch((err) => {
+                        console.error('Error fetching Administrative offenses:', err);
+                        res.status(500).send('Internal Server Error');
+                    });
+                return; // Salimos del ciclo una vez que se haya procesado
+            }
+        }
+    
+        // Si no tiene el privilegio 'addAO', mostramos solo sus faltas personales
+        Falta.fetchFAPER(req.session.idUsuario)
+            .then(([faltas]) => {
+                Usuario.fetchAll()
+                    .then(([rows]) => {
+                        const noFaltas = faltas.length === 0;
+    
+                        return res.status(200).json({
+                            usuariosfa: rows,
+                            csrfToken: req.csrfToken(),
+                            faltas: faltas,
+                            noFaltas: noFaltas,
+                            title: 'Administrative offenses',
+                            iconClass: 'fa-solid fa-triangle-exclamation',
+                            privilegios: req.session.privilegios || [],
+                        });
+                    })
+                    .catch((err) => {
+                        console.error('Error fetching Users:', err);
+                        res.status(500).send('Internal Server Error');
+                    });
+            })
+            .catch((err) => {
+                console.error('Error fetching Personal Administrative Offenses:', err);
+                res.status(500).send('Internal Server Error');
+            });
+    
+        
+
     }).catch((error)=>{
         console.log(error)
     })
