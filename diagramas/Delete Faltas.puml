@@ -1,0 +1,40 @@
+@startuml
+ actor navegador
+ entity delete
+ boundary "confirmDeleteFal" as Fun
+ boundary "faltaAdministrativa.routes.js" as Rou
+ control "faltas.controller.js" as Co
+ entity "faltas.model" as Mo
+ database sql
+ activate navegador
+ navegador->delete
+ deactivate navegador
+ activate delete
+ delete->Fun
+ deactivate delete
+ activate Fun
+ Fun->>Rou:DELETE(/nuclea/holiday/delete/idDiaFeriado)
+ activate Rou
+ Rou->Co:Delete(req,res)
+ deactivate Rou
+ activate Co
+ Co->>Mo:Delete(req.params.idDiaFeriado)
+ activate Mo
+ Mo->>sql:execute('DELETE FROM DiasFeriados WHERE idDiaFeriado=?',[id])
+ activate sql
+ sql-->>Mo:Query OK
+ deactivate sql
+ Mo-->>Co:Promesa
+ deactivate Mo
+ 
+ Co-->>Fun:return res.JSON
+ deactivate Co
+ Fun->>Fun:Data res.JSON()
+ 
+ Fun->navegador:HTML
+ deactivate Fun
+ activate navegador
+ deactivate navegador
+ 
+ 
+ @enduml
