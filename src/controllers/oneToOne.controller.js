@@ -43,7 +43,7 @@ exports.getInterview = async (req, res) => {
         // Obtener el tiempo del usuario en la empresa
         const currentDate = new Date();
 
-        const startDate = new Date(employee.Fecha_inicio_colab);
+        const startDate = new Date(employee.fechaInicioColab);
 
         const years = differenceInYears(currentDate, startDate);
         const months = differenceInMonths(currentDate, startDate) % 12;
@@ -122,7 +122,7 @@ exports.postInterview = async (req, res) => {
       const userId = req.params.id;
       const responses = req.body.respuestas || {};
       
-      const result = await OneToOneModel.saveOpenQuestionResponses(userId, responses);
+      const result = await oneToOneModel.saveOpenQuestionResponses(userId, responses);
       
       res.json(result);
     } catch (error) {
@@ -136,7 +136,7 @@ exports.postInterview = async (req, res) => {
       const userId = req.params.id;
       const responses = req.body.closedResponses || {};
       
-      const result = await OneToOneModel.saveClosedQuestionResponses(userId, responses);
+      const result = await oneToOneModel.saveClosedQuestionResponses(userId, responses);
       
       res.json(result);
     } catch (error) {

@@ -1,7 +1,7 @@
 const Falta = require('../models/faltas.model');
 const Usuario = require('../models/usuario.model');
 
-exports.get_fa = (req, res, next) => {
+exports.getFa = (req, res, next) => {
     // Iteramos sobre los privilegios
     let encontrado = false; // Variable para saber si encontramos el privilegio 'addAO'
     console.log('privilegios session', req.session.privilegios)
@@ -22,9 +22,9 @@ exports.get_fa = (req, res, next) => {
             encontrado = true;
             // Si tiene privilegio 'addAO', mostramos todas las faltas administrativas
             Falta.fetchFA()
-                .then(([faltas, fD]) => {
+                .then(([faltas]) => {
                     Usuario.fetchAll()
-                        .then(([rows, fieldData]) => {
+                        .then(([rows]) => {
                             const noFaltas = faltas.length === 0;
 
                             return res.render('../views/pages/faltasAdministrativas.hbs', {
@@ -54,9 +54,9 @@ exports.get_fa = (req, res, next) => {
 
     // Si no tiene el privilegio 'addAO', mostramos solo sus faltas personales
     Falta.fetchFAPER(req.session.idUsuario)
-        .then(([faltas, fD]) => {
+        .then(([faltas]) => {
             Usuario.fetchAll()
-                .then(([rows, fieldData]) => {
+                .then(([rows]) => {
                     const noFaltas = faltas.length === 0;
 
                     return res.render('../views/pages/faltasAdministrativas.hbs', {
@@ -82,7 +82,7 @@ exports.get_fa = (req, res, next) => {
 
 
 
-exports.post_agregar_fa = (req, res, next) => {
+exports.postAgregarFa = (req, res, next) => {
     const archivo = req.file ? req.file.filename : null;
     if(req.body.modal=="modal1"){
         const falta = new Falta(
@@ -109,7 +109,7 @@ exports.post_agregar_fa = (req, res, next) => {
     
 };
 
-exports.get_delete = (req, res, next) => {
+exports.getDelete = (req, res, next) => {
     Falta.deleteA(req.params.idFalta).then(()=>{
         res.redirect('/nuclea/faltasAdministrativas')
     }).catch((error)=>{
@@ -117,13 +117,13 @@ exports.get_delete = (req, res, next) => {
     })
 };
 
-exports.get_update = (req, res, next) => {
+exports.getUpdate = (req, res, next) => {
     Falta.fetchFA()
-        .then(([faltas, fD]) => {
+        .then(([faltas]) => {
             Falta.fetchFAI(req.params.idFalta)
-                .then(([falta, fD]) => {
+                .then(([falta]) => {
                     Usuario.fetchAll()
-                        .then(([rows, fieldData]) => {
+                        .then(([rows]) => {
                             const noFaltas = faltas.length === 0;
 
                             res.render('../views/pages/editarFalta.hbs', {
@@ -151,7 +151,7 @@ exports.get_update = (req, res, next) => {
         });
 }
 
-exports.post_update = (req, res, next) => {
+exports.postUpdate = (req, res, next) => {
     const idFalta = req.params.idFalta;  // Usar el parámetro de la URL
     console.log(idFalta)
     const archivo = req.file ? req.file.filename : req.body.archivoActual;  // Conservar archivo actual si no hay nuevo
@@ -162,7 +162,7 @@ exports.post_update = (req, res, next) => {
             res.redirect('/nuclea/faltasAdministrativas');
         })
         .catch((error) => {
-            req.session.errorAO = `Error registering Addministrative offense.`;
+            req.session.errorAo = `Error registering Addministrative offense.`;
             res.redirect('/nuclea/faltasAdministrativas');
             res.status(500);
         });

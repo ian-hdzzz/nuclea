@@ -60,7 +60,7 @@ passport.use(new GoogleStrategy({
 
     // Verificar si el correo existe en tu base de datos
     try {
-      const [rows, fieldData] = await Usuario.fetchOne(email);
+      const [rows] = await Usuario.fetchOne(email);
       console.log("Resultado de búsqueda en BD:", rows.length > 0 ? "Usuario encontrado" : "Usuario no encontrado");
       
       if (rows.length === 0) {

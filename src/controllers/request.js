@@ -9,12 +9,12 @@ exports.getRequests = (req, res) => {
          req.session.info = '';
      }
 
-     const mensajeerror = req.session.errorRE || '';
-     if (req.session.errorRE) {
-        req.session.errorRE = '';
+     const mensajeerror = req.session.errorRe || '';
+     if (req.session.errorRe) {
+        req.session.errorRe = '';
      }
   DiasFeriados.fetchAll()
-  .then(([diasf,fD]) => {
+  .then(([diasf]) => {
     let canViewPersonal = false;
     let canApprove = false; //Variable verificar si usuario puede aprobar solicitudes
     for (let privilegio of req.session.privilegios) {
@@ -91,19 +91,19 @@ exports.postRequest = (request, response,next) => {
   console.log(`Id: ${sessionId}`)
   const nombreUsuario = request.session.nombre; // Para mostrar en el mensaje
 
-  const requests = new Request(sessionId, request.body.Tipo, request.body.Fecha_inicio, request.body.Fecha_fin,request.body.Descripcion);
+  const requests = new Request(sessionId, request.body.tipo, request.body.fechaInicio, request.body.fechaFin,request.body.descripcion);
   
-  if(request.body.Tipo==='Vacations'){
-    const fechaInicio = new Date(request.body.Fecha_inicio);
-    const fechaFin = new Date(request.body.Fecha_fin);
+  if(request.body.tipo==='Vacations'){
+    const fechaInicio = new Date(request.body.fechaInicio);
+    const fechaFin = new Date(request.body.fechaFin);
 
     // Calcular la diferencia en milisegundos y convertirla a días
     const totalDias = (fechaFin - fechaInicio) / (1000 * 60 * 60 * 24) + 1; // +1 para incluir ambos días
 
-    Request.fetchDays(sessionId).then(([diasrestantes, FB])=>{
-      const dias_restantes=diasrestantes[0].dias_vaciones;
-      console.log(dias_restantes);
-      const dias = dias_restantes-totalDias
+    Request.fetchDays(sessionId).then(([diasRestantes])=>{
+      const diaRestantes=diasRestantes[0].dias_vaciones;
+      console.log(diaRestantes);
+      const dias = diaRestantes-totalDias
       if(dias>=0){
         requests.save()
         .then(() => {
@@ -112,17 +112,17 @@ exports.postRequest = (request, response,next) => {
           console.log('Se guardó correctamente');            
         })
         .catch((err) => {
-          request.session.errorRE = `Error registering request.`;
+          request.session.errorRe = `Error registering request.`;
           console.error(err);
           response.redirect('/nuclea/request/personal');
           response.status(500);
         });
       }else {
-        request.session.errorRE = `Could not register request, vacation days left ${dias_restantes}`;
+        request.session.errorRe = `Could not register request, vacation days left ${diaRestantes}`;
         response.redirect('/nuclea/request/personal');
       }
     }).catch((err)=> {
-      reqquest.session.errorRE = `Error registering request.`;
+      request.session.errorRe = `Error registering request.`;
       console.error(err);
       response.redirect('/nuclea/request/personal');
       response.status(500);
@@ -171,7 +171,9 @@ exports.rejectRequest = (req, res) => {
   Usuario.getRolById(usuarioId)
     .then(([result]) => {
       const rol = result[0]?.idRol;
-      if (!rol) return res.status(403).send('Rol no encontrado');
+      if (!rol) {
+        return res.status(403).send('Rol no encontrado');
+      }
 
       return Request.rejectSolicitud(solicitudId, rol);
     })
@@ -184,7 +186,7 @@ exports.rejectRequest = (req, res) => {
 
 exports.editRequest = (req, res) => {
   const idSolicitud = req.params.id;
-  const { Tipo, Fecha_inicio, Fecha_fin, Descripcion } = req.body;
+  const { tipo, fechaInicio, fechaFin, descripcion } = req.body;
 
   db.execute(`
     UPDATE Solicitudes
@@ -192,7 +194,7 @@ exports.editRequest = (req, res) => {
         Aprobacion_L = 'Pendiente', Fecha_aprob_L = NULL,
         Aprobacion_A = 'Pendiente', Fecha_aprob_A = NULL
     WHERE idSolicitud = ?
-  `, [Tipo, Fecha_inicio, Fecha_fin, Descripcion, idSolicitud])
+  `, [tipo, fechaInicio, fechaFin, descripcion, idSolicitud])
     .then(() => {
       res.redirect('/nuclea/request/personal');
     })
@@ -202,7 +204,7 @@ exports.editRequest = (req, res) => {
     });
 };
 
-/* 
+/** 
 
 exports.postRequest = async (req, res) => {
   try {
@@ -242,13 +244,13 @@ exports.getRequestsapr = (req, res) => {
 
   let encontrado = false; // Variable para saber si encontramos el privilegio 'addAO'
   console.log('privilegios session', req.session.privilegios);
-  let privilegiostot = req.session.privilegios;
-  console.log(privilegiostot);
+  let privilegiosTot = req.session.privilegios;
+  console.log(privilegiosTot);
 
-  for (let privilegio of privilegiostot) {
+  for (let privilegio of privilegiosTot) {
     if (privilegio.Nombre_privilegio == 'viewcollabs') {
       DiasFeriados.fetchAll()
-        .then(([diasf, fD]) => {
+        .then(([diasf]) => {
           Request.requestcollabs(req.session.idUsuario)
             .then(([rows]) => {
               const vacationRequests = rows.filter(row => row.Tipo === 'Vacations'); //Filtrar solo por vacaciones
@@ -276,7 +278,7 @@ exports.getRequestsapr = (req, res) => {
   };
 
   DiasFeriados.fetchAll()
-    .then(([diasf, fD]) => {
+    .then(([diasf]) => {
       Request.fetchAll()
         .then(([rows]) => {
           const vacationRequests = rows.filter(row => row.Tipo === 'Vacations'); //Filtrar solo por vacaciones
@@ -303,14 +305,14 @@ exports.getRequestsapr = (req, res) => {
 
 exports.getRequestsPersonal = (req, res) => {
   const privilegios = req.session.privilegios || [];
-  for (let privilegio of req.session.privilegios) {
+  for (let privilegio of privilegios) {
 
     if (privilegio.Nombre_privilegio == 'Acepta Deniega solicitud'){
       canApprove = true;
     }
 
   DiasFeriados.fetchAll()
-    .then(([diasf, fD]) => {
+    .then(([diasf, ]) => {
       Request.fetchPersonal(req.session.idUsuario)
         .then(([rows]) => {
           res.render('pages/requestpersonal', {
@@ -343,14 +345,14 @@ exports.deleteRequest = (req, res) => {
          req.session.info = '';
      }
 
-     const mensajeerror = req.session.errorRE || '';
-     if (req.session.errorRE) {
-        req.session.errorRE = '';
+     const mensajeerror = req.session.errorRe || '';
+     if (req.session.errorRe) {
+        req.session.errorRe = '';
      }
-  Request.Delete(req.params.idSolicitud).then(()=>{
+  Request.delete(req.params.idSolicitud).then(()=>{
     console.log("Solicitud eliminada correctamente");
     Request.fetchPersonal(req.session.idUsuario)
-    .then(([rows,fD]) => {
+    .then(([rows]) => {
       res.status(200).json({
         datos: rows,
         csrfToken: req.csrfToken(),
