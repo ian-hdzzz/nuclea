@@ -209,3 +209,33 @@ function confirmDeleteReq(idSolicitud) {
         });
     }
 }
+
+
+function confirmDeleteHol(idDiaFeriado) {
+    console.log("------------Esta es el id solicitud----------");
+    console.log(idDiaFeriado);
+    const confirmed = confirm("Are you sure you want to delete this request?");
+    if (confirmed) {
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        
+        fetch(`/nuclea/request/delete/${idDiaFeriado}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-Token': csrfToken
+            },
+            credentials: 'include'
+        })
+        .then(result => {
+            return result.json();
+        })
+        .then(data => {
+            console.log(data);
+           
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            alert("An error occurred.");
+        });
+    }
+}
