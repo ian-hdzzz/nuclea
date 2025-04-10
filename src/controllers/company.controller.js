@@ -77,7 +77,7 @@ exports.getDelete = (req, res, next) => {
 };
 
 
-exports.get_update = (req, res, next) => {
+exports.getUpdate = (req, res, next) => {
   Company.fetchAll()
       .then(([companies]) => {
           Company.fetchOne(req.params.idEmpresa)
