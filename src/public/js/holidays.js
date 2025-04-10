@@ -19,10 +19,10 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 
-const btn_buscar = document.getElementById("search-input");
+const btnBuscar = document.getElementById("search-input");
 
-btn_buscar.addEventListener("keyup", () => {
-    const query = btn_buscar.value.trim();
+btnBuscar.addEventListener("keyup", () => {
+    const query = btnBuscar.value.trim();
     
 
 

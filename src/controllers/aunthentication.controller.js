@@ -20,7 +20,7 @@ exports.getAuth = (req, res) => {
 // Modificar postAuth para usar Passport
 exports.postAuth = (req, res) => {
   Usuario.fetchOne(req.body.email)
-  .then(([rows, fieldData]) => {
+  .then(([rows]) => {
     if (rows.length > 0) {
       bcrypt.compare(req.body.password, rows[0].Contrasena).then((doMatch) => {
         if (doMatch) {

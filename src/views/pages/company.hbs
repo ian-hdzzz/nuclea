@@ -100,14 +100,14 @@
             <input type="hidden" name="_csrf" value="{{csrfToken}}">
                 <div class="form-group">
                     <label for="deptName">Company Name</label>
-                    <input type="text" id="holiName" name="Nombre_company" placeholder="Nuclea" class="text-modal" required
+                    <input type="text" id="holiName" name="nombreCompany" placeholder="Nuclea" class="text-modal" required
                     oninvalid="this.setCustomValidity('Please remember to write the company name')"
                     oninput="this.setCustomValidity('')">
                 </div>
 
                 <div class="form-group">
                     <label>Status</label>
-                    <select  class="text-modal" name="status_company" required
+                    <select  class="text-modal" name="statusCompany" required
                         oninvalid="this.setCustomValidity('Please select a Status')" 
                         onchange="this.setCustomValidity('')">
                         <option value="">- Select a Status -</option>

@@ -1,4 +1,4 @@
-exports.get_profile = (req, res, next)=>{
+exports.getProfile = (req, res, next)=>{
     res.render('./pages/profile', {
         nombre: req.session.nombre || [],
         apellidos: req.session.apellidos || [],

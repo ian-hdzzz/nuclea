@@ -39,7 +39,7 @@ VALUES (
     SET  dias_vaciones = ?  -- Cambia el valor según lo que necesites
     WHERE idUsuario = ?; `,[dias_restantes,id])
   }
-  static Delete(id){
+  static delete(id){
     return db.execute(`DELETE FROM Solicitudes WHERE idSolicitud=?`,[id]);
   }
   static fetchAll() {

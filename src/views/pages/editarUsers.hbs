@@ -120,49 +120,49 @@
             
             <div class="form-group">
                 <label>Employee Names</label>
-                <input type="text" placeholder="Jacob" class="text-modal" name="name_us" value="{{usuarioDetails.Nombre}}" required
+                <input type="text" placeholder="Jacob" class="text-modal" name="nameUs" value="{{usuarioDetails.Nombre}}" required
                     oninvalid="this.setCustomValidity('Please remember to write the user names')"
                     oninput="this.setCustomValidity('')">
             </div>
 
             <div class="form-group">
                 <label>Last Name</label>
-                <input type="text" placeholder="Espejel" class="text-modal" name="lastname_us" value="{{usuarioDetails.Apellidos}}"required
+                <input type="text" placeholder="Espejel" class="text-modal" name="lastnameUs" value="{{usuarioDetails.Apellidos}}"required
                     oninvalid="this.setCustomValidity('Please remember to write the user last name')"
                     oninput="this.setCustomValidity('')">
             </div>
             
             <div class="form-group">
                 <label>Email</label>
-                <input type="text" placeholder="jacob@nuclea.com" class="text-modal" name="email_us" value="{{usuarioDetails.Correo_electronico}}"required
+                <input type="text" placeholder="jacob@nuclea.com" class="text-modal" name="emailUs" value="{{usuarioDetails.Correo_electronico}}"required
                     oninvalid="this.setCustomValidity('Please remember to write the user email')"
                     oninput="this.setCustomValidity('')">
             </div>
 
             <div class="form-group">
                 <label>Country</label>
-                <input type="text" placeholder="Mexico" class="text-modal" name="country_us" value="{{usuarioDetails.Pais}}"required
+                <input type="text" placeholder="Mexico" class="text-modal" name="countryUs" value="{{usuarioDetails.Pais}}"required
                     oninvalid="this.setCustomValidity('Please remember to write the user country')"
                     oninput="this.setCustomValidity('')">
             </div>
 
             <div class="form-group">
                 <label>City </label>
-                <input type="text" placeholder="Queretaro" class="text-modal" name="city_us" value="{{usuarioDetails.Ciudad}}"required
+                <input type="text" placeholder="Queretaro" class="text-modal" name="cityUs" value="{{usuarioDetails.Ciudad}}"required
                     oninvalid="this.setCustomValidity('Please remember to write the user city')"
                     oninput="this.setCustomValidity('')">
             </div>
 
             <div class="form-group">
                 <label>Street</label>
-                <input type="text" placeholder="Las Praderas 123" class="text-modal" name="street_us" value="{{usuarioDetails.Calle}}" required
+                <input type="text" placeholder="Las Praderas 123" class="text-modal" name="streetUs" value="{{usuarioDetails.Calle}}" required
                     oninvalid="this.setCustomValidity('Please remember to write the user street')"
                     oninput="this.setCustomValidity('')">
             </div>
 
             <div class="form-group">
                 <label for="status">Working Model</label>
-                <select class="text-modal" name="model_us" value="{{usuarioDetails.Modalidad}}"required
+                <select class="text-modal" name="modelUs" value="{{usuarioDetails.Modalidad}}"required
                     oninvalid="this.setCustomValidity('Please select a working model')" 
                     onchange="this.setCustomValidity('')">
                     <option value="On-Site-Work">On-site-work</option>
@@ -177,7 +177,7 @@
                     type="number" 
                     placeholder="Enter vacation days" 
                     class="text-modal" 
-                    name="dias_vacaciones"
+                    name="diasVacaciones"
                     required
                     min="0"
                     max="12"
@@ -230,7 +230,7 @@
 
             <div class="form-group">
                 <label>Status</label>
-                <select class="text-modal" name="status_us" required
+                <select class="text-modal" name="statusUs" required
                     oninvalid="this.setCustomValidity('Please select a Status')" 
                     onchange="this.setCustomValidity('')">
                     <option value="">- Select a Status -</option>
@@ -242,7 +242,7 @@
             <div class="form-row">
                 <div class="form-group form-date">
                     <label>Start Date</label>
-                    <input type="date" class="text-modal date-modal" name="start_date" required
+                    <input type="date" class="text-modal date-modal" name="startDate" required
                     oninvalid="this.setCustomValidity('Please select a date')" 
                     onchange="this.setCustomValidity('')" value="{{usuarioDetails.Fecha_inicio_colab}}">
                     
@@ -250,7 +250,7 @@
 
                 <div class="form-group form-date">
                     <label>End Date</label>
-                    <input type="date" class="text-modal date-modal" name="end_date" value="{{usuarioDetails.Fecha_vencimiento_colab}}">
+                    <input type="date" class="text-modal date-modal" name="endDate" value="{{usuarioDetails.Fecha_vencimiento_colab}}">
                 </div>
             </div>
 

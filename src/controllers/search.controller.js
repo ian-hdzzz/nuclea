@@ -63,8 +63,8 @@ exports.renderSearchComponent = async (req, res) => {
       // Format employees for the view
       viewData.employee = defaultEmployees.map(user => ({
         idUsuario: user.idUsuario,
-        Nombre: user.nombre,
-        Apellidos: user.apellidos || '',
+        nombre: user.nombre,
+        apellidos: user.apellidos || '',
         initial: user.nombre.charAt(0).toUpperCase()
       }));
     }
@@ -89,7 +89,7 @@ exports.renderEmployeeDetails = async (req, res) => {
       if (!employee) {
         return res.status(404).send('Employee not found');
       }
-      employee.initial = employee.Nombre.charAt(0).toUpperCase();
+      employee.initial = employee.nombre.charAt(0).toUpperCase();
       console.log('Empleado encontrado:', employee);
       // Pasar los datos del empleado a la vista
       res.render('pages/interview', { employee });
