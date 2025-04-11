@@ -1,13 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
+  <!DOCTYPE html>
+  <html lang="es">
+  <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Department Management</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="/css/holiday.css">
-    <meta name="csrf-token" content="{{ csrfToken }}">
-</head>
-<body>
+  </head>
+  <body>
     <div class="top-container">
         <nav class="nav-bar">
             <div class="first-container">
@@ -59,10 +59,8 @@
                     <th>Actions</th>
                 </tr>
             </thead>
-            
-            <tbody id="despliegue">
-            
-                    {{#each datosh}}
+            <tbody>
+                {{#each datosh}}
                 <tr>
                     <td>{{Nombre_asueto}}</td>
                     <td>{{formatDate Fecha_asueto}}</td>
@@ -71,39 +69,38 @@
                             <button class="action-btn">Actions</button>
                             <div class="dropdown-content">
                                 <button class="edit-btn"  onclick="location.href='/nuclea/holiday/update/{{idDiaFeriado}}'">
-                                <i class="fa-solid fa-pen-to-square"></i> Edit
+                                  <i class="fa-solid fa-pen-to-square"></i> Edit
                                 </button>
-                                <button class="delete-btn" onclick="confirmDeleteHol('{{idDiaFeriado}}')">
-                                <i class="fa-solid fa-trash"></i> Delete
+                                <button class="delete-btn" onclick="location.href='/nuclea/holiday/delete/{{idDiaFeriado}}'">
+                                  <i class="fa-solid fa-trash"></i> Delete
                                 </button>
 
-                            </div>
+              </div>
                         </div>
                     </td>
                 </tr>
                 {{/each}}
-
-
             </tbody>
-            
         </table>
         {{#if error}}
             <p style="text-align: center; margin-top: 20px;">No departaments existing</p>
         {{/if}}
 
-    <div id="modal" class="modal hidden">
+      <!-- Modal -->
+      <div id="modal" class="modal">
         <div class="modal-content">
             
-            <button id="closeModal" class="close-btn">✖</button>
+            <button id="closeModal" class="close-btn" onclick="window.location.href='/nuclea/holiday'">✖</button>
 
-            <h2 class="title-modal">Add Holiday</h2>
-            <p class="description">Fill in the required details to register a Holiday</p>
+            <h2 class="title-modal">Update Holiday</h2>
+            <p class="description">Fill in the required details to update a Holiday</p>
 
-            <form id="holidayForm" method="POST" action="/nuclea/holiday">
+            <form id="holidayForm" method="POST" action="/nuclea/holiday/update/{{diai.idDiaFeriado}}">
             <input type="hidden" name="_csrf" value="{{csrfToken}}">
                 <div class="form-group">
                     <label for="deptName">Holiday Name</label>
-                    <input type="text" id="holiName" name="nombreHoliday" placeholder="Christmas" class="text-modal" required>
+                    <input type="text" id="holiName" name="Nombre_holiday" placeholder="Christmas" class="text-modal" 
+                    value="{{diai.Nombre_asueto}}"required>
                 </div>
 
                 <div class="form-row">
@@ -119,20 +116,17 @@
                         oninvalid="this.setCustomValidity('Please select a date')" 
                         onchange="this.setCustomValidity('')"
                         style="width: auto;"
+                        value="{{formatDate2 diai.Fecha_asueto}}"
                         />
                     </div>
                 </div>
 
-                <input type="submit" class="btn-submit" value="Add Holiday">
+                <input type="submit" class="btn-submit" value="Update Holiday">
             </form>
         </div>
     </div>
 
 
-    </div>
-
-
-    <script src="/js/holidays.js"></script>
-    <script src="/js/delete.js"></script>
-</body>
-</html>
+    <script src="/js/editholiday.js"></script>
+  </body>
+  </html>

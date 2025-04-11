@@ -42,7 +42,7 @@ module.exports = class Falta {
             WHERE idFalta = ?;
         `,[idFalta]);
     }
-    static deleteA(idFalta){
+    static delete(idFalta){
         return db.execute(`
             DELETE FROM Faltas_administrativas WHERE idFalta = ?;
         `,[idFalta])

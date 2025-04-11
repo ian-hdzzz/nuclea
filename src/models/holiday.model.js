@@ -19,7 +19,7 @@ module.exports = class Holiday {
         
     }
 
-     static deleteA(idDiaFeriado){
+     static delete(idDiaFeriado){
                 return db.execute(`
                     DELETE FROM DiasFeriados WHERE idDiaFeriado = ?;
                 `,[idDiaFeriado])
@@ -31,6 +31,19 @@ module.exports = class Holiday {
         return db.execute('SELECT * FROM DiasFeriados');
     }
 
+    static fetchOne(id) {
+        return db.execute('SELECT * FROM DiasFeriados WHERE idDiaFeriado=?', [id]);
+    }
+
+    static Update(idDF, name, date) {
+        return db.execute(
+            `UPDATE DiasFeriados 
+             SET Nombre_asueto = ?, Fecha_asueto = ?
+             WHERE idDiaferiado = ?`,
+            [name, date, idDF]
+        );
+    }
+    
     static search(name) {
         if (name) {
             // Búsqueda con filtro

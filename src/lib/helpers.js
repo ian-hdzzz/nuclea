@@ -1,6 +1,8 @@
 module.exports = {
   formatDate: function (date) {
-    if (!date) return '';
+    if (!date) {
+      return '';
+    }
     const d = new Date(date);
     const day = String(d.getDate()).padStart(2, '0');
     const month = String(d.getMonth() + 1).padStart(2, '0');
@@ -9,7 +11,9 @@ module.exports = {
   },
 
   formatDate2: function (date) {
-    if (!date) return '';
+    if (!date){ 
+      return '';
+    }
     const d = new Date(date);
     const year = d.getFullYear();
     const month = String(d.getMonth() + 1).padStart(2, '0');
@@ -30,7 +34,9 @@ module.exports = {
   },
 
   hasPrivilege: function (privilegios, nombre, options) {
-    if (!Array.isArray(privilegios)) return options.inverse(this);
+    if (!Array.isArray(privilegios)) {
+      return options.inverse(this);
+    }
     const tiene = privilegios.some(p => p.Nombre_privilegio === nombre);
     return tiene ? options.fn(this) : options.inverse(this);
   },

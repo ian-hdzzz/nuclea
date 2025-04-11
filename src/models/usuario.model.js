@@ -264,7 +264,7 @@
       `, [idUsuario]);
     }
     
-    static getcollabsdept(iduser) {
+    static getCollabsDept(iduser) {
       return db.execute(`
         SELECT u.*
         FROM Usuarios u 
@@ -361,5 +361,33 @@
         connection.release();
       }
     }
-  };
 
+    static searchByName(name) {
+      return db.execute(`
+          SELECT 
+              u.idUsuario,
+              u.Nombre,
+              u.Apellidos,
+              u.Correo_electronico,
+              u.Estatus,
+              u.Fecha_inicio_colab,
+              u.Modalidad,
+              u.Ciudad,
+              GROUP_CONCAT(d.Nombre_departamento SEPARATOR ', ') AS Departamentos
+          FROM Usuarios u
+          LEFT JOIN Pertenece p ON u.idUsuario = p.idUsuario
+          LEFT JOIN Departamentos d ON p.idDepartamento = d.idDepartamento
+          WHERE u.Nombre LIKE ?
+          GROUP BY u.idUsuario
+          ORDER BY u.Nombre ASC
+      `, [`%${name}%`]);
+    }
+    
+  
+
+
+  
+};
+
+
+  

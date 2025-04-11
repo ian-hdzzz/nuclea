@@ -1,0 +1,40 @@
+@startuml
+ actor navegador
+ entity delete
+ boundary confirmDeleteHol
+ boundary holiday.routes.js
+ control holiday.controller.js
+ entity holiday.model
+ database sql
+ activate navegador
+ navegador->delete
+ deactivate navegador
+ activate delete
+ delete->confirmDeleteHol
+ deactivate delete
+ activate confirmDeleteHol
+ confirmDeleteHol->>holiday.routes.js:DELETE(/nuclea/holiday/delete/idDiaFeriado)
+ activate holiday.routes.js
+ holiday.routes.js->holiday.controller.js:Delete(req,res)
+ deactivate holiday.routes.js
+ activate holiday.controller.js
+ holiday.controller.js->>holiday.model:Delete(req.params.idDiaFeriado)
+ activate holiday.model
+ holiday.model->>sql:execute('DELETE FROM DiasFeriados WHERE idDiaFeriado=?',[id])
+ activate sql
+ sql-->>holiday.model:Query OK
+ deactivate sql
+ holiday.model-->>holiday.controller.js:Promesa
+ deactivate holiday.model
+ 
+ holiday.controller.js-->>confirmDeleteHol:return res.JSON
+ deactivate holiday.controller.js
+ confirmDeleteHol->>confirmDeleteHol:Data res.JSON()
+ 
+ confirmDeleteHol->navegador:HTML
+ deactivate confirmDeleteHol
+ activate navegador
+ deactivate navegador
+ 
+ 
+ @enduml

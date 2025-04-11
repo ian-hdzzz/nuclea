@@ -1,21 +1,26 @@
 
 function formatDate(date) {
-  if (!date) return '';
-  const d = new Date(date);
-  const day = String(d.getDate()).padStart(2, '0');
-  const month = String(d.getMonth() + 1).padStart(2, '0');
-  const year = d.getFullYear();
-  return `${day}/${month}/${year}`;
+    if (!date) {
+        return '';
+    }
+    const d = new Date(date);
+    const day = String(d.getDate()).padStart(2, '0');
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const year = d.getFullYear();
+    return `${day}/${month}/${year}`;
 }
   
 // Formatea la fecha al formato yyyy-mm-dd
 function formatDate2(date) {
-  if (!date) return '';
-  const d = new Date(date);
-  const year = d.getFullYear();
-  const month = String(d.getMonth() + 1).padStart(2, '0');
-  const day = String(d.getDate()).padStart(2, '0');
-  return `${year}-${month}-${day}`;
+    if (!date) {
+        return '';
+    }
+
+    const d = new Date(date);
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
 }
 
 function confirmDeleteReq(idSolicitud) {
@@ -38,7 +43,7 @@ function confirmDeleteReq(idSolicitud) {
         })
         .then(data => {
             console.log(data);
-            let html_container=`
+            let htmlContainer=`
             <table>
             <thead>
                 <tr>
@@ -56,7 +61,7 @@ function confirmDeleteReq(idSolicitud) {
             `;
             if(data.datos.length >0){
                 data.datos.forEach(dato => {
-                    html_container+=`
+                    htmlContainer+=`
                     <tr
                         data-id="${dato.idSolicitud}" 
                         data-tipo="${dato.Tipo}" 
@@ -71,53 +76,53 @@ function confirmDeleteReq(idSolicitud) {
                     <td class="descripcion-columna">${dato.Descripcion}</td>
                         <td>`;
                     if(dato.Tipo == 'Vacations'){
-                        html_container+=`<span class=" vacation-status `;
+                        htmlContainer+=`<span class=" vacation-status `;
                         if(dato.Aprobacion_L=='Aprobado'){
-                            html_container+=`active"`;
+                            htmlContainer+=`active"`;
                         }else if(dato.Aprobacion_L=='Rechazado'){
-                            html_container+=`inactive"`;
+                            htmlContainer+=`inactive"`;
                         }else{
-                            html_container+=`pending"`;
+                            htmlContainer+=`pending"`;
                         }
-                        html_container+=`<div class="dot"></div>`;
+                        htmlContainer+=`<div class="dot"></div>`;
                         if(dato.Aprobacion_L=='Aprobado'){
-                            html_container+=`Approved`;
+                            htmlContainer+=`Approved`;
                         }else if(dato.Aprobacion_L=='Rechazado'){
-                            html_container+=`Rejected`;
+                            htmlContainer+=`Rejected`;
                         }else{
-                            html_container+=`Pending`;
+                            htmlContainer+=`Pending`;
                         }
-                        html_container+=`</span>`;
+                        htmlContainer+=`</span>`;
                     }else{
-                        html_container+=`<span class="vacation-status">N/A</span>`;
+                        htmlContainer+=`<span class="vacation-status">N/A</span>`;
                     }
                    
                     
                     
-                    html_container+=` 
+                    htmlContainer+=` 
                         </td>
                         <td>` ;
                     if(dato.Tipo=='Vacations'){
-                        html_container+=`<span class=" vacation-status ` ;
+                        htmlContainer+=`<span class=" vacation-status ` ;
                         if(dato.Aprobacion_A=='Aprobado'){
-                            html_container+=`active"`;
+                            htmlContainer+=`active"`;
                         }else if(dato.Aprobacion_A=='Rechazado'){
-                            html_container+=`inactive"`;
+                            htmlContainer+=`inactive"`;
                         }else{
-                            html_container+=`pending"`;
+                            htmlContainer+=`pending"`;
                         }
-                        html_container+=`<div class="dot"></div>`;
+                        htmlContainer+=`<div class="dot"></div>`;
                         if(dato.Aprobacion_A=='Aprobado'){
-                            html_container+=`Approved`;
+                            htmlContainer+=`Approved`;
                         }else if(dato.Aprobacion_A=='Rechazado'){
-                            html_container+=`Rejected`;
+                            htmlContainer+=`Rejected`;
                         }else{
-                            html_container+=`Pending`;
+                            htmlContainer+=`Pending`;
                         }
-                        html_container+=` </span>`; 
+                        htmlContainer+=` </span>`; 
                     
                     }else{
-                        html_container+=`<span class="vacation-status">N/A</span>`;
+                        htmlContainer+=`<span class="vacation-status">N/A</span>`;
                     }
                        
 
@@ -125,22 +130,24 @@ function confirmDeleteReq(idSolicitud) {
                     
                     
 
-                    html_container+=` 
+                    htmlContainer+=` 
                         </td>
                         <td> 
                         <div class="dropdown"> 
                         <button class="action-btn">Actions</button>
                         <div class="dropdown-content">`; 
-                    /* //{{#if ../puedeAceptar}}
-                    html_container+=`<button class="approve-btn" onclick="approveRequest('${dato.idSolicitud}')">
+                    /** 
+                    //{{#if ../puedeAceptar}}
+                    htmlContainer+=`<button class="approve-btn" onclick="approveRequest('${dato.idSolicitud}')">
                         <i class="fa-solid fa-check"></i> Approve
                         </button>
                         <button class="reject-btn" onclick="rejectRequest('${dato.idSolicitud}')">
                         <i class="fa-solid fa-xmark"></i> Reject
                         </button>`;
                     
-                    //{{else}} */
-                   html_container+=`
+                    //{{else}} 
+                    */
+                   htmlContainer+=`
                         <button class="edit-btn" onclick="editRequest('${dato.idSolicitud}')">
                           <i class="fa-solid fa-pen-to-square"></i> Edit
                         </button>
@@ -150,21 +157,21 @@ function confirmDeleteReq(idSolicitud) {
                     //Fin del else 
             
                 })
-                html_container+=`</div>
+                htmlContainer+=`</div>
                         </div>
                         </td>
                     </tr>`;
 
             } else {
-                html_container+=`<tr>
+                htmlContainer+=`<tr>
                 <td colspan="7" class="empty-message">No requests available</td>
               </tr>`;
             }
-            html_container+=`</tbody>
+            htmlContainer+=`</tbody>
                     </table>
                 </div>`;
             let tabla =document.getElementById('table-container');
-            tabla.innerHTML=html_container;
+            tabla.innerHTML=htmlContainer;
             //---------------------------------Para que funcione el drop---------------------
 
 
@@ -194,7 +201,198 @@ function confirmDeleteReq(idSolicitud) {
                   });
                 });
               
-              //-------------------------------Fin-------------------------------
+              // -------------------------------Fin-------------------------------
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            alert("An error occurred.");
+        });
+    }
+}
+
+
+function confirmDeleteHol(idDiaFeriado) {
+    console.log("------------Esta es el id solicitud----------");
+    console.log(idDiaFeriado);
+    const confirmed = confirm("Are you sure you want to delete this request?");
+    if (confirmed) {
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        
+        fetch(`/nuclea/holiday/delete/${idDiaFeriado}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-Token': csrfToken
+            },
+            credentials: 'include'
+        })
+        .then(result => {
+            return result.json();
+        })
+        .then(data => {
+            console.log(data);
+            let htmlContainer=``;
+            data.datosh.forEach(dato => {
+                htmlContainer+=`
+                <tr>
+                    <td>${dato.Nombre_asueto}</td>
+                    <td>${formatDate(dato.Fecha_asueto)}</td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="action-btn">Actions</button>
+                            <div class="dropdown-content">
+                                <button class="edit-btn"  onclick="location.href='/nuclea/holiday/update/${dato.idDiaFeriado}'">
+                                  <i class="fa-solid fa-pen-to-square"></i> Edit
+                                </button>
+                                <button class="delete-btn" onclick="confirmDeleteHol('${dato.idDiaFeriado}')">
+                                  <i class="fa-solid fa-trash"></i> Delete
+                                </button>
+
+                             </div>
+                        </div>
+                    </td>
+                </tr>`;
+                
+
+
+
+            })
+            htmlContainer+=``;
+
+            let tabla =document.getElementById('despliegue');
+            tabla.innerHTML=htmlContainer;
+            // ========== DROPDOWN ========== //
+            const actionButtons = document.querySelectorAll(".action-btn");
+              
+            actionButtons.forEach((btn) => {
+              btn.addEventListener("click", (e) => {
+                e.stopPropagation();
+                document.querySelectorAll(".dropdown-content").forEach((content) => {
+                  if (content !== btn.nextElementSibling) {
+                    content.classList.remove("show");
+                  }
+                });
+          
+                const dropdown = btn.nextElementSibling;
+                if (dropdown) {
+                  dropdown.classList.toggle("show");
+                }
+              });
+            });
+          
+            window.addEventListener("click", () => {
+              document.querySelectorAll(".dropdown-content").forEach((content) => {
+                content.classList.remove("show");
+              });
+            });
+          
+          // -------------------------------Fin-------------------------------
+
+           
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            alert("An error occurred.");
+        });
+    }
+}
+
+
+function confirmDeleteFal(idFalta) {
+    console.log("------------Esta es el id solicitud----------");
+    console.log(idFalta);
+    const confirmed = confirm("Are you sure you want to delete this request?");
+    if (confirmed) {
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        
+        fetch(`/nuclea/faltasAdministrativas/delete/${idFalta}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-Token': csrfToken
+            },
+            credentials: 'include'
+        })
+        .then(result => {
+            return result.json();
+        })
+        .then(data => {
+            console.log(data);
+           let htmlContainer=``;
+            data.faltas.forEach(dato => {
+                htmlContainer+=`
+                <tr>
+                <td>${dato.Nombre} ${dato.Apellidos}</td>
+                <td>${dato.Motivo}</td>
+                <td>${formatDate(dato.Fecha_asignacion_falta)}</td>
+                <td>
+                `;
+                if(dato.archivo){
+                    htmlContainer+=`
+                    <a href="/Uploads/{{archivo}}" target="_blank" class="pdf-link">
+                        <i class="fa-solid fa-file-pdf"></i> Open PDF
+                    </a>
+                    `;
+                }else{
+                    htmlContainer+=`Sin archivo`;
+                }
+                htmlContainer+=`</td>`;
+                data.privilegios.forEach(privilegio => {
+                    if(privilegio.Nombre_privilegio=="addAO"){
+                        htmlContainer+=`
+                        <td>
+                        <div class="dropdown">
+                        <button class="action-btn">Actions</button>
+                        <div class="dropdown-content">
+                            <button class="edit-btn"  onclick="location.href='/nuclea/faltasAdministrativas/update/${dato.idFalta}'">
+                            <i class="fa-solid fa-pen-to-square"></i> Edit
+                            </button>
+                            <button class="delete-btn" onclick="confirmDeleteFal('${dato.idFalta}')">
+                            <i class="fa-solid fa-trash"></i> Delete
+                            </button>
+
+                        </div>
+                        </div>
+                    </td>
+                        
+                        `;
+                    }
+
+                })
+                htmlContainer+=`</tr>`;
+
+            })
+
+            let tabla =document.getElementById('despliegue');
+            tabla.innerHTML=htmlContainer;
+            // ========== DROPDOWN ========== //
+            const actionButtons = document.querySelectorAll(".action-btn");
+              
+            actionButtons.forEach((btn) => {
+              btn.addEventListener("click", (e) => {
+                e.stopPropagation();
+                document.querySelectorAll(".dropdown-content").forEach((content) => {
+                  if (content !== btn.nextElementSibling) {
+                    content.classList.remove("show");
+                  }
+                });
+          
+                const dropdown = btn.nextElementSibling;
+                if (dropdown) {
+                  dropdown.classList.toggle("show");
+                }
+              });
+            });
+          
+            window.addEventListener("click", () => {
+              document.querySelectorAll(".dropdown-content").forEach((content) => {
+                content.classList.remove("show");
+              });
+            });
+          
+          // -------------------------------Fin-------------------------------
+
+           
         })
         .catch(error => {
             console.error("Error:", error);

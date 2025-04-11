@@ -51,16 +51,16 @@ exports.getDepartaments = (req, res) => {
         
     
 
-exports.post_agregar_dep = (req, res, next) => {
+exports.postAgregarDep = (req, res, next) => {
     console.log(req.body);
 
     const empresaId = req.body.company ?? null;
     
     // Crear el nuevo departamento
     const falta = new Departament(
-        req.body.Nombre_departamento,
-        req.body.Descripcion,
-        req.body.Estado
+        req.body.nombreDepartamento,
+        req.body.descripcion,
+        req.body.estado
     );
 
     falta.save()
@@ -86,7 +86,7 @@ exports.post_agregar_dep = (req, res, next) => {
         });
 };
 
-exports.get_delete = (req, res, next) => {
+exports.getDelete = (req, res, next) => {
   console.log(req.body)
   Departament.deleteA(req.params.idDepartamento).then(()=>{
       res.redirect('/nuclea/departament')
@@ -95,7 +95,7 @@ exports.get_delete = (req, res, next) => {
   })
 };
 
-exports.get_update = (req, res, next) => {
+exports.getUpdate = (req, res, next) => {
   Empresa.fetchAll().then(([emp]) => {
     Departament.fetchAll().then(([rows])=>{
       Departament.fetchAllDepa().then(([rowsDepa])=>{
@@ -123,9 +123,9 @@ exports.get_update = (req, res, next) => {
 };
 
 
-exports.post_update = (req, res, next) => {
+exports.postUpdate = (req, res, next) => {
   const idDepartamento = req.params.idDepartamento;
-  const nombre = req.body.Nombre_departamento || null;
+  const nombre = req.body.nombreDepartamento || null;
   const descripcion = req.body.Descripcion || null;
   const estado = req.body.Estado || null;
   const idEmpresa = req.body.company || null; // Obtener el id de la empresa desde el formulario

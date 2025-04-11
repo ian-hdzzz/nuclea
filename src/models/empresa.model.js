@@ -33,6 +33,18 @@ module.exports = class Empresa {
     return db.execute('SELECT * FROM Empresa');
   }
 
+  static fetchOne(id) {
+    return db.execute('SELECT * FROM Empresa WHERE idEmpresa=?', [id]);
+  }
+
+  static Update(idC, name, stat) {
+    return db.execute(
+        `UPDATE Empresa 
+         SET Nombre_empresa = ?, Estado = ?
+         WHERE idEmpresa = ?`,
+        [name, stat, idC]
+    );
+  }
 
    static deleteA(idEmpresa){
               return db.execute(`
