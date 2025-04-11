@@ -119,55 +119,44 @@ searchInput.addEventListener('keyup', handleSearch);
 // Función para actualizar los resultados en la tabla
 function updateResults(data) {
     const tbody = document.querySelector('table tbody');
-    tbody.innerHTML = ''; // Limpiar resultados anteriores
+    tbody.innerHTML = '';
+  
+    data.forEach(item => {
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td>${item.idDepartamento}</td>
+        <td>${item.Nombre_departamento}</td>
+        <td>${item.Nombre_empresa || 'Empresa no encontrada'}</td>
+        <td>${item.Descripcion}</td>
+        <td class="state">
+          <span class="${item.Estado ? 'active' : 'inactive'}">
+            <div class="dot"></div>
+            ${item.Estado ? 'Activo' : 'Inactivo'}
+          </span>
+        </td>
+        <td>
+          <div class="dropdown">
+            <button class="action-btn">Acciones</button>
+            <div class="dropdown-content">
+              <button class="edit-btn" 
+                onclick="location.href='/nuclea/departament/update/${item.idDepartamento}'">
+                <i class="fa-solid fa-pen-to-square"></i> Editar
+              </button>
+              <button class="delete-btn" 
+                onclick="confirmDeleteDepartamento('${item.idDepartamento}')">
+                <i class="fa-solid fa-trash"></i> Eliminar
+              </button>
+            </div>
+          </div>
+        </td>
+      `;
+  
 
-    if (data.length > 0) {
-        data.forEach(item => {
-            const row = document.createElement('tr');
-            
-            // Plantilla para cada fila
-            row.innerHTML = `
-                <td>${item.idDepartamento}</td>
-                <td>${item.Nombre_departamento}</td>
-                <td>${item.Nombre_empresa || 'Empresa no encontrada'}</td>
-                <td>${item.Descripcion}</td>
-                <td class="state">
-                    <span class="${item.Estado ? 'active' : 'inactive'}">
-                        <div class="dot"></div>
-                        ${item.Estado ? 'Activo' : 'Inactivo'}
-                    </span>
-                </td>
-                <td>
-                    <div class="dropdown">
-                        <button class="action-btn">Acciones</button>
-                        <div class="dropdown-content">
-                            <button class="edit-btn" 
-                                onclick="location.href='/nuclea/departament/update/${item.idDepartamento}'">
-                                <i class="fa-solid fa-pen-to-square"></i> Editar
-                            </button>
-                            <button class="delete-btn" 
-                                onclick="location.href='/nuclea/departament/delete/${item.idDepartamento}'">
-                                <i class="fa-solid fa-trash"></i> Eliminar
-                            </button>
-                        </div>
-                    </div>
-                </td>
-            `;
+      setupDropdown(row); 
+      tbody.appendChild(row);
+    });
+  }
 
-            // Manejar dropdowns dinámicos
-            setupDropdown(row);
-            tbody.appendChild(row);
-        });
-    } else {
-        tbody.innerHTML = `
-            <tr>
-                <td colspan="6" class="no-results">No se encontraron resultados</td>
-            </tr>
-        `;
-    }
-}
-
-// Configurar dropdowns
 function setupDropdown(row) {
     const actionBtn = row.querySelector('.action-btn');
     const dropdownContent = row.querySelector('.dropdown-content');
@@ -181,7 +170,7 @@ function setupDropdown(row) {
     });
 }
 
-// Cerrar dropdowns al hacer click fuera
+
 document.addEventListener('click', (e) => {
     if (!e.target.closest('.action-btn')) {
         document.querySelectorAll('.dropdown-content').forEach(d => {
@@ -199,3 +188,50 @@ function showError(message) {
     document.body.appendChild(errorDiv);
     setTimeout(() => errorDiv.remove(), 3000);
 }
+
+function confirmDeleteDepartamento(idDepartamento) {
+    const confirmed = confirm("¿Seguro que deseas eliminar?");
+    if (confirmed) {
+      const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+      
+      fetch(`/nuclea/departament/delete/${idDepartamento}`, {
+        method: 'DELETE', 
+        headers: {
+          'X-CSRF-Token': csrfToken,
+          'Content-Type': 'application/json'
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          updateResults(data.datos); 
+        } else {
+          alert("Error al eliminar");
+        }
+      })
+      .catch(err => console.error('Error:', err));
+    }
+  }
+
+
+document.addEventListener('click', (e) => {
+    if (!e.target.closest('.action-btn')) {
+      document.querySelectorAll('.dropdown-content').forEach(d => {
+        d.classList.remove('show');
+      });
+    }
+  });
+  
+
+  function setupDropdown(row) {
+    const actionBtn = row.querySelector('.action-btn');
+    const dropdownContent = row.querySelector('.dropdown-content');
+  
+    actionBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      document.querySelectorAll('.dropdown-content').forEach(d => {
+        if (d !== dropdownContent) d.classList.remove('show');
+      });
+      dropdownContent.classList.toggle('show');
+    });
+  }

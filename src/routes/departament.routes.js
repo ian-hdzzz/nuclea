@@ -7,7 +7,8 @@ const express = require('express');
  // Definir rutas
  router.get('/',isAuth,departamentController.getDepartaments);
  router.post('/',isAuth,departamentController.postAgregarDep)
- router.get('/delete/:idDepartamento',departamentController.getDelete);
+ // Cambiar de GET a DELETE
+router.delete('/delete/:idDepartamento', departamentController.getDelete);
  router.get('/update/:idDepartamento',departamentController.getUpdate)
 router.post('/update/:idDepartamento',departamentController.postUpdate)
 router.get('/search', departamentController.searchDepartments)
