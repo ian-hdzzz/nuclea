@@ -10,7 +10,7 @@ router.post('/', isAuth, faltasController.postAgregarFa);
 router.delete('/delete/:idFalta', faltasController.getDelete);
 router.get('/update/:idFalta',faltasController.getUpdate)
 router.post('/update/:idFalta',faltasController.postUpdate)
-router.get('/search', faltasController.searchDepartments)
+router.get('/search', faltasController.searchAO)
 
 
 module.exports = router;
