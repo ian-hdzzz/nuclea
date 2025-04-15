@@ -5,11 +5,19 @@ const Usuario = require('../models/usuario.model');
 const crypto = require('crypto');
 const Dept = require('../models/departament.model');
 const Empresa = require('../models/empresa.model');
+const nodemailer = require('nodemailer');
 
 function generateRandomPassword(length = 10) {
     return crypto.randomBytes(length).toString('hex').slice(0, length);
 }
 
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASSWORD
+    }
+});
 
 exports.getUsers = async (req, res, next) => {
     try {
@@ -43,7 +51,8 @@ exports.getUsers = async (req, res, next) => {
             info: mensaje,
             error: mensajeError,
             title: 'Users',
-        });
+        }
+    );
     } catch (err) {
         console.error('Error en get_users:', err);
         res.status(500).send('Internal Server Error');
@@ -55,7 +64,8 @@ exports.postUsers = (request, response, next) => {
     console.log("Datos recibidos en POST /users:", request.body);
 
     const action = request.body.action;
-
+    const userEmail = request.body.emailUs; // Usamos email_us
+    const userPassword = request.body.password; // Usamos password
     if (!request.body.password) {
         console.error("Error: La contraseña es undefined.");
         return response.status(400).send("Error: Falta la contraseña.");
@@ -127,7 +137,27 @@ exports.postUsers = (request, response, next) => {
             return asignacion.assignment();
         })
         .then(() => {
-            request.session.info = `User registered correcly`;
+            console.log("Enviando correo a:", userEmail); // Agregamos un log para depuración
+            const mailOptions = {
+                from: '"Nuclea App" <flowitdb@gmail.com>',
+                to: userEmail,
+                subject: 'Login Credentials',
+                html: `
+                    <h2>!Registration Succesful!</h2>
+                    <p>Here are your login credentials:</p>
+                    <ul>
+                        <li><strong>Email:</strong> ${userEmail}</li>
+                        <li><strong>Password:</strong> ${userPassword}</li>
+                    </ul>
+                    <p>Please store this information securely and do not share it with anyone.</p>
+                `
+            };
+
+            return transporter.sendMail(mailOptions);
+        })
+
+        .then(()=>{
+            request.session.info = `User registered correctly`;
             response.redirect('/nuclea/users');
         })
         .catch((error) => {
