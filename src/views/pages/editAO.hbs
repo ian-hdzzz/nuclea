@@ -1,0 +1,164 @@
+  <!DOCTYPE html>
+  <html lang="es">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Department Management</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="/css/AO.css">
+  </head>
+  <body>
+    <div class="content">
+    <div class="nav-content">
+      <h2>Administrative offenses</h2>
+      {{#each privilegios}}
+        {{#if (eq this.Nombre_privilegio "addAO")}}
+          <div class="add-btn-container" id="openModal">
+                <i class="fa-regular fa-square-plus"></i>
+                <input type="button" value="Add Administrative offense" id="openModal" class="add-btn">
+                <!-- Botón de enviar <input type="button" value="Assign user to Dep" id="openModal2" class="add-btn"> -->
+          </div>
+        {{/if}}
+      {{/each}}
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Assigned to</th>
+          <th>Reason</th>
+          <th>Date</th>
+          <th>File</th>
+          {{#each privilegios}}
+            {{#if (eq this.Nombre_privilegio "addAO")}}
+              <th>Actions</th>
+            {{/if}}
+          {{/each}}
+
+        </tr>
+      </thead>
+      <tbody id="despliegue">
+        {{#each faltas}}
+        <tr>
+          <td>{{Nombre}} {{Apellidos}}</td>
+          <td>{{Motivo}}</td>
+          <td>{{formatDate Fecha_asignacion_falta}}</td>
+          <td>
+            {{#if archivo}}
+              <a href="/Uploads/{{archivo}}" target="_blank" class="pdf-link">
+                <i class="fa-solid fa-file-pdf"></i> Open PDF
+              </a>
+            {{else}}
+              Sin archivo
+            {{/if}}
+          </td>
+          {{#each ../privilegios}}
+            {{#if (eq this.Nombre_privilegio "addAO")}}
+              <td>
+                <div class="dropdown">
+                  <button class="action-btn">Actions</button>
+                  <div class="dropdown-content">
+                    <button class="edit-btn"  onclick="location.href='/nuclea/faltasAdministrativas/update/{{../idFalta}}'">
+                      <i class="fa-solid fa-pen-to-square"></i> Edit
+                    </button>
+                    <button class="delete-btn" onclick="confirmDeleteFal('{{../idFalta}}')">
+                      <i class="fa-solid fa-trash"></i> Delete
+                    </button>
+
+                  </div>
+                </div>
+              </td>
+            {{/if}}
+          {{/each}}
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+    {{#if noFaltas}}
+      <p style="text-align: center; margin-top: 20px;">No administrative offenses existing</p>
+    {{/if}}
+  </div>
+
+      <!-- Modal -->
+      <div id="modal" class="modal">
+    <div class="modal-content">
+      <button id="closeModal" class="close-btn" onclick="window.location.href='/nuclea/faltasAdministrativas'">✖</button>
+      <h2 class="title-modal">Add Administrative Offense</h2>
+      <p class="description">Fill in the required details to <br>assign an Administrative Offense</p>
+      <br>
+      <form action="/nuclea/faltasAdministrativas/update/{{falta.idFalta}}" id="form-falta" method="POST" enctype="multipart/form-data">
+       <input type="hidden" name="modal" value="modal1">
+        <input type="hidden" name="_csrf" value="{{csrfToken}}">
+        <input type="hidden" name="idFalta" value="{{falta.idFalta}}">
+
+        <div class="form-group">
+          <label for="usuario" class="label">Find collaborator:</label>
+          <select class="text-modal" id="idUsu" name="idUsu" required
+                  oninvalid="this.setCustomValidity('Please select a collaborator')" 
+                  onchange="this.setCustomValidity('')">
+            <option value="">- Select User -</option>
+            {{#each usuariosfa}}
+                    <option value="{{idUsuario}}" {{#if (eq idUsuario ../falta.idUsuario)}}selected{{/if}}>
+                        {{Nombre}} {{Apellidos}}
+                    </option>
+                {{/each}}
+          </select>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group form-date date-modal">
+            <label for="fecha" class="label">Date</label>
+            <input
+              class="text-modal"
+              type="date"
+              placeholder="dd/mm/yy"
+              id="fecha"
+              name="fecha"
+              required
+              oninvalid="this.setCustomValidity('Please select a date')" 
+              onchange="this.setCustomValidity('')"
+              style="width: auto;"
+              value="{{formatDate2 falta.Fecha_asignacion_falta}}"
+            />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="motivo" class="label">Reason</label>
+          <input
+            class="text-modal"
+            type="text"
+            placeholder=""
+            id="motivo"
+            name="motivo"
+            required
+            oninvalid="this.setCustomValidity('Please remember to write a reason')"
+            oninput="this.setCustomValidity('')"
+            value="{{falta.Motivo}}"
+          />
+        </div>
+
+        <div class="form-group">
+            <label for="archivo"></label>
+            {{#if falta.archivo}}
+                <p><a href="/uploads/{{falta.archivo}}" target="_blank"><i class="fa-solid fa-file-pdf"></i><u>Current file uploaded to this register</u></a></p>
+            {{else}}
+                <p>No file uploaded</p>
+            {{/if}}
+            <input 
+            type="file" 
+            id="archivo" 
+            name="archivo" 
+            accept=".pdf"
+            class="text-modal">    
+        </div>
+        
+        <input type="hidden" name="archivoActual" value="{{falta.archivo}}">
+        <input type="submit" class="btn-submit" value="Update Administrative Offense" style="padding-right: 20px;">
+      </form>
+    </div>
+  </div>
+
+
+    <script src="/js/AO2.js"></script>
+  </body>
+  </html>

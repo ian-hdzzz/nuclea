@@ -203,7 +203,7 @@ exports.getUpdate = (req, res, next) => {
                         .then(([rows]) => {
                             const noFaltas = faltas.length === 0;
 
-                            res.render('../views/pages/editarFalta.hbs', {
+                            res.render('../views/pages/editAO.hbs', {
                                 usuariosfa: rows,
                                 csrfToken: req.csrfToken(),
                                 faltass: faltas,
