@@ -84,7 +84,6 @@ exports.renderEmployeeDetails = async (req, res) => {
     try {
       const employeeId = req.query.employee;  // Obtener el ID del empleado de la URL
       const employee = await searchModel.getEmployeeById(employeeId);  // Obtener los detalles del empleado
-  
       if (!employee) {
         return res.status(404).send('Employee not found');
       }
