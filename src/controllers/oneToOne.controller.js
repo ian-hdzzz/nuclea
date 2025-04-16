@@ -36,7 +36,6 @@ exports.getInterview = async (req, res) => {
         console.log('ID del entrevistador:', entrevistadorId, 'Nombre:', entrevistadorName); 
 
         const preguntas = await Questions.getQuestions();
-        const employeeInterviewHistory = await Questions.getEmployeeInterviewHistory();
         const employeeId = req.query.employee;
 
         const employee = await SearchModel.getEmployeeById(employeeId);
@@ -57,7 +56,6 @@ exports.getInterview = async (req, res) => {
             title: 'Interview', 
             iconClass:'fa-solid fa-people-arrows',
             preguntas,
-            employeeInterviewHistory,
             entrevistadorId,
             employee,
             csrfToken: req.csrfToken(),
