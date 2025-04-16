@@ -88,7 +88,6 @@ app.use(require('./routes/google.routes'));
 app.use('/nuclea', require('./routes/dashboard.routes'));
 app.use('/nuclea', require('./routes/request.routes'));
 app.use('/nuclea', require('./routes/objectives.routes'));
-app.use('/nuclea', require('./routes/interview.routes'));
 app.use('/nuclea', require('./routes/search.routes'));
 app.use('/nuclea', require('./routes/one.routes'));
 app.use('/nuclea', require('./routes/reports.routes'));
@@ -114,6 +113,6 @@ app.use('/nuclea/company', companyRoutes);
 app.use(express.static(path.join(__dirname, 'public')));
 
 // starting the server 
-app.listen(app.get('port'),'0.0.0.0', () => {
+app.listen(app.get('port'),() => {
     console.log('Server on port', app.get('port'));
 });

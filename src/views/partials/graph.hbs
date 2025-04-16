@@ -18,11 +18,11 @@
     const ctx = document.getElementById('radar-chart').getContext('2d');
     
     // Obtener los valores iniciales
-    const workload = parseInt(document.getElementById('workload').value);
-    const health = parseInt(document.getElementById('health').value);
-    const recognition = parseInt(document.getElementById('recognition').value);
-    const emotionalHealth = parseInt(document.getElementById('emotional-health').value);
-    const workLifeBalance = parseInt(document.getElementById('work-life-balance').value);
+    const workload = parseInt(document.getElementsByName('workload')[0].value);
+    const health = parseInt(document.getElementsByName('health')[0].value);
+    const recognition = parseInt(document.getElementsByName('recognition')[0].value);
+    const emotionalHealth = parseInt(document.getElementsByName('emotional-health')[0].value);
+    const workLifeBalance = parseInt(document.getElementsByName('work-life-balance')[0].value);
     
     // Crear el gráfico
     const radarChart = new Chart(ctx, {
@@ -82,11 +82,11 @@
     const selects = document.querySelectorAll('select');
     selects.forEach(select => {
     select.addEventListener('change', function () {
-      const workload = parseInt(document.getElementById('workload').value);
-      const health = parseInt(document.getElementById('health').value);
-      const recognition = parseInt(document.getElementById('recognition').value);
-      const emotionalHealth = parseInt(document.getElementById('emotional-health').value);
-      const workLifeBalance = parseInt(document.getElementById('work-life-balance').value);
+      const workload = parseInt(document.getElementsByName('workload')[0].value);
+      const health = parseInt(document.getElementsByName('health')[0].value);
+      const recognition = parseInt(document.getElementsByName('recognition')[0].value);
+      const emotionalHealth = parseInt(document.getElementsByName('emotional-health')[0].value);
+      const workLifeBalance = parseInt(document.getElementsByName('work-life-balance')[0].value);
 
       const newData = [workload, health, recognition, emotionalHealth, workLifeBalance];
       const average = newData.reduce((a, b) => a + b, 0) / newData.length;

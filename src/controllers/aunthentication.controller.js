@@ -24,6 +24,7 @@ exports.postAuth = (req, res) => {
     if (rows.length > 0) {
       bcrypt.compare(req.body.password, rows[0].Contrasena).then((doMatch) => {
         if (doMatch) {
+          console.log(req.session.idUsuario)
           req.session.idUsuario = rows[0].idUsuario;
           req.session.nombre = rows[0].Nombre;
           req.session.apellidos = rows[0].Apellidos;

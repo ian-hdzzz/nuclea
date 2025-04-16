@@ -50,7 +50,6 @@ exports.processSearch = async (req, res, next) => {
 };
 
 // Middleware para renderizar el componente de búsqueda
-// Middleware for rendering the search component
 exports.renderSearchComponent = async (req, res) => {
   try {
     // Use existing search data if available, otherwise initialize empty

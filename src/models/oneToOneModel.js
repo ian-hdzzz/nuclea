@@ -12,12 +12,12 @@ class OneToOneModel {
           LEFT JOIN Departamentos d ON p.idDepartamento = d.idDepartamento
           WHERE u.idUsuario = ?
           GROUP BY u.idUsuario;
-        `
+        `,
       [employeeId]
     );
     return rows[0];
   }
- 
+
   static async saveOneToOneInterview(data) {
     const { 
       idUsuario, 
@@ -72,22 +72,110 @@ class OneToOneModel {
     );
     return rows;
   }
-  static async getOpenQuestions(){
+  
+  static async getQuestions(){
     const [openQuestions] = await db.execute(
-      'SELECT * FROM preguntas_abiertas WHERE es_default = 1'
+      'SELECT * FROM preguntas;'
     );
     return openQuestions;
   }
-  static async getOptionQuestions(){
-    const [optionQuestions] = await db.execute(
-      'SELECT * FROM preguntas_cerradas WHERE es_default = 1'
+
+  // Nuevos métodos para manejar entrevistas
+  
+  // Método para crear una nueva entrevista
+  static async saveInterview(data) {
+    const { idUsuario, idUsuarioA } = data;
+
+    
+    const [result] = await db.execute(
+      `INSERT INTO entrevistas (empleadoId, entrevistadorId, fechaEntrevista, completada) 
+       VALUES (?, ?, CURRENT_TIMESTAMP(), 0)`,
+      [idUsuario, idUsuarioA]
     );
-    return optionQuestions;
+    
+    return result.insertId;
   }
-
   
+  // Método para guardar respuestas (tanto abiertas como cerradas)
+  static async saveAnswers(entrevistaId, respuestas) {
+    const promises = [];
+    
+    for (const [preguntaId, respuesta] of Object.entries(respuestas)) {
+      // Determinar si es respuesta textual o numérica
+      if (typeof respuesta === 'string') {
+        promises.push(
+          db.execute(
+            `INSERT INTO respuestas (entrevistaId, preguntaId, textoRespuesta) 
+             VALUES (?, ?, ?)`,
+            [entrevistaId, preguntaId, respuesta]
+          )
+        );
+      } else {
+        promises.push(
+          db.execute(
+            `INSERT INTO respuestas (entrevistaId, preguntaId, valorRespuesta) 
+             VALUES (?, ?, ?)`,
+            [entrevistaId, preguntaId, respuesta]
+          )
+        );
+      }
+    }
+    
+    await Promise.all(promises);
+    return true;
+  }
   
+  // Método para marcar una entrevista como completada
+  static async completeInterview(entrevistaId) {
+    await db.execute(
+      'UPDATE entrevistas SET completada = 1 WHERE entrevistaId = ?',
+      [entrevistaId]
+    );
+    return true;
+  }
+  
+  // Método para obtener una entrevista por su ID
+  static async getInterviewById(entrevistaId) {
+    const [interview] = await db.execute(
+      `SELECT e.*, 
+          u1.Nombre AS empleadoNombre, u1.Apellidos AS empleadoApellidos,
+          u2.Nombre AS entrevistadorNombre, u2.Apellidos AS entrevistadorApellidos
+       FROM entrevistas e
+       JOIN Usuarios u1 ON e.empleadoId = u1.idUsuario
+       JOIN Usuarios u2 ON e.entrevistadorId = u2.idUsuario
+       WHERE e.entrevistaId = ?`,
+      [entrevistaId]
+    );
+    
+    if (interview.length === 0) {
+      return null;
+    }
+    
+    const [answers] = await db.execute(
+      `SELECT r.*, p.pregunta, p.tipoPregunta 
+       FROM respuestas r
+       JOIN preguntas p ON r.preguntaId = p.preguntaId
+       WHERE r.entrevistaId = ?`,
+      [entrevistaId]
+    );
+    
+    return { interview: interview[0], answers };
+  }
+  
+  // Método para obtener el historial de entrevistas de un empleado
+  static async getEmployeeInterviewHistory(employeeId) {
+    const [interviews] = await db.execute(
+      `SELECT e.*, 
+          u.Nombre AS entrevistadorNombre, u.Apellidos AS entrevistadorApellidos
+       FROM entrevistas e
+       JOIN Usuarios u ON e.entrevistadorId = u.idUsuario
+       WHERE e.empleadoId = ? AND e.completada = 1
+       ORDER BY e.fechaEntrevista DESC`,
+      [employeeId]
+    );
+    
+    return interviews;
+  }
 }
-
 
 module.exports = OneToOneModel;

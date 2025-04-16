@@ -5,17 +5,21 @@
 
    <div class="one-container">
     
-    {{> search 
-        title="Search employee" 
-        placeholder="Search..." 
-        searchId="employeeSearch"
-        searchType="users"
-        contacts=employees
-    }}
+
       <div class="empezarInterview">
           <div class="card" href="/nuclea/interview">
-              <h3>Interview</h3>
-              <p>Conduct and manage employee feedback sessions</p>
+              <div class="search-container">
+                <h3>Search employee</h3>
+                {{> search  
+                    title="Search employee" 
+                    placeholder="Employee name..." 
+                    searchId="employeeSearch"
+                    searchType="users"
+                    contacts=employees
+                }}
+                
+              </div>
+
               <div class="buttons">
                 <a href="/nuclea/interview/edit" class="btn ">Edit Questions </a>
                 <a href="/nuclea/interview" class="btn apply " id="applyInterviewBtn">Apply Interview →</a>

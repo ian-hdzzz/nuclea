@@ -3,13 +3,11 @@
 .search {
   grid-area: search;
   background-color: var(--card-bg);
-  border: 1px solid var(--border-color);
+
   border-radius: 12px;
-  padding: 30px;
   text-align: left;
   transition: all 0.3s ease;
   width: 100%;
-  height: 100%;
 }
 
 /* search */
@@ -22,14 +20,16 @@
 }
 
 .search-bar {
-  padding: 15px;
+  padding: 10px 0;
+  margin: 0;
 }
 
 .search-input {
   width: 100%;
-  padding: 10px;
+  padding: 15px 10px;
+  margin: 0;
   background-color: #0C1019;
-  border-radius: 5px;
+  border-radius: 10px;
   font-size: 16px;
   color: #fff;
   outline: none;
@@ -101,13 +101,13 @@
 </style>
 
 <div class="search" id="search-container-{{searchId}}">
-    <h3 class="text-lg font-medium mb-4 text-white">{{title}}</h3>
+    {{!-- <h3 class="text-lg font-medium mb-4 text-white">{{title}}</h3> --}}
+    <p>Search for any employee you would like to evaluate</p>
     <div class="search-bar">
         <input type="text" placeholder="{{placeholder}}" class="search-input" id="{{searchId}}" data-search-type="{{searchType}}">
     </div>
-    
     <div class="search-loader">
-        <span>Buscando...</span>
+        <span>Searching..</span>
     </div>
     
     <div class="search-no-results">
@@ -115,14 +115,14 @@
     </div>
     
     <div class="contact-items">
-        {{#if contacts}}
+        {{!-- {{#if contacts}}
         {{#each contacts}}
             <div class="contact-item {{#if @first}}active{{/if}}" data-id="{{this.id}}">
                 <div class="contact-avatar {{#if @first}}active{{/if}}">{{this.initial}}</div>
                 <div class="contact-name">{{this.name}}</div>
-            </div>
-        {{/each}}
-    {{/if}}
+            </div> --}}
+        {{!-- {{/each}} --}}
+    {{!-- {{/if}} --}}
     </div>
 </div>
 
