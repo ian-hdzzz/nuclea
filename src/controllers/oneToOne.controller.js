@@ -45,12 +45,7 @@ exports.getInterview = async (req, res) => {
 
         // Obtener el tiempo del usuario en la empresa
         const currentDate = new Date();
-<<<<<<< Updated upstream
-
-        const startDate = new Date(employee.fechaInicioColab);
-=======
         const startDate = new Date(employee.Fecha_inicio_colab);
->>>>>>> Stashed changes
 
         const years = differenceInYears(currentDate, startDate);
         const months = differenceInMonths(currentDate, startDate) % 12;
@@ -185,39 +180,4 @@ exports.saveInterview = async (req, res) => {
             message: 'Error al guardar la entrevista'
         });
     }
-<<<<<<< Updated upstream
 };
-
-exports.postInterview = async (req, res) => {
-    try {
-      const userId = req.params.id;
-      const responses = req.body.respuestas || {};
-      
-      const result = await oneToOneModel.saveOpenQuestionResponses(userId, responses);
-      
-      res.json(result);
-    } catch (error) {
-      console.error('Error in postInterview:', error);
-      res.status(500).json({ success: false, error: error.message });
-    }
-  };
-  
-  exports.postClosedQuestions = async (req, res) => {
-    try {
-      const userId = req.params.id;
-      const responses = req.body.closedResponses || {};
-      
-      const result = await oneToOneModel.saveClosedQuestionResponses(userId, responses);
-      
-      res.json(result);
-    } catch (error) {
-      console.error('Error in postClosedQuestions:', error);
-      res.status(500).json({ success: false, error: error.message });
-    }
-  };
-  
-  // Make sure this route is defined in your router
-  // router.post('/interview/:id', interviewController.postInterview);
-=======
-};
->>>>>>> Stashed changes
