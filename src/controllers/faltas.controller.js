@@ -254,6 +254,6 @@ exports.searchAO = (req, res) => {
         })
         .catch(error => {
             console.error('Error en búsqueda:', error);
-            res.status(500).json({ error: 'Error al buscar departamentos' });
+            res.status(500).json({ error: 'Error al buscar faltas administrativas' });
         });
-  };
+};
