@@ -7,6 +7,12 @@ const router = express.Router();
 router.get('/one', OneToOneController.getOneToOne);
 router.get('/interview', OneToOneController.getInterview);
 router.post('/interview',OneToOneController.saveInterview);
-router.get('/interview/edit');
+router.get('/all-interviews', OneToOneController.getAllInterviewHistory);
+router.get('/employee-history/:id', OneToOneController.getEmployeeHistory);
+router.get('/interview/details/:id', OneToOneController.getInterviewDetails);
+router.get('/employee-graph/:id', OneToOneController.getEmployeeGraph);
+router.get('/all-employees-graph', OneToOneController.getAllEmployeesGraph);
 
-module.exports = router;
+// router.get('/interview/edit');
+
+module.exports = router;    

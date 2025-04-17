@@ -1,9 +1,8 @@
 {{!-- views/partials/searchContacts.hbs --}}
 <style>
-.search {
+.search-container {
   grid-area: search;
   background-color: var(--card-bg);
-
   border-radius: 12px;
   text-align: left;
   transition: all 0.3s ease;
@@ -11,11 +10,11 @@
 }
 
 /* search */
-.search h3{
+.search-container h3{
   color: var(--color-fuente);
   font-weight: 600;
   font-size: 1.3rem;
-  margin-left: 10px;
+  margin-left: 0;
   margin-bottom: 10px;
 }
 
@@ -100,7 +99,7 @@
 }
 </style>
 
-<div class="search" id="search-container-{{searchId}}">
+<div class="search-container" id="search-container-{{searchId}}">
     {{!-- <h3 class="text-lg font-medium mb-4 text-white">{{title}}</h3> --}}
     <p>Search for any employee you would like to evaluate</p>
     <div class="search-bar">
@@ -409,7 +408,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Escuchar evento de selección de contacto
     document.addEventListener('contact-selected', function(event) {
-        currentSelectedId = event.detail.id; // Corregido: usar event.detail.id
+        currentSelectedId = event.detail.id;
         console.log("ID de usuario seleccionado:", currentSelectedId);
         if (currentSelectedId) {
             highlightApplyButton();

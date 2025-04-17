@@ -134,48 +134,170 @@ class OneToOneModel {
     return true;
   }
   
-  // Método para obtener una entrevista por su ID
-  static async getInterviewById(entrevistaId) {
-    const [interview] = await db.execute(
-      `SELECT e.*, 
-          u1.Nombre AS empleadoNombre, u1.Apellidos AS empleadoApellidos,
-          u2.Nombre AS entrevistadorNombre, u2.Apellidos AS entrevistadorApellidos
-       FROM entrevistas e
-       JOIN Usuarios u1 ON e.empleadoId = u1.idUsuario
-       JOIN Usuarios u2 ON e.entrevistadorId = u2.idUsuario
-       WHERE e.entrevistaId = ?`,
-      [entrevistaId]
-    );
-    
-    if (interview.length === 0) {
-      return null;
+
+  static async getAllCompletedInterviewHistory() {
+    try {
+      const [interviews] = await db.execute(
+        `SELECT e.*,
+         u.Nombre AS entrevistadorNombre,
+         u.Apellidos AS entrevistadorApellidos,
+         emp.Nombre AS empleadoNombre,
+         emp.Apellidos AS empleadoApellidos
+         FROM entrevistas e
+         JOIN Usuarios u ON e.entrevistadorId = u.idUsuario
+         JOIN Usuarios emp ON e.empleadoId = emp.idUsuario
+         WHERE e.completada = 1
+         ORDER BY e.fechaEntrevista DESC`
+      );
+      return interviews;
+    } catch (error) {
+      console.error('Error fetching completed interviews:', error);
+      throw error;
     }
-    
-    const [answers] = await db.execute(
-      `SELECT r.*, p.pregunta, p.tipoPregunta 
-       FROM respuestas r
-       JOIN preguntas p ON r.preguntaId = p.preguntaId
-       WHERE r.entrevistaId = ?`,
-      [entrevistaId]
-    );
-    
-    return { interview: interview[0], answers };
   }
-  
-  // Método para obtener el historial de entrevistas de un empleado
-  static async getEmployeeInterviewHistory(employeeId) {
-    const [interviews] = await db.execute(
-      `SELECT e.*, 
-          u.Nombre AS entrevistadorNombre, u.Apellidos AS entrevistadorApellidos
-       FROM entrevistas e
-       JOIN Usuarios u ON e.entrevistadorId = u.idUsuario
-       WHERE e.empleadoId = ? AND e.completada = 1
-       ORDER BY e.fechaEntrevista DESC`,
-      [employeeId]
-    );
-    
-    return interviews;
+  static async getSpecificInterviewHistory(employeeId) {
+    try {
+      const [rows] = await db.execute(
+        `SELECT e.*,
+                u.Nombre AS entrevistadorNombre,
+                u.Apellidos AS entrevistadorApellidos
+         FROM entrevistas e
+         JOIN Usuarios u ON e.entrevistadorId = u.idUsuario
+         WHERE e.empleadoId = ?
+           AND e.completada = 1
+         ORDER BY e.fechaEntrevista DESC`,
+        [employeeId]
+      );
+      return rows;
+    } catch (error) {
+      console.error('Error fetching interview history by employee:', error);
+      throw error;
+    }
   }
+
+  static async getInterviewById(interviewId) {
+    try {
+      // Log the interviewId to troubleshoot
+      console.log("Fetching interview with ID:", interviewId);
+      
+      if (!interviewId || interviewId === 'undefined') {
+          throw new Error('Invalid interview ID provided');
+      }
+      
+      // Adjust table names based on your actual schema
+      // Replace 'users' with your actual users table name
+      const query = `
+          SELECT e.*, 
+                 u1.Nombre AS empleadoNombre, 
+                 u1.Apellidos AS empleadoApellidos,
+                 u2.Nombre AS entrevistadorNombre, 
+                 u2.Apellidos AS entrevistadorApellidos
+          FROM entrevistas e
+          INNER JOIN Usuarios u1 ON e.empleadoId = u1.idUsuario
+          INNER JOIN Usuarios u2 ON e.entrevistadorId = u2.idUsuario
+          WHERE e.entrevistaId = ?
+      `;
+      
+      const [rows] = await db.query(query, [interviewId]);
+      return rows.length > 0 ? rows[0] : null;
+  } catch (error) {
+      console.error('Error al obtener entrevista por ID:', error);
+      throw error;
+  }
+};
+
+static async getOpenResponses(interviewId) {
+  try {
+      const query = `
+          SELECT r.respuestaId AS respuestaId, 
+                 r.textoRespuesta, 
+                 p.preguntaId AS preguntaId, 
+                 p.pregunta, 
+                 p.descripcionPregunta
+          FROM respuestas r
+          INNER JOIN preguntas p ON r.preguntaId = p.preguntaId
+          WHERE r.entrevistaId = ? AND p.tipoPregunta = 'abierta'
+          ORDER BY p.preguntaId
+      `;
+      
+      const [rows] = await db.query(query, [interviewId]);
+      return rows;
+  } catch (error) {
+      console.error('Error al obtener respuestas abiertas:', error);
+      throw error;
+  }
+};
+
+static async getClosedResponses(interviewId){
+  try {
+      const query = `
+          SELECT r.respuestaId AS respuestaId, 
+                 r.valorRespuesta, 
+                 p.preguntaId AS preguntaId, 
+                 p.pregunta, 
+                 p.descripcionPregunta
+          FROM respuestas r
+          INNER JOIN preguntas p ON r.preguntaId = p.preguntaId
+          WHERE r.entrevistaId = ? AND p.tipoPregunta = 'cerrada'
+          ORDER BY p.preguntaId
+      `;
+      
+      const [rows] = await db.query(query, [interviewId]);
+      return rows;
+  } catch (error) {
+      console.error('Error al obtener respuestas cerradas:', error);
+      throw error;
+  }
+};
+// En oneToOneModel.js
+static async getAllClosedResponsesAverage(){
+  try {
+      // Esta consulta debe agrupar todas las respuestas por pregunta y calcular el promedio
+      const query = `
+          SELECT 
+              p.preguntaId,
+              p.pregunta,
+              p.orden,
+              AVG(r.valorRespuesta) as valorRespuesta
+          FROM preguntas p
+          JOIN respuestas r ON p.preguntaId = r.preguntaId
+          JOIN entrevistas e ON r.entrevistaId = e.entrevistaId
+          WHERE p.tipoPregunta = 'cerrada' AND e.completada = 1
+          GROUP BY p.preguntaId
+          ORDER BY p.orden ASC
+      `;
+      const [rows, fields] = await db.query(query);
+      console.log('Promedios de respuestas cerradas:', rows);
+      return rows;
+  } catch (error) {
+      console.error('Error al obtener promedios de respuestas cerradas:', error);
+      throw error;
+  }
+};
+
+static async getEmployeeClosedResponsesAverage(employeeId){
+  try {
+      // Esta consulta debe agrupar las respuestas del empleado por pregunta y calcular el promedio
+      const query = `
+          SELECT 
+              p.preguntaId,
+              p.pregunta,
+              p.orden,
+              AVG(r.valorRespuesta) as valorRespuesta
+          FROM preguntas p
+          JOIN respuestas r ON p.preguntaId = r.preguntaId
+          JOIN entrevistas e ON r.entrevistaId = e.entrevistaId
+          WHERE p.tipoPregunta = 'cerrada' AND e.completada = 1 AND e.empleadoId = ?
+          GROUP BY p.preguntaId
+          ORDER BY p.orden ASC
+      `;
+      
+      return await db.query(query, [employeeId]);
+  } catch (error) {
+      console.error(`Error al obtener promedios de respuestas cerradas para el empleado ${employeeId}:`, error);
+      throw error;
+  }
+};
 }
 
 module.exports = OneToOneModel;

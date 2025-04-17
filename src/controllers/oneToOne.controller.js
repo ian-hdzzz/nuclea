@@ -181,3 +181,215 @@ exports.saveInterview = async (req, res) => {
         });
     }
 };
+
+exports.getEmployeeHistory = async (req, res) => {
+    try {
+        const employeeId = req.params.id;
+        console.log('ID del empleado:', employeeId);
+        
+        // Get employee details
+        const employee = await SearchModel.getEmployeeById(employeeId);
+        
+        // Get interview history - Pass employeeId instead of employee object
+        const interviewHistory = await Questions.getSpecificInterviewHistory(employeeId);
+        
+        // Format the data for the frontend
+        const formattedInterviews = interviewHistory.map(interview => ({
+            id: interview.entrevistaId,
+            fechaEntrevista: interview.fechaEntrevista,
+            empleadoId: interview.empleadoId,
+            empleadoNombre: `${employee.Nombre || ''} ${employee.Apellidos || ''}`.trim(),
+            entrevistadorId: interview.entrevistadorId,
+            entrevistadorNombre: `${interview.entrevistadorNombre || ''} ${interview.entrevistadorApellidos || ''}`.trim(),
+            completada: interview.completada
+        }));
+        
+        res.json({
+            success: true,
+            employee: {
+                id: employee.idUsuario,
+                nombre: employee.Nombre,
+                apellidos: employee.Apellidos || '',
+                puesto: employee.Puesto || '',
+                modalidad: employee.Modalidad || '',
+                departamento: employee.Departamentos || '',
+                fechaInicio: employee.Fecha_inicio_colab,
+                initial: employee.Nombre ? employee.Nombre.charAt(0).toUpperCase() : ''
+            },
+            interviewHistory: formattedInterviews
+        });
+    } catch (error) {
+        console.error('Error al obtener historial de entrevistas:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error al obtener historial de entrevistas'
+        });
+    }
+};
+
+exports.getAllInterviewHistory = async (req, res) => {
+    try {
+        // Get all completed interviews
+        const allInterviews = await Questions.getAllCompletedInterviewHistory();
+        
+        // Format the data for the frontend
+        const formattedInterviews = allInterviews.map(interview => ({
+            id: interview.entrevistaId,
+            fechaEntrevista: interview.fechaEntrevista,
+            empleadoId: interview.empleadoId,
+            empleadoNombre: `${interview.empleadoNombre || ''} ${interview.empleadoApellidos || ''}`.trim(),
+            entrevistadorId: interview.entrevistadorId,
+            entrevistadorNombre: `${interview.entrevistadorNombre || ''} ${interview.entrevistadorApellidos || ''}`.trim(),
+            completada: interview.completada
+        }));
+        console.log('Entrevistas formateadas:', formattedInterviews);
+        res.json({
+            success: true,
+            interviews: formattedInterviews
+        });
+    } catch (error) {
+        console.error('Error al obtener historial de entrevistas:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error al obtener historial de entrevistas'
+        });
+    }
+};
+// Add this to your oneToOneController.js
+
+exports.getInterviewDetails = async (req, res) => {
+    try {
+        const interviewId = req.params.id;
+
+        // Get interview details
+        const interview = await Questions.getInterviewById(interviewId);
+        
+        if (!interview) {
+            return res.status(404).render('error', { 
+                message: 'Entrevista no encontrada',
+                error: { status: 404 }
+            });
+        }
+        
+        // Get employee and interviewer details
+        const employee = await SearchModel.getEmployeeById(interview.empleadoId);
+        const interviewer = await SearchModel.getEmployeeById(interview.entrevistadorId);
+        
+        // Get open and closed questions with responses
+        const openResponses = await Questions.getOpenResponses(interviewId);
+        const closedResponses = await Questions.getClosedResponses(interviewId);
+        
+        // Format date
+        const formattedDate = interview.fechaEntrevista ? 
+            new Date(interview.fechaEntrevista).toLocaleDateString('es-ES', { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            }) : 'N/A';
+            
+        res.render('pages/interviewDetails', { 
+            title: 'Interview Details', 
+            iconClass: 'fa-solid fa-people-arrows',
+            interview: {
+                id: interview.id,
+                date: formattedDate,
+                completed: interview.completada
+            },
+            employee: {
+                id: employee.idUsuario,
+                nombre: employee.Nombre,
+                apellidos: employee.Apellidos || '',
+                modalidad: employee.Modalidad || '',
+                departamento: employee.Departamento || '',
+                initial: employee.Nombre ? employee.Nombre.charAt(0).toUpperCase() : ''
+            },
+            interviewer: {
+                id: interviewer.idUsuario,
+                nombre: interviewer.Nombre,
+                apellidos: interviewer.Apellidos || '',
+                puesto: interviewer.Puesto || ''
+            },
+            openResponses: openResponses,
+            closedResponses: closedResponses
+        });
+    } catch (error) {
+        console.error('Error al obtener detalles de la entrevista:', error);
+        res.status(500).render('error', { 
+            message: 'Error al cargar los detalles de la entrevista',
+            error: process.env.NODE_ENV === 'development' ? error : {}
+        });
+    }
+};
+// Graph render controllers
+exports.getEmployeeGraph = async (req, res) => {
+    try {
+        const employeeId = req.params.id;
+        // Obtener las respuestas cerradas del empleado específico
+        const closedResponses = await Questions.getEmployeeClosedResponsesAverage(employeeId);
+        console.log('Respuestas cerradas del empleado:', closedResponses);
+        
+        // Return JSON data instead of rendering a partial
+        res.json({
+            success: true,
+            graphData: {
+                workload: closedResponses[0]?.valorRespuesta || 0,
+                health: closedResponses[1]?.valorRespuesta || 0,
+                recognition: closedResponses[2]?.valorRespuesta || 0,
+                emotionalHealth: closedResponses[3]?.valorRespuesta || 0,
+                workLifeBalance: closedResponses[4]?.valorRespuesta || 0
+            }
+        });
+    } catch (error) {
+        console.error(`Error al obtener datos del gráfico para el empleado ${req.params.id}:`, error);
+        res.status(500).json({
+            success: false,
+            message: 'Error al cargar datos del gráfico'
+        });
+    }
+};
+
+exports.getAllEmployeesGraph = async (req, res) => {
+    try {
+      // Get all closed responses from completed interviews
+      let closedResponses = await Questions.getAllClosedResponsesAverage();
+      
+      // Check if the response is an array of arrays (containing both data and schema)
+      if (Array.isArray(closedResponses) && Array.isArray(closedResponses[0])) {
+        // Extract just the data part (first element of the array)
+        closedResponses = closedResponses[0];
+      }
+      
+      // Check if we have valid data
+      if (!closedResponses || !Array.isArray(closedResponses) || closedResponses.length === 0) {
+        return res.status(200).json({
+          success: true,
+          message: 'No data available for graph',
+          graphData: {
+            workload: 0,
+            health: 0,
+            recognition: 0,
+            emotionalHealth: 0,
+            workLifeBalance: 0
+          }
+        });
+      }
+      
+      // Return JSON data (removed the conflicting res.render call)
+      res.json({
+        success: true,
+        graphData: {
+          workload: closedResponses[0]?.valorRespuesta || 0,
+          health: closedResponses[1]?.valorRespuesta || 0,
+          recognition: closedResponses[2]?.valorRespuesta || 0,
+          emotionalHealth: closedResponses[3]?.valorRespuesta || 0,
+          workLifeBalance: closedResponses[4]?.valorRespuesta || 0
+        }
+      });
+    } catch (error) {
+      console.error('Error al obtener datos para el gráfico:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Error al cargar datos del gráfico'
+      });
+    }
+  };

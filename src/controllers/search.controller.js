@@ -95,4 +95,6 @@ exports.renderEmployeeDetails = async (req, res) => {
       console.error('Error al obtener los detalles del empleado:', error);
       res.status(500).send('Error al obtener los detalles del empleado');
     }
-  };
+  }
+
+  

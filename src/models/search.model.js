@@ -72,6 +72,26 @@ async search(searchTerm, table, fields, returnFields) {
   }
 };
   
+static async getAllCompletedInterviewHistory() {
+  try {
+    const [interviews] = await db.execute(
+      `SELECT e.*,
+       u.Nombre AS entrevistadorNombre,
+       u.Apellidos AS entrevistadorApellidos,
+       emp.Nombre AS empleadoNombre,
+       emp.Apellidos AS empleadoApellidos
+       FROM entrevistas e
+       JOIN Usuarios u ON e.entrevistadorId = u.idUsuario
+       JOIN Usuarios emp ON e.empleadoId = emp.idUsuario
+       WHERE e.completada = 1
+       ORDER BY e.fechaEntrevista DESC`
+    );
+    return interviews;
+  } catch (error) {
+    console.error('Error fetching completed interviews:', error);
+    throw error;
+  }
+}
   
 }
 
