@@ -325,18 +325,20 @@ exports.getEmployeeGraph = async (req, res) => {
     try {
         const employeeId = req.params.id;
         // Obtener las respuestas cerradas del empleado específico
-        const closedResponses = await Questions.getEmployeeClosedResponsesAverage(employeeId);
-        console.log('Respuestas cerradas del empleado:', closedResponses);
+        const result = await Questions.getEmployeeClosedResponsesAverage(employeeId);
+        const closedResponses = result[0]; // Accede al primer elemento que contiene los datos reales
+        
+        console.log('Respuestas procesadas del empleado:', closedResponses);
         
         // Return JSON data instead of rendering a partial
         res.json({
             success: true,
             graphData: {
-                workload: closedResponses[0]?.valorRespuesta || 0,
-                health: closedResponses[1]?.valorRespuesta || 0,
-                recognition: closedResponses[2]?.valorRespuesta || 0,
-                emotionalHealth: closedResponses[3]?.valorRespuesta || 0,
-                workLifeBalance: closedResponses[4]?.valorRespuesta || 0
+                workload: parseFloat(closedResponses[0]?.valorRespuesta || 0),
+                health: parseFloat(closedResponses[1]?.valorRespuesta || 0),
+                recognition: parseFloat(closedResponses[2]?.valorRespuesta || 0),
+                emotionalHealth: parseFloat(closedResponses[3]?.valorRespuesta || 0),
+                workLifeBalance: parseFloat(closedResponses[4]?.valorRespuesta || 0)
             }
         });
     } catch (error) {
