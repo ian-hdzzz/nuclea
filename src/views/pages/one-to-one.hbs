@@ -27,6 +27,7 @@
       </div>
 
       <div class="card graph">
+       <h3 id="graph-title">Team Performance Overview</h3>
         {{> graph 
                 workload=closedResponses.[0].valorRespuesta
                 health=closedResponses.[1].valorRespuesta 
@@ -224,6 +225,11 @@ document.addEventListener('DOMContentLoaded', function() {
             if (this.value.trim() === '') {
                 loadAllInterviews();
                 updateEmployeeGraph(null);
+                //Restaurar el título
+                const graphTitle = document.querySelector('.card.graph h3');
+                if (graphTitle) {
+                    graphTitle.textContent = 'Team Performance Overview';
+                }
             }
         });
     }
@@ -340,7 +346,13 @@ document.addEventListener('DOMContentLoaded', function() {
     document.addEventListener('contact-selected', function(event) {
         const employeeId = event.detail.id;
         const employeeName = event.detail.name;
-        
+
+        const graphTitle = document.getElementById('graph-title');
+        if (graphTitle) {
+            graphTitle.textContent = employeeName 
+                ? `${employeeName} Performance Overview` 
+                : 'Team Performance Overview';
+        }
         if (employeeId) {
             // Show loading indicator
             if (tableCollabDiv) {
@@ -371,6 +383,10 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Reset graph to default (all employees)
             updateEmployeeGraph(null);
+            const graphTitle = document.getElementById('graph-title');
+            if (graphTitle) {
+                graphTitle.textContent = 'Team Performance Overview';
+            }
         }
     });
     

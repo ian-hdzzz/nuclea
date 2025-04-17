@@ -21,11 +21,12 @@
 .search-bar {
   padding: 10px 0;
   margin: 0;
+  position: relative;
 }
 
 .search-input {
   width: 100%;
-  padding: 15px 10px;
+  padding: 15px 40px 15px 10px; /* espacio a la derecha para el ícono */
   margin: 0;
   background-color: #0C1019;
   border-radius: 10px;
@@ -35,6 +36,16 @@
   margin-bottom: 10px;
   border: 1px solid transparent; 
   border-color: var(--accent-blue);
+  box-sizing: border-box;
+}
+
+.search-bar i {
+  position: absolute;
+  right: 15px;
+  top: 44%;
+  transform: translateY(-50%);
+  color: #888;
+  pointer-events: none;
 }
 
 .search-input:focus {
@@ -104,6 +115,7 @@
     <p>Search for any employee you would like to evaluate</p>
     <div class="search-bar">
         <input type="text" placeholder="{{placeholder}}" class="search-input" id="{{searchId}}" data-search-type="{{searchType}}">
+        <i class="fa-solid fa-magnifying-glass"></i>
     </div>
     <div class="search-loader">
         <span>Searching..</span>
