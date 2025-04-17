@@ -63,7 +63,6 @@ exports.getUsers = async (req, res, next) => {
 exports.postUsers = (request, response, next) => {
     console.log("Datos recibidos en POST /users:", request.body);
 
-    const action = request.body.action;
     const userEmail = request.body.emailUs; // Usamos email_us
     const userPassword = request.body.password; // Usamos password
     if (!request.body.password) {

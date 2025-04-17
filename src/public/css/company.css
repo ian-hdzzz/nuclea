@@ -130,15 +130,15 @@ h2{
 
 table {
     font-family: 'Montserrat',sans-serif;
-    width: 70%;
+    width: 100%;
     border-collapse: collapse;
     margin: auto;
     margin-top: 20px;
+    border-collapse: collapse;
 }
 th, td {
     padding: 20px 10px;
     text-align: center;
-    width: 10px;
 }
 
 .active{
@@ -404,3 +404,48 @@ th, td {
     width: 80%;
     text-align: center; /* Centra el texto */
 }
+
+
+.actions-col {
+    text-align: right;
+    width: 1%;
+    white-space: nowrap;
+    padding-right: 20px;
+}
+
+td.actions-col .dropdown {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.state {
+    text-align: center;
+    margin-left: 400px; /* Empuja más a la izquierda */
+}
+
+.state .active,
+.state .inactive {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 12px;
+    background: #12392B;
+    font-size: .85rem;
+    border-radius: 2rem;
+    margin: auto; /* centrado horizontal en la celda */
+}
+
+.state .inactive {
+    background: #392112;
+    color: #f87171;
+}
+
+.state .dot {
+    background: #22C55F;
+    border-radius: 50%;
+    width: 7px;
+    height: 7px;
+    margin-right: 8px;
+}
+
+
