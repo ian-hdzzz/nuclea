@@ -199,3 +199,26 @@ module.exports.rejectSolicitud = (idSolicitud, rol) => {
   }
 };
 
+// Obtener el layout guardado por usuario
+module.exports.fetchDashboardLayout = (userId) => {
+  return db.execute(`
+    SELECT widget_id, x, y, w, h
+    FROM dashboard_layout
+    WHERE user_id = ?`, [userId]);
+};
+
+// Guardar o actualizar el layout (puedes llamar a esto desde una ruta tipo POST /dashboard/save-layout)
+module.exports.saveDashboardLayout = async (userId, layoutArray) => {
+  // Borrar el layout anterior
+  await db.execute(`DELETE FROM dashboard_layout WHERE user_id = ?`, [userId]);
+
+  // Insertar el nuevo layout
+  const insertPromises = layoutArray.map(widget => {
+    return db.execute(`
+      INSERT INTO dashboard_layout (user_id, widget_id, x, y, w, h)
+      VALUES (?, ?, ?, ?, ?, ?)`,
+      [userId, widget.widget_id, widget.x, widget.y, widget.w, widget.h]);
+  });
+
+  return Promise.all(insertPromises);
+};

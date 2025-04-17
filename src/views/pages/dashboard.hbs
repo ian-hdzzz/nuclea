@@ -1,11 +1,24 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mi Sitio con Loader</title>
-  <link rel="stylesheet" href="/css/dashboard.css">
-  
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>{{title}}</title>
+  <link rel="stylesheet" href="/css/dashboard.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gridstack@9.2.1/dist/gridstack.min.css" />
+  <style>
+    .grid-stack {
+      background: #f5f5f5;
+      margin: 30px auto;
+      width: 90%;
+    }
+    .grid-stack-item-content {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      padding: 20px;
+    }
+  </style>
 </head>
 <body>
   <div class="loader-wrapper" id="loaderWrapper">
@@ -21,70 +34,123 @@
     </div>
   </div>
 
-   <div class="dashboard-conatiner">
-    <h1 class="title">Welcome to Flowit HRMS </h1>
-    <p class="subtitle">A comprehensive solution for managing your company's human resources.</p>
-  </div>
-  <!-- HBS Template -->
-<div class="dashboard-container">
+  <h1 class="title">Welcome to Flowit HRMS</h1>
+  <p class="subtitle">A comprehensive solution for managing your company's human resources.</p>
 
-  <div class="dashboard-cards">
-    <div class="card">
-      <div class="card-content">
-        <div class="card-info">
-          <h2>Active Departments</h2>
-          <div class="card-number">7</div>
-          <a href="/nuclea/departament" class="card-link">See details <span class="arrow">&#8594;</span></a>
-        </div>
-        <div class="card-icon blue">
-          <i class="fa-solid fa-building"></i>
-        </div>
-      </div>
-    </div>
+  <button onclick="saveLayout()">Guardar Layout</button>
 
-    <div class="dashboard-cards">
-    <div class="card">
-      <div class="card-content">
-        <div class="card-info">
-          <h2>Remaining vacation</h2>
-          <div class="card-number">{{diasRestantes}}</div>
-        </div>
-        <div class="card-icon blue">
-          <i class="fa-solid fa-plane-up"></i>
-        </div>
-      </div>
-    </div>
+  <div class="grid-stack"></div>
 
-    <div class="card">
-      <div class="card-content">
-        <div class="card-info">
-          <h2>Registered Users</h2>
-          <div class="card-number">18</div>
-          <a href="/nuclea/users" class="card-link">See details <span class="arrow">&#8594;</span></a>
-        </div>
-        <div class="card-icon purple">
-          <i class="fa-solid fa-people-group"></i>
-        </div>
-      </div>
-    </div>
+  <script src="https://cdn.jsdelivr.net/npm/gridstack@9.2.1/dist/gridstack-all.js"></script>
+  <script>
+    const layout = {{{layout}}}; // viene desde el controlador como JSON
 
-    <div class="card">
-      <div class="card-content">
-        <div class="card-info">
-          <h2>Ongoing Projects</h2>
-          <div class="card-number">12</div>
-          <a href="#" class="card-link">See details <span class="arrow">&#8594;</span></a>
-        </div>
-        <div class="card-icon green">
-          <i class="fa-solid fa-chart-simple"></i>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+    document.addEventListener('DOMContentLoaded', () => {
+      const grid = GridStack.init({
+        float: true,
+        resizable: { handles: 'all' }
+      });
 
-<!-- CSS Styles -->
+      const cards = [
+        {
+          id: 'departments',
+          content: `
+            <h2>Active Departments</h2>
+            <div class="card-number">7</div>
+            <a href="/nuclea/departament" class="card-link">See details →</a>
+          `,
+          icon: 'fa-building'
+        },
+        {
+          id: 'vacations',
+          content: `
+            <h2>Remaining Vacation</h2>
+            <div class="card-number">{{diasRestantes}}</div>
+          `,
+          icon: 'fa-plane-up'
+        },
+        {
+          id: 'users',
+          content: `
+            <h2>Registered Users</h2>
+            <div class="card-number">18</div>
+            <a href="/nuclea/users" class="card-link">See details →</a>
+          `,
+          icon: 'fa-people-group'
+        },
+        {
+          id: 'projects',
+          content: `
+            <h2>Ongoing Projects</h2>
+            <div class="card-number">12</div>
+            <a href="#" class="card-link">See details →</a>
+          `,
+          icon: 'fa-chart-simple'
+        }
+      ];
 
-  <script src="/js/dashboard.js"></script>
+      // Si existe un layout personalizado, lo usamos
+      if (layout && layout.length > 0) {
+        layout.forEach((item) => {
+          const card = cards.find(c => c.id === item.id);
+          if (card) {
+            const el = document.createElement('div');
+            el.classList.add('grid-stack-item');
+            el.setAttribute('gs-id', card.id);
+            el.setAttribute('gs-x', item.x);
+            el.setAttribute('gs-y', item.y);
+            el.setAttribute('gs-w', item.w);
+            el.setAttribute('gs-h', item.h);
+            el.innerHTML = `
+              <div class="grid-stack-item-content">
+                <i class="fa-solid ${card.icon}"></i>
+                ${card.content}
+              </div>
+            `;
+            grid.addWidget(el);
+          }
+        });
+      } else {
+        // Layout por defecto
+        cards.forEach((card, i) => {
+          const el = document.createElement('div');
+          el.classList.add('grid-stack-item');
+          el.setAttribute('gs-id', card.id);
+          el.setAttribute('gs-x', i * 3);
+          el.setAttribute('gs-y', 0);
+          el.setAttribute('gs-w', 3);
+          el.setAttribute('gs-h', 2);
+          el.innerHTML = `
+            <div class="grid-stack-item-content">
+              <i class="fa-solid ${card.icon}"></i>
+              ${card.content}
+            </div>
+          `;
+          grid.addWidget(el);
+        });
+      }
+
+      window.saveLayout = function () {
+        const layoutData = grid.save(false).map(item => ({
+          id: item.id,
+          x: item.x,
+          y: item.y,
+          w: item.w,
+          h: item.h
+        }));
+
+        fetch('/dashboard/save-layout', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ layout: layoutData })
+        })
+        .then(res => res.ok ? alert('Layout guardado') : alert('Error al guardar'))
+        .catch(err => console.error(err));
+      };
+    });
+  </script>
+  <script src="https://kit.fontawesome.com/your-fontawesome-kit.js" crossorigin="anonymous"></script>
 </body>
 </html>
