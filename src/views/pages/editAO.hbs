@@ -1,56 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Department Management</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <link rel="stylesheet" href="/css/AO.css">
-  <meta name="csrf-token" content="{{ csrfToken }}">
-</head>
-<body>
-  <div class="top-container">
-    <nav class="nav-bar">
-      <div class="first-container">
-        <div class="hidden"></div>
-        <div class="search-container">
-          <input type="text" placeholder="Search..." class="input-search" id="search-input">
-          <i class="fa-solid fa-magnifying-glass search-icon"></i>
-        </div>
-      </div>
-      <div class="second-container">
-        <div>
-          <i class="fa-solid fa-bell hidden" ></i>
-        </div>
-        <div>
-          <i class="fa-solid fa-user hidden"></i>
-        </div>
-      </div>
-    </nav>
-  </div>
-  {{#if info}}
-     <div "top-container">
-       <div class="nav-bar">
-         <div class="first-container">
-           <div class="notification is-success">
-             {{info}}
-           </div>
-         </div>
-       </div>
-     </div>
-  {{/if}}
-  {{#if error}}
-     <div "top-container">
-       <div class="nav-bar">
-         <div class="first-container">
-           <div class="notification is-danger">
-             {{error}}
-           </div>
-         </div>
-       </div>
-     </div>
-  {{/if}}
-  <div class="content">
+  <!DOCTYPE html>
+  <html lang="es">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Department Management</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="/css/AO.css">
+  </head>
+  <body>
+    <div class="content">
     <div class="nav-content">
       <h2>Administrative offenses</h2>
       {{#each privilegios}}
@@ -120,15 +78,17 @@
     {{/if}}
   </div>
 
-  <div id="modal" class="modal hidden">
+      <!-- Modal -->
+      <div id="modal" class="modal">
     <div class="modal-content">
-      <button id="closeModal" class="close-btn">✖</button>
+      <button id="closeModal" class="close-btn" onclick="window.location.href='/nuclea/faltasAdministrativas'">✖</button>
       <h2 class="title-modal">Add Administrative Offense</h2>
       <p class="description">Fill in the required details to <br>assign an Administrative Offense</p>
       <br>
-      <form action="/nuclea/faltasAdministrativas" id="form-falta" method="POST" enctype="multipart/form-data">
+      <form action="/nuclea/faltasAdministrativas/update/{{falta.idFalta}}" id="form-falta" method="POST" enctype="multipart/form-data">
        <input type="hidden" name="modal" value="modal1">
         <input type="hidden" name="_csrf" value="{{csrfToken}}">
+        <input type="hidden" name="idFalta" value="{{falta.idFalta}}">
 
         <div class="form-group">
           <label for="usuario" class="label">Find collaborator:</label>
@@ -137,8 +97,10 @@
                   onchange="this.setCustomValidity('')">
             <option value="">- Select User -</option>
             {{#each usuariosfa}}
-            <option value="{{idUsuario}}">{{Nombre}} {{Apellidos}}</option>
-            {{/each}}
+                    <option value="{{idUsuario}}" {{#if (eq idUsuario ../falta.idUsuario)}}selected{{/if}}>
+                        {{Nombre}} {{Apellidos}}
+                    </option>
+                {{/each}}
           </select>
         </div>
 
@@ -155,6 +117,7 @@
               oninvalid="this.setCustomValidity('Please select a date')" 
               onchange="this.setCustomValidity('')"
               style="width: auto;"
+              value="{{formatDate2 falta.Fecha_asignacion_falta}}"
             />
           </div>
         </div>
@@ -170,25 +133,32 @@
             required
             oninvalid="this.setCustomValidity('Please remember to write a reason')"
             oninput="this.setCustomValidity('')"
+            value="{{falta.Motivo}}"
           />
         </div>
 
         <div class="form-group">
-          <label for="fecha" class="label">Add file</label>
-          <input 
+            <label for="archivo"></label>
+            {{#if falta.archivo}}
+                <p><a href="/uploads/{{falta.archivo}}" target="_blank"><i class="fa-solid fa-file-pdf"></i><u>Current file uploaded to this register</u></a></p>
+            {{else}}
+                <p>No file uploaded</p>
+            {{/if}}
+            <input 
             type="file" 
             id="archivo" 
             name="archivo" 
             accept=".pdf"
-            class="text-modal">
+            class="text-modal">    
         </div>
-        <input type="submit" class="btn-submit" value="Add Administrative Offense">
+        
+        <input type="hidden" name="archivoActual" value="{{falta.archivo}}">
+        <input type="submit" class="btn-submit" value="Update Administrative Offense" style="padding-right: 20px;">
       </form>
     </div>
   </div>
 
-  <script src="/js/AO.js"></script>
-  <script src="/js/delete.js"></script>
-  <script src="/js/searchAO.js"></script>
-</body>
-</html>
+
+    <script src="/js/AO2.js"></script>
+  </body>
+  </html>

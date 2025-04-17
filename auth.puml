@@ -1,0 +1,108 @@
+@startuml Authentication Sequence
+
+actor User
+participant "Login Page" as UI
+participant "Router" as Router
+participant "AuthController" as Auth
+participant "Passport" as Passport
+participant "GoogleOAuth" as Google
+participant "Usuario Model" as Model
+participant "Database" as DB
+participant "Session" as Session
+
+title Authentication Flow Sequence
+
+alt Local Authentication
+    User -> UI: Enter credentials
+    activate UI
+    UI -> Router: POST /nuclea/signup
+    activate Router
+    Router -> Auth: postAuth()
+    activate Auth
+    
+    Auth -> Model: fetchOne(email)
+    activate Model
+    Model -> DB: SELECT user data
+    DB --> Model: Return user data
+    Model --> Auth: User data
+    deactivate Model
+
+    alt User exists
+        Auth -> Auth: bcrypt.compare(password)
+        alt Valid Password
+            Auth -> Session: Set session data
+            activate Session
+            Auth -> Model: getPrivilegios(userId)
+            Model -> DB: SELECT privileges
+            DB --> Model: Return privileges
+            
+            Auth -> Model: fetchDeptSession(email)
+            Model -> DB: SELECT departments
+            DB --> Model: Return departments
+            
+            Auth -> Session: Save complete session
+            Session --> Auth: Session saved
+            deactivate Session
+            Auth --> Router: Success response
+            Router --> UI: Redirect to dashboard
+        else Invalid Password
+            Auth --> Router: Authentication failed
+            Router --> UI: Return error (failed=true)
+        end
+    else User not found
+        Auth --> Router: User not found
+        Router --> UI: Redirect to signup
+    end
+    deactivate Auth
+    deactivate Router
+    deactivate UI
+
+else Google Authentication
+    User -> UI: Click "Sign in with Google"
+    activate UI
+    UI -> Router: GET /auth/google
+    activate Router
+    Router -> Auth: getGoogleAuth()
+    activate Auth
+    
+    Auth -> Passport: authenticate('google')
+    activate Passport
+    Passport -> Google: Request authorization
+    activate Google
+    Google --> User: Show consent screen
+    User -> Google: Approve access
+    Google --> Passport: Return authorization code
+    
+    Google -> Router: GET /auth/google/callback
+    Router -> Auth: getGoogleCallback()
+    deactivate Google
+    
+    Passport -> Model: fetchOneByGoogleId(googleId)
+    activate Model
+    Model -> DB: SELECT user by google_id
+    DB --> Model: Return user data
+    
+    alt User exists
+        Model -> Model: Update google_token
+    else New User
+        Model -> Model: saveGoogleUser(profile)
+        Model -> DB: INSERT/UPDATE user
+    end
+    Model --> Passport: User data
+    deactivate Model
+    
+    Passport -> Session: Initialize session
+    activate Session
+    Session --> Passport: Session created
+    deactivate Session
+    
+    Passport --> Auth: Authentication complete
+    deactivate Passport
+    Auth --> Router: Success response
+    Router --> UI: Close popup & redirect
+    deactivate Auth
+    deactivate Router
+    deactivate UI
+end
+
+@enduml

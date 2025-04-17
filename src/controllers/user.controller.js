@@ -236,6 +236,8 @@ exports.getUpdate = async (req, res, next) => {
         const nousers = usuarios.length === 0;
         const tempPassword = generateRandomPassword();
 
+        console.log(usuarioDetails)
+
         usuario.PrimerDepartamento = usuario.Departamentos?.split(',')[0].trim();
         usuario.PrimerRol = usuario.Roles?.split(',')[0].trim();
         usuario.PrimerEmpresa = usuario.Empresas?.split(',')[0].trim();

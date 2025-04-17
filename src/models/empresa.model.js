@@ -51,5 +51,13 @@ module.exports = class Empresa {
                   DELETE FROM Empresa WHERE idEmpresa = ?;
               `,[idEmpresa])
           }
+
+  static searchByName(searchTerm) {
+    return db.execute(`
+      SELECT * FROM Empresa 
+      WHERE Nombre_empresa LIKE ? OR Estado LIKE ?
+      ORDER BY Nombre_empresa ASC
+    `, [`%${searchTerm}%`, `%${searchTerm}%`]);
+  }
   
 };

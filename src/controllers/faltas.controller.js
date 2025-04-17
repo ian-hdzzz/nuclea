@@ -203,7 +203,7 @@ exports.getUpdate = (req, res, next) => {
                         .then(([rows]) => {
                             const noFaltas = faltas.length === 0;
 
-                            res.render('../views/pages/editarFalta.hbs', {
+                            res.render('../views/pages/editAO.hbs', {
                                 usuariosfa: rows,
                                 csrfToken: req.csrfToken(),
                                 faltass: faltas,
@@ -242,5 +242,18 @@ exports.postUpdate = (req, res, next) => {
             req.session.errorAo = `Error registering Addministrative offense.`;
             res.redirect('/nuclea/faltasAdministrativas');
             res.status(500);
+        });
+};
+
+exports.searchAO = (req, res) => {
+    const searchTerm = req.query.name || '';
+    
+    Falta.searchByName(searchTerm)
+        .then(([results]) => {
+            res.json(results);
+        })
+        .catch(error => {
+            console.error('Error en búsqueda:', error);
+            res.status(500).json({ error: 'Error al buscar faltas administrativas' });
         });
 };

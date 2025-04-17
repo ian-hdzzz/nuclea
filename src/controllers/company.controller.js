@@ -113,8 +113,21 @@ exports.postUpdate = (req, res, next) => {
           res.redirect('/nuclea/company');
       })
       .catch((error) => {
-          req.session.errorAO = `Error updating Company.`;
+          req.session.errorCO = `Error updating Company.`;
           res.redirect('/nuclea/company');
           res.status(500);
       });
+};
+
+exports.searchCompany = (req, res) => {
+  const searchTerm = req.query.name || '';
+  
+  Company.searchByName(searchTerm)
+    .then(([results]) => {
+      res.json(results);
+    })
+    .catch(error => {
+      console.error('Error en búsqueda:', error);
+      res.status(500).json({ error: 'Error al buscar empresas' });
+    });
 };
