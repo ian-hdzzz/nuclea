@@ -17,6 +17,7 @@
         </div>
         {{/if}}
         <div class="survey-container" id="survey-container">
+          <input type="hidden" id="current-user-id" value="{{currentUser.idUsuario}}">
             <div id="interview1">
                 {{> interview1 }}
             </div>
@@ -51,15 +52,6 @@
     </div>
 </div>
 <script>
-let currentQuestion = 1;
-const totalQuestions = 4;
-const responses = {}; // Object to store responses for each question
-
-function updateProgressBar() {
-  const progressElement = document.querySelector('.progress');
-  const progressPercentage = (currentQuestion / totalQuestions) * 100;
-  progressElement.style.width = `${progressPercentage}%`;
-}
 
 document.addEventListener('DOMContentLoaded', function () {
   const nextButton = document.getElementById('next-btn');
@@ -69,16 +61,42 @@ document.addEventListener('DOMContentLoaded', function () {
   const questionDescription = document.querySelector('.question p');
   const textarea = document.querySelector('textarea');
   const form = document.getElementById('interviewForm');
+  const currentQuestionIdInput = document.getElementById('currentQuestionId');
 
-  const questions = {{{json preguntasAbiertas}}};
+  const questions = {{{json preguntas}}};
+  let currentQuestion = 1;
+  const totalQuestions = questions.filter(q => q.tipoPregunta === 'abierta').length;
+  const responses = {}; // Object to store responses for each question
+
+  // Filtrar solo preguntas abiertas para primera encuesta
+  const openQuestions = questions.filter(q => q.tipoPregunta === 'abierta' && q.activa === 1);
+  // Filtrar solo preguntas cerradas para segunda encuesta
+  const closedQuestions = questions.filter(q => q.tipoPregunta === 'cerrada' && q.activa === 1);
+
+  function updateProgressBar() {
+    const progressElement = document.querySelector('.progress');
+    const progressPercentage = (currentQuestion / openQuestions.length) * 100;
+    progressElement.style.width = `${progressPercentage}%`;
+  }
 
   function updateQuestion() {
-    questionIndicator.textContent = `Question ${currentQuestion} of ${totalQuestions}`;
-    questionTitle.textContent = questions[currentQuestion - 1].pregunta;
-    questionDescription.textContent = questions[currentQuestion - 1].descripcion;
+    // Usamos los nombres de columna actualizados
+    const question = openQuestions[currentQuestion - 1];
+    questionIndicator.textContent = `Question ${currentQuestion} of ${openQuestions.length}`;
+    questionTitle.textContent = question.pregunta;
+    questionDescription.textContent = question.descripcionPregunta;
+    
+    // Actualizar el ID de la pregunta actual en el input oculto
+    if (currentQuestionIdInput) {
+      currentQuestionIdInput.value = question.preguntaId;
+    }
+    
+    // Cargar respuesta existente si hay una
+    textarea.value = responses[question.preguntaId] || '';
+    
     updateProgressBar();
 
-    if (currentQuestion === totalQuestions) {
+    if (currentQuestion === openQuestions.length) {
       nextButton.innerHTML = 'Next Survey<i class="fa-solid fa-caret-right"></i>';
       nextButton.classList.add('final-step');
     } else {
@@ -87,102 +105,201 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 
+  // Función para guardar la respuesta actual
+  function saveCurrentResponse() {
+    const userId = new URLSearchParams(window.location.search).get('employee');
+    console.log('ID de usuario:', userId);
+
+    const currentQuestionData = openQuestions[currentQuestion - 1];
+    if (currentQuestionData && textarea.value.trim() !== '') {
+      responses[currentQuestionData.preguntaId] = textarea.value;
+      console.log(`Saved response for question ${currentQuestionData.preguntaId}:`, textarea.value);
+    }
+  }
+
+  // Añadir event listener para guardar automáticamente cuando el usuario escriba
+  textarea.addEventListener('input', function() {
+    const currentQuestionData = openQuestions[currentQuestion - 1];
+    responses[currentQuestionData.preguntaId] = textarea.value;
+  });
+
   nextButton.addEventListener('click', function () {
-    // Save current response
-    responses[questions[currentQuestion - 1].idPreguntaAbierta] = textarea.value;
+    // Guardar respuesta actual
+    saveCurrentResponse();
     
     if (nextButton.classList.contains('final-step')) {
-      // Save all responses before moving to the next survey
-      saveResponses();
+      // Verificar si todas las preguntas tienen respuesta
+      const allQuestionsAnswered = openQuestions.every(q => 
+        responses[q.preguntaId] && responses[q.preguntaId].trim() !== '');
       
-      // Show the second interview form
+      if (!allQuestionsAnswered) {
+        const confirm = window.confirm('No has respondido todas las preguntas. ¿Deseas continuar de todos modos?');
+        if (!confirm) return;
+      }
+      
+      // Guardar todas las respuestas antes de pasar a la siguiente encuesta
+      saveResponses(responses, 'open');
+      
+      // Mostrar la segunda forma de entrevista
       document.getElementById('interview1').style.display = 'none';
       document.getElementById('interview2').style.display = 'block';
+      
+      // Configurar la segunda encuesta (preguntas cerradas)
+      setupClosedQuestions();
       return;
     }
 
-    if (currentQuestion < totalQuestions) {
+    if (currentQuestion < openQuestions.length) {
       currentQuestion++;
       updateQuestion();
-      textarea.value = responses[questions[currentQuestion - 1].idPreguntaAbierta] || '';
     }
   });
 
   prevButton.addEventListener('click', function () {
-    // Save current response
-    responses[questions[currentQuestion - 1].idPreguntaAbierta] = textarea.value;
+    // Guardar respuesta actual
+    saveCurrentResponse();
     
     if (currentQuestion > 1) {
       currentQuestion--;
       updateQuestion();
-      textarea.value = responses[questions[currentQuestion - 1].idPreguntaAbierta] || '';
     }
   });
   
-  function saveResponses() {
-    // Create form data object
-    const formData = new FormData();
+  //Función para guardar respuestas
+  function saveResponses(responsesData, type) {
+    // Crear objeto de datos
+    const formData = {
+      idUsuario: new URLSearchParams(window.location.search).get('employee'),
+      tipoPregunta: type, // 'open' o 'closed'
+      respuestas: responsesData
+    };
     
-    // Add all responses
-    for (const [questionId, response] of Object.entries(responses)) {
-      formData.append(`respuestas[${questionId}]`, response);
-    }
+    // Mostrar las respuestas que se van a enviar (para depuración)
+    console.log(`Sending ${type} responses:`, responsesData);
     
-    // Add user ID from the URL
-    const userId = window.location.pathname.split('/').pop();
-    formData.append('idUsuario', userId);
+    // Obtener CSRF token si existe
+    const csrfToken = document.querySelector('input[name="_csrf"]')?.value || '';
     
-    // Send data using fetch API
-    fetch('/nuclea/interview/' + userId, {
+    // Enviar datos usando fetch API
+    fetch('/nuclea/interview', {
       method: 'POST',
-      body: formData
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-Token': csrfToken
+      },
+      body: JSON.stringify(formData)
     })
-    .then(response => response.json())
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return response.json();
+    })
+    .then(data => {
+      if (data.success) {
+        if (type === 'closed') {
+          // Solo mostramos el mensaje después de guardar ambas encuestas
+          alert('Evaluación guardada exitosamente');
+          window.location.href = '/nuclea/one';
+        }
+      } else {
+        console.error('Error:', data.message);
+        alert('Error al guardar las respuestas: ' + data.message);
+      }
+    })
     .catch(error => {
       console.error('Error saving responses:', error);
+      alert('Error al guardar las respuestas: ' + error.message);
     });
   }
 
-  updateQuestion(); // Initialize question and progress
-});
-
-// Add event listener for the save button in the second form
-document.getElementById('save-button').addEventListener('click', function() {
-  const selectInputs = document.querySelectorAll('#interview2 select');
-  const closedResponses = {};
-  
-  selectInputs.forEach(select => {
-    closedResponses[select.id] = select.value;
-  });
-  
-  // Create form data
-  const formData = new FormData();
-  
-  // Add all closed question responses
-  for (const [questionName, value] of Object.entries(closedResponses)) {
-    formData.append(`closedResponses[${questionName}]`, value);
+  function setupClosedQuestions() {
+    // Obtener el contenedor para las preguntas cerradas
+    const closedQuestionsContainer = document.querySelector('#interview2 .closed-questions-container');
+    if (!closedQuestionsContainer) {
+      console.error('Closed questions container not found');
+      return;
+    }
+    
+    // Limpiar el contenedor
+    closedQuestionsContainer.innerHTML = '';
+    
+    // Objeto para almacenar respuestas de preguntas cerradas
+    const closedResponses = {};
+    
+    // Generar HTML para cada pregunta cerrada
+    closedQuestions.forEach(question => {
+      const questionDiv = document.createElement('div');
+      questionDiv.className = 'closed-question';
+      
+      const questionTitle = document.createElement('h3');
+      questionTitle.textContent = question.pregunta;
+      
+      const questionDescription = document.createElement('p');
+      questionDescription.textContent = question.descripcionPregunta;
+      
+      const selectElement = document.createElement('select');
+      selectElement.id = `question_${question.preguntaId}`;
+      selectElement.className = 'rating-select';
+      
+      // Por defecto, seleccionar el valor medio
+      const defaultValue = Math.floor((question.escalaMaxima + question.escalaMinima) / 2);
+      closedResponses[question.preguntaId] = defaultValue.toString();
+      
+      // Añadir opciones basadas en la escala de la pregunta
+      for (let i = question.escalaMinima; i <= question.escalaMaxima; i++) {
+        const option = document.createElement('option');
+        option.value = i;
+        option.textContent = i;
+        if (i === defaultValue) {
+          option.selected = true;
+        }
+        selectElement.appendChild(option);
+      }
+      
+      // Listener para guardar respuesta cuando cambia
+      selectElement.addEventListener('change', function() {
+        closedResponses[question.preguntaId] = this.value;
+      });
+      
+      // Añadir todo al contenedor
+      questionDiv.appendChild(questionTitle);
+      questionDiv.appendChild(questionDescription);
+      questionDiv.appendChild(selectElement);
+      closedQuestionsContainer.appendChild(questionDiv);
+    });
+    
   }
   
-  // Add user ID from the URL
-  const userId = window.location.pathname.split('/').pop();
-  formData.append('idUsuario', userId);
-  
-  // Send data
-  fetch('/nuclea/interview/closed/' + userId, {
-    method: 'POST',
-    body: formData
-  })
-  .then(response => response.json())
-  .then(data => {
-    if (data.success) {
-      alert('Evaluación guardada exitosamente');
-      window.location.href = '/nuclea/dashboard'; // Redirect to dashboard
-    } else {
-      alert('Error al guardar la evaluación');
-    }
-  })
-  .catch(error => {
-    console.error('Error:', error);
-  });
+  const saveButton = document.getElementById('save-button');
+  if (saveButton) {
+    saveButton.addEventListener('click', function(e) {
+      e.preventDefault();
+
+      const closedResponses = {};
+      const selects = document.querySelectorAll('.evaluation-field select');
+
+      selects.forEach(select => {
+        const questionId = select.id || select.name;
+        if (questionId) {
+          closedResponses[questionId] = select.value;
+        }
+      });
+
+      if (Object.keys(closedResponses).length === 0) {
+        alert('No se encontraron respuestas para enviar');
+        return;
+      }
+
+      saveResponses(closedResponses, 'closed');
+    });
+  }
+
+  // Initialize first question
+  if (openQuestions.length > 0) {
+    updateQuestion();
+  } else {
+    console.error('No open questions found');
+  }
 });
 </script>

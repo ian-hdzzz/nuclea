@@ -261,7 +261,6 @@ function confirmDeleteHol(idDiaFeriado) {
 
             let tabla =document.getElementById('despliegue');
             tabla.innerHTML=htmlContainer;
-            
             // ========== DROPDOWN ========== //
             const actionButtons = document.querySelectorAll(".action-btn");
               

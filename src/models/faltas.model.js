@@ -68,4 +68,21 @@ module.exports = class Falta {
         }
     }
 
+    static searchByName(name) {
+        return db.execute(`
+            SELECT 
+                fa.idFalta, 
+                u.idUsuario, 
+                u.Nombre,
+                u.Apellidos, 
+                fa.Motivo, 
+                fa.Fecha_asignacion_falta, 
+                fa.archivo
+            FROM Faltas_administrativas fa 
+            JOIN Usuarios u ON fa.idUsuario = u.idUsuario
+            WHERE u.Nombre LIKE ? OR u.Apellidos LIKE ? OR fa.Motivo LIKE ?
+            ORDER BY fa.Fecha_asignacion_falta DESC
+        `, [`%${name}%`, `%${name}%`, `%${name}%`]);
+    }
+
 }

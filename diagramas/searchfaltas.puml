@@ -1,0 +1,34 @@
+@startuml
+title Diagrama de Secuencia: Búsqueda de Departamentos
+
+actor navegador
+participant routes
+participant controlador
+participant modelo
+database "Base de Datos SQL" as bd
+
+
+navegador -> navegador : 1. evento keyup(input[buscar])
+navegador -> routes : 2. fetch('/nuclea/departament/search?name=...')
+activate routes
+routes -> controlador : 3. searchDepartment()
+deactivate routes
+
+activate controlador
+controlador ->> modelo : 4. searchByName(nombre||?)
+activate modelo
+modelo ->> bd : 5. executeSQL(\nSELECT d.*\nFROM Departaments d\nJOIN PerteneceDepa pd\nJOIN Empresa e\nON d.idDepartamento = pd.idDepartamento\nAND pd.idEmpresa = e.idEmpresa\nWHERE d.nombreDepartamento LIKE ?\n)
+activate bd
+bd -->> modelo : 6. Resultados SQL
+deactivate bd
+modelo --> controlador : 7. Datos (promesa)
+deactivate modelo
+controlador --> navegador : 8. JSON / resultados
+deactivate controlador
+alt ["Datos correctos"]
+    navegador -> navegador : 9. procesar(opciones_extras)
+else ["Error"]
+    navegador -> navegador : 10. manejar.error(1)
+end
+
+@enduml

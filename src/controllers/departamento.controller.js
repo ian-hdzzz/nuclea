@@ -86,13 +86,27 @@ exports.postAgregarDep = (req, res, next) => {
         });
 };
 
+// controllers/departamento.controller.js
 exports.getDelete = (req, res, next) => {
-  console.log(req.body)
-  Departament.deleteA(req.params.idDepartamento).then(()=>{
-      res.redirect('/nuclea/departament')
-  }).catch((error)=>{
-      console.log(error)
-  })
+  const id = req.params.idDepartamento;
+  Departament.deleteA(id)
+    .then(() => Departament.fetchAllDepa())
+    .then(([rows]) => {
+      res.status(200).json({ 
+        success: true, 
+        datos: rows.map(row => ({
+          idDepartamento: row.idDepartamento,
+          Nombre_departamento: row.Nombre_departamento, // Nombre correcto
+          Descripcion: row.Descripcion,
+          Estado: row.Estado,
+          Nombre_empresa: row.Nombre_empresa // Nombre correcto
+        }))
+      });
+    })
+    .catch((error) => {
+      console.error(error);
+      res.status(500).json({ success: false, message: 'Error al eliminar' });
+    });
 };
 
 exports.getUpdate = (req, res, next) => {

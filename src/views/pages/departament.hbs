@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="/css/departament.css">
+    <meta name="csrf-token" content="{{csrfToken}}">
 </head>
 <body>
     <div class="top-container">
@@ -92,7 +93,7 @@
                       <button class="edit-btn" onclick="location.href='/nuclea/departament/update/{{idDepartamento}}'">
                         <i class="fa-solid fa-pen-to-square"></i> Edit
                       </button>
-                      <button class="delete-btn" onclick="location.href='/nuclea/departament/delete/{{idDepartamento}}'">
+                      <button class="delete-btn" onclick="confirmDeleteDepartamento('{{idDepartamento}}')">
                         <i class="fa-solid fa-trash"></i> Delete
                       </button>
                     </div>

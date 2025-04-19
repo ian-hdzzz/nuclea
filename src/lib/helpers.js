@@ -43,5 +43,18 @@ module.exports = {
 
   json: function (context) {
     return JSON.stringify(context);
+  },
+  lte: function (a, b) {
+    return a <= b;
+  },
+  times: function (n, block) {
+    let accum = '';
+    for (let i = 1; i <= n; ++i) {
+      accum += block.fn(i);
+    }
+    return accum;
+  },
+  typeof: function(value) {
+    return typeof value;
   }
 };

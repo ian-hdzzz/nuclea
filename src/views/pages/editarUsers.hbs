@@ -108,7 +108,7 @@
     <div id="modal" class="modal">
     <div class="modal-content">
         <!-- Botón de cerrar -->
-        <button id="closeModal" class="close-btn">✖</button>
+        <button id="closeModal" class="close-btn" onclick="window.location.href='/nuclea/users'">✖</button>
 
         <h2 class="title-modal">Add Users</h2>
         <p class="description">Fill in the required details to recall this Users</p>
@@ -194,7 +194,8 @@
                 <select class="text-modal" name="role" required>
                     <option value="">- Select a User Role -</option>
                     {{#each rols}}
-                    <option value="{{idRol}}" {{#if (eq ../usuarioDetails.idRol idRol)}}selected{{/if}}>
+                    <option value="{{idRol}}" 
+                        {{#if (eq Nombre_rol ../usuarioDetails.PrimerRol)}}selected{{/if}}>
                         {{Nombre_rol}}
                     </option>
                     {{/each}}
@@ -261,18 +262,19 @@
     </div>
 </div>
 
-<script src="/js/users.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+    const openModal = document.getElementById("openModal");
+    const closeModal = document.getElementById("closeModal");
+    const modal = document.getElementById("modal");
 
-</body>
-</html>
-
-
-
-    
-    </div>
-    </div>
-
-    <script src="/js/users.js"></script>
-
+    // Cierra el modal si se hace clic fuera de él
+    modal.addEventListener("click", (e) => {
+        if (e.target === modal) {
+            window.location.href = "/nuclea/users";
+        }
+    });
+});
+</script>
 </body>
 </html>
