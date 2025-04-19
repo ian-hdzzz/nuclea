@@ -9,7 +9,7 @@
 </head>
 <body>
     <div class="top-container">
-        <nav class="nav-bar">
+        {{!-- <nav class="nav-bar">
             <div class="first-container">
                 <div class="views">Views</div>
                 <div class="search-container">
@@ -18,7 +18,16 @@
                 </div>
             </div>
             
-        </nav>
+        </nav> --}}
+      <div class="search-input-container">
+
+        {{> search placeholder="Departament name..." }}
+      </div>
+      <div class="add-btn-container" id="openModal">
+          <i class="fa-regular fa-square-plus"></i>
+          <input type="button" value="Add Department" class="add-btn">
+          <!-- Botón de enviar <input type="button" value="Assign user to Dep" id="openModal2" class="add-btn"> -->
+      </div>
     </div>
 
     {{#if info}}
@@ -47,11 +56,7 @@
     <div class="content">
         <div class="nav-content">
             <h2>Departament Managment</h2>
-            <div class="add-btn-container" id="openModal">
-                <i class="fa-regular fa-square-plus"></i>
-                <input type="button" value="Add Department" class="add-btn">
-                <!-- Botón de enviar <input type="button" value="Assign user to Dep" id="openModal2" class="add-btn"> -->
-            </div>
+            
         </div>
        <table>
             <thead>
@@ -88,7 +93,7 @@
 
                 <td>
                   <div class="dropdown">
-                    <button class="action-btn">Actions</button>
+                    <button class="action-btn">Manage</button>
                     <div class="dropdown-content">
                       <button class="edit-btn" onclick="location.href='/nuclea/departament/update/{{idDepartamento}}'">
                         <i class="fa-solid fa-pen-to-square"></i> Edit
