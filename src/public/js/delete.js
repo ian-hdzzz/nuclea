@@ -209,3 +209,194 @@ function confirmDeleteReq(idSolicitud) {
         });
     }
 }
+
+
+function confirmDeleteHol(idDiaFeriado) {
+    console.log("------------Esta es el id solicitud----------");
+    console.log(idDiaFeriado);
+    const confirmed = confirm("Are you sure you want to delete this request?");
+    if (confirmed) {
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        
+        fetch(`/nuclea/holiday/delete/${idDiaFeriado}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-Token': csrfToken
+            },
+            credentials: 'include'
+        })
+        .then(result => {
+            return result.json();
+        })
+        .then(data => {
+            console.log(data);
+            let htmlContainer=``;
+            data.datosh.forEach(dato => {
+                htmlContainer+=`
+                <tr>
+                    <td>${dato.Nombre_asueto}</td>
+                    <td>${formatDate(dato.Fecha_asueto)}</td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="action-btn">Actions</button>
+                            <div class="dropdown-content">
+                                <button class="edit-btn"  onclick="location.href='/nuclea/holiday/update/${dato.idDiaFeriado}'">
+                                  <i class="fa-solid fa-pen-to-square"></i> Edit
+                                </button>
+                                <button class="delete-btn" onclick="confirmDeleteHol('${dato.idDiaFeriado}')">
+                                  <i class="fa-solid fa-trash"></i> Delete
+                                </button>
+
+                             </div>
+                        </div>
+                    </td>
+                </tr>`;
+                
+
+
+
+            })
+            htmlContainer+=``;
+
+            let tabla =document.getElementById('despliegue');
+            tabla.innerHTML=htmlContainer;
+            // ========== DROPDOWN ========== //
+            const actionButtons = document.querySelectorAll(".action-btn");
+              
+            actionButtons.forEach((btn) => {
+              btn.addEventListener("click", (e) => {
+                e.stopPropagation();
+                document.querySelectorAll(".dropdown-content").forEach((content) => {
+                  if (content !== btn.nextElementSibling) {
+                    content.classList.remove("show");
+                  }
+                });
+          
+                const dropdown = btn.nextElementSibling;
+                if (dropdown) {
+                  dropdown.classList.toggle("show");
+                }
+              });
+            });
+          
+            window.addEventListener("click", () => {
+              document.querySelectorAll(".dropdown-content").forEach((content) => {
+                content.classList.remove("show");
+              });
+            });
+          
+          // -------------------------------Fin-------------------------------
+
+           
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            alert("An error occurred.");
+        });
+    }
+}
+
+
+function confirmDeleteFal(idFalta) {
+    console.log("------------Esta es el id solicitud----------");
+    console.log(idFalta);
+    const confirmed = confirm("Are you sure you want to delete this request?");
+    if (confirmed) {
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        
+        fetch(`/nuclea/faltasAdministrativas/delete/${idFalta}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-Token': csrfToken
+            },
+            credentials: 'include'
+        })
+        .then(result => {
+            return result.json();
+        })
+        .then(data => {
+            console.log(data);
+           let htmlContainer=``;
+            data.faltas.forEach(dato => {
+                htmlContainer+=`
+                <tr>
+                <td>${dato.Nombre} ${dato.Apellidos}</td>
+                <td>${dato.Motivo}</td>
+                <td>${formatDate(dato.Fecha_asignacion_falta)}</td>
+                <td>
+                `;
+                if(dato.archivo){
+                    htmlContainer+=`
+                    <a href="/Uploads/{{archivo}}" target="_blank" class="pdf-link">
+                        <i class="fa-solid fa-file-pdf"></i> Open PDF
+                    </a>
+                    `;
+                }else{
+                    htmlContainer+=`Sin archivo`;
+                }
+                htmlContainer+=`</td>`;
+                data.privilegios.forEach(privilegio => {
+                    if(privilegio.Nombre_privilegio=="addAO"){
+                        htmlContainer+=`
+                        <td>
+                        <div class="dropdown">
+                        <button class="action-btn">Actions</button>
+                        <div class="dropdown-content">
+                            <button class="edit-btn"  onclick="location.href='/nuclea/faltasAdministrativas/update/${dato.idFalta}'">
+                            <i class="fa-solid fa-pen-to-square"></i> Edit
+                            </button>
+                            <button class="delete-btn" onclick="confirmDeleteFal('${dato.idFalta}')">
+                            <i class="fa-solid fa-trash"></i> Delete
+                            </button>
+
+                        </div>
+                        </div>
+                    </td>
+                        
+                        `;
+                    }
+
+                })
+                htmlContainer+=`</tr>`;
+
+            })
+
+            let tabla =document.getElementById('despliegue');
+            tabla.innerHTML=htmlContainer;
+            // ========== DROPDOWN ========== //
+            const actionButtons = document.querySelectorAll(".action-btn");
+              
+            actionButtons.forEach((btn) => {
+              btn.addEventListener("click", (e) => {
+                e.stopPropagation();
+                document.querySelectorAll(".dropdown-content").forEach((content) => {
+                  if (content !== btn.nextElementSibling) {
+                    content.classList.remove("show");
+                  }
+                });
+          
+                const dropdown = btn.nextElementSibling;
+                if (dropdown) {
+                  dropdown.classList.toggle("show");
+                }
+              });
+            });
+          
+            window.addEventListener("click", () => {
+              document.querySelectorAll(".dropdown-content").forEach((content) => {
+                content.classList.remove("show");
+              });
+            });
+          
+          // -------------------------------Fin-------------------------------
+
+           
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            alert("An error occurred.");
+        });
+    }
+}
