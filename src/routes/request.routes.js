@@ -15,5 +15,5 @@ router.get('/request/approval', isAuth, requestController.getRequestsapr);
 router.post('/request/:id/approve', isAuth, requestController.approveRequest); 
 router.post('/request/:id/reject', isAuth, requestController.rejectRequest);
 router.post('/request/:id/edit', isAuth, requestController.editRequest);
-router.delete('/request/delete/:idSolicitud', isAuth, requestController.deleteRequest);
+router.delete('/request/delete/:idSolicitud', isAuth, requestController.delete);
 module.exports = router;

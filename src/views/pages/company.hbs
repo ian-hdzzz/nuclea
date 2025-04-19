@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="/css/company.css">
+    <meta name="csrf-token" content="{{csrfToken}}">
 </head>
 <body>
      <div class="top-container">
@@ -60,9 +61,9 @@
                     <th>Actions</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="despliegue">
                 {{#each datosh}}
-                <tr>
+                <tr >
                     <td>{{Nombre_empresa}}</td>
                     <td class="state-container">
                         {{#if Estado}}
@@ -78,7 +79,7 @@
                             <button class="edit-btn"  onclick="location.href='/nuclea/company/update/{{idEmpresa}}'">
                             <i class="fa-solid fa-pen-to-square"></i> Edit
                             </button>
-                            <button class="delete-btn" onclick="location.href='/nuclea/company/delete/{{idEmpresa}}'">
+                            <button class="delete-btn" onclick="confirmDeleteCom('{{idEmpresa}}')">
                             <i class="fa-solid fa-trash"></i> Delete
                             </button>
 
@@ -131,5 +132,6 @@
 
     <script src="/js/company.js"></script>
     <script src="/js/searchcompany.js"></script>
+    <script src="/js/delete.js"></script>
 </body>
 </html>

@@ -67,13 +67,25 @@ exports.postAgregarCompany = (request, response, next) => {
 
 };
 
-exports.getDelete = (req, res, next) => {
-  console.log(req.body)
-  Company.deleteA(req.params.idEmpresa).then(()=>{
-      res.redirect('/nuclea/company')
-  }).catch((error)=>{
-      console.log(error)
-  })
+exports.delete = (req, res, next) => {
+  const id = req.params.idEmpresa;
+  Company.deleteA(id)
+    .then(() => Company.fetchAll())
+    .then(([rows]) => {
+      res.status(200).json({ 
+        success: true, 
+        datos: rows.map(row => ({
+          idEmpresa: row.idEmpresa,
+          Nombre_empresa: row.Nombre_empresa, // Nombre correcto
+          Estado: row.Estado,
+  
+        }))
+      });
+    })
+    .catch((error) => {
+      console.error(error);
+      res.status(500).json({ success: false, message: 'Error al eliminar' });
+    });
 };
 
 

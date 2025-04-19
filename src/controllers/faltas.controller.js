@@ -109,7 +109,7 @@ exports.postAgregarFa = (req, res, next) => {
     
 };
 
-exports.getDelete = (req, res, next) => {
+exports.delete = (req, res, next) => {
     Falta.delete(req.params.idFalta)
     .then(()=>{
         let encontrado = false; // Variable para saber si encontramos el privilegio 'addAO'

@@ -350,7 +350,7 @@ exports.getRequestsPersonal = (req, res) => {
 
 
 
-exports.deleteRequest = (req, res) => {
+exports.delete = (req, res) => {
   const mensaje = req.session.info || '';
      if (req.session.info) {
          req.session.info = '';

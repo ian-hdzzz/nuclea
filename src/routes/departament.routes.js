@@ -8,7 +8,7 @@ const express = require('express');
  router.get('/',isAuth,departamentController.getDepartaments);
  router.post('/',isAuth,departamentController.postAgregarDep)
  // Cambiar de GET a DELETE
-router.delete('/delete/:idDepartamento', departamentController.getDelete);
+router.delete('/delete/:idDepartamento', departamentController.delete);
  router.get('/update/:idDepartamento',departamentController.getUpdate)
 router.post('/update/:idDepartamento',departamentController.postUpdate)
 router.get('/search', departamentController.searchDepartments)

@@ -87,7 +87,7 @@ exports.postAgregarDep = (req, res, next) => {
 };
 
 // controllers/departamento.controller.js
-exports.getDelete = (req, res, next) => {
+exports.delete = (req, res, next) => {
   const id = req.params.idDepartamento;
   Departament.deleteA(id)
     .then(() => Departament.fetchAllDepa())
