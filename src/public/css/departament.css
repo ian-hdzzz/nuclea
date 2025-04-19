@@ -75,11 +75,11 @@ body{
 }
 
 .content{
-    width: 80%;
+    width: 90%;
     border-radius: 2rem;
     margin: auto;
     padding: 40px;
-    background-color: #151720;
+    background-color: var(--color-bg-secundario);
 }
 
 .nav-content{

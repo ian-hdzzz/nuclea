@@ -10,7 +10,7 @@
     margin-left: 140px;
     display: flex;
     height: 80%;
-    width: 800px;
+    width: 100%;
 
 }
 body{
@@ -76,11 +76,11 @@ body{
 }
 
 .content{
-    width: 80%;
+    width: 92%;
     border-radius: 2rem;
     margin: auto;
     padding: 40px;
-    background-color: #151720;
+    background-color: var(--color-bg-secundario);
 }
 
 .nav-content{

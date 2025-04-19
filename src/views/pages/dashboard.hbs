@@ -1,23 +1,72 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>{{title}}</title>
-  <link rel="stylesheet" href="/css/dashboard.css" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gridstack@9.2.1/dist/gridstack.min.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mi Sitio con Loader</title>
+  
+  <!-- GridStack CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/gridstack.js/7.3.0/gridstack.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/gridstack.js/7.3.0/gridstack-extra.min.css" />
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <!-- Tu CSS personalizado -->
+  <link rel="stylesheet" href="/css/dashboard.css">
+  
   <style>
+    
+  /* Estilos adicionales para GridStack */
     .grid-stack {
-      background: #f5f5f5;
-      margin: 30px auto;
-      width: 90%;
-    }
-    .grid-stack-item-content {
-      background: white;
       border-radius: 10px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-      padding: 20px;
+      margin: 20px;
+      padding: 10px;
     }
+    
+    .grid-stack-item-content {
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    
+    .card {
+      height: 100%;
+      margin: 0;
+      width: 100%;
+      box-shadow: none;
+    }
+    
+    .card-content {
+      padding: 15px;
+      height: 100%;
+      display: flex;
+      align-items: center;
+    }
+    
+    .grid-stack-item-removing {
+      opacity: 0.5;
+    }
+    
+    .dashboard-controls {
+      display: flex;
+      justify-content: flex-end;
+      padding: 10px 20px;
+    }
+    
+    .dashboard-controls button {
+      margin-left: 10px;
+      padding: 8px 15px;
+      background: #4a6cf7;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    
+    .dashboard-controls button:hover {
+      background: #3657d4;
+    }
+    
+    
+>>>>>>> salvado
   </style>
 </head>
 <body>
@@ -34,123 +83,223 @@
     </div>
   </div>
 
-  <h1 class="title">Welcome to Flowit HRMS</h1>
-  <p class="subtitle">A comprehensive solution for managing your company's human resources.</p>
 
-  <button onclick="saveLayout()">Guardar Layout</button>
+  <div class="dashboard-container">
+    <h1 class="title">Welcome to Flowit HRMS</h1>
+    <p class="subtitle">A comprehensive solution for managing your company's human resources.</p>
+    
+    <div class="dashboard-controls">
+      <button id="save-grid">Guardar Layout</button>
+      <!-- Botón comentado de cargar layout -->
+      <!-- <button id="load-grid">Cargar Layout</button> -->
+      <!-- Botón comentado de añadir widget -->
+      <!-- <button id="add-widget">Añadir Widget</button> -->
+    </div>
+    
+    <!-- GridStack Container -->
+    <div class="grid-stack"></div>
+  </div>
 
-  <div class="grid-stack"></div>
-
-  <script src="https://cdn.jsdelivr.net/npm/gridstack@9.2.1/dist/gridstack-all.js"></script>
+  <!-- GridStack JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gridstack.js/7.3.0/gridstack-all.js"></script>
+  
   <script>
-    const layout = {{{layout}}}; // viene desde el controlador como JSON
-
-    document.addEventListener('DOMContentLoaded', () => {
-      const grid = GridStack.init({
+    // Ocultar el loader cuando la página está cargada
+    window.addEventListener('load', function() {
+      setTimeout(function() {
+        document.getElementById('loaderWrapper').style.display = 'none';
+      }, 1000);
+    });
+    
+    // Inicializar GridStack
+    document.addEventListener('DOMContentLoaded', function() {
+      const options = {
+        cellHeight: 'auto',      // Altura automática para las celdas
+        minRow: 1,    
+        column: 4,    
+        margin: 10,              // Espacio entre widgets
+        disableOneColumnMode: false,
         float: true,
-        resizable: { handles: 'all' }
-      });
-
-      const cards = [
-        {
-          id: 'departments',
-          content: `
-            <h2>Active Departments</h2>
-            <div class="card-number">7</div>
-            <a href="/nuclea/departament" class="card-link">See details →</a>
-          `,
-          icon: 'fa-building'
-        },
-        {
-          id: 'vacations',
-          content: `
-            <h2>Remaining Vacation</h2>
-            <div class="card-number">{{diasRestantes}}</div>
-          `,
-          icon: 'fa-plane-up'
-        },
-        {
-          id: 'users',
-          content: `
-            <h2>Registered Users</h2>
-            <div class="card-number">18</div>
-            <a href="/nuclea/users" class="card-link">See details →</a>
-          `,
-          icon: 'fa-people-group'
-        },
-        {
-          id: 'projects',
-          content: `
-            <h2>Ongoing Projects</h2>
-            <div class="card-number">12</div>
-            <a href="#" class="card-link">See details →</a>
-          `,
-          icon: 'fa-chart-simple'
+        animate: true,
+        resizable: {
+          handles: 'e,se,s,sw,w'  // Permitir redimensionar en todas direcciones
         }
+      };
+      
+      // Crear la instancia de GridStack
+      const grid = GridStack.init(options);
+      
+      // Definición de widgets iniciales (ahora 1 columna de ancho que es ~20%)
+      const widgets = [
+        { x: 0, y: 0, width: 1, height: 2, content: createDepartmentCard() },
+        { x: 1, y: 0, width: 1, height: 2, content: createVacationCard() },
+        { x: 2, y: 0, width: 1, height: 2, content: createUsersCard() },
+        { x: 3, y: 0, width: 1, height: 2, content: createProjectsCard() }
       ];
-
-      // Si existe un layout personalizado, lo usamos
-      if (layout && layout.length > 0) {
-        layout.forEach((item) => {
-          const card = cards.find(c => c.id === item.id);
-          if (card) {
-            const el = document.createElement('div');
-            el.classList.add('grid-stack-item');
-            el.setAttribute('gs-id', card.id);
-            el.setAttribute('gs-x', item.x);
-            el.setAttribute('gs-y', item.y);
-            el.setAttribute('gs-w', item.w);
-            el.setAttribute('gs-h', item.h);
-            el.innerHTML = `
-              <div class="grid-stack-item-content">
-                <i class="fa-solid ${card.icon}"></i>
-                ${card.content}
-              </div>
-            `;
-            grid.addWidget(el);
-          }
-        });
-      } else {
-        // Layout por defecto
-        cards.forEach((card, i) => {
-          const el = document.createElement('div');
-          el.classList.add('grid-stack-item');
-          el.setAttribute('gs-id', card.id);
-          el.setAttribute('gs-x', i * 3);
-          el.setAttribute('gs-y', 0);
-          el.setAttribute('gs-w', 3);
-          el.setAttribute('gs-h', 2);
-          el.innerHTML = `
-            <div class="grid-stack-item-content">
-              <i class="fa-solid ${card.icon}"></i>
-              ${card.content}
-            </div>
-          `;
-          grid.addWidget(el);
+      
+      // Cargar los widgets iniciales
+      loadWidgets(widgets);
+      
+      // Guardar layout
+      document.getElementById('save-grid').addEventListener('click', function() {
+        const serializedData = grid.save();
+        localStorage.setItem('dashboard-layout', JSON.stringify(serializedData));
+        alert('Layout guardado correctamente');
+      });
+      
+      // Cargar layout (comentado por ahora)
+      /*
+      document.getElementById('load-grid').addEventListener('click', function() {
+        const savedLayout = localStorage.getItem('dashboard-layout');
+        if (savedLayout) {
+          grid.removeAll();
+          const layout = JSON.parse(savedLayout);
+          loadSavedGrid(layout);
+        } else {
+          alert('No hay layout guardado');
+        }
+      });
+      */
+      
+      // Añadir nuevo widget (comentado por ahora)
+      /*
+      document.getElementById('add-widget').addEventListener('click', function() {
+        const widgetTypes = ['department', 'vacation', 'users', 'projects'];
+        const randomType = widgetTypes[Math.floor(Math.random() * widgetTypes.length)];
+        let content;
+        
+        switch (randomType) {
+          case 'department':
+            content = createDepartmentCard();
+            break;
+          case 'vacation':
+            content = createVacationCard();
+            break;
+          case 'users':
+            content = createUsersCard();
+            break;
+          case 'projects':
+            content = createProjectsCard();
+            break;
+        }
+        
+        const newWidget = { x: 0, y: 0, width: 1, height: 2, content };
+        grid.addWidget(newWidget);
+      });
+      */
+      
+      // Función para cargar widgets
+      function loadWidgets(widgets) {
+        widgets.forEach(widget => {
+          const element = document.createElement('div');
+          element.innerHTML = widget.content;
+          grid.addWidget({
+            x: widget.x,
+            y: widget.y,
+            width: widget.width,
+            height: widget.height,
+            content: widget.content,
+            autoPosition: false
+          });
         });
       }
-
-      window.saveLayout = function () {
-        const layoutData = grid.save(false).map(item => ({
-          id: item.id,
-          x: item.x,
-          y: item.y,
-          w: item.w,
-          h: item.h
-        }));
-
-        fetch('/dashboard/save-layout', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ layout: layoutData })
-        })
-        .then(res => res.ok ? alert('Layout guardado') : alert('Error al guardar'))
-        .catch(err => console.error(err));
-      };
+      
+      // Función para cargar layout guardado
+      function loadSavedGrid(layout) {
+        layout.forEach(item => {
+          let content;
+          
+          // Recrear el contenido basado en los datos o usar un contenido predeterminado
+          if (item.content && item.content.includes('Active Departments')) {
+            content = createDepartmentCard();
+          } else if (item.content && item.content.includes('Remaining vacation')) {
+            content = createVacationCard();
+          } else if (item.content && item.content.includes('Registered Users')) {
+            content = createUsersCard();
+          } else if (item.content && item.content.includes('Ongoing Projects')) {
+            content = createProjectsCard();
+          } else {
+            content = '<div class="card"><div class="card-content"><div class="card-info"><h2>New Widget</h2><div class="card-number">0</div></div></div></div>';
+          }
+          
+          grid.addWidget({
+            x: item.x,
+            y: item.y,
+            width: item.w || item.width,
+            height: item.h || item.height,
+            content: content
+          });
+        });
+      }
+      
+      // Funciones para crear tarjetas
+      function createDepartmentCard() {
+        return `
+          <div class="card">
+            <div class="card-content">
+              <div class="card-info">
+                <h2>Active Departments</h2>
+                <div class="card-number">7</div>
+                <a href="/nuclea/departament" class="card-link">See details <span class="arrow">&#8594;</span></a>
+              </div>
+              <div class="card-icon blue">
+                <i class="fa-solid fa-building"></i>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+      
+      function createVacationCard() {
+        return `
+          <div class="card">
+            <div class="card-content">
+              <div class="card-info">
+                <h2>Remaining vacation</h2>
+                <div class="card-number">15</div>
+              </div>
+              <div class="card-icon blue">
+                <i class="fa-solid fa-plane-up"></i>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+      
+      function createUsersCard() {
+        return `
+          <div class="card">
+            <div class="card-content">
+              <div class="card-info">
+                <h2>Registered Users</h2>
+                <div class="card-number">18</div>
+                <a href="/nuclea/users" class="card-link">See details <span class="arrow">&#8594;</span></a>
+              </div>
+              <div class="card-icon purple">
+                <i class="fa-solid fa-people-group"></i>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+      
+      function createProjectsCard() {
+        return `
+          <div class="card">
+            <div class="card-content">
+              <div class="card-info">
+                <h2>Ongoing Projects</h2>
+                <div class="card-number">12</div>
+                <a href="#" class="card-link">See details <span class="arrow">&#8594;</span></a>
+              </div>
+              <div class="card-icon green">
+                <i class="fa-solid fa-chart-simple"></i>
+              </div>
+            </div>
+          </div>
+        `;
+      }
     });
   </script>
-  <script src="https://kit.fontawesome.com/your-fontawesome-kit.js" crossorigin="anonymous"></script>
 </body>
 </html>
