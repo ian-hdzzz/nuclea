@@ -9,19 +9,23 @@
 </head>
 <body>
      <div class="top-container">
-        {{!-- <nav class="nav-bar">
-            <div class="first-container">
-                <div class="hidden"></div>
-                <div class="search-container">
-                <input type="text" placeholder="Search..." class="input-search" id="search-input">
-                <i class="fa-solid fa-magnifying-glass search-icon"></i>
-                </div>
-            </div>
-            
-        </nav> --}}
-        <div class="search-input-container">
-            {{> search placeholder="Company name..." }}
+        <nav class="nav-bar">
+      <div class="first-container">
+        <div class="hidden"></div>
+        <div class="search-container">
+          <input type="text" placeholder="Search..." class="input-search" id="search-input">
+          <i class="fa-solid fa-magnifying-glass search-icon"></i>
         </div>
+      </div>
+      <div class="second-container">
+        <div>
+          <i class="fa-solid fa-bell hidden" ></i>
+        </div>
+        <div>
+          <i class="fa-solid fa-user hidden"></i>
+        </div>
+      </div>
+    </nav>
         <div class="add-btn-container" id="openModal">
                 <input type="button" value="Add Company" class="add-btn">
         </div>

@@ -12,22 +12,24 @@
 
 
   <div class="top-container">
+    <nav class="nav-bar">
       <div class="first-container">
         <div class="hidden"></div>
-        <div class="search-ao">
-
-        {{> search 
-          placeholder="Employee name..." }}
-          
-        </div>
-        <div class="add-btn-container" id="openModal">
-          <i class="fa-regular fa-square-plus"></i>
-          <input type="button" value="Add Administrative offense" id="openModal" class="add-btn">
-              
+        <div class="search-container">
+          <input type="text" placeholder="Search..." class="input-search" id="search-input">
+          <i class="fa-solid fa-magnifying-glass search-icon"></i>
         </div>
       </div>
-
-  </div>
+      <div class="second-container">
+        <div>
+          <i class="fa-solid fa-bell hidden" ></i>
+        </div>
+        <div>
+          <i class="fa-solid fa-user hidden"></i>
+        </div>
+      </div>
+    </nav>
+  </div>
   {{#if info}}
      <div "top-container">
        <div class="nav-bar">
