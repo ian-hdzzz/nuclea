@@ -9,8 +9,6 @@
   <meta name="csrf-token" content="{{ csrfToken }}">
 </head>
 <body>
-
-
   <div class="top-container">
     <nav class="nav-bar">
       <div class="first-container">
@@ -28,8 +26,8 @@
           <i class="fa-solid fa-user hidden"></i>
         </div>
       </div>
-    </nav>
-  </div>
+    </nav>
+  </div>
   {{#if info}}
      <div "top-container">
        <div class="nav-bar">
@@ -57,7 +55,11 @@
       <h2>Administrative offenses</h2>
       {{#each privilegios}}
         {{#if (eq this.Nombre_privilegio "addAO")}}
-
+          <div class="add-btn-container" id="openModal">
+                <i class="fa-regular fa-square-plus"></i>
+                <input type="button" value="Add Administrative offense" id="openModal" class="add-btn">
+                <!-- Botón de enviar <input type="button" value="Assign user to Dep" id="openModal2" class="add-btn"> -->
+          </div>
         {{/if}}
       {{/each}}
     </div>
@@ -95,7 +97,7 @@
             {{#if (eq this.Nombre_privilegio "addAO")}}
               <td>
                 <div class="dropdown">
-                  <button class="action-btn">Manage</button>
+                  <button class="action-btn">Actions</button>
                   <div class="dropdown-content">
                     <button class="edit-btn"  onclick="location.href='/nuclea/faltasAdministrativas/update/{{../idFalta}}'">
                       <i class="fa-solid fa-pen-to-square"></i> Edit
