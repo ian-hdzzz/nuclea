@@ -8,14 +8,25 @@
     <meta name="csrf-token" content="{{csrfToken}}">
 </head>
 <body>
+    <div class="company-container">
+
+
      <div class="top-container">
-        <nav class="nav-bar">
-      <div class="first-container">
-        <div class="hidden"></div>
-        <div class="search-container">
-          <input type="text" placeholder="Search..." class="input-search" id="search-input">
-          <i class="fa-solid fa-magnifying-glass search-icon"></i>
-        </div>
+
+        {{!-- <nav class="nav-bar">
+            <div class="first-container">
+                <div class="hidden"></div>
+                <div class="search-container">
+                <input type="text" placeholder="Search..." class="input-search" id="search-input">
+                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                </div>
+            </div>
+            
+        </nav> --}}
+        <div class="search-input-container">
+            {{> search placeholder="Company name..." searchId="search-input"}}
+
+  
       </div>
       <div class="second-container">
         <div>
@@ -29,6 +40,7 @@
         <div class="add-btn-container" id="openModal">
                 <input type="button" value="Add Company" class="add-btn">
         </div>
+    </div>
     </div>
     {{#if info}}
         <div class="top-container">
@@ -78,7 +90,7 @@
                         {{/if}}</td>
                     <td class="actions-col">
                         <div class="dropdown">
-                        <button class="action-btn">Manage</button>
+                        <button class="action-btn">Mange</button>
                         <div class="dropdown-content">
                             <button class="edit-btn"  onclick="location.href='/nuclea/company/update/{{idEmpresa}}'">
                             <i class="fa-solid fa-pen-to-square"></i> Edit
@@ -132,7 +144,7 @@
 
 
     </div>
-
+    </div>
 
     <script src="/js/company.js"></script>
     <script src="/js/searchcompany.js"></script>

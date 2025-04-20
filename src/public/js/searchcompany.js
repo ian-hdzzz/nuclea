@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
     // Seleccionar el input de búsqueda
-    const searchInput = document.querySelector('.input-search');
+    const searchInput = document.getElementById("search-input");
     
     // Verificar si el elemento existe
     if (searchInput) {

@@ -116,24 +116,20 @@
         <input type="text" placeholder="{{placeholder}}" class="search-input" id="{{searchId}}" data-search-type="{{searchType}}">
         <i class="fa-solid fa-magnifying-glass"></i>
     </div>
+    {{#ifNotEqual searchId "search-input"}}
     <div class="search-loader">
         <span>Searching..</span>
     </div>
-    
+
     <div class="search-no-results">
         No se encontraron resultados
     </div>
-    
+
     <div class="contact-items">
-        {{!-- {{#if contacts}}
-        {{#each contacts}}
-            <div class="contact-item {{#if @first}}active{{/if}}" data-id="{{this.id}}">
-                <div class="contact-avatar {{#if @first}}active{{/if}}">{{this.initial}}</div>
-                <div class="contact-name">{{this.name}}</div>
-            </div> --}}
-        {{!-- {{/each}} --}}
-    {{!-- {{/if}} --}}
+        {{!-- contenido --}}
     </div>
+    {{/ifNotEqual}}
+
 </div>
 
 {{!-- Script específico para este partial, incluido solo cuando se usa el partial --}}

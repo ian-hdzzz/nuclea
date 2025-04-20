@@ -1,0 +1,225 @@
+
+<head>
+    <link rel="stylesheet" href="/css/my-events.css">
+</head>
+    <div class="container">
+        <div class="main-content">
+            <div class="header">
+                <div class="title">
+                    <h1>My Event Calendar</h1>
+                    <p>View your one-to-one meetings, vacations and holidays</p>
+                </div>
+                <button class="sync-button">
+                   <i class="fa-regular fa-calendar"></i>Calendar Sync with Google Calendar
+                </button>
+            </div>
+
+            <!-- Toggle Switch -->
+            <div class="toggle-container" id="viewToggle">
+                <div class="toggle-slider"></div>
+                <div class="toggle-option active" data-view="calendar">
+                    <i class="fa-regular fa-calendar"></i>Calendar
+                </div>
+                <div class="toggle-option " data-view="upcoming">
+                    <i class="fa-regular fa-clock"></i> Upcoming
+                </div>
+            </div>
+
+            <!-- First view: Upcoming events -->
+            <div class="upcoming-events" id="upcomingView" style="display: none;">
+                <h2>Upcoming Events</h2>
+                
+                <div class="event-item">
+                    <div class="event-title">
+                        <span class="event-icon">👤</span>
+                        <div class="event-details">
+                            <div>One-to-One with Manager</div>
+                            <div class="event-date">
+                                <span>📅 04/20/2025</span>
+                                <span style="margin-left: 10px;">⌚ 10:00 - 11:00</span>
+                            </div>
+                        </div>
+                    </div>
+                    <span class="event-tag">Meeting</span>
+                </div>
+                
+                <div class="event-item">
+                    <div class="event-title">
+                        <span class="event-icon">👤</span>
+                        <div class="event-details">
+                            <div>One-to-One with Director</div>
+                            <div class="event-date">
+                                <span>📅 04/22/2025</span>
+                                <span style="margin-left: 10px;">⌚ 3:30 - 4:30 PM</span>
+                            </div>
+                        </div>
+                    </div>
+                    <span class="event-tag">Meeting</span>
+                </div>
+                
+                <div class="event-item">
+                    <div class="event-title">
+                        <span class="event-icon vacation">🌙</span>
+                        <div class="event-details">
+                            <div>Vacation</div>
+                            <div class="event-date">
+                                <span>📅 04/25/2025 - 04/30/2025</span>
+                            </div>
+                        </div>
+                    </div>
+                    <span class="event-tag vacation">Vacation</span>
+                </div>
+                
+                <div class="event-item">
+                    <div class="event-title">
+                        <span class="event-icon holiday">📌</span>
+                        <div class="event-details">
+                            <div>Independence Day</div>
+                            <div class="event-date">
+                                <span>📅 05/01/2025</span>
+                            </div>
+                        </div>
+                    </div>
+                    <span class="event-tag holiday">Holiday</span>
+                </div>
+            </div>
+
+            <!-- Second view: Calendar -->
+            <div class="calendar-view" id="calendarView" style="display: block;">
+                <div class="month-header">
+                    <div class="month-title">April 2025</div>
+                    <div class="month-nav">
+                        <i class="fa-solid fa-angle-left"></i>
+                       <i class="fa-solid fa-angle-right"></i>
+                    </div>
+                </div>
+                
+                <div class="calendar-grid">
+                    <div class="weekdays">
+                        <div>Sun</div>
+                        <div>Mon</div>
+                        <div>Tue</div>
+                        <div>Wed</div>
+                        <div>Thu</div>
+                        <div>Fri</div>
+                        <div>Sat</div>
+                    </div>
+                    
+                    <div class="days">
+                        <!-- Week 1 -->
+                        <div class="day">1</div>
+                        <div class="day">2</div>
+                        <div class="day">3</div>
+                        <div class="day">4</div>
+                        <div class="day">5</div>
+                        <div class="day">6</div>
+                        <div class="day">7</div>
+                        
+                        <!-- Week 2 -->
+                        <div class="day">8</div>
+                        <div class="day">9</div>
+                        <div class="day">10</div>
+                        <div class="day">11</div>
+                        <div class="day">12</div>
+                        <div class="day">13</div>
+                        <div class="day">14</div>
+                        
+                        <!-- Week 3 -->
+                        <div class="day">15</div>
+                        <div class="day">16</div>
+                        <div class="day">17</div>
+                        <div class="day">18</div>
+                        <div class="day today">19</div>
+                        <div class="day event">
+                            20
+                            <div class="day-event-tag">One-to-One...</div>
+                        </div>
+                        <div class="day">21</div>
+                        
+                        <!-- Week 4 -->
+                        <div class="day">22</div>
+                        <div class="day">23</div>
+                        <div class="day">24</div>
+                        <div class="day vacation">
+                            25
+                            <div class="day-event-tag">Vacation</div>
+                        </div>
+                        <div class="day vacation">
+                            26
+                            <div class="day-event-tag">Vacation</div>
+                        </div>
+                        <div class="day vacation">
+                            27
+                            <div class="day-event-tag">Vacation</div>
+                        </div>
+                        <div class="day vacation">
+                            28
+                            <div class="day-event-tag">Vacation</div>
+                        </div>
+                        
+                        <!-- Week 5 -->
+                        <div class="day vacation">29</div>
+                        <div class="day vacation">30</div>
+                        <div class="day" style="opacity: 0.5;">1</div>
+                        <div class="day" style="opacity: 0.5;">2</div>
+                        <div class="day" style="opacity: 0.5;">3</div>
+                        <div class="day" style="opacity: 0.5;">4</div>
+                        <div class="day" style="opacity: 0.5;">5</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="sidebar">
+            <div class="my-events">
+                <i class="fa-solid fa-user"></i></a>
+                <h2>My Events</h2>
+            </div>
+                
+            <div class="stats">
+                <h3 class="stats-title">STATISTICS</h3>
+                
+                <div class="stat-item">
+                    <div>One-to-One</div>
+                    <div class="stat-count">2</div>
+                </div>
+                
+                <div class="stat-item">
+                    <div>Vacation Days</div>
+                    <div class="stat-count purple">7</div>
+                </div>
+                
+                <div class="stat-item">
+                    <div>Holidays</div>
+                    <div class="stat-count green">9</div>
+                </div>
+            </div>
+            
+            <div class="event-types">
+                <h3 class="stats-title">EVENT TYPE</h3>
+                
+                <div class="event-type">
+                    <div class="event-type-dot blue-dot"></div>
+                    <div>One-to-One Meetings</div>
+                </div>
+                
+                <div class="event-type">
+                    <div class="event-type-dot purple-dot"></div>
+                    <div>Vacations</div>
+                </div>
+                
+                <div class="event-type">
+                    <div class="event-type-dot green-dot"></div>
+                    <div>Holidays</div>
+                </div>
+                
+                <div class="event-type">
+                    <div class="event-type-dot gray-dot"></div>
+                    <div>Non-Working Days</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script async defer src="https://apis.google.com/js/api.js"></script>
+<script src="/js/my-events.js"></script>

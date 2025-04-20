@@ -153,8 +153,24 @@ actionButtons.forEach((button) => {
 })
 
 // Close dropdowns when clicking elsewhere on the page
-window.addEventListener("click", () => {
-  document.querySelectorAll(".dropdown-content").forEach((content) => {
-    content.classList.remove("show")
-  })
-})
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('.action-btn')) {
+    document.querySelectorAll('.dropdown-content').forEach(d => {
+      d.classList.remove('show');
+    });
+  }
+});
+
+
+function setupDropdown(row) {
+  const actionBtn = row.querySelector('.action-btn');
+  const dropdownContent = row.querySelector('.dropdown-content');
+
+  actionBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    document.querySelectorAll('.dropdown-content').forEach(d => {
+      if (d !== dropdownContent) d.classList.remove('show');
+    });
+    dropdownContent.classList.toggle('show');
+  });
+}

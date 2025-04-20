@@ -56,5 +56,12 @@ module.exports = {
   },
   typeof: function(value) {
     return typeof value;
+  },
+  ifNotEqual: function (a, b, options) {
+    if (a !== b) {
+      return options.fn(this);
+    } else {
+      return options.inverse(this);
+    }
   }
 };

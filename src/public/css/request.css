@@ -13,21 +13,9 @@ body {
     font-family: 'Montserrat', sans-serif;
 }
 
-.nav-bar {
-    font-family: "Radio Canada", sans-serif;
-    margin: 20px 20px;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    height: 50px;
-}
 
-.first-container {
-    margin-left: 140px;
-    display: flex;
-    height: 80%;
-    width: 800px;
-}
+
+
 .top-container {
     display: flex;
     justify-content: space-between;
@@ -38,23 +26,8 @@ body {
     margin-bottom: 20px;
     padding: 0 20px;
 }
-.search-request{
+.search-ao{
     width: 40%;
-}
-.search-container {
-    flex-grow: 0.7;
-    background-color: #fff;
-    padding: 4px;
-    border-radius: 0 8px 8px 0;
-}
-
-.input-search {
-    font-size: 18px;
-    padding: 4px;
-    outline: none;
-    border: none;
-    width: 95%;
-    height: 100%;
 }
 
 .search-icon {

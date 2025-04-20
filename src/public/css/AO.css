@@ -25,7 +25,9 @@ body{
     margin: auto;
     margin-top: 30px;
     margin-bottom: 20px;
-    padding: 0;
+    padding: 0 20px;
+    display: flex;
+    justify-content: space-between;
 }
 .search-ao{
     width: 40%;
