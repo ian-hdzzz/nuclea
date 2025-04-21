@@ -1,1 +1,48 @@
-<img src="/media/reports.png" alt="">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gráfica de prueba</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
+</head>
+<body>
+  <canvas id="estadoUsuariosChart" style="width:100%;max-width:700px;"></canvas>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const activos = {{{activosPorMes}}};
+    const inactivos = {{{inactivosPorMes}}};
+
+    new Chart("estadoUsuariosChart", {
+      type: "bar",
+      data: {
+        labels: ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"],
+        datasets: [
+          {
+            label: "Active",
+            backgroundColor: "#4CAF50",
+            data: activos
+          },
+          {
+            label: "Inactive",
+            backgroundColor: "#F44336",
+            data: inactivos
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          title: {
+            display: true,
+            text: "Active and Inactive collaborators per Month"
+          }
+        }
+      }
+    });
+  });
+</script>
+</body>
+</html>

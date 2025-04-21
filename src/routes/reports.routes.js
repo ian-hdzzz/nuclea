@@ -1,11 +1,8 @@
 const express = require('express');
 const isAuth = require('../util/is-auth');
+const dashController = require('../controllers/reports.controller');
 const router = express.Router();
 
-// Definir rutas
-router.get('/reports',isAuth,(req, res) => {
-  res.render('./pages/reports');
-});
-
+router.get('/reports', isAuth, dashController.getDashboardInfo);
 
 module.exports =  router;
