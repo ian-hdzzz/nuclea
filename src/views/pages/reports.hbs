@@ -5,44 +5,99 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Gráfica de prueba</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
+  <link rel="stylesheet" href="/css/reports.css">
 </head>
 <body>
-  <canvas id="estadoUsuariosChart" style="width:100%;max-width:700px;"></canvas>
+  <div class="dashboard-container">
+    <div class="chart-container">
+      <h2 class="chart-title">Gráfica de Colaboradores</h2>
+      <canvas id="estadoUsuariosChart"></canvas>
+    </div>
+    
+    <div class="info-panel">
+      <div class="info-card info-card-1">
+        <h3>Empleados activos e inactivos</h3>
+        <p>Información sobre el estatus de los empleados en la organización.</p>
+      </div>
+      
+      <div class="info-card info-card-2">
+        <h3>Departamentos</h3>
+        <p>Distribución de personal por departamentos.</p>
+      </div>
+      
+      <div class="info-card info-card-3">
+        <h3>Faltas administrativas</h3>
+        <p>Registro y seguimiento de incidencias administrativas.</p>
+      </div>
+      
+      <div class="info-card info-card-4">
+        <h3>Estadísticas generales</h3>
+        <p>Resumen de indicadores clave de rendimiento.</p>
+      </div>
+    </div>
+  </div>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    const activos = {{{activosPorMes}}};
-    const inactivos = {{{inactivosPorMes}}};
-
-    new Chart("estadoUsuariosChart", {
-      type: "bar",
-      data: {
-        labels: ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"],
-        datasets: [
-          {
-            label: "Active",
-            backgroundColor: "#4CAF50",
-            data: activos
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      // Estos valores serán reemplazados por tus datos reales
+      const activos = {{{activosPorMes}}};
+      const inactivos = {{{inactivosPorMes}}};
+      
+      new Chart("estadoUsuariosChart", {
+        type: "bar",
+        data: {
+          labels: ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"],
+          datasets: [
+            {
+              label: "Activos",
+              backgroundColor: "#4CAF50",
+              data: activos,
+              borderRadius: 5
+            },
+            {
+              label: "Inactivos",
+              backgroundColor: "#F44336",
+              data: inactivos,
+              borderRadius: 5
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: true,
+          plugins: {
+            legend: {
+              position: 'top',
+              labels: {
+                boxWidth: 12,
+                usePointStyle: true,
+                padding: 20
+              }
+            },
+            title: {
+              display: true,
+              text: "Colaboradores Activos e Inactivos por Mes",
+              font: {
+                size: 16
+              }
+            }
           },
-          {
-            label: "Inactive",
-            backgroundColor: "#F44336",
-            data: inactivos
-          }
-        ]
-      },
-      options: {
-        responsive: true,
-        plugins: {
-          title: {
-            display: true,
-            text: "Active and Inactive collaborators per Month"
+          scales: {
+            y: {
+              beginAtZero: true,
+              grid: {
+                color: 'rgba(0, 0, 0, 0.05)'
+              }
+            },
+            x: {
+              grid: {
+                display: false
+              }
+            }
           }
         }
-      }
+      });
     });
-  });
-</script>
+  </script>
 </body>
 </html>

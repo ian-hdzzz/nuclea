@@ -1,0 +1,57 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 20px;
+  }
+  
+  .dashboard-container {
+    display: flex;
+    gap: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .chart-container {
+    background-color:  var(--color-bg-secundario);
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    flex: 2;
+  }
+  
+  .info-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .info-card {
+    background-color:  var(--color-bg-secundario);
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+  }
+  
+  .info-card:hover {
+    transform: translateY(-5px);
+  }
+  
+  .info-card h3 {
+    margin-top: 0;
+    color: #ffffff;
+    border-bottom: 2px solid #eaeaea;
+    padding-bottom: 10px;
+  }
+  
+  .info-card-1 { border-top: 4px solid #4CAF50; }
+  .info-card-2 { border-top: 4px solid #2196F3; }
+  .info-card-3 { border-top: 4px solid #FF9800; }
+  .info-card-4 { border-top: 4px solid #9C27B0; }
+  
+  .chart-title {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #ffffff;
+  }
