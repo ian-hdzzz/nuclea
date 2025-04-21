@@ -414,7 +414,7 @@ th {
   
   
   .dropdown-content {
-    display: block;
+    display: none;
     position: absolute;
     left: 0;
     right: 0;
@@ -429,6 +429,13 @@ th {
     opacity: 0;
   }
   
+  .dropdown-content.show {
+    display: block;
+    opacity: 1;
+    max-height: 100px;
+  }
+  
+
   .dropdown-content.show {
     max-height: 100px; /* Adjust based on your content */
     opacity: 1;
@@ -481,14 +488,12 @@ th {
 
 .action-btn {
     cursor: pointer;
-    color: #fff;
-    font-size: 1rem;
-    padding: 10px 25px;
-    background: linear-gradient(to right, #2762ea 0%, #4162f0 29%, #8061fd 100%);
+    padding: 6px 20px;
+    background: linear-gradient(to right, #2762ea6e 0%, #1da3fc6d 100%);
+    box-sizing: border-box;
     border-radius: 2rem;
     border: none;
-    box-shadow: 3px 3px 15px rgba(46, 82, 227, 0.515);
-    transition: transform 0.2s ease-in-out;
+    font-size: .87rem;
   }
   
   .action-btn:hover {
