@@ -103,34 +103,65 @@ exports.postRequest = (request, response,next) => {
   const nombreUsuario = request.session.nombre; // Para mostrar en el mensaje
 
   const requests = new Request(sessionId, request.body.tipo, request.body.fechaInicio, request.body.fechaFin,request.body.descripcion);
-  
-  if(request.body.tipo==='Vacations'){
-    const fechaInicio = new Date(request.body.fechaInicio);
-    const fechaFin = new Date(request.body.fechaFin);
-
-    // Calcular la diferencia en milisegundos y convertirla a días
-    const totalDias = (fechaFin - fechaInicio) / (1000 * 60 * 60 * 24) + 1; // +1 para incluir ambos días
-
-    Request.fetchDays(sessionId).then(([diasRestantes])=>{
-      const diaRestantes=diasRestantes[0].dias_vaciones;
-      console.log(diaRestantes);
-      const dias = diaRestantes-totalDias
-      if(dias>=0){
-        requests.save()
-        .then(() => {
-          request.session.info = `Request from ${nombreUsuario} saved.`;
-          response.redirect('/nuclea/request/personal');
-          console.log('Se guardó correctamente');            
-        })
-        .catch((err) => {
+  DiasFeriados.fetchBetween(request.body.fechaInicio,request.body.fechaFin)
+    .then(([rows]) => {
+      const feriados = rows[0]['COUNT(*)'];
+      if(request.body.tipo==='Vacations'){
+        //const feriados = DiasFeriados.fetchBetween(request.body.fechaInicio, request.body.fechaFin)
+    
+        const fechaInicio = new Date(request.body.fechaInicio);
+        const fechaFin = new Date(request.body.fechaFin);  
+        console.log(request.body.fechaInicio);
+        console.log(request.body.fechaFin);
+        // Calcular la diferencia en milisegundos y convertirla a días
+        const totalDias = (fechaFin - fechaInicio) / (1000 * 60 * 60 * 24) + 1 - feriados; // +1 para incluir ambos días
+        console.log(totalDias)
+        Request.fetchDays(sessionId).then(([diasRestantes])=>{
+          const diaRestantes=diasRestantes[0].dias_vaciones;
+          console.log('Estos son los dias restantes:')
+          console.log(diaRestantes);
+          
+          if(totalDias>0){
+            const dias = diaRestantes-totalDias
+            console.log('Estos son los dias restantes:')
+            console.log(dias);
+            if(dias>=0){
+              requests.save()
+              .then(() => {
+                request.session.info = `Request from ${nombreUsuario} saved.`;
+                response.redirect('/nuclea/request/personal');
+                console.log('Se guardó correctamente');            
+              })
+              .catch((err) => {
+                request.session.errorRe = `Error registering request.`;
+                console.error(err);
+                response.redirect('/nuclea/request/personal');
+                response.status(500);
+              });
+            }else {
+              request.session.errorRe = `Could not register request, vacation days left ${diaRestantes}`;
+              response.redirect('/nuclea/request/personal');
+            }
+          }
+        }).catch((err)=> {
           request.session.errorRe = `Error registering request.`;
           console.error(err);
           response.redirect('/nuclea/request/personal');
           response.status(500);
         });
-      }else {
-        request.session.errorRe = `Could not register request, vacation days left ${diaRestantes}`;
-        response.redirect('/nuclea/request/personal');
+    
+      }else{
+        requests.save()
+      
+        .then(() => {
+            request.session.info = `Solicitud de ${nombreUsuario} guardado.`;
+            response.redirect('/nuclea/request/personal');
+        })
+        .catch((err) => {
+          console.error('Error al guardar la solicitud:', err.message);
+          console.error(err);
+          response.status(500).send('Error al obtener los datos');
+        });
       }
     }).catch((err)=> {
       request.session.errorRe = `Error registering request.`;
@@ -139,19 +170,7 @@ exports.postRequest = (request, response,next) => {
       response.status(500);
     });
 
-  }else{
-    requests.save()
   
-    .then(() => {
-        request.session.info = `Solicitud de ${nombreUsuario} guardado.`;
-        response.redirect('/nuclea/request/personal');
-    })
-    .catch((err) => {
-      console.error('Error al guardar la solicitud:', err.message);
-      console.error(err);
-      response.status(500).send('Error al obtener los datos');
-    });
-  }
   
 
 };

@@ -18,4 +18,10 @@ module.exports = class DiasFeriados {
     `);
     
   }
+  static fetchBetween(diaInicio, diaFin){
+    return db.execute(`
+      SELECT COUNT(*)
+      FROM DiasFeriados
+      WHERE Fecha_asueto BETWEEN ? AND ?;`,[diaInicio, diaFin]);
+  }
 };
