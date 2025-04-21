@@ -12,6 +12,7 @@ router.get('/employee-history/:id', OneToOneController.getEmployeeHistory);
 router.get('/interview/details/:id', OneToOneController.getInterviewDetails);
 router.get('/employee-graph/:id', OneToOneController.getEmployeeGraph);
 router.get('/all-employees-graph', OneToOneController.getAllEmployeesGraph);
+router.get('/interview/edit',OneToOneController.getInterviewEdit, OneToOneController.getInterview);
 
 // router.get('/interview/edit');
 

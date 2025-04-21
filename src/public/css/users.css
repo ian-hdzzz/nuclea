@@ -142,6 +142,7 @@ th, td {
     display: flex;
     cursor: auto;
     align-items: center;
+    justify-content: center;
     padding: 4px 15px;
     background: #12392B;
     box-sizing: border-box;
@@ -150,6 +151,17 @@ th, td {
     color: #22C55F;
 
 }
+.vacation-status {
+    display: flex;
+    cursor: auto;
+    align-items: center;
+    padding: 4px 15px;
+    background: #c0392b;
+    box-sizing: border-box;
+    font-size: .85rem;
+    border-radius: 2rem;
+    color: #ffffff;
+  }
 .dot{
     background: #22C55F;
     border-radius: 50%;  
@@ -406,3 +418,16 @@ input[type=checkbox] {
     width: 80%;
     text-align: center; /* Centra el texto */
 }
+  
+ 
+  
+  /* Punto rojo para inactivos */
+  .vacation-status.inactive .dot {
+    background-color: #ff5151;
+  }
+  
+  /* Fondo rojo para inactivos */
+  .inactive {
+    background-color: #c0392b;
+    color: white;
+  }

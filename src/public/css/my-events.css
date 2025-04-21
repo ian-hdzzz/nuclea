@@ -1,4 +1,3 @@
-
 :root {
     --dark-bg: #111827;
     --darker-bg: #0f172a;
@@ -12,11 +11,11 @@
     --border-color: #2d3748;
 }
 .container {
-    margin: 0 auto;
+    margin: 0;
     display: grid;
     background: none;
     grid-template-areas: 
-        "main sidebar";
+        "main main main main main sidebar";
     gap: 20px;
     width: 100%; 
     margin-left: 70px;
@@ -71,6 +70,7 @@
     border-radius: 8px;
     cursor: pointer;
     font-size: 16px;
+    margin-top: -20px;
 }
 
 .sync-button i {
@@ -137,6 +137,7 @@
     border-radius: 12px;
     padding: 20px;
     margin-bottom: 20px;
+
 }
 
 .upcoming-events h2 {
@@ -516,3 +517,63 @@
     display: flex;
     align-items: center;
 }
+
+/* Estilos para los eventos en el calendario */
+.day {
+    min-height: 80px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .day-number {
+    font-weight: bold;
+    margin-bottom: 2px;
+  }
+  
+  .day-events {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin-top: 2px;
+  }
+  
+  .day-event-tag {
+    font-size: 11px;
+    padding: 2px 4px;
+    border-radius: 3px;
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .day-event-tag.meeting {
+    background-color: #d1e3ff;
+    color: #0052cc;
+  }
+  
+  .day-event-tag.vacation {
+    background-color: #ffd1e3;
+    color: #cc0052;
+  }
+  
+  .day-event-tag.holiday {
+    background-color: #d1ffea;
+    color: #00cc85;
+  }
+  
+  .more-events {
+    font-size: 10px;
+    font-style: italic;
+    color: #666;
+  }
+  
+  /* Estilos para días con eventos */
+  .vacation-day {
+    background-color: rgba(255, 209, 227, 0.2);
+  }
+  
+  .holiday-day {
+    background-color: rgba(209, 255, 234, 0.2);
+  }

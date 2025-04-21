@@ -4,7 +4,7 @@ exports.getUnemployedUsers = (req, res) => {
   const privilegios = req.session.privilegios || [];
 
   const tieneAcceso = privilegios.some(
-    (p) => p.Nombre_privilegio === 'viewcollabs'
+    (p) => p.Nombre_privilegio === 'viewreport'
   );
 
   if (!tieneAcceso) {

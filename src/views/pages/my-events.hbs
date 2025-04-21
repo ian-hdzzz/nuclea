@@ -2,18 +2,9 @@
 <head>
     <link rel="stylesheet" href="/css/my-events.css">
 </head>
-    <div class="container">
-        <div class="main-content">
-            <div class="header">
-                <div class="title">
-                    <h1>My Event Calendar</h1>
-                    <p>View your one-to-one meetings, vacations and holidays</p>
-                </div>
-                <button class="sync-button">
-                   <i class="fa-regular fa-calendar"></i>Calendar Sync with Google Calendar
-                </button>
-            </div>
 
+        <div class="main-content">
+            <div class="header">        
             <!-- Toggle Switch -->
             <div class="toggle-container" id="viewToggle">
                 <div class="toggle-slider"></div>
@@ -23,7 +14,13 @@
                 <div class="toggle-option " data-view="upcoming">
                     <i class="fa-regular fa-clock"></i> Upcoming
                 </div>
+                
             </div>
+            <button class="sync-button" id="syncButton">
+                   <i class="fa-regular fa-calendar"></i> Sync with Google Calendar
+            </button>
+            </div>
+
 
             <!-- First view: Upcoming events -->
             <div class="upcoming-events" id="upcomingView" style="display: none;">
@@ -219,7 +216,16 @@
                 </div>
             </div>
         </div>
+
+    <div id="google-calendar-config" 
+        data-client-id='{{GOOGLE_CLIENT_ID}}'
+        data-api-key='{{GOOGLE_API_KEY}}'>
     </div>
 
 <script async defer src="https://apis.google.com/js/api.js"></script>
+<script src="https://accounts.google.com/gsi/client"></script>
+
 <script src="/js/my-events.js"></script>
+
+
+
