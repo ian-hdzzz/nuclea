@@ -1,6 +1,17 @@
 const Usuario = require('../models/unemployed.model');
 
 exports.getUnemployedUsers = (req, res) => {
+  const privilegios = req.session.privilegios || [];
+
+  const tieneAcceso = privilegios.some(
+    (p) => p.Nombre_privilegio === 'viewcollabs'
+  );
+
+  if (!tieneAcceso) {
+    req.session.errorRe = 'Acceso denegado: no cuentas con el privilegio necesario.';
+    return res.redirect('/nuclea/request/personal');
+  }
+
   Usuario.fetchUnemployedUsers()
     .then(([users]) => {
       res.render('pages/unemployed', {
