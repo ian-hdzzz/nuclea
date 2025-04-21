@@ -4,24 +4,32 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Gráfica de prueba</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
   <link rel="stylesheet" href="/css/reports.css">
 </head>
 <body>
   <div class="dashboard-container">
     <div class="chart-container">
-      <h2 class="chart-title">Gráfica de Colaboradores</h2>
       <canvas id="estadoUsuariosChart"></canvas>
     </div>
     
     <div class="info-panel">
       <div class="info-card info-card-1">
         <h3>Empleados activos e inactivos</h3>
-        <p>Información sobre el estatus de los empleados en la organización.</p>
+        <div class="employee-counters">
+          <div class="counter-box active-counter">
+            <div class="counter-label">Empleados Activos</div>
+            <div class="counter-number">{{reportsDetailsActive.cantidad}}</div>
+          </div>
+          <div class="counter-box inactive-counter">
+            <div class="counter-label">Empleados Inactivos</div>
+            <div class="counter-number">{{reportsDetailsInactive.cantidad}}</div>
+        </div>
+      </div>
       </div>
       
       <div class="info-card info-card-2">
-        <h3>Departamentos</h3>
+        <h3>One-to-One</h3>
         <p>Distribución de personal por departamentos.</p>
       </div>
       
@@ -52,13 +60,15 @@
               label: "Activos",
               backgroundColor: "#4CAF50",
               data: activos,
-              borderRadius: 5
+              borderRadius: 5,
+              borderSkipped: false // Importante para que se redondeen todos los lados
             },
             {
               label: "Inactivos",
               backgroundColor: "#F44336",
               data: inactivos,
-              borderRadius: 5
+              borderRadius: 5,
+              borderSkipped: false // Importante para que se redondeen todos los lados
             }
           ]
         },
@@ -78,7 +88,7 @@
               display: true,
               text: "Colaboradores Activos e Inactivos por Mes",
               font: {
-                size: 16
+                size: 15
               }
             }
           },
@@ -93,6 +103,16 @@
               grid: {
                 display: false
               }
+            }
+          },
+          elements: {
+            bar: {
+              borderWidth: 1,
+              borderRadius: {
+                topLeft: 5,
+                topRight: 5,
+              },
+              borderSkipped: false
             }
           }
         }

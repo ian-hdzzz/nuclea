@@ -1,6 +1,6 @@
 const db = require("../util/database");
 const Usuario = require('../models/usuario.model');
-
+const Reports = require('../models/reports.model');
 exports.getDashboardInfo = async (req, res, next) => {
     try {
         const [acts] = await db.query(`
@@ -24,6 +24,9 @@ exports.getDashboardInfo = async (req, res, next) => {
 
             ORDER BY mes;
           `);
+
+         const [reportsDetailsInactive] = await Reports.fetchUsersInactive();
+         const [reportsDetailsActive] = await Reports.fetchUsersActive();
           // Inicializar los arrays para 12 meses
         const activos = Array(12).fill(0);
         const inactivos = Array(12).fill(0);
@@ -53,6 +56,10 @@ exports.getDashboardInfo = async (req, res, next) => {
             req.session.errorUsu = '';
         }
 
+
+        console.log(reportsDetailsActive);
+        console.log(reportsDetailsInactive);
+        
         res.render('../views/pages/reports.hbs', {
             activosPorMes: JSON.stringify(activos),
             inactivosPorMes: JSON.stringify(inactivos),
@@ -60,6 +67,8 @@ exports.getDashboardInfo = async (req, res, next) => {
             info: mensaje,
             error: mensajeError,
             title: 'Users',
+            reportsDetailsInactive:reportsDetailsInactive[0],
+            reportsDetailsActive:reportsDetailsActive[0],
         }
     );
     } catch (err) {

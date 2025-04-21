@@ -55,3 +55,40 @@ body {
     margin-bottom: 20px;
     color: #ffffff;
   }
+
+  .employee-counters {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+  }
+  
+  .counter-box {
+    flex: 1;
+    padding: 10px;
+    text-align: center;
+    border-radius: 6px;
+    color: white;
+    font-weight: bold;
+  }
+  
+  .active-counter {
+    background-color: #4CAF50;
+    margin-right: 8px;
+  }
+  
+  .inactive-counter {
+    background-color: #F44336;
+    margin-left: 8px;
+  }
+  
+  .counter-number {
+    font-size: 24px;
+    font-weight: bold;
+    margin-top: 5px;
+  }
+  
+  .counter-label {
+    font-size: 14px;
+    opacity: 0.9;
+  }
+
