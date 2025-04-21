@@ -66,7 +66,7 @@ exports.getDashboardInfo = async (req, res, next) => {
             csrfToken: req.csrfToken(),
             info: mensaje,
             error: mensajeError,
-            title: 'Users',
+            title: 'Reports',
             reportsDetailsInactive:reportsDetailsInactive[0],
             reportsDetailsActive:reportsDetailsActive[0],
         }
