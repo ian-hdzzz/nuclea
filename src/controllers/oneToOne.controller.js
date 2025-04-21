@@ -55,7 +55,7 @@ exports.getInterview = async (req, res) => {
         res.render('pages/interview',{ 
             title: 'Interview', 
             iconClass:'fa-solid fa-people-arrows',
-            preguntas,
+            preguntas,  
             entrevistadorId,
             employee,
             csrfToken: req.csrfToken(),
@@ -73,7 +73,7 @@ exports.getInterview = async (req, res) => {
 exports.getInterviewEdit = async (req, res) => {
     try {
         const preguntas = await Questions.getQuestions();
-
+        console.log('Preguntas obtenidas:', preguntas);
         res.render('pages/interviewEdit',{ 
             title: 'Edit Interview', 
             iconClass:'fa-solid fa-people-arrows',
