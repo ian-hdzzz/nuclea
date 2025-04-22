@@ -1,0 +1,34 @@
+@startuml
+actor Navegador as navegador
+boundary "calendar.routes" as calendarRoutes
+control "calendar.controller" as calendarController
+entity "calendar.model" as calendarModel
+boundary "celandar.hbs" as calendarHbs
+database sql
+
+
+activate navegador
+navegador -> calendarRoutes : GET(/nuclea/calendar)
+deactivate navegador
+activate calendarRoutes
+calendarRoutes -> calendarController : getCalendar(req,res)
+deactivate
+activate calendarController
+calendarController ->> calendarModel : getEventsById(req.sessionID)
+activate calendarModel
+calendarModel ->> sql : execute("SELECT * FROM eventos WHERE user_id = ?", [sessionID])
+activate sql
+sql -->> calendarModel : Query ok
+deactivate sql
+calendarModel -->> calendarController : Promise
+deactivate
+calendarController -> calendarHbs : res.render(/nuclea/calendar)
+
+deactivate
+activate calendarHbs
+calendarHbs -> navegador : HTML
+deactivate
+
+activate navegador
+deactivate navegador
+@enduml
