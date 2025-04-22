@@ -2,6 +2,7 @@ const db = require('../util/database');
 const Request = require('../models/request.model');
 const DiasFeriados = require('../models/diasferiados.model');
 const Usuario = require('../models/usuario.model');
+const helpers = require('../lib/helpers');
 
 exports.getRequests = (req, res) => {
   const mensaje = req.session.info || '';
@@ -114,7 +115,8 @@ exports.postRequest = (request, response,next) => {
         console.log(request.body.fechaInicio);
         console.log(request.body.fechaFin);
         // Calcular la diferencia en milisegundos y convertirla a días
-        const totalDias = (fechaFin - fechaInicio) / (1000 * 60 * 60 * 24) + 1 - feriados; // +1 para incluir ambos días
+        const totalDias = helpers.countWeekdays(fechaInicio, fechaFin); // Por ahora solo excluimos fines de semana. Luego restaremos feriados si es necesario.
+        console.log('Weekdays entre fechas:', helpers.countWeekdays(fechaInicio, fechaFin));
         console.log(totalDias)
         Request.fetchDays(sessionId).then(([diasRestantes])=>{
           const diaRestantes=diasRestantes[0].dias_vaciones;

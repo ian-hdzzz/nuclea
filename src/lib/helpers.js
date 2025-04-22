@@ -63,5 +63,20 @@ module.exports = {
     } else {
       return options.inverse(this);
     }
+  },
+
+countWeekdays: function (startDate, endDate) {
+  const start = new Date(startDate);
+  const end = new Date(endDate);
+  let count = 0;
+  let current = new Date(start);
+
+  while (current <= end) {
+    const day = current.getDay(); // 0 = domingo, 6 = sábado
+    if (day !== 0 && day !== 6) count++;
+    current.setDate(current.getDate() + 1);
   }
+
+  return count;
+}
 };

@@ -1,4 +1,5 @@
 const db = require('../util/database');
+const helpers = require('../lib/helpers');
 
 module.exports = class Request {
 
@@ -165,7 +166,7 @@ module.exports.approveSolicitud = async (idSolicitud, rol) => {
     const fechaFin = new Date(s.Fecha_fin);
     console.log('fechafinal', fechaFin)
 
-    const diasSolicitados = Math.ceil((fechaFin - fechaInicio) / (1000 * 60 * 60 * 24)) + 1;
+    const diasSolicitados = helpers.countWeekdays(fechaInicio, fechaFin);
     console.log('diasSolicitados', diasSolicitados)
     // Obtener días restantes del usuario
     const [usuario] = await db.execute(`
