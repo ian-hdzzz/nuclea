@@ -23,7 +23,7 @@ deactivate Mo
 
 Co->>Mo:inactivosSemestre(fechaSeisMeses, fechaActual)
 activate Mo
-Mo->>sql:execute('SELECT MONTH(fecha_inicio_colab) AS mes, \nYEAR(fecha_inicio_colab) AS año, 'inactivo' AS estado, \nCOUNT(*) AS cantidad FROM Usuarios WHERE estatus = 0 \nAND MONTH(fecha_inicio_colab) BETWEEN ? AND ? \nGROUP BY mes, año ORDER BY año, mes;',fechaSeisMeses, fechaActual)
+Mo->>sql:execute('SELECT MONTH(fecha_inicio_colab) AS mes, \nYEAR(fecha_inicio_colab) AS año, 'inactivo' AS estado, \nCOUNT(*) AS cantidad FROM Usuarios WHERE estatus = 0 \nAND fecha_inicio_colab BETWEEN ? AND ? \nGROUP BY mes, año ORDER BY año, mes;',fechaSeisMeses, fechaActual)
 activate sql
 sql-->>Mo:Query ok
 deactivate sql

@@ -31,12 +31,44 @@ module.exports = class Report {
         return db.execute('SELECT * FROM DiasFeriados');
     }
 
+    static activosSemestre(fechaSeisMeses,fechaActual){
+        return db.execute(
+            `SELECT MONTH(fecha_inicio_colab) AS mes,
+             YEAR(fecha_inicio_colab) AS año, 
+             'activo' AS estado, 
+             COUNT(*) AS cantidad 
+             FROM Usuarios 
+             WHERE estatus = 1 
+             AND fecha_inicio_colab BETWEEN ? AND ? 
+             GROUP BY mes, año 
+             ORDER BY año, mes;`,[fechaSeisMeses, fechaActual])
+    }
+    static inactivosSemestre(fechaSeisMeses,fechaActual){
+        return db.execute(
+            `SELECT MONTH(fecha_inicio_colab) AS mes, 
+            YEAR(fecha_inicio_colab) AS año, 
+            'inactivo' AS estado, 
+            COUNT(*) AS cantidad 
+            FROM Usuarios 
+            WHERE estatus = 0 
+            AND fecha_inicio_colab BETWEEN ? AND ? 
+            GROUP BY mes, año 
+            ORDER BY año, mes;`,[fechaSeisMeses, fechaActual])
+    }
+
     static fetchUsersInactive() {
         return db.execute(`
             SELECT COUNT(*) AS cantidad
             FROM Usuarios
             WHERE estatus = 0
         `);
+    }
+    static usuariosPrevios(fechaSeisMeses){
+        return db.execute(`
+            SELECT COUNT(*) AS 'total'
+            FROM Usuarios
+            WHERE Fecha_inicio_colab < ?
+            AND estatus= 1;`,[fechaSeisMeses])
     }
 
     static fetchUsersActive() {

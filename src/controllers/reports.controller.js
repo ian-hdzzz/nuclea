@@ -2,6 +2,7 @@ const db = require("../util/database");
 const Usuario = require('../models/usuario.model');
 const Reports = require('../models/reports.model');
 exports.getDashboardInfo = async (req, res, next) => {
+
     try {
         const [acts] = await db.query(`
             SELECT 
@@ -56,16 +57,90 @@ exports.getDashboardInfo = async (req, res, next) => {
             req.session.errorUsu = '';
         }
 
-
+        
         console.log(reportsDetailsActive);
         console.log(reportsDetailsInactive);
-        
+        //---------Fecha actual------------
+        const today = new Date();
+        const yyyy = today.getFullYear();
+        const mm = String(today.getMonth() + 1).padStart(2, '0'); // Los meses van de 0 a 11
+        const dd = String(today.getDate()).padStart(2, '0');
+        const fechaActual = `${yyyy}-${mm}-${dd}`;
+
+        //---------Fecha 6 meses atras------------
+        const fechaSeisMesesAtras = new Date(today.setMonth(today.getMonth() - 5));
+        const yyyy6 = fechaSeisMesesAtras.getFullYear();
+        const mm6 = String(fechaSeisMesesAtras.getMonth() + 1).padStart(2, '0');
+        const fechaSeisMeses = `${yyyy6}-${mm6}-01`;
+        let mm6check = parseInt(String(fechaSeisMesesAtras.getMonth() + 1));
+
+
+        console.log('Fecha actual:')
+        console.log(fechaActual); // Ejemplo: 2025-04-21
+        console.log('Fecha 6 meses atras:')
+        console.log(fechaSeisMeses);
+
+        let [usuariosActivos] = await Reports.activosSemestre(fechaSeisMeses, fechaActual)
+        let [usuariosInactivos] = await Reports.inactivosSemestre(fechaSeisMeses, fechaActual)
+        console.log(usuariosActivos)
+        console.log(usuariosInactivos)
+        const activosSeisMeses=[0,0,0,0,0,0];
+        const inactivosSeisMeses=[0,0,0,0,0,0];
+        let cont=0;
+        while (cont < 6) {
+            // Buscar si hay datos para ese mes
+            const encontradoAc = usuariosActivos.find(u => u.mes === mm6check);
+            if (encontradoAc) {
+                activosSeisMeses[cont] = encontradoAc.cantidad ?? 0;
+                // Removemos el elemento encontrado del array si quieres simular un shift
+                usuariosActivos = usuariosActivos.filter(u => u.mes !== mm6check);
+            }
+            // Buscar si hay datos para ese mes
+            const encontradoIn = usuariosInactivos.find(u => u.mes === mm6check);
+            if (encontradoIn) {
+                inactivosSeisMeses[cont] = encontradoIn.cantidad ?? 0;
+                // Removemos el elemento encontrado del array si quieres simular un shift
+                usuariosInactivos = usuariosInactivos.filter(u => u.mes !== mm6check);
+            }
+            // Avanzamos el mes
+            mm6check++;
+            if (mm6check === 13) {
+                mm6check = 1; // Resetea a enero si llega a diciembre
+            }
+            cont++;
+        }
+        console.log(activosSeisMeses);
+        console.log(inactivosSeisMeses);
+        const resultado = await Reports.usuariosPrevios(fechaSeisMeses);
+        console.log(resultado);
+        let temp =resultado[0][0].total;
+        const activosTotales = activosSeisMeses.map((valor, i) => {
+            const resultado = temp + valor;
+            temp = resultado;  // Actualizamos 'temp' para la siguiente iteración
+            return resultado;  // Retornamos el valor actualizado
+        });
+        console.log(activosTotales);
+
+        const promedioActivos = activosTotales.map((valor, i) => {
+            return (valor+ (valor-inactivosSeisMeses[i])) / 2;
+        });
+        const indice = promedioActivos.map((valor, i) => {
+            if(valor==0){
+                return 0;
+            }
+
+            return Math.round((inactivosSeisMeses[i]/ valor)*100);
+        });
+        const suma = indice.reduce((acc, val) => acc + val, 0);
+        const promedioIndice = indice.length > 0 ? suma / indice.length : 0;
+
         res.render('../views/pages/reports.hbs', {
             activosPorMes: JSON.stringify(activos),
             inactivosPorMes: JSON.stringify(inactivos),
             csrfToken: req.csrfToken(),
             info: mensaje,
             error: mensajeError,
+            primedioGeneral:promedioIndice,
             title: 'Reports',
             reportsDetailsInactive:reportsDetailsInactive[0],
             reportsDetailsActive:reportsDetailsActive[0],
