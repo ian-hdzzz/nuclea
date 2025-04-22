@@ -144,7 +144,8 @@ exports.getDashboardInfo = async (req, res, next) => {
             return Math.round((inactivosSeisMeses[i]/ valor)*100);
         });
         const suma = indice.reduce((acc, val) => acc + val, 0);
-        const promedioIndice = indice.length > 0 ? suma / indice.length : 0;
+        const promedioIndice = indice.length > 0 ? (suma / indice.length).toFixed(2) : "0.00";
+
 
         res.render('../views/pages/reports.hbs', {
             activosPorMes: JSON.stringify(activos),
