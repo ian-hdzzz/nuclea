@@ -1,0 +1,43 @@
+@startuml
+ actor "Navegador" as Na
+ boundary "reports.routes.js" as Ro
+ boundary "reports.hbs" as hbs
+ control "reports.controller.js" as Co
+ entity "reports.model.js" as Mo
+database "database" as sql
+activate Na
+Na->Ro:GET(/nuclea/reports)
+deactivate Na
+activate Ro
+Ro->Co:GET(res, req)
+deactivate Ro
+activate Co
+Co->>Mo:activosSemestre(fechaSeisMeses,fechaActual)
+activate Mo
+Mo->>sql:execute('SELECT MONTH(fecha_inicio_colab) AS mes, \nYEAR(fecha_inicio_colab) AS año, 'activo' AS estado, \nCOUNT(*) AS cantidad FROM Usuarios WHERE estatus = 1 \nAND fecha_inicio_colab BETWEEN ? AND ? \nGROUP BY mes, año ORDER BY año, mes;',[fechaSeisMeses, fechaActual])
+activate sql
+sql-->>Mo: Query ok
+deactivate sql
+Mo-->>Co: Promesa
+deactivate Mo
+
+Co->>Mo:inactivosSemestre(fechaSeisMeses, fechaActual)
+activate Mo
+Mo->>sql:execute('SELECT MONTH(fecha_inicio_colab) AS mes, \nYEAR(fecha_inicio_colab) AS año, 'inactivo' AS estado, \nCOUNT(*) AS cantidad FROM Usuarios WHERE estatus = 0 \nAND MONTH(fecha_inicio_colab) BETWEEN ? AND ? \nGROUP BY mes, año ORDER BY año, mes;',fechaSeisMeses, fechaActual)
+activate sql
+sql-->>Mo:Query ok
+deactivate sql
+Mo-->>Co:Promesa
+deactivate Mo
+Co->hbs:res.redirect('reports.hbs')
+activate hbs
+hbs->Na:HTML
+deactivate hbs
+activate Na
+deactivate Na
+
+
+
+
+
+ @enduml
