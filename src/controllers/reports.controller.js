@@ -79,13 +79,17 @@ exports.getDashboardInfo = async (req, res, next) => {
         console.log(fechaActual); // Ejemplo: 2025-04-21
         console.log('Fecha 6 meses atras:')
         console.log(fechaSeisMeses);
-
+        const meses = [
+            "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+            "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+          ];
         let [usuariosActivos] = await Reports.activosSemestre(fechaSeisMeses, fechaActual)
         let [usuariosInactivos] = await Reports.inactivosSemestre(fechaSeisMeses, fechaActual)
         console.log(usuariosActivos)
         console.log(usuariosInactivos)
         const activosSeisMeses=[0,0,0,0,0,0];
         const inactivosSeisMeses=[0,0,0,0,0,0];
+        let mesesGrafica=[];
         let cont=0;
         while (cont < 6) {
             // Buscar si hay datos para ese mes
@@ -103,12 +107,20 @@ exports.getDashboardInfo = async (req, res, next) => {
                 usuariosInactivos = usuariosInactivos.filter(u => u.mes !== mm6check);
             }
             // Avanzamos el mes
+            mesesGrafica.push(mm6check)
             mm6check++;
             if (mm6check === 13) {
                 mm6check = 1; // Resetea a enero si llega a diciembre
             }
             cont++;
         }
+
+        const nombresMeses = mesesGrafica.map((mes, index) => {
+            // Si el mes es menor que el último mes, entonces pasó el año nuevo
+            const año = mes < mesesGrafica[0] ? yyyy : yyyy6;
+            return `${meses[mes - 1]} - ${año}`;
+          });
+        console.log(nombresMeses)
         console.log(activosSeisMeses);
         console.log(inactivosSeisMeses);
         const resultado = await Reports.usuariosPrevios(fechaSeisMeses);
@@ -141,6 +153,8 @@ exports.getDashboardInfo = async (req, res, next) => {
             info: mensaje,
             error: mensajeError,
             primedioGeneral:promedioIndice,
+            mesYear: JSON.stringify(nombresMeses),
+            indice: JSON.stringify(indice),
             title: 'Reports',
             reportsDetailsInactive:reportsDetailsInactive[0],
             reportsDetailsActive:reportsDetailsActive[0],
