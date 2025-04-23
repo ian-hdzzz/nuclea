@@ -62,6 +62,18 @@ VALUES (
     `);
     
   }
+
+  static countPendientesVacaciones(id) {
+    return db.execute(`
+      SELECT COUNT(*) AS totalPendientes
+      FROM Solicitudes s
+      WHERE 
+        s.idUsuario = ?
+        AND s.Tipo = 'vacations'
+        AND (s.Aprobacion_L = 'Pendiente' OR s.Aprobacion_A = 'Pendiente');
+    `, [id]);
+  }
+
   static fetchPersonal(id) {
     return db.execute(`
       SELECT 

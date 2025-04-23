@@ -65,7 +65,91 @@
       background: #3657d4;
     }
     
-    
+    .daily-quote {
+      margin: 0;
+      font-style: italic;
+      font-size: 14px;
+      color: #ffffff;
+    }
+
+    .daily-quote p {
+      margin-bottom: 5px;
+      margin-right: 5px;
+    }
+
+    .daily-quote footer {
+      text-align: right;
+      font-size: 12px;
+      opacity: 0.8;
+    }
+
+    .asuetos-title {
+  color: #4a6cf7;
+  margin-bottom: 15px;
+  font-size: 18px;
+}
+
+  .asuetos-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 200px;
+    overflow-y: auto;
+  }
+
+  .asueto-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  }
+
+  .asueto-item:last-child {
+    border-bottom: none;
+  }
+
+  .asueto-info {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .asueto-name {
+    font-weight: 600;
+    color: #ffffff;
+    font-size: 14px;
+  }
+
+  .asueto-date {
+    color: #777;
+    font-size: 12px;
+    margin-top: 2px;
+  }
+
+  .asueto-icon {
+    color: #6c5ce7;
+    font-size: 16px;
+  }
+
+  /* Para la barra de desplazamiento personalizada */
+  .asuetos-list::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  .asuetos-list::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+  }
+
+  .asuetos-list::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 10px;
+  }
+
+  .asuetos-list::-webkit-scrollbar-thumb:hover {
+    background: #aaa;
+  }
+          
   </style>
 </head>
 <body>
@@ -88,7 +172,7 @@
     <p class="subtitle">A comprehensive solution for managing your company's human resources.</p>
     
     <div class="dashboard-controls">
-      <button id="save-grid">Guardar Layout</button>
+      <button id="save-grid">Save layout</button>
       <!-- Botón comentado de cargar layout -->
       <!-- <button id="load-grid">Cargar Layout</button> -->
       <!-- Botón comentado de añadir widget -->
@@ -101,8 +185,9 @@
 
   <!-- GridStack JS -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gridstack.js/7.3.0/gridstack-all.js"></script>
-  
+  <script id="asuetos-data" type="application/json">{{{asuetos}}}</script>
   <script>
+
     // Ocultar el loader cuando la página está cargada
     window.addEventListener('load', function() {
       setTimeout(function() {
@@ -188,7 +273,7 @@
       */
       
       // Función para cargar widgets
-      function loadWidgets(widgets) {
+      async function loadWidgets(widgets) {
         widgets.forEach(widget => {
           const element = document.createElement('div');
           element.innerHTML = widget.content;
@@ -200,6 +285,17 @@
             content: widget.content,
             autoPosition: false
           });
+        });
+
+        const quoteData = getQuoteOfTheDay();
+        const quoteContainers = document.querySelectorAll('#quote-container');
+        quoteContainers.forEach(container => {
+          container.innerHTML = `
+            <blockquote class="daily-quote">
+              <p>"${quoteData.quote}"</p>
+              <footer>- ${quoteData.author}</footer>
+            </blockquote>
+          `;
         });
       }
       
@@ -237,25 +333,26 @@
           <div class="card">
             <div class="card-content">
               <div class="card-info">
-                <h2>Active Departments</h2>
-                <div class="card-number">7</div>
-                <a href="/nuclea/departament" class="card-link">See details <span class="arrow">&#8594;</span></a>
+                <h2>Quote of the day</h2>
+                <div id="quote-container">Loading quote...</div>
               </div>
               <div class="card-icon blue">
-                <i class="fa-solid fa-building"></i>
+                <i class="fa-solid fa-lightbulb"></i>
               </div>
             </div>
           </div>
         `;
       }
+
       
       function createVacationCard() {
+        const dias = {{{diasRestantes}}}
         return `
           <div class="card">
             <div class="card-content">
               <div class="card-info">
-                <h2>Remaining vacation</h2>
-                <div class="card-number">15</div>
+                <h2>Remaining vacation Days</h2>
+                <div class="card-number">${dias}</div>
               </div>
               <div class="card-icon blue">
                 <i class="fa-solid fa-plane-up"></i>
@@ -265,40 +362,122 @@
         `;
       }
       
-      function createUsersCard() {
-        return `
-          <div class="card">
-            <div class="card-content">
-              <div class="card-info">
-                <h2>Registered Users</h2>
-                <div class="card-number">18</div>
-                <a href="/nuclea/users" class="card-link">See details <span class="arrow">&#8594;</span></a>
-              </div>
-              <div class="card-icon purple">
-                <i class="fa-solid fa-people-group"></i>
-              </div>
-            </div>
-          </div>
-        `;
-      }
-      
+     function createUsersCard() {
+  const asuetos = JSON.parse(document.getElementById('asuetos-data').textContent);
+
+  const feriadosHTML = asuetos.map(a => {
+    const fecha = new Date(a.Fecha_asueto).toLocaleDateString('es-MX', {
+      year: 'numeric', month: 'long', day: 'numeric'
+    });
+    
+    return `
+      <li class="asueto-item">
+        <div class="asueto-info">
+          <span class="asueto-name">${a.Nombre_asueto}</span>
+          <span class="asueto-date">${fecha}</span>
+        </div>
+        <div class="asueto-icon">
+          <i class="fa-solid fa-calendar-check"></i>
+        </div>
+      </li>`;
+  }).join('');
+
+  return `
+    <div class="card">
+      <div class="card-content">
+        <div class="card-info">
+          <h2>Upcoming holidays</h2>
+          <ul class="asuetos-list">${feriadosHTML}</ul>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
       function createProjectsCard() {
+        const pend = {{{pendientes}}}
         return `
           <div class="card">
             <div class="card-content">
               <div class="card-info">
-                <h2>Ongoing Projects</h2>
-                <div class="card-number">12</div>
-                <a href="#" class="card-link">See details <span class="arrow">&#8594;</span></a>
-              </div>
-              <div class="card-icon green">
-                <i class="fa-solid fa-chart-simple"></i>
+                <h2>Pending Vacation Requests</h2>
+                <div class="card-number">${pend}</div>
               </div>
             </div>
           </div>
         `;
       }
     });
+
+    // Función para obtener una frase motivacional del array basada en el día del mes
+  function getQuoteOfTheDay() {
+    // Array con 30 frases motivacionales (una para cada día del mes)
+    const quotes = [
+      { quote: "The future belongs to those who believe in the beauty of their dreams.", author: "Eleanor Roosevelt" },
+      { quote: "Success is not final, failure is not fatal: it is the courage to continue that counts.", author: "Winston Churchill" },
+      { quote: "It does not matter how slowly you go as long as you do not stop.", author: "Confucius" },
+      { quote: "Believe you can and you're halfway there.", author: "Theodore Roosevelt" },
+      { quote: "Everything you've ever wanted is on the other side of fear.", author: "George Addair" },
+      { quote: "The only way to do great work is to love what you do.", author: "Steve Jobs" },
+      { quote: "If you're going through hell, keep going.", author: "Winston Churchill" },
+      { quote: "You are never too old to set another goal or to dream a new dream.", author: "C.S. Lewis" },
+      { quote: "The only limit to our realization of tomorrow will be our doubts of today.", author: "Franklin D. Roosevelt" },
+      { quote: "Your time is limited, don't waste it living someone else's life.", author: "Steve Jobs" },
+      { quote: "The best way to predict the future is to create it.", author: "Abraham Lincoln" },
+      { quote: "Life is what happens when you're busy making other plans.", author: "John Lennon" },
+      { quote: "Success is stumbling from failure to failure with no loss of enthusiasm.", author: "Winston Churchill" },
+      { quote: "The only person you are destined to become is the person you decide to be.", author: "Ralph Waldo Emerson" },
+      { quote: "Don't watch the clock; do what it does. Keep going.", author: "Sam Levenson" },
+      { quote: "The purpose of our lives is to be happy.", author: "Dalai Lama" },
+      { quote: "The power of imagination makes us infinite.", author: "John Muir" },
+      { quote: "Try to be a rainbow in someone's cloud.", author: "Maya Angelou" },
+      { quote: "Life is really simple, but we insist on making it complicated.", author: "Confucius" },
+      { quote: "Don't count the days, make the days count.", author: "Muhammad Ali" },
+      { quote: "It is never too late to be what you might have been.", author: "George Eliot" },
+      { quote: "In three words I can sum up everything I've learned about life: it goes on.", author: "Robert Frost" },
+      { quote: "You miss 100% of the shots you don't take.", author: "Wayne Gretzky" },
+      { quote: "Everything will be okay in the end. If it's not okay, it's not the end.", author: "John Lennon" },
+      { quote: "Happiness is not something ready-made. It comes from your own actions.", author: "Dalai Lama" },
+      { quote: "Life isn't about finding yourself. Life is about creating yourself.", author: "George Bernard Shaw" },
+      { quote: "Strive not to be a success, but rather to be of value.", author: "Albert Einstein" },
+      { quote: "The journey of a thousand miles begins with one step.", author: "Lao Tzu" },
+      { quote: "The way to get started is to quit talking and begin doing.", author: "Walt Disney" },
+      { quote: "If you can dream it, you can do it.", author: "Walt Disney" }
+    ];
+
+    // Obtener el día actual del mes (1-31)
+    const today = new Date().getDate();
+    
+    // Asegurarse de que el índice está dentro del rango del array (0-29)
+    const index = (today - 1) % quotes.length;
+    
+    // Devolver la frase del día
+    return quotes[index];
+  }
+
+  setTimeout(function() {
+  // Buscar todos los contenedores de citas en el documento
+    const quoteContainers = document.querySelectorAll('#quote-container');
+    
+    if (quoteContainers.length > 0) {
+      // Obtener la frase motivacional (ahora síncrona)
+      const quoteData = getQuoteOfTheDay();
+      
+      // Actualizar todos los contenedores con la misma frase
+      quoteContainers.forEach(container => {
+        container.innerHTML = `
+          <blockquote class="daily-quote">
+            <p>"${quoteData.quote}"</p>
+            <footer>- ${quoteData.author}</footer>
+          </blockquote>
+        `;
+      });
+    }
+  }, 1000);
+
+    
+
+    
   </script>
 </body>
 </html>
