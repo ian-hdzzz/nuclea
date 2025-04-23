@@ -56,6 +56,17 @@ module.exports = class Report {
             ORDER BY año, mes;`,[fechaSeisMeses, fechaActual])
     }
 
+    static fetchAoYear(year){
+        return db.execute(
+          `SELECT COUNT(*) AS cantidad
+           FROM Faltas_administrativas
+           WHERE YEAR(Fecha_asignacion_falta) = ?;`,
+          [year]
+        );
+      }
+
+
+
     static fetchUsersInactive() {
         return db.execute(`
             SELECT COUNT(*) AS cantidad

@@ -26,6 +26,8 @@ exports.getDashboardInfo = async (req, res, next) => {
             ORDER BY mes;
           `);
 
+          
+
          const [reportsDetailsInactive] = await Reports.fetchUsersInactive();
          const [reportsDetailsActive] = await Reports.fetchUsersActive();
           // Inicializar los arrays para 12 meses
@@ -146,6 +148,8 @@ exports.getDashboardInfo = async (req, res, next) => {
         const suma = indice.reduce((acc, val) => acc + val, 0);
         const promedioIndice = indice.length > 0 ? (suma / indice.length).toFixed(2) : "0.00";
 
+        const [aoYear] = await Reports.fetchAoYear(yyyy);
+
         res.render('../views/pages/reports.hbs', {
             activosPorMes: JSON.stringify(activos),
             inactivosPorMes: JSON.stringify(inactivos),
@@ -158,6 +162,7 @@ exports.getDashboardInfo = async (req, res, next) => {
             title: 'Reports',
             reportsDetailsInactive:reportsDetailsInactive[0],
             reportsDetailsActive:reportsDetailsActive[0],
+            aoYear:aoYear[0],
         }
     );
     } catch (err) {
