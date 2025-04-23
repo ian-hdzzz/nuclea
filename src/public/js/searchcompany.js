@@ -62,7 +62,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Construir el HTML para cada fila
                 let rowHtml = `
                     <td>${item.Nombre_empresa}</td>
-                    <td>${item.Estado ? 'Active' : 'Inactive'}</td>
+                    <td class="state">
+                        <span class="${item.Estado ? 'active' : 'inactive'}">
+                            <div class="dot"></div>
+                            ${item.Estado ? 'Active' : 'Inactive'}
+                        </span>
+                    </td>
                     <td class="tdactions">
                         <div class="dropdown">
                             <button class="action-btn">Actions</button>

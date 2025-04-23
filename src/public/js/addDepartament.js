@@ -118,7 +118,7 @@ searchInput.addEventListener('keyup', handleSearch);
 
 // Función para actualizar los resultados en la tabla
 function updateResults(data) {
-    const tbody = document.querySelector('table tbody');
+    const tbody = document.querySelector("#department-body");
     tbody.innerHTML = '';
   
     data.forEach(item => {

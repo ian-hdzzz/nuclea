@@ -8,6 +8,7 @@
 body{
     background-color: #0c1019;
     color: #fff;
+    height:100vh;
 }
 
 .first-container{
@@ -402,7 +403,7 @@ th, td {
   }
 
   /* Punto rojo para inactivos */
-  .vacation-status.inactive .dot {
+  .inactive .dot {
     background-color: #ff5151;
   }
   

@@ -16,6 +16,7 @@
 body{
     background-color: #0c1019;
     color: #fff;
+    height:100vh;
 }
 .nav-bar{
     font-family: "Radio Canada", sans-serif;
@@ -418,4 +419,9 @@ th, td {
     box-sizing: border-box;
     font-size: .85rem;
     border-radius: 2rem;
+  }
+
+
+  .body-table-active {
+    background-color: #0c1019; /* o cualquier color que prefieras */
   }
