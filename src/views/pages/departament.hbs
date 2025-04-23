@@ -81,27 +81,18 @@
               </tr>
             </thead>
             <tbody>
-              {{#each datos}}
+            {{#each datos}}
               <tr>
                 <td>{{idDepartamento}}</td>
                 <td>{{Nombre_departamento}}</td>
-
-                {{!-- Buscar empresa correspondiente y mostrar su nombre --}}
-                {{#each ../emps}}
-                  {{#if (eq idEmpresa ../idEmpresa)}}
-                    <td>{{Nombre_empresa}}</td>
-                  {{/if}}
-                {{/each}}
-
+                <td>{{Nombre_empresa}}</td> <!-- ✅ Aquí accedes directamente -->
                 <td>{{Descripcion}}</td>
-
                 <td class="state">
                   <span class="{{#if Estado}}active{{else}}inactive{{/if}}">
                     <div class="dot"></div>
                     {{#if Estado}}Active{{else}}Inactive{{/if}}
                   </span>
                 </td>
-
                 <td>
                   <div class="dropdown">
                     <button class="action-btn">Manage</button>
@@ -117,7 +108,7 @@
                 </td>
               </tr>
               {{/each}}
-            </tbody>
+          </tbody>
         </table>
 
         {{#if error}}

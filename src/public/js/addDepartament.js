@@ -124,27 +124,27 @@ function updateResults(data) {
     data.forEach(item => {
       const row = document.createElement('tr');
       row.innerHTML = `
-        <td>${item.idDepartamento}</td>
-        <td>${item.Nombre_departamento}</td>
-        <td>${item.Nombre_empresa || 'Empresa no encontrada'}</td>
-        <td>${item.Descripcion}</td>
+        <td>${item.idDepartamento || ''}</td>
+        <td>${item.Nombre_departamento || ''}</td>
+        <td>${item.Nombre_empresa || ''}</td>
+        <td>${item.Descripcion || ''}</td>
         <td class="state">
           <span class="${item.Estado ? 'active' : 'inactive'}">
             <div class="dot"></div>
-            ${item.Estado ? 'Activo' : 'Inactivo'}
+            ${item.Estado ? 'Active' : 'Inactive'}
           </span>
         </td>
         <td>
           <div class="dropdown">
-            <button class="action-btn">Acciones</button>
+            <button class="action-btn">Manage</button>
             <div class="dropdown-content">
               <button class="edit-btn" 
                 onclick="location.href='/nuclea/departament/update/${item.idDepartamento}'">
-                <i class="fa-solid fa-pen-to-square"></i> Editar
+                <i class="fa-solid fa-pen-to-square"></i> Edit
               </button>
               <button class="delete-btn" 
                 onclick="confirmDeleteDepartamento('${item.idDepartamento}')">
-                <i class="fa-solid fa-trash"></i> Eliminar
+                <i class="fa-solid fa-trash"></i> Delete
               </button>
             </div>
           </div>
@@ -190,7 +190,7 @@ function showError(message) {
 }
 
 function confirmDeleteDepartamento(idDepartamento) {
-    const confirmed = confirm("¿Seguro que deseas eliminar?");
+    const confirmed = confirm("¿Are you sure you want to delete this department?");
     if (confirmed) {
       const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
       
@@ -206,7 +206,7 @@ function confirmDeleteDepartamento(idDepartamento) {
         if (data.success) {
           updateResults(data.datos); 
         } else {
-          alert("Error al eliminar");
+          alert("Error deleting department");
         }
       })
       .catch(err => console.error('Error:', err));
