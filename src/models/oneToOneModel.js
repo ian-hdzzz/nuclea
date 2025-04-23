@@ -1,3 +1,4 @@
+// interview model
 const db = require('../util/database');
 
 class OneToOneModel {
@@ -298,6 +299,101 @@ static async getEmployeeClosedResponsesAverage(employeeId){
       throw error;
   }
 };
+// QUESTIONS CRUD 
+static async createQuestion(data) {
+  try {
+      const { pregunta, descripcionPregunta, tipoPregunta, orden } = data;
+      const [[{ maxOrden }]] = await db.execute(
+        'SELECT MAX(orden) AS maxOrden FROM preguntas'
+      );
+      const nuevoOrden = (maxOrden ?? 0) + 1;
+      // Default values for min/max scale if it's a closed question
+      const escalaMinima = tipoPregunta === 'cerrada' ? 1 : null;
+      const escalaMaxima = tipoPregunta === 'cerrada' ? 5 : null;
+      
+      const [result] = await db.execute(
+          `INSERT INTO preguntas (
+              pregunta, 
+              descripcionPregunta, 
+              tipoPregunta, 
+              orden,
+              escalaMinima,
+              escalaMaxima,
+              activa
+          ) VALUES (?, ?, ?, ?, ?, ?, 1)`,
+          [pregunta, descripcionPregunta, tipoPregunta, nuevoOrden, escalaMinima, escalaMaxima]
+      );
+      
+      return result.insertId;
+  } catch (error) {
+      console.error('Error creating question:', error);
+      throw error;
+  }
+}
+
+// Update an existing question
+static async updateQuestion(questionId, data) {
+  try {
+      const { pregunta, descripcionPregunta, tipoPregunta, orden } = data;
+      
+      // Build SET clause dynamically based on provided data
+      const updates = [];
+      const params = [];
+      
+      if (pregunta !== undefined) {
+          updates.push('pregunta = ?');
+          params.push(pregunta);
+      }
+      
+      if (descripcionPregunta !== undefined) {
+          updates.push('descripcionPregunta = ?');
+          params.push(descripcionPregunta);
+      }
+      
+      if (tipoPregunta !== undefined) {
+          updates.push('tipoPregunta = ?');
+          params.push(tipoPregunta);
+      }
+      
+      if (orden !== undefined) {
+          updates.push('orden = ?');
+          params.push(orden);
+      }
+      
+      // Update fechaModificacion
+      updates.push('fechaModificacion = CURRENT_TIMESTAMP()');
+      
+      // Add questionId to params
+      params.push(questionId);
+      
+      const query = `
+          UPDATE preguntas
+          SET ${updates.join(', ')}
+          WHERE preguntaId = ?
+      `;
+      
+      const [result] = await db.execute(query, params);
+      return result.affectedRows > 0;
+  } catch (error) {
+      console.error('Error updating question:', error);
+      throw error;
+  }
+}
+
+
+// Delete a question (soft delete by setting active=0)
+static async deleteQuestion(questionId) {
+  try {
+      const [result] = await db.execute(
+          'DELETE FROM preguntas WHERE preguntaId = ?',
+          [questionId]
+      );
+      return result.affectedRows > 0;
+  } catch (error) {
+      console.error('Error deleting question:', error);
+      throw error;
+  }
+}
 }
 
 module.exports = OneToOneModel;

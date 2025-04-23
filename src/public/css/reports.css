@@ -35,9 +35,9 @@ body {
     grid-template-columns: 2fr 2fr 1fr 1fr;
     grid-template-rows: auto auto auto;
     grid-template-areas:
-      "monthly monthly  graph graph"
+      "activeE activeE ao turnover"
       "monthly monthly graph graph"
-      "ao turnover activeE activeE";
+      "monthly monthly graph graph";
     gap: 20px;
   }
 

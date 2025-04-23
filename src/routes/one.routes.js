@@ -1,3 +1,4 @@
+// interview routes
 const express = require('express');
 const OneToOneController = require('../controllers/oneToOne.controller');
 const searchController = require('../controllers/search.controller');
@@ -13,6 +14,9 @@ router.get('/interview/details/:id', OneToOneController.getInterviewDetails);
 router.get('/employee-graph/:id', OneToOneController.getEmployeeGraph);
 router.get('/all-employees-graph', OneToOneController.getAllEmployeesGraph);
 router.get('/interview/edit',OneToOneController.getInterviewEdit, OneToOneController.getInterview);
+router.post('/interview/edit', OneToOneController.createQuestion);
+router.put('/interview/edit/:id', OneToOneController.updateQuestion);
+router.delete('/interview/edit/:id', OneToOneController.deleteQuestion);
 
 // router.get('/interview/edit');
 

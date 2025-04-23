@@ -1,3 +1,4 @@
+// interview controller
 const Questions = require('../models/oneToOneModel');
 const SearchModel = require('../models/search.model'); 
 const { differenceInYears, differenceInMonths, differenceInDays } = require('date-fns');
@@ -395,3 +396,117 @@ exports.getAllEmployeesGraph = async (req, res) => {
       });
     }
   };
+// Logica para CRUD de preguntas
+
+
+exports.createQuestion = async (req, res) => {
+    try {
+        const { pregunta, descripcionPregunta, tipoPregunta, orden } = req.body;
+        
+        // Validate required fields
+        if (!pregunta || !tipoPregunta) {
+            return res.status(400).json({
+                success: false,
+                message: 'Question and type are required'
+            });
+        }
+        
+        // Create question in the database
+        const questionId = await Questions.createQuestion({
+            pregunta,
+            descripcionPregunta,
+            tipoPregunta,
+            orden: orden || 0 // Default order if not provided
+        });
+        
+        res.status(201).json({
+            success: true,
+            message: 'Question created successfully',
+            questionId
+        });
+    } catch (error) {
+        console.error('Error creating question', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error creating question'
+        });
+    }
+};
+
+// Update an existing question
+exports.updateQuestion = async (req, res) => {
+    try {
+        const questionId = req.params.id;
+        const { pregunta, descripcionPregunta, tipoPregunta, orden } = req.body;
+        
+        // Validate question ID
+        if (!questionId) {
+            return res.status(400).json({
+                success: false,
+                message: 'Question ID was not provided'
+            });
+        }
+        
+        // Update question in the database
+        const updated = await Questions.updateQuestion(questionId, {
+            pregunta,
+            descripcionPregunta,
+            tipoPregunta,
+            orden
+        });
+        
+        if (!updated) {
+            return res.status(404).json({
+                success: false,
+                message: 'Question not found'
+            });
+        }
+        
+        res.status(200).json({
+            success: true,
+            message: 'Question updated successfully'
+        });
+    } catch (error) {
+        console.error('Error updating question:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error updating question'
+        });
+    }
+};
+
+// Delete a question
+exports.deleteQuestion = async (req, res) => {
+    try {
+        const questionId = req.params.id;
+        
+        // Validate question ID
+        if (!questionId) {
+            return res.status(400).json({
+                success: false,
+                message: 'Question ID was not provided'
+            });
+        }
+        
+        // Delete question from the database
+        const deleted = await Questions.deleteQuestion(questionId);
+        
+        if (!deleted) {
+            return res.status(404).json({
+                success: false,
+                message: 'Question not found'
+            });
+        }
+        
+        res.status(200).json({
+            success: true,
+            message: 'Question deleted successfully'
+        });
+    } catch (error) {
+        console.error('Error deleting question:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error deleting question'
+        });
+    }
+};
