@@ -209,7 +209,8 @@ exports.getUpdate = (req, res, next) => {
                                 faltass: faltas,
                                 falta: falta[0],
                                 noFaltas: noFaltas,
-                                title: 'Administrative offenses'
+                                title: 'Administrative offenses',
+                                iconClass: 'fa-solid fa-triangle-exclamation',
                             });
                             console.log(falta)
                             console.log(faltas)
