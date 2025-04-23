@@ -66,7 +66,7 @@
         <div class="closedQuestions-container">
 
        
-        <div class="closed-responses">
+        <div class=" card closed-responses">
             <h3>Closed Questions (Rated 1-5)</h3>
             <table class="responses-table">
                 <thead>
@@ -96,13 +96,15 @@
             </table>
         </div>
         {{/if}}
-            <div class=" graph details">
+            <div class=" card graph details">
             {{> graph 
                 workload=closedResponses.[0].valorRespuesta
                 health=closedResponses.[1].valorRespuesta 
                 recognition=closedResponses.[2].valorRespuesta
                 emotionalHealth=closedResponses.[3].valorRespuesta
-                workLifeBalance=closedResponses.[4].valorRespuesta}}
+                workLifeBalance=closedResponses.[4].valorRespuesta
+                className="chart-container details"
+                graphTitle="Performance Overview"}}
             </div>
          </div>
         {{#unless (or openResponses.length closedResponses.length)}}

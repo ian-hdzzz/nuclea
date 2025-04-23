@@ -2,6 +2,7 @@
     padding: 0;
     margin: 0;
     box-sizing: border-box;
+
 }
 :root{
     --color-bg:#0B1019;
@@ -15,7 +16,7 @@
     --color-fuente:#fff;
 }
 body{
-    background: var(--color-bg);
+    background-color: var(--color-bg);
 }
 h1{ 
 
@@ -30,7 +31,7 @@ h1{
     margin-left: 70px;
     margin-top: -20px;
     padding: 20px;
-    height: 100vh;
+    height: auto;
 }
 .container h1{
     margin: 20px;
