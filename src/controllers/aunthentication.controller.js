@@ -58,7 +58,7 @@ exports.postAuth = (req, res) => {
               res.redirect("/nuclea/signup");
             });
         } else {
-          req.session.failed = true;
+          req.session.failed = `Incorrect email or password`;
           res.redirect("/nuclea/signup");
         }
       });
