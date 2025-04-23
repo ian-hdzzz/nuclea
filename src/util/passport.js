@@ -39,10 +39,19 @@ passport.use(new LocalStrategy(
 ));
 
 // Estrategia de Google
+let callbackURL;
+if (process.env.NODE_ENV === 'production') {
+  // URL absoluta para producción
+  callbackURL = "https://nuclea-production.up.railway.app/auth/google/callback";
+} else {
+  // URL para desarrollo
+  callbackURL = "http://localhost:4002/auth/google/callback";
+}
 passport.use(new GoogleStrategy({
+  
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: "/auth/google/callback"
+    callbackURL: callbackURL
   },
   async (accessToken, refreshToken, profile, done) => {
     console.log("Google profile:", JSON.stringify(profile));
