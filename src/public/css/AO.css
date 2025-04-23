@@ -5,50 +5,35 @@
     padding: 0;
     margin: 0;
 }
-
-.first-container{
-    margin-left: 140px;
-    display: flex;
-    height: 80%;
-    width: 800px;
-
-}
 body{
     background-color: #0c1019;
     color: #fff;
+    height:100vh;
 }
-.nav-bar{
-    font-family: "Radio Canada", sans-serif;
-    margin: 20px 20px ;
+
+.first-container{
+    margin:0;
     display: flex;
-    justify-content: space-around;
-    align-items: center;
-    height: 50px;
-}
-.search-container{
-    margin-left: 100px;
-    flex-grow: 0.7;
-    background-color: #fff;
-    padding: 4px;
-    border-radius: 8px 8px 8px 8px;
-
-}
-
-.input-search{
-    font-size: 18px;
-    padding: 4px;
-    outline: none;
-    border: none;
-    width: 95%;
     height: 100%;
+    width: 100%;
+    margin: auto 20px;
+    align-items: center;
+    justify-content: space-between;
+
+}
+.top-container{
+    width: 92%;
+    margin: auto;
+    margin-top: 30px;
+    margin-bottom: 20px;
+    padding: 0 20px;
+    display: flex;
+    justify-content: space-between;
+}
+.search-ao{
+    width: 40%;
 }
 
-.search-icon{
-    cursor: pointer;
-    color: #000;
-    transform: translateY(8%);
-    padding-right: 5px;
-}
 .views{
     font-size: 18px;
     display: flex;
@@ -76,12 +61,19 @@ body{
 }
 
 .content{
-    width: 80%;
+    width: 92%;
     border-radius: 2rem;
     margin: auto;
     padding: 40px;
-    background-color: #151720;
+    border: 1px solid var(--border-color);
+    transition: all 0.3s ease;
+    background-color: var(--color-bg-secundario);
+    
 }
+/* .content:hover {
+    border-color: var(--accent-blue);
+    box-shadow: 0 0 15px rgba(74, 108, 247, 0.2);
+  } */
 
 .nav-content{
     font-family: "Radio Canada", sans-serif;
@@ -105,7 +97,7 @@ h2{
     font-size: 1rem;
     width: auto;
     height: 50px;
-    border-radius: 16px;
+    border-radius: 10px;
     background: linear-gradient(to right, var(--color-primario) 0%, var(--color-secundario)100%);
     border: none;
     padding: 5px 15px;
@@ -114,6 +106,7 @@ h2{
     align-items: center;
     gap: 7px;
     transition: transform 0.3s ease-in-out;
+   
 }
 
 .add-btn{
@@ -138,7 +131,9 @@ th, td {
     padding: 20px 10px;
     text-align: center;
 }
-
+.pdf-link{
+    color: var(--accent-blue);
+}
 
 .active{
     display: flex;
@@ -320,9 +315,10 @@ th, td {
     position: absolute;
     left: 0;
     right: 0;
-    background: #151720;
+    background: var(--color-bg-secundario);
     min-width: 120px;
     box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    
     z-index: 1;
     border-radius: 0 0 4px 4px;
     overflow: hidden;

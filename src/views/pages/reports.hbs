@@ -1,1 +1,237 @@
-<img src="/media/reports.png" alt="">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gráfica de prueba</title>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+   
+   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+
+  <link rel="stylesheet" href="/css/reports.css">
+</head>
+<body>
+    
+  <div class="dashboard-container">
+    <h1 class="title">HR Performance Analytics</h1>
+    <p class="subtitle">Reports overview of human resources metrics</p>
+    <div class="reports-container">
+
+
+    <div class="graph-container">
+      <canvas id="estadoUsuariosChart"></canvas>
+    </div>
+    
+
+      <div class="info-card info-card-1">
+        <h3>Active and Inactive collaborators</h3>
+        <div class="employee-counters">
+          <div class="counter-box active-counter">
+            <div class="counter-label">Active Collaborators</div>
+            <div class="counter-number">{{reportsDetailsActive.cantidad}}</div>
+          </div>
+          <div class="counter-box inactive-counter" href="/nuclea/unemployed">
+            <div class="counter-label">
+                <a href="/nuclea/unemployed" style="color: white ; text-decoration: underline;">
+                Inactive Collaborators
+                </a>
+            </div>
+            <div class="counter-number">{{reportsDetailsInactive.cantidad}}</div>
+        </div>
+        
+      </div>
+        <p></p> 
+          
+      </div>
+      
+      <div class="info-card info-card-2 team-overview">
+        <p >Team Performance Overview</p>
+        {{!-- {{> graph 
+                workload=closedResponses.[0].valorRespuesta
+                health=closedResponses.[1].valorRespuesta 
+                recognition=closedResponses.[2].valorRespuesta
+                emotionalHealth=closedResponses.[3].valorRespuesta
+                workLifeBalance=closedResponses.[4].valorRespuesta
+                className="chart-container report"
+                }}  --}}
+      </div>
+      
+      <div class="info-card info-card-3">
+        <h3>Administrative offenses in the year</h3>
+        <div class="employee-counters">
+          <div class="counter-box inactive-counter">
+            <div class="counter-label"></div>
+            <div class="counter-number">{{aoYear.cantidad}}</div>
+          </div>
+        </div>
+
+      </div>
+      
+      <div class="info-card info-card-4">
+        <h3>Employee turnover last 6 months</h3>
+        <p style="text-align: center; font-size:x-large">{{primedioGeneral}}%</p>
+        <div style="text-align: center;">
+          <button class="button is-link" onclick="abrirModal()" >check rotation from 6 months ago</button>
+        </div>
+      </div>
+      <!-- Modal -->
+      <div id="modalGrafica" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background-color: rgba(0, 0, 0, 0.658); justify-content: center; align-items: center; z-index: 1000;">
+        
+        <div style="background: #131A26; padding: 20px; border-radius: 10px; width: 80%; max-width: 600px; position: relative;">
+          <button style="position: absolute; top: 10px; right: 10px;" onclick="cerrarModal()">✖</button>
+          
+          <h3 style="text-align:center;">Employee Turnover Chart</h3>
+          <canvas id="miGrafico" width="1000" height="600"></canvas>
+        </div>
+      </div>
+    
+    
+  </div>
+  
+      
+
+  <script src="/js/graph.js"></script>
+  <script src="/js/one.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      // Estos valores serán reemplazados por tus datos reales
+      const activos = {{{activosPorMes}}};
+      const inactivos = {{{inactivosPorMes}}};
+      
+      new Chart("estadoUsuariosChart", {
+        type: "bar",
+        data: {
+          labels: ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"],
+          datasets: [
+            {
+              label: "Hired Collaborators",
+              backgroundColor: "#4CAF50",
+              data: activos,
+              borderRadius: 5,
+              borderSkipped: false // Importante para que se redondeen todos los lados
+            },
+            {
+              label: "Terminated Collaborators",
+              backgroundColor: "#F44336",
+              data: inactivos,
+              borderRadius: 5,
+              borderSkipped: false // Importante para que se redondeen todos los lados
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: true,
+          plugins: {
+              legend: {
+              position: 'top',
+              labels: {
+                  boxWidth: 12,
+                  usePointStyle: true,
+                  padding: 20,
+                  color: '#FFFFFF' // ← Color de la fuente de la leyenda
+              }
+              },
+              title: {
+              display: true,
+              text: "Monthly New Hires and Terminations",
+              font: {
+                  size: 15,
+                  weight: 'bold',
+              },
+              color: '#FFFFFF' // ← Color de la fuente del título
+              }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              grid: {
+                color: '#FFFFFF'
+              },
+              ticks: {
+                color: '#FFFFFF' // ← Cambia el color de las etiquetas del eje X
+              }
+            },
+            x: {
+              grid: {
+                display: false
+              },
+              ticks: {
+                color: '#FFFFFF' // ← Cambia el color de las etiquetas del eje X
+              }
+            }
+          },
+          elements: {
+            bar: {
+              borderWidth: 1,
+              borderRadius: {
+                topLeft: 5,
+                topRight: 5,
+              },
+              borderSkipped: false
+            }
+          }
+        }
+      });
+    });
+
+   function abrirModal() {
+     document.getElementById('modalGrafica').style.display = 'flex';
+     if (!window.chartGenerado) {
+       generarGrafica();
+       window.chartGenerado = true;
+     }
+   }
+ 
+   function cerrarModal() {
+     document.getElementById('modalGrafica').style.display = 'none';
+   }
+ 
+   function generarGrafica() {
+     const labels = {{{mesYear}}};
+     const data = {{{indice}}};
+ 
+     const ctx = document.getElementById('miGrafico').getContext('2d');
+     new Chart(ctx, {
+       type: 'bar',
+       data: {
+         labels: labels,
+         datasets: [{
+           label: 'Índice',
+           data: data,
+           backgroundColor: 'rgba(54, 162, 235, 0.6)',
+           borderColor: 'rgba(54, 162, 235, 1)',
+           borderWidth: 1
+         }]
+       },
+       options: {
+         responsive: true,
+         plugins: {
+           legend: { display: false },
+           datalabels: {
+             anchor: 'end',
+             align: 'end',
+             formatter: value => value + '%',
+             font: { weight: 'bold' }
+           }
+         },
+         scales: {
+           y: {
+             beginAtZero: true,
+             max: Math.max(...data) * 1.08, // Aumenta un 20% el máximo
+             ticks: {
+               callback: function(value) {
+                 return value + '%';
+               },
+               color: 'white' // Asegúrate de que las etiquetas sean legibles
+             }
+           }
+         }
+       },
+       plugins: [ChartDataLabels]
+     });
+   }
+  </script>
+</body>
+</html>

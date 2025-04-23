@@ -4,8 +4,153 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Mi Sitio con Loader</title>
+  
+  <!-- GridStack CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/gridstack.js/7.3.0/gridstack.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/gridstack.js/7.3.0/gridstack-extra.min.css" />
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <!-- Tu CSS personalizado -->
   <link rel="stylesheet" href="/css/dashboard.css">
   
+  <style>
+    
+  /* Estilos adicionales para GridStack */
+    .grid-stack {
+      border-radius: 10px;
+      margin: 20px;
+      padding: 10px;
+    }
+    
+    .grid-stack-item-content {
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    
+    .card {
+      height: 100%;
+      margin: 0;
+      width: 100%;
+      box-shadow: none;
+    }
+    
+    .card-content {
+      padding: 15px;
+      height: 100%;
+      display: flex;
+      align-items: center;
+    }
+    
+    .grid-stack-item-removing {
+      opacity: 0.5;
+    }
+    
+    .dashboard-controls {
+      display: flex;
+      justify-content: flex-end;
+      padding: 10px 20px;
+    }
+    
+    .dashboard-controls button {
+      margin-left: 10px;
+      padding: 8px 15px;
+      background: #4a6cf7;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    
+    .dashboard-controls button:hover {
+      background: #3657d4;
+    }
+    
+    .daily-quote {
+      margin: 0;
+      font-style: italic;
+      font-size: 14px;
+      color: #ffffff;
+    }
+
+    .daily-quote p {
+      margin-bottom: 5px;
+      margin-right: 5px;
+    }
+
+    .daily-quote footer {
+      text-align: right;
+      font-size: 12px;
+      opacity: 0.8;
+    }
+
+    .asuetos-title {
+  color: #4a6cf7;
+  margin-bottom: 15px;
+  font-size: 18px;
+}
+
+  .asuetos-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 200px;
+    overflow-y: auto;
+  }
+
+  .asueto-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  }
+
+  .asueto-item:last-child {
+    border-bottom: none;
+  }
+
+  .asueto-info {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .asueto-name {
+    font-weight: 600;
+    color: #ffffff;
+    font-size: 14px;
+  }
+
+  .asueto-date {
+    color: #777;
+    font-size: 12px;
+    margin-top: 2px;
+  }
+
+  .asueto-icon {
+    color: #6c5ce7;
+    font-size: 16px;
+  }
+
+  /* Para la barra de desplazamiento personalizada */
+  .asuetos-list::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  .asuetos-list::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+  }
+
+  .asuetos-list::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 10px;
+  }
+
+  .asuetos-list::-webkit-scrollbar-thumb:hover {
+    background: #aaa;
+  }
+          
+  </style>
 </head>
 <body>
   <div class="loader-wrapper" id="loaderWrapper">
@@ -21,70 +166,318 @@
     </div>
   </div>
 
-   <div class="dashboard-conatiner">
-    <h1 class="title">Welcome to Flowit HRMS </h1>
+
+  <div class="dashboard-container">
+    <h1 class="title">Welcome to Flowit HRMS</h1>
     <p class="subtitle">A comprehensive solution for managing your company's human resources.</p>
+    
+    <div class="dashboard-controls">
+      <button id="save-grid">Save layout</button>
+      <!-- Botón comentado de cargar layout -->
+      <!-- <button id="load-grid">Cargar Layout</button> -->
+      <!-- Botón comentado de añadir widget -->
+      <!-- <button id="add-widget">Añadir Widget</button> -->
+    </div>
+    
+    <!-- GridStack Container -->
+    <div class="grid-stack"></div>
   </div>
-  <!-- HBS Template -->
-<div class="dashboard-container">
 
-  <div class="dashboard-cards">
+  <!-- GridStack JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gridstack.js/7.3.0/gridstack-all.js"></script>
+  <script id="asuetos-data" type="application/json">{{{asuetos}}}</script>
+  <script>
+
+    // Ocultar el loader cuando la página está cargada
+    window.addEventListener('load', function() {
+      setTimeout(function() {
+        document.getElementById('loaderWrapper').style.display = 'none';
+      }, 1000);
+    });
+    
+    // Inicializar GridStack
+    document.addEventListener('DOMContentLoaded', function() {
+      const options = {
+        cellHeight: 'auto',      // Altura automática para las celdas
+        minRow: 1,    
+        column: 4,    
+        margin: 10,              // Espacio entre widgets
+        disableOneColumnMode: false,
+        float: true,
+        animate: true,
+        resizable: {
+          handles: 'e,se,s,sw,w'  // Permitir redimensionar en todas direcciones
+        }
+      };
+      
+      // Crear la instancia de GridStack
+      const grid = GridStack.init(options);
+      
+      // Definición de widgets iniciales (ahora 1 columna de ancho que es ~20%)
+      const widgets = [
+        { x: 0, y: 0, width: 1, height: 2, content: createDepartmentCard() },
+        { x: 1, y: 0, width: 1, height: 2, content: createVacationCard() },
+        { x: 2, y: 0, width: 1, height: 2, content: createUsersCard() },
+        { x: 3, y: 0, width: 1, height: 2, content: createProjectsCard() }
+      ];
+      
+      // Cargar los widgets iniciales
+      loadWidgets(widgets);
+      
+      // Guardar layout
+      document.getElementById('save-grid').addEventListener('click', function() {
+        const serializedData = grid.save();
+        localStorage.setItem('dashboard-layout', JSON.stringify(serializedData));
+        alert('Layout guardado correctamente');
+      });
+      
+      // Cargar layout (comentado por ahora)
+      /*
+      document.getElementById('load-grid').addEventListener('click', function() {
+        const savedLayout = localStorage.getItem('dashboard-layout');
+        if (savedLayout) {
+          grid.removeAll();
+          const layout = JSON.parse(savedLayout);
+          loadSavedGrid(layout);
+        } else {
+          alert('No hay layout guardado');
+        }
+      });
+      */
+      
+      // Añadir nuevo widget (comentado por ahora)
+      /*
+      document.getElementById('add-widget').addEventListener('click', function() {
+        const widgetTypes = ['department', 'vacation', 'users', 'projects'];
+        const randomType = widgetTypes[Math.floor(Math.random() * widgetTypes.length)];
+        let content;
+        
+        switch (randomType) {
+          case 'department':
+            content = createDepartmentCard();
+            break;
+          case 'vacation':
+            content = createVacationCard();
+            break;
+          case 'users':
+            content = createUsersCard();
+            break;
+          case 'projects':
+            content = createProjectsCard();
+            break;
+        }
+        
+        const newWidget = { x: 0, y: 0, width: 1, height: 2, content };
+        grid.addWidget(newWidget);
+      });
+      */
+      
+      // Función para cargar widgets
+      async function loadWidgets(widgets) {
+        widgets.forEach(widget => {
+          const element = document.createElement('div');
+          element.innerHTML = widget.content;
+          grid.addWidget({
+            x: widget.x,
+            y: widget.y,
+            width: widget.width,
+            height: widget.height,
+            content: widget.content,
+            autoPosition: false
+          });
+        });
+
+        const quoteData = getQuoteOfTheDay();
+        const quoteContainers = document.querySelectorAll('#quote-container');
+        quoteContainers.forEach(container => {
+          container.innerHTML = `
+            <blockquote class="daily-quote">
+              <p>"${quoteData.quote}"</p>
+              <footer>- ${quoteData.author}</footer>
+            </blockquote>
+          `;
+        });
+      }
+      
+      // Función para cargar layout guardado
+      function loadSavedGrid(layout) {
+        layout.forEach(item => {
+          let content;
+          
+          // Recrear el contenido basado en los datos o usar un contenido predeterminado
+          if (item.content && item.content.includes('Active Departments')) {
+            content = createDepartmentCard();
+          } else if (item.content && item.content.includes('Remaining vacation')) {
+            content = createVacationCard();
+          } else if (item.content && item.content.includes('Registered Users')) {
+            content = createUsersCard();
+          } else if (item.content && item.content.includes('Ongoing Projects')) {
+            content = createProjectsCard();
+          } else {
+            content = '<div class="card"><div class="card-content"><div class="card-info"><h2>New Widget</h2><div class="card-number">0</div></div></div></div>';
+          }
+          
+          grid.addWidget({
+            x: item.x,
+            y: item.y,
+            width: item.w || item.width,
+            height: item.h || item.height,
+            content: content
+          });
+        });
+      }
+      
+      // Funciones para crear tarjetas
+      function createDepartmentCard() {
+        return `
+          <div class="card">
+            <div class="card-content">
+              <div class="card-info">
+                <h2>Quote of the day</h2>
+                <div id="quote-container">Loading quote...</div>
+              </div>
+              <div class="card-icon blue">
+                <i class="fa-solid fa-lightbulb"></i>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      
+      function createVacationCard() {
+        const dias = {{{diasRestantes}}}
+        return `
+          <div class="card">
+            <div class="card-content">
+              <div class="card-info">
+                <h2>Remaining vacation Days</h2>
+                <div class="card-number">${dias}</div>
+              </div>
+              <div class="card-icon blue">
+                <i class="fa-solid fa-plane-up"></i>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+      
+     function createUsersCard() {
+  const asuetos = JSON.parse(document.getElementById('asuetos-data').textContent);
+
+  const feriadosHTML = asuetos.map(a => {
+    const fecha = new Date(a.Fecha_asueto).toLocaleDateString('es-MX', {
+      year: 'numeric', month: 'long', day: 'numeric'
+    });
+    
+    return `
+      <li class="asueto-item">
+        <div class="asueto-info">
+          <span class="asueto-name">${a.Nombre_asueto}</span>
+          <span class="asueto-date">${fecha}</span>
+        </div>
+        <div class="asueto-icon">
+          <i class="fa-solid fa-calendar-check"></i>
+        </div>
+      </li>`;
+  }).join('');
+
+  return `
     <div class="card">
       <div class="card-content">
         <div class="card-info">
-          <h2>Active Departments</h2>
-          <div class="card-number">7</div>
-          <a href="/nuclea/departament" class="card-link">See details <span class="arrow">&#8594;</span></a>
-        </div>
-        <div class="card-icon blue">
-          <i class="fa-solid fa-building"></i>
+          <h2>Upcoming holidays</h2>
+          <ul class="asuetos-list">${feriadosHTML}</ul>
         </div>
       </div>
     </div>
+  `;
+}
 
-    <div class="dashboard-cards">
-    <div class="card">
-      <div class="card-content">
-        <div class="card-info">
-          <h2>Remaining vacation</h2>
-          <div class="card-number">{{diasRestantes}}</div>
-        </div>
-        <div class="card-icon blue">
-          <i class="fa-solid fa-plane-up"></i>
-        </div>
-      </div>
-    </div>
+      function createProjectsCard() {
+        const pend = {{{pendientes}}}
+        return `
+          <div class="card">
+            <div class="card-content">
+              <div class="card-info">
+                <h2>Pending Vacation Requests</h2>
+                <div class="card-number">${pend}</div>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+    });
 
-    <div class="card">
-      <div class="card-content">
-        <div class="card-info">
-          <h2>Registered Users</h2>
-          <div class="card-number">18</div>
-          <a href="/nuclea/users" class="card-link">See details <span class="arrow">&#8594;</span></a>
-        </div>
-        <div class="card-icon purple">
-          <i class="fa-solid fa-people-group"></i>
-        </div>
-      </div>
-    </div>
+    // Función para obtener una frase motivacional del array basada en el día del mes
+  function getQuoteOfTheDay() {
+    // Array con 30 frases motivacionales (una para cada día del mes)
+    const quotes = [
+      { quote: "The future belongs to those who believe in the beauty of their dreams.", author: "Eleanor Roosevelt" },
+      { quote: "Success is not final, failure is not fatal: it is the courage to continue that counts.", author: "Winston Churchill" },
+      { quote: "It does not matter how slowly you go as long as you do not stop.", author: "Confucius" },
+      { quote: "Believe you can and you're halfway there.", author: "Theodore Roosevelt" },
+      { quote: "Everything you've ever wanted is on the other side of fear.", author: "George Addair" },
+      { quote: "The only way to do great work is to love what you do.", author: "Steve Jobs" },
+      { quote: "If you're going through hell, keep going.", author: "Winston Churchill" },
+      { quote: "You are never too old to set another goal or to dream a new dream.", author: "C.S. Lewis" },
+      { quote: "The only limit to our realization of tomorrow will be our doubts of today.", author: "Franklin D. Roosevelt" },
+      { quote: "Your time is limited, don't waste it living someone else's life.", author: "Steve Jobs" },
+      { quote: "The best way to predict the future is to create it.", author: "Abraham Lincoln" },
+      { quote: "Life is what happens when you're busy making other plans.", author: "John Lennon" },
+      { quote: "Success is stumbling from failure to failure with no loss of enthusiasm.", author: "Winston Churchill" },
+      { quote: "The only person you are destined to become is the person you decide to be.", author: "Ralph Waldo Emerson" },
+      { quote: "Don't watch the clock; do what it does. Keep going.", author: "Sam Levenson" },
+      { quote: "The purpose of our lives is to be happy.", author: "Dalai Lama" },
+      { quote: "The power of imagination makes us infinite.", author: "John Muir" },
+      { quote: "Try to be a rainbow in someone's cloud.", author: "Maya Angelou" },
+      { quote: "Life is really simple, but we insist on making it complicated.", author: "Confucius" },
+      { quote: "Don't count the days, make the days count.", author: "Muhammad Ali" },
+      { quote: "It is never too late to be what you might have been.", author: "George Eliot" },
+      { quote: "In three words I can sum up everything I've learned about life: it goes on.", author: "Robert Frost" },
+      { quote: "You miss 100% of the shots you don't take.", author: "Wayne Gretzky" },
+      { quote: "Everything will be okay in the end. If it's not okay, it's not the end.", author: "John Lennon" },
+      { quote: "Happiness is not something ready-made. It comes from your own actions.", author: "Dalai Lama" },
+      { quote: "Life isn't about finding yourself. Life is about creating yourself.", author: "George Bernard Shaw" },
+      { quote: "Strive not to be a success, but rather to be of value.", author: "Albert Einstein" },
+      { quote: "The journey of a thousand miles begins with one step.", author: "Lao Tzu" },
+      { quote: "The way to get started is to quit talking and begin doing.", author: "Walt Disney" },
+      { quote: "If you can dream it, you can do it.", author: "Walt Disney" }
+    ];
 
-    <div class="card">
-      <div class="card-content">
-        <div class="card-info">
-          <h2>Ongoing Projects</h2>
-          <div class="card-number">12</div>
-          <a href="#" class="card-link">See details <span class="arrow">&#8594;</span></a>
-        </div>
-        <div class="card-icon green">
-          <i class="fa-solid fa-chart-simple"></i>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+    // Obtener el día actual del mes (1-31)
+    const today = new Date().getDate();
+    
+    // Asegurarse de que el índice está dentro del rango del array (0-29)
+    const index = (today - 1) % quotes.length;
+    
+    // Devolver la frase del día
+    return quotes[index];
+  }
 
-<!-- CSS Styles -->
+  setTimeout(function() {
+  // Buscar todos los contenedores de citas en el documento
+    const quoteContainers = document.querySelectorAll('#quote-container');
+    
+    if (quoteContainers.length > 0) {
+      // Obtener la frase motivacional (ahora síncrona)
+      const quoteData = getQuoteOfTheDay();
+      
+      // Actualizar todos los contenedores con la misma frase
+      quoteContainers.forEach(container => {
+        container.innerHTML = `
+          <blockquote class="daily-quote">
+            <p>"${quoteData.quote}"</p>
+            <footer>- ${quoteData.author}</footer>
+          </blockquote>
+        `;
+      });
+    }
+  }, 1000);
 
-  <script src="/js/dashboard.js"></script>
+    
+
+    
+  </script>
 </body>
 </html>

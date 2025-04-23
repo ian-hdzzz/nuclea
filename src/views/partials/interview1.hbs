@@ -1,5 +1,8 @@
-<form id="interviewForm" action="/nuclea/interview/{{contacts.id}}" method="POST">
+
+
+<input type="hidden" id="questions-data" value="{{{json preguntas}}}">
 <input type="hidden" name="_csrf" value="{{csrfToken}}">
+
   <div class="interview1">
     <div class="indicator">
       <p>Question <span id="questionNumber">1</span> of <span id="totalQuestions">4</span></p>
@@ -21,4 +24,4 @@
       <div class="progress"></div>
     </div>
   </div>
-</form>
+  

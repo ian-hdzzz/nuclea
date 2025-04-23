@@ -107,4 +107,11 @@ body {
     background-color: #2563eb;
   }
   
- 
+  .evaluation-field .question{
+  width: 100%;
+  display: flex;
+}
+.question label{
+  font-size: 1.2rem;
+  font-weight: 600;
+}

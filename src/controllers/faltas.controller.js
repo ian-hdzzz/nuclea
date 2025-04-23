@@ -109,7 +109,7 @@ exports.postAgregarFa = (req, res, next) => {
     
 };
 
-exports.getDelete = (req, res, next) => {
+exports.delete = (req, res, next) => {
     Falta.delete(req.params.idFalta)
     .then(()=>{
         let encontrado = false; // Variable para saber si encontramos el privilegio 'addAO'
@@ -202,16 +202,18 @@ exports.getUpdate = (req, res, next) => {
                     Usuario.fetchAll()
                         .then(([rows]) => {
                             const noFaltas = faltas.length === 0;
-
-                            res.render('../views/pages/editarFalta.hbs', {
+                            
+                            res.render('../views/pages/editAO.hbs', {
                                 usuariosfa: rows,
                                 csrfToken: req.csrfToken(),
                                 faltass: faltas,
                                 falta: falta[0],
                                 noFaltas: noFaltas,
-                                title: 'Administrative offenses'
+                                title: 'Administrative offenses',
+                                iconClass: 'fa-solid fa-triangle-exclamation',
                             });
                             console.log(falta)
+                            console.log(faltas)
                         })
                         .catch((err) => {
                             console.error('Error fetching Users:', err);
@@ -242,5 +244,18 @@ exports.postUpdate = (req, res, next) => {
             req.session.errorAo = `Error registering Addministrative offense.`;
             res.redirect('/nuclea/faltasAdministrativas');
             res.status(500);
+        });
+};
+
+exports.searchAO = (req, res) => {
+    const searchTerm = req.query.name || '';
+    
+    Falta.searchByName(searchTerm)
+        .then(([results]) => {
+            res.json(results);
+        })
+        .catch(error => {
+            console.error('Error en búsqueda:', error);
+            res.status(500).json({ error: 'Error al buscar faltas administrativas' });
         });
 };

@@ -1,0 +1,116 @@
+<head>
+     <link rel="stylesheet" href="/css/one-to-one.css">
+</head>
+<div class="interview-details-container">
+    <div class="back-button-container">
+        <a href="/nuclea/one" class="btn-back">
+            <i class="fas fa-arrow-left"></i> Back to One-to-one
+        </a>
+    </div>
+    
+    <!-- Employee and Interview Header -->
+    <div class="interview-header">
+        <div class="employee-profile">
+            <div class="employee-avatar">{{employee.initial}}</div>
+            <div class="employee-info">
+                <h2>{{employee.nombre}} {{employee.apellidos}}</h2>
+                <p class="employee-position">{{#if employee.puesto}}{{employee.puesto}}{{else}}No position specified{{/if}}</p>
+                <p class="employee-department">Modality: {{#if employee.modalidad}}{{ employee.modalidad}}{{else}}No modality specified{{/if}}</p>
+            </div>
+        </div>
+        
+        <div class="interview-meta">
+            <div class="meta-item">
+                <strong>Interview Date:</strong> {{interview.date}}
+            </div>
+            <div class="meta-item">
+                <strong>Interviewer:</strong> {{interviewer.nombre}} {{interviewer.apellidos}}
+            </div>
+            <div class="meta-item">
+                <strong>Status:</strong> 
+                <span class="{{#if interview.completed}}status-completed{{else}}status-progress{{/if}}">
+                    {{#if interview.completed}}Completed{{else}}In Progress{{/if}}
+                </span>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Responses Tables -->
+    <div class="responses-container">
+        {{#if openResponses.length}}
+        <div class=" open-responses">
+            <h3>Open Questions</h3>
+            <table class="responses-table">
+                <thead>
+                    <tr>
+                        <th>Question</th>
+                        <th>Response</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each openResponses}}
+                    <tr>
+                        <td>
+                            <div class="question-text">{{this.pregunta}}</div>
+                            <div class="question-description">{{this.descripcionPregunta}}</div>
+                        </td>
+                        <td>{{#if this.textoRespuesta}}{{this.textoRespuesta}}{{else}}No response provided{{/if}}</td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+        {{/if}}
+        
+        {{#if closedResponses.length}}
+        <div class="closedQuestions-container">
+
+       
+        <div class=" card closed-responses">
+            <h3>Closed Questions (Rated 1-5)</h3>
+            <table class="responses-table">
+                <thead>
+                    <tr>
+                        <th>Question</th>
+                        <th>Rating</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each closedResponses}}
+                    <tr>
+                        <td>
+                            <div class="question-text">{{this.pregunta}}</div>
+                            <div class="question-description">{{this.descripcionPregunta}}</div>
+                        </td>
+                        <td>
+                            <div class="rating-display">
+                                {{#times 5}}
+                                    <span class="star {{#if (lte this ../this.valorRespuesta)}}filled{{/if}}">★</span>
+                                {{/times}}
+                                <span class="rating-number">{{this.valorRespuesta}}/5</span>
+                            </div>
+                        </td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+        {{/if}}
+            <div class=" card graph details">
+            {{> graph 
+                workload=closedResponses.[0].valorRespuesta
+                health=closedResponses.[1].valorRespuesta 
+                recognition=closedResponses.[2].valorRespuesta
+                emotionalHealth=closedResponses.[3].valorRespuesta
+                workLifeBalance=closedResponses.[4].valorRespuesta
+                className="chart-container details"
+                graphTitle="Performance Overview"}}
+            </div>
+         </div>
+        {{#unless (or openResponses.length closedResponses.length)}}
+        <div class="no-responses">
+            <p>No responses available for this interview.</p>
+        </div>
+        {{/unless}}
+    </div>
+</div>

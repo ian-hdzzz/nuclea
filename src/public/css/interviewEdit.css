@@ -1,0 +1,437 @@
+
+.main-content {
+    flex: 1;
+    padding: 20px;
+    max-width: calc(100% - var(--sidebar-width));
+    color: #fff;
+}
+
+.sidebar {
+    width: var(--sidebar-width);
+    border-left: 1px solid var(--border-color);
+    background-color: var(--secondary-color);
+    padding: 20px;
+}
+
+.interview-section,
+.evaluation-section {
+    background-color: var(--primary-color);
+    border-radius: 8px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background-color: var(--secondary-color);
+    border-bottom: 1px solid var(--border-color);
+}
+
+h2, h3 {
+    font-size: 1.4rem;
+    font-weight: 500;
+}
+
+.btn-add {
+    background: linear-gradient(to right, var(--color-primario) 0%, var(--color-secundario)100%);
+
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 10px 12px;
+    cursor: pointer;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: background-color 0.2s;
+}
+
+.btn-add:hover {
+    background-color: #5a52d5;
+}
+
+.question-list,
+.aspect-list {
+    list-style: none;
+    padding: 0;
+}
+
+.question-item,
+.aspect-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    border-bottom: 1px solid var(--border-color);
+    transition: background-color 0.2s;
+    cursor: grab;
+    border-radius: 1rem;
+    background: var(--color-bg-secundario);
+    margin: 10px auto;
+}
+
+.question-item:last-child,
+.aspect-item:last-child {
+    border-bottom: none;
+}
+
+
+
+.question-item.dragging,
+.aspect-item.dragging {
+    opacity: 0.5;
+    background-color: var(--secondary-color);
+}
+
+.question-content,
+.aspect-content {
+    flex: 1;
+}
+
+.question-actions,
+.aspect-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-edit,
+.btn-delete {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.btn-edit {
+    color: var(--accent-color);
+}
+
+.btn-delete {
+    color: var(--danger-color);
+}
+
+.btn-edit:hover,
+.btn-delete:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Employee sidebar styles */
+.employee-info {
+    margin-bottom: 30px;
+}
+
+.info-item {
+    margin: 10px 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.label {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+}
+
+.value {
+    font-size: 1rem;
+    margin-top: 3px;
+}
+
+.employee-search {
+    margin-top: 20px;
+}
+
+.search-box {
+    margin: 10px 0 15px;
+}
+
+.search-box input {
+    width: 100%;
+    padding: 10px;
+    background-color: var(--primary-color);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    color: var(--text-color);
+    font-size: 0.9rem;
+}
+
+.employee-list {
+    list-style: none;
+    padding: 0;
+}
+
+.employee-item {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.employee-item:hover {
+    background-color: var(--hover-color);
+}
+
+.employee-initial {
+    width: 30px;
+    height: 30px;
+    background-color: var(--accent-color);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 10px;
+    font-weight: bold;
+}
+
+/* Modal styles */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal.active {
+    display: flex;
+}
+
+.modal-content {
+    color: #fff;
+    background-color: var(--color-bg-secundario);
+    border-radius: 8px;
+    width: 90%;
+    max-width: 500px;
+    position: relative;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.close-modal {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    transition: color 0.2s;
+}
+
+.close-modal:hover {
+    color: var(--danger-color);
+}
+
+.modal-description {
+    margin: 15px 0;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.form-group {
+    padding: 15px 20px;
+}
+
+.modal-input {
+    width: 100%;
+    margin: 10px 0;
+    padding: 12px 15px;
+    border-radius: 4px;
+    border: 1px solid #ffffff39;
+    background-color: var(--primary-color);
+    color: var(--text-color);
+    font-size: 1rem;
+    transition: border-color 0.2s;
+}
+
+.modal-input:focus {
+    outline: none;
+    border-color: var(--accent-blue);
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    padding: 15px 20px;
+    gap: 10px;
+    border-top: 1px solid var(--border-color);
+}
+
+.btn-submit,
+.btn-save,
+.btn-cancel,
+.btn-delete-modal {
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: background-color 0.2s;
+    border: none;
+   
+}
+.btn-submit,
+.btn-save{
+background: linear-gradient(to right, var(--color-primario) 0%, var(--color-secundario)100%);
+}
+.btn-delete-modal{
+    background-color: #ff5252;
+}
+.btn-cancel{
+    color: var(--text-color);
+    border: 1px solid #dedede7a;
+}
+.btn-submit {
+    background-color: var(--accent-color);
+    color: white;
+}
+
+
+
+.btn-save {
+    background-color: var(--accent-color);
+    color: white;
+}
+
+.btn-save:hover {
+    background-color: #5a52d5;
+}
+
+
+
+.btn-delete-modal:hover {
+    background-color: #ff5252;
+}
+
+
+.btn-cancel:hover {
+    background-color: var(--hover-color);
+}
+
+/* Drag placeholder */
+.item-placeholder {
+    background-color: rgba(108, 99, 255, 0.2);
+    border: 2px dashed var(--accent-color);
+    margin: 10px 0;
+    height: 50px;
+    border-radius: 4px;
+}
+
+/* Dragover effect */
+.question-item.dragover,
+.aspect-item.dragover {
+    border-top: 2px solid var(--accent-color);
+}
+
+.question-content p, .aspect-content p{
+    color: #ffffff6c;
+    font-size: .8rem;
+}
+
+/* Estilos para el sistema de notificaciones */
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1050;
+    max-width: 350px;
+    transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+    transform: translateX(100%);
+    opacity: 0;
+}
+
+.notification.show {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+.notification-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 20px;
+    border-radius: 4px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    color: #fff;
+}
+
+.notification.success .notification-content {
+    background-color: #28a745;
+}
+
+.notification.error .notification-content {
+    background-color: #dc3545;
+}
+
+.notification.warning .notification-content {
+    background-color: #ffc107;
+    color: #212529;
+}
+
+.notification-close {
+    background: none;
+    border: none;
+    color: inherit;
+    font-size: 1.2rem;
+    margin-left: 15px;
+    cursor: pointer;
+    opacity: 0.7;
+}
+
+.notification-close:hover {
+    opacity: 1;
+}
+
+/* Para múltiples notificaciones apiladas */
+.notification:nth-child(1) {
+    top: 20px;
+}
+
+.notification:nth-child(2) {
+    top: 90px;
+}
+
+.notification:nth-child(3) {
+    top: 160px;
+}
+
+.notification:nth-child(n+4) {
+    top: 230px;
+}
+.question-item .fa-ellipsis-vertical, .aspect-item .fa-ellipsis-vertical{
+    font-family: 8px;
+    margin-right: 20px;
+    color: rgba(238, 218, 218, 0.705);
+}

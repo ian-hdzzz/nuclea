@@ -8,46 +8,26 @@
 }
 
 body {
-    background-color: #0c1019;
+    background-color: var(--color-bg);
     color: #fff;
     font-family: 'Montserrat', sans-serif;
 }
-.request-container {
-    width: calc(100% - 10px);
+
+
+
+
+.top-container {
     display: flex;
-    flex-direction: column;
-    margin-left: 90px;
-}
-.nav-bar {
-    font-family: "Radio Canada", sans-serif;
-    margin: 20px 20px;
-    display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
     align-items: center;
-    height: 50px;
+    width: 92%;
+    margin: auto;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding: 0 20px;
 }
-
-.first-container {
-    margin-left: 140px;
-    display: flex;
-    height: 80%;
-    width: 800px;
-}
-
-.search-container {
-    flex-grow: 0.7;
-    background-color: #fff;
-    padding: 4px;
-    border-radius: 0 8px 8px 0;
-}
-
-.input-search {
-    font-size: 18px;
-    padding: 4px;
-    outline: none;
-    border: none;
-    width: 95%;
-    height: 100%;
+.search-ao{
+    width: 40%;
 }
 
 .search-icon {
@@ -85,13 +65,14 @@ body {
 }
 
 .content {
-    width: 100%;
+    width: 92%;
     border-radius: 1.5rem;
     margin: 0 auto;
     padding: 40px 30px;
-    background-color: #151720;
+    transition: all 0.3s ease;
+    background-color: var(--color-bg-secundario);
+    border: 1px solid var(--border-color);
 }
-
 .nav-content {
     font-family: "Radio Canada", sans-serif;
     display: flex;
@@ -112,7 +93,7 @@ table {
 }
 
 thead {
-    background-color: #151720;
+    background-color: var(--color-bg-secundario);
     color: white;
 }
 
@@ -131,7 +112,7 @@ th, td {
     padding: 4px 5px;
     border-radius: 20px;
     font-size: .855rem;
-    width: 80%;
+    width: 100%;
 }
 .dot{
     background: #f99b03;
@@ -274,7 +255,7 @@ th, td {
     font-size: 1rem;
     width: auto;
     height: 50px;
-    border-radius: 16px;
+    border-radius: 10px;
     background: linear-gradient(to right, var(--color-primario) 0%, var(--color-secundario)100%);
     border: none;
     padding: 5px 15px;
@@ -433,7 +414,7 @@ th {
   
   
   .dropdown-content {
-    display: block;
+    display: none;
     position: absolute;
     left: 0;
     right: 0;
@@ -448,6 +429,13 @@ th {
     opacity: 0;
   }
   
+  .dropdown-content.show {
+    display: block;
+    opacity: 1;
+    max-height: 100px;
+  }
+  
+
   .dropdown-content.show {
     max-height: 100px; /* Adjust based on your content */
     opacity: 1;
@@ -500,14 +488,12 @@ th {
 
 .action-btn {
     cursor: pointer;
-    color: #fff;
-    font-size: 1rem;
-    padding: 10px 25px;
-    background: linear-gradient(to right, #2762ea 0%, #4162f0 29%, #8061fd 100%);
+    padding: 6px 20px;
+    background: linear-gradient(to right, #2762ea6e 0%, #1da3fc6d 100%);
+    box-sizing: border-box;
     border-radius: 2rem;
     border: none;
-    box-shadow: 3px 3px 15px rgba(46, 82, 227, 0.515);
-    transition: transform 0.2s ease-in-out;
+    font-size: .87rem;
   }
   
   .action-btn:hover {

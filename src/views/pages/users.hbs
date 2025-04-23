@@ -11,8 +11,9 @@
 <body>
 
 
-    <div class="top-container">
-        <nav class="nav-bar">
+     <div class="top-container">
+
+        {{!-- <nav class="nav-bar">
             <div class="first-container">
                 <div class="views">Views</div>
                 <div class="search-container">
@@ -20,7 +21,27 @@
                     <i class="fa-solid fa-magnifying-glass search-icon"></i>
                 </div>
             </div>
-        </nav>
+            
+        </nav> --}}
+      <div class="search-input-container">
+
+        {{> search placeholder="User name..." searchId="search-input"}}
+
+      </div>
+      <div class="second-container">
+        <div>
+          <i class="fa-solid fa-bell hidden" ></i>
+        </div>
+        <div>
+          <i class="fa-solid fa-user hidden"></i>
+        </div>
+      </div>
+    </nav>
+      <div class="add-btn-container" id="openModal">
+          <i class="fa-regular fa-square-plus"></i>
+          <input type="button" value="Add User"class="add-btn">
+          <!-- Botón de enviar <input type="button" value="Assign user to Dep" id="openModal2" class="add-btn"> -->
+      </div>
     </div>
     {{#if info}}
         <div "top-container">
@@ -47,11 +68,7 @@
     <div class="content">
         <div class="nav-content">
             <h2>Users Managment</h2>
-            <div class="add-btn-container">
-                <i class="fa-regular fa-square-plus"></i>
-                <input type="button" value="Add Users" id="openModal" class="add-btn">
-                <!-- Botón de enviar <input type="button" value="Assign user to Dep" id="openModal2" class="add-btn"> -->
-            </div>
+            
         </div>
         <table id="users-table" >
             <thead>
@@ -78,11 +95,11 @@
                        
                           <span class="active"> <div class="dot"></div>Active</span>
                         {{else}}
-                          <span class="inactive"> <div class="dot"></div>Inactive</span>
+                          <span class="vacation-status inactive"> <div class="dot"></div>Inactive</span>
                         {{/if}}</td>
                     <td>
                         <div class="dropdown">
-                            <button class="action-btn">Actions</button>
+                            <button class="action-btn">Manage</button>
                             <div class="dropdown-content">
                                 <button class="edit-btn"  onclick="location.href='/nuclea/users/update/{{idUsuario}}'">
                                   <i class="fa-solid fa-pen-to-square"></i> Edit
@@ -189,7 +206,7 @@
 
                 <div class="form-group">
                     <label>Password</label>
-                    <input type="password" placeholder="Choose a Number" value="{{tempPassword}}" class="text-modal" name="password">
+                    <input type="password" placeholder="Choose a Number" value="{{tempPassword}}" class="text-modal" name="password" readonly>
                 </div>
 
                 <div class="form-group">

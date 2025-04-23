@@ -5,22 +5,46 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="/css/company.css">
+    <meta name="csrf-token" content="{{csrfToken}}">
 </head>
 <body>
+    <div class="company-container">
+
+
      <div class="top-container">
-        <nav class="nav-bar">
+
+        {{!-- <nav class="nav-bar">
             <div class="first-container">
                 <div class="hidden"></div>
                 <div class="search-container">
-                <input type="text" placeholder="Search..." class="input-search">
+                <input type="text" placeholder="Search..." class="input-search" id="search-input">
                 <i class="fa-solid fa-magnifying-glass search-icon"></i>
                 </div>
             </div>
             
-        </nav>
+        </nav> --}}
+        <div class="search-input-container">
+            {{> search placeholder="Company name..." searchId="search-input"}}
+
+  
+      </div>
+      <div class="second-container">
+        <div>
+          <i class="fa-solid fa-bell hidden" ></i>
+        </div>
+        <div>
+          <i class="fa-solid fa-user hidden"></i>
+        </div>
+      </div>
+    </nav>
+        <div class="add-btn-container" id="openModal">
+                <i class="fa-regular fa-square-plus"></i>
+                <input type="button" value="Add Company" class="add-btn">
+        </div>
+    </div>
     </div>
     {{#if info}}
-        <div "top-container">
+        <div class="top-container">
         <div class="nav-bar">
             <div class="first-container">
             <div class="notification is-success">
@@ -31,7 +55,7 @@
         </div>
     {{/if}}
     {{#if merror}}
-        <div "top-container">
+        <div class="top-container">
         <div class="nav-bar">
             <div class="first-container">
             <div class="notification is-danger">
@@ -44,9 +68,7 @@
     <div class="content">
         <div class="nav-content">
             <h2>Companies</h2>
-            <div class="add-btn-container" id="openModal">
-                <input type="button" value="Add Company" class="add-btn">
-            </div>
+            
         </div>
         <table>
             <thead>
@@ -56,25 +78,25 @@
                     <th>Actions</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="despliegue">
                 {{#each datosh}}
-                <tr>
+                <tr >
                     <td>{{Nombre_empresa}}</td>
                     <td class="state">
                         {{#if Estado}}
                        
                           <span class="active"> <div class="dot"></div>Active</span>
                         {{else}}
-                          <span class="inactive"> <div class="dot"></div>Inactive</span>
+                          <span class="vacation-status inactive"> <div class="dot"></div>Inactive</span>
                         {{/if}}</td>
-                    <td>
+                    <td class="actions-col">
                         <div class="dropdown">
-                        <button class="action-btn">Actions</button>
+                        <button class="action-btn">Manage</button>
                         <div class="dropdown-content">
                             <button class="edit-btn"  onclick="location.href='/nuclea/company/update/{{idEmpresa}}'">
                             <i class="fa-solid fa-pen-to-square"></i> Edit
                             </button>
-                            <button class="delete-btn" onclick="location.href='/nuclea/company/delete/{{idEmpresa}}'">
+                            <button class="delete-btn" onclick="confirmDeleteCom('{{idEmpresa}}')">
                             <i class="fa-solid fa-trash"></i> Delete
                             </button>
 
@@ -123,8 +145,10 @@
 
 
     </div>
-
+    </div>
 
     <script src="/js/company.js"></script>
+    <script src="/js/searchcompany.js"></script>
+    <script src="/js/delete.js"></script>
 </body>
 </html>

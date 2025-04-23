@@ -1,21 +1,26 @@
-
 <head>
     <link rel="stylesheet" href="/css/one-to-one.css">
 </head>
 
    <div class="one-container">
     
-    {{> search 
-        title="Search employee" 
-        placeholder="Search..." 
-        searchId="employeeSearch"
-        searchType="users"
-        contacts=employees
-    }}
+
       <div class="empezarInterview">
-          <div class="card" href="/nuclea/interview">
-              <h3>Interview</h3>
-              <p>Conduct and manage employee feedback sessions</p>
+          <div class="card search" href="/nuclea/interview">
+              <div class="search-container">
+                <h3>Search employee</h3>
+                <p>Search for any employee you would like to evaluate</p>
+               
+                {{> search  
+                    title="Search employee" 
+                    placeholder="Mauricio Hernández..." 
+                    searchId="employeeSearch"
+                    searchType="users"
+                    contacts=employees
+                }}
+                
+              </div>
+
               <div class="buttons">
                 <a href="/nuclea/interview/edit" class="btn ">Edit Questions </a>
                 <a href="/nuclea/interview" class="btn apply " id="applyInterviewBtn">Apply Interview →</a>
@@ -23,12 +28,20 @@
           </div>
       </div>
 
-      <div class="graph">
-        {{> graph }}    
+      <div class="card graph">
+       <h3 id="graph-title">Team Performance Overview</h3>
+        {{> graph 
+                workload=closedResponses.[0].valorRespuesta
+                health=closedResponses.[1].valorRespuesta 
+                recognition=closedResponses.[2].valorRespuesta
+                emotionalHealth=closedResponses.[3].valorRespuesta
+                workLifeBalance=closedResponses.[4].valorRespuesta
+                className="chart-container" }}
       </div>
-      <div class="tableCollab">
-
+      <div class="card tableCollab">
+        
       </div>
 
  
    </div>
+<script src="/js/one.js"></script>

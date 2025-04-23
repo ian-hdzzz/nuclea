@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Inactive Users</title>
+  <link rel="stylesheet" href="/css/unemployed.css" />
+  <meta name="csrf-token" content="{{ csrfToken }}">
+</head>
+<body>
+  <div class="unemployed-container">
+    <div class="top-container">
+      <nav class="nav-bar">
+        <div class="first-container">
+          <div class="views">Search</div>
+          <div class="search-container">
+            <input type="text" placeholder="Search..." class="input-search" />
+            <i class="fa-solid fa-magnifying-glass search-icon"></i>
+          </div>
+        </div>
+      </nav>
+    </div>
+
+    <div class="content">
+      <div class="nav-content">
+        <h2>Inactive Users</h2>
+      </div>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Correo Electrónico</th>
+              <th>Fecha Inicio</th>
+              <th>Fecha Fin</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{#if usuarios.length}}
+              {{#each usuarios}}
+              <tr>
+                <td>{{Nombre}} {{Apellidos}}</td>
+                <td>{{Correo_electronico}}</td>
+                <td>{{formatDate Fecha_inicio_colab}}</td>
+                <td>{{formatDate Fecha_vencimiento_colab}}</td>
+                <td class="state">
+                  <span class="vacation-status inactive">
+                    <div class="dot"></div>
+                    Inactive
+                  </span>
+                </td>
+              </tr>
+              {{/each}}
+            {{else}}
+              <tr>
+                <td colspan="5" class="empty-message">No hay usuarios inactivos</td>
+              </tr>
+            {{/if}}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

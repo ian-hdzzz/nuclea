@@ -108,6 +108,17 @@ document.addEventListener("DOMContentLoaded", () => {
         timer = setTimeout(() => func.apply(this, args), timeout);
       };
     };
+
+    function formatDate(date) {
+      if (!date) {
+          return '';
+      }
+      const d = new Date(date);
+      const day = String(d.getDate()).padStart(2, '0');
+      const month = String(d.getMonth() + 1).padStart(2, '0');
+      const year = d.getFullYear();
+      return `${day}/${month}/${year}`;
+    }
   
     // Función para actualizar resultados en la tabla
     const updateResults = (users) => {
@@ -119,7 +130,7 @@ document.addEventListener("DOMContentLoaded", () => {
           <tr>
               <td>${user.Nombre}</td>
               <td>${user.Departamentos}</td>
-              <td>${user.Fecha_inicio_colab}</td>
+              <td>${formatDate(user.Fecha_inicio_colab)}</td>
               <td>${user.Modalidad || "Sin departamento"}</td>
               <td>${user.Ciudad || "Sin departamento"}</td>
               <td class="state">
@@ -178,5 +189,23 @@ document.addEventListener("DOMContentLoaded", () => {
   
     // Listener para la búsqueda
     searchInput.addEventListener("keyup", handleSearch);
+
+
+        // Confirmación antes de eliminar usuario
+        document.querySelectorAll(".delete-btn").forEach(button => {
+          const originalUrlMatch = button.getAttribute("onclick")?.match(/'(.*?)'/);
+          if (!originalUrlMatch) return;
+    
+          const originalUrl = originalUrlMatch[1];
+          button.removeAttribute("onclick");
+    
+          button.addEventListener("click", (e) => {
+            e.preventDefault();
+            const confirmDelete = confirm("Are you sure you want to delete this user?");
+            if (confirmDelete) {
+              window.location.href = originalUrl;
+            }
+          });
+        });
   });
   

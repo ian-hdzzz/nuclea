@@ -5,6 +5,11 @@
     padding: 0;
     margin: 0;
 }
+body{
+    background-color: #0c1019;
+    color: #fff;
+    height:100vh;
+}
 
 .first-container{
     margin-left: 140px;
@@ -13,35 +18,15 @@
     width: 800px;
 
 }
-body{
-    background-color: #0c1019;
-    color: #fff;
-}
-.nav-bar{
-    font-family: "Radio Canada", sans-serif;
-    margin: 20px 20px ;
+.top-container{
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
     align-items: center;
-    height: 50px;
-}
-.search-container{
-    margin-left: 100px;
-    flex-grow: 0.7;
-    background-color: #fff;
-    padding: 4px;
-    border-radius: 8px 8px 8px 8px;
-
+    margin: auto;
+    width: 92%;
 }
 
-.input-search{
-    font-size: 18px;
-    padding: 4px;
-    outline: none;
-    border: none;
-    width: 95%;
-    height: 100%;
-}
+
 
 .search-icon{
     cursor: pointer;
@@ -76,11 +61,11 @@ body{
 }
 
 .content{
-    width: 80%;
+    width: 92%;
     border-radius: 2rem;
     margin: auto;
     padding: 40px;
-    background-color: #151720;
+    background-color: var(--color-bg-secundario);
 }
 
 .nav-content{
@@ -130,7 +115,7 @@ h2{
 
 table {
     font-family: 'Montserrat',sans-serif;
-    width: 70%;
+    width: 90%;
     border-collapse: collapse;
     margin: auto;
     margin-top: 20px;
@@ -404,3 +389,35 @@ th, td {
     width: 80%;
     text-align: center; /* Centra el texto */
 }
+
+.vacation-status {
+    display: flex;
+    cursor: auto;
+    align-items: center;
+    padding: 4px 15px;
+    background: #c0392b;
+    box-sizing: border-box;
+    font-size: .85rem;
+    border-radius: 2rem;
+    color: #ffffff;
+  }
+
+  /* Punto rojo para inactivos */
+  .inactive .dot {
+    background-color: #ff5151;
+  }
+  
+  /* Fondo rojo para inactivos */
+  .inactive {
+    background-color: #c0392b;
+    color: white;
+    display: flex;
+    cursor: auto;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 10px;
+    box-sizing: border-box;
+    font-size: .85rem;
+    border-radius: 2rem;
+    width: 40%;
+  }

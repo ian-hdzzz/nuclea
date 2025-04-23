@@ -1,0 +1,57 @@
+@startuml
+actor Navegador as navegador
+boundary "interview.routes" as interviewRoutes
+control "interview.controller" as interviewController
+entity "interview.model" as interviewModel
+boundary "interview.hbs" as interviewHbs
+boundary "interviews.hbs" as interviewsHbs
+database sql
+
+activate navegador
+navegador -> interviewRoutes : GET(/nuclea/interview?id)
+deactivate navegador
+activate interviewRoutes
+interviewRoutes -> interviewController : getInterview(req,res)
+deactivate
+activate interviewController
+interviewController ->> interviewModel : getQuestions()
+activate interviewModel
+interviewModel ->> sql : execute('SELECT * FROM preguntas;');
+activate sql
+sql -->> interviewModel: Query ok
+deactivate
+interviewModel -->> interviewController : Promise
+deactivate
+interviewController -> interviewHbs : res.render(/pages/interview)
+deactivate
+activate interviewHbs
+interviewHbs -> navegador : HTML
+deactivate
+activate navegador
+navegador -> interviewRoutes : POST(/nuclea/interview?id)
+deactivate
+activate interviewRoutes
+interviewRoutes -> interviewController : saveInterviewById(req,res)
+deactivate
+activate interviewController
+interviewController -->> interviewModel : saveQuestions(req.body)
+activate interviewModel
+interviewModel -->> sql : execute(`INSERT INTO entrevista (empleadoId, entrevistaId, preguntaId, textoRespuesta)  VALUES (?, ?, ?)`, [idUsuario, entrevistaId, preguntaId, respuesta])
+activate sql
+sql -->> interviewModel : Query ok
+deactivate
+interviewModel -->> interviewController : Promise
+deactivate
+interviewController -> interviewRoutes : res.redirect(/nuclea/interviews)
+deactivate
+activate interviewRoutes
+interviewRoutes -> interviewController : getInterviewsView(req,res) 
+deactivate
+activate interviewController
+interviewController -> interviewsHbs : res.render(interviewsView.hbs)
+deactivate
+activate interviewsHbs
+interviewsHbs -> navegador : HTML
+deactivate
+activate navegador
+deactivate navegador

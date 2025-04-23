@@ -55,5 +55,15 @@ module.exports = class Holiday {
             return db.execute('SELECT * FROM DiasFeriados'); 
         }
     }
+
+    static fetchtop3() {
+        return db.execute(`
+            SELECT * 
+            FROM DiasFeriados
+            WHERE Fecha_asueto >= CURDATE()
+            ORDER BY Fecha_asueto ASC
+            LIMIT 3;
+        `);
+    }
 }
 

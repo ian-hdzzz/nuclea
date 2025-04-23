@@ -400,3 +400,102 @@ function confirmDeleteFal(idFalta) {
         });
     }
 }
+
+
+
+function confirmDeleteCom(idEmpresa) {
+    console.log("------------Esta es el id solicitud----------");
+    console.log(idEmpresa);
+    const confirmed = confirm("Are you sure you want to delete this request?");
+    if (confirmed) {
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        
+        fetch(`/nuclea/company/delete/${idEmpresa}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-Token': csrfToken
+            },
+            credentials: 'include'
+        })
+        .then(result => {
+            return result.json();
+        })
+        .then(data => {
+            console.log(data);
+            let htmlContainer=``;
+            data.datos.forEach(dato => {
+                htmlContainer+=`
+                <tr>
+                    <td>${dato.Nombre_empresa} </td>
+                    <td class="state-container">`;
+
+                
+                if(dato.Estado=="1"){
+                    htmlContainer+=`<span class="active"> <div class="dot"></div>Active</span>`;
+                }else{
+                    htmlContainer+=`<span class="inactive"> <div class="dot"></div>Inactive</span>`;
+                }htmlContainer+=`
+                  </td>`;
+                
+                 htmlContainer+=`
+                  </td>
+                    <td class="actions-col">
+                        <div class="dropdown">
+                        <button class="action-btn">Manage</button>
+                        <div class="dropdown-content">
+                            <button class="edit-btn"  onclick="location.href='/nuclea/company/update/${dato.idEmpresa}'">
+                            <i class="fa-solid fa-pen-to-square"></i> Edit
+                            </button>
+                            <button class="delete-btn" onclick="confirmDeleteCom('${dato.idEmpresa}')">
+                            <i class="fa-solid fa-trash"></i> Delete
+                            </button>
+
+                        </div>
+                    </td>
+                </tr>
+                 `;
+            })
+                 
+
+
+            let tabla =document.getElementById('despliegue');
+            tabla.innerHTML=htmlContainer;
+
+
+        
+            // ========== DROPDOWN ========== //
+            const actionButtons = document.querySelectorAll(".action-btn");
+              
+            actionButtons.forEach((btn) => {
+              btn.addEventListener("click", (e) => {
+                e.stopPropagation();
+                document.querySelectorAll(".dropdown-content").forEach((content) => {
+                  if (content !== btn.nextElementSibling) {
+                    content.classList.remove("show");
+                  }
+                });
+          
+                const dropdown = btn.nextElementSibling;
+                if (dropdown) {
+                  dropdown.classList.toggle("show");
+                }
+              });
+            });
+          
+            window.addEventListener("click", () => {
+              document.querySelectorAll(".dropdown-content").forEach((content) => {
+                content.classList.remove("show");
+              });
+            });
+          
+          // -------------------------------Fin-------------------------------
+
+           
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            alert("An error occurred.");
+        });
+    }
+}

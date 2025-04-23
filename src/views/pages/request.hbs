@@ -8,11 +8,11 @@
   <meta name="csrf-token" content="{{ csrfToken }}">
 </head>
 <body>
-  <div class="request-container">
+
 
 
     <div class="top-container">
-      <nav class="nav-bar">
+      {{!-- <nav class="nav-bar">
         <div class="first-container">
           <div class="views">Views</div>
           <div class="search-container">
@@ -20,7 +20,24 @@
             <i class="fa-solid fa-magnifying-glass search-icon"></i>
           </div>
         </div>
-      </nav>
+      </nav> --}}
+      <div class="search-request">
+
+        {{> search placeholder="Employee name..." }}
+      </div>
+      <div class="btns-wrapper">
+            <div class="add-btn-container" id="openModal">
+              <i class="fa-regular fa-square-plus"></i>
+              <input type="button" value="Add Request" class="add-btn" id="openModal">
+            </div>
+
+            {{#if canApprove}}
+              <div onclick="location.href='/nuclea/request/approval'" class="add-btn-container" >
+                <i class="fa fa-check" aria-hidden="true"></i>
+                <input type="button" value="Approve requests" class="add-btn">
+              </div>
+            {{/if}}
+            </div>
     </div>
     {{#if info}}
      <div "top-container">
@@ -50,27 +67,14 @@
       <div class="nav-content">
         <h2>Absences Management</h2>
         <!--Botones Add y Approval-->
-          <div class="btns-wrapper">
-            <div class="add-btn-container" id="openModal">
-              <i class="fa-regular fa-square-plus"></i>
-              <input type="button" value="Add Request" class="add-btn" id="openModal">
-            </div>
-
-            {{#if canApprove}}
-              <div onclick="location.href='/nuclea/request/approval'" class="add-btn-container" >
-                <i class="fa-regular fa-square-plus"></i>
-                <input type="button" value="Approve requests" class="add-btn">
-              </div>
-            {{/if}}
-            </div>
-          </div>
+      
+      </div>
 
     <div class="table-holidays-wrapper">
       <div class="table-container" id="table-container">
         <table>
           <thead>
             <tr>
-              <th>Request of</th>
               <th>Type</th>
               <th>Start Date</th>
               <th>End Date</th>
@@ -90,7 +94,6 @@
                 data-fecha-fin="{{formatDate2 Fecha_fin}}" 
                 data-descripcion="{{Descripcion}}"
               >
-                <td>{{Nombre}} {{Apellido}}</td>
                 <td>{{Tipo}}</td>
                 <td>{{formatDate Fecha_inicio}}</td>
                 <td>{{formatDate Fecha_fin}}</td>
@@ -272,7 +275,7 @@
       </div>
 
     </div>
-  </div>
+
   <script src="/js/addRequest.js"></script>
   <script src="/js/delete.js"></script>
   <script src="/js/approve.js"></script>

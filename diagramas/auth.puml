@@ -1,0 +1,48 @@
+@startuml
+actor Navegador
+boundary "Auth.routes" as AuthRoutes
+boundary "dashboard.routes" as DashboardRoutes
+control "Auth.controller" as AuthController
+control "Dashboard.controller" as DashboardController
+entity "Usuario.model" as UsuarioModel
+boundary "dashboard.hbs" as DashboardHBS
+entity "Request.model" as RequestModel
+database sql
+
+
+activate Navegador
+Navegador -> AuthRoutes : POST(/nuclea/signup)
+deactivate Navegador
+activate AuthRoutes
+AuthRoutes -> AuthController : postAuth(req,res)
+deactivate 
+activate AuthController
+AuthController ->> UsuarioModel : fechOne(req.body.email)
+activate UsuarioModel
+UsuarioModel ->> sql : execute(SELECT * FROM Usuarios WHERE Correo_electronico=?,email)
+activate sql
+sql -->> UsuarioModel : Query ok
+deactivate 
+UsuarioModel -->> AuthController : Promise
+deactivate
+AuthController -> DashboardRoutes : res.redirect(/nuclea/dashboard)
+deactivate 
+activate DashboardRoutes
+DashboardRoutes -> DashboardController : getDashboard(req,res)
+deactivate
+activate DashboardController
+DashboardController ->> UsuarioModel : fechDays(req.sessio.idUsuario)
+activate UsuarioModel
+UsuarioModel ->> sql : execute(SELECT dias_vacaciones FROM Usuarios WHERE idUsuario=?,idUsuario)
+activate sql
+sql -->> UsuarioModel : Query ok
+deactivate
+UsuarioModel -->> DashboardController : Promesa
+deactivate
+DashboardController -> DashboardHBS : res.render(dashboard.hbs)
+deactivate
+activate DashboardHBS
+DashboardHBS -> Navegador : HTML
+activate Navegador
+deactivate Navegador
+@enduml

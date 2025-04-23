@@ -6,44 +6,24 @@ exports.getDepartaments = (req, res) => {
   const mensaje = req.session.info || null;
   const error = req.session.error || null;
   req.session.info = null;
+  req.session.error = null;
+
   Empresa.fetchAll()
     .then(([emp]) => {
-      Departament.fetchAll()
-        .then(([rows]) => {
-          Departament.fetchAllDepa()
-            .then(([rowsDepa]) => {
-              if (rows.length > 0) {
-                res.render('../views/pages/departament.hbs', { 
-                  info: mensaje,
-                  error: error,
-                  datos: rowsDepa,
-                  emps: emp,
-                  csrfToken: req.csrfToken(),
-                  title: 'Departaments',
-                  iconClass: 'fa-solid fa-building',
-                });
-              } else {
-                const error = req.session.error || true;
-                req.session.error = false;
-                res.render('../views/pages/departament.hbs', { 
-                  datos: rows,
-                  csrfToken: req.csrfToken(),
-                  error: error,
-                });
-              }
-            })
-            .catch((err) => {
-              console.error('Error fetching departments:', err);
-              res.status(500).send('Internal Server Error');
-            });
-        })
-        .catch((err) => {
-          console.error('Error fetching departments:', err);
-          res.status(500).send('Internal Server Error');
+      return Departament.fetchAllDepa().then(([rowsDepa]) => {
+        res.render('../views/pages/departament.hbs', {
+          info: mensaje,
+          error: error,
+          datos: rowsDepa,
+          emps: emp,
+          csrfToken: req.csrfToken(),
+          title: 'Departments',
+          iconClass: 'fa-solid fa-building',
         });
+      });
     })
     .catch((err) => {
-      console.error('Error fetching companies:', err);
+      console.error('Error fetching data:', err);
       res.status(500).send('Internal Server Error');
     });
 };
@@ -86,13 +66,27 @@ exports.postAgregarDep = (req, res, next) => {
         });
 };
 
-exports.getDelete = (req, res, next) => {
-  console.log(req.body)
-  Departament.deleteA(req.params.idDepartamento).then(()=>{
-      res.redirect('/nuclea/departament')
-  }).catch((error)=>{
-      console.log(error)
-  })
+// controllers/departamento.controller.js
+exports.delete = (req, res, next) => {
+  const id = req.params.idDepartamento;
+  Departament.deleteA(id)
+    .then(() => Departament.fetchAllDepa())
+    .then(([rows]) => {
+      res.status(200).json({ 
+        success: true, 
+        datos: rows.map(row => ({
+          idDepartamento: row.idDepartamento,
+          Nombre_departamento: row.Nombre_departamento, // Nombre correcto
+          Descripcion: row.Descripcion,
+          Estado: row.Estado,
+          Nombre_empresa: row.Nombre_empresa // Nombre correcto
+        }))
+      });
+    })
+    .catch((error) => {
+      console.error(error);
+      res.status(500).json({ success: false, message: 'Error al eliminar' });
+    });
 };
 
 exports.getUpdate = (req, res, next) => {
@@ -108,7 +102,8 @@ exports.getUpdate = (req, res, next) => {
                       depa:rows,
                       datos: depas[0],
                       emps:rowsDepa,
-                      title: 'Administrative offenses'
+                      title: 'Departments',
+                      iconClass: 'fa-solid fa-building',
                   });
                   console.log(depas)
               })

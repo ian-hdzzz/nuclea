@@ -67,13 +67,25 @@ exports.postAgregarCompany = (request, response, next) => {
 
 };
 
-exports.getDelete = (req, res, next) => {
-  console.log(req.body)
-  Company.deleteA(req.params.idEmpresa).then(()=>{
-      res.redirect('/nuclea/company')
-  }).catch((error)=>{
-      console.log(error)
-  })
+exports.delete = (req, res, next) => {
+  const id = req.params.idEmpresa;
+  Company.deleteA(id)
+    .then(() => Company.fetchAll())
+    .then(([rows]) => {
+      res.status(200).json({ 
+        success: true, 
+        datos: rows.map(row => ({
+          idEmpresa: row.idEmpresa,
+          Nombre_empresa: row.Nombre_empresa, // Nombre correcto
+          Estado: row.Estado,
+  
+        }))
+      });
+    })
+    .catch((error) => {
+      console.error(error);
+      res.status(500).json({ success: false, message: 'Error al eliminar' });
+    });
 };
 
 
@@ -113,8 +125,21 @@ exports.postUpdate = (req, res, next) => {
           res.redirect('/nuclea/company');
       })
       .catch((error) => {
-          req.session.errorAO = `Error updating Company.`;
+          req.session.errorCO = `Error updating Company.`;
           res.redirect('/nuclea/company');
           res.status(500);
       });
+};
+
+exports.searchCompany = (req, res) => {
+  const searchTerm = req.query.name || '';
+  
+  Company.searchByName(searchTerm)
+    .then(([results]) => {
+      res.json(results);
+    })
+    .catch(error => {
+      console.error('Error en búsqueda:', error);
+      res.status(500).json({ error: 'Error al buscar empresas' });
+    });
 };

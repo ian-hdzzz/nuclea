@@ -28,11 +28,10 @@ module.exports = class Departament {
         return db.execute('SELECT * FROM Departamentos');
     }
 
-    static deleteA(idDepartamento){
-            return db.execute(`
-                DELETE FROM PerteneceDepa WHERE idDepartamento = ?;
-            `,[idDepartamento])
-        }
+    static async deleteA(idDepartamento) {
+        await db.execute(`DELETE FROM PerteneceDepa WHERE idDepartamento = ?`, [idDepartamento]);
+        await db.execute(`DELETE FROM Departamentos WHERE idDepartamento = ?`, [idDepartamento]);
+    }
 
         static fetchFAI(idDepartamento) {
             return db.execute(`
@@ -57,19 +56,18 @@ module.exports = class Departament {
     }
 
     static fetchAllDepa() {
-        return db.execute(`SELECT 
-            d.idDepartamento,
-            d.Nombre_departamento,
-            d.Descripcion,
-             d.Estado,
-             e.idEmpresa,
-             e.Nombre_empresa
+        return db.execute(`
+            SELECT 
+                d.idDepartamento,
+                d.Nombre_departamento,
+                e.Nombre_empresa,
+                d.Descripcion,
+                d.Estado
             FROM Departamentos d
-            JOIN PerteneceDepa pd ON d.idDepartamento = pd.idDepartamento
-            JOIN Empresa e ON pd.idEmpresa = e.idEmpresa;`); //Para el controlador de Usuarios
+            LEFT JOIN PerteneceDepa pd ON d.idDepartamento = pd.idDepartamento
+            LEFT JOIN Empresa e ON pd.idEmpresa = e.idEmpresa;
+        `);
     }
-    
-
     static fetchOne(id) {
         return db.execute('SELECT * FROM personajes WHERE id=?', [id]);
     }

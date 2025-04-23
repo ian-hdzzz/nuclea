@@ -43,5 +43,40 @@ module.exports = {
 
   json: function (context) {
     return JSON.stringify(context);
+  },
+  lte: function (a, b) {
+    return a <= b;
+  },
+  times: function (n, block) {
+    let accum = '';
+    for (let i = 1; i <= n; ++i) {
+      accum += block.fn(i);
+    }
+    return accum;
+  },
+  typeof: function(value) {
+    return typeof value;
+  },
+  ifNotEqual: function (a, b, options) {
+    if (a !== b) {
+      return options.fn(this);
+    } else {
+      return options.inverse(this);
+    }
+  },
+
+countWeekdays: function (startDate, endDate) {
+  const start = new Date(startDate);
+  const end = new Date(endDate);
+  let count = 0;
+  let current = new Date(start);
+
+  while (current <= end) {
+    const day = current.getDay(); // 0 = domingo, 6 = sábado
+    if (day !== 0 && day !== 6) count++;
+    current.setDate(current.getDate() + 1);
   }
+
+  return count;
+}
 };

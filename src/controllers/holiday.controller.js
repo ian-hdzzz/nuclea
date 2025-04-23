@@ -64,7 +64,7 @@ exports.postAgregarHoliday = (request, response, next) => {
 
 
 };
-exports.deleteDelete = (req, res, next) => {
+exports.delete = (req, res, next) => {
   const mensaje = req.session.info || '';
   if (req.session.info) {
       req.session.info = '';

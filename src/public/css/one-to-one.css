@@ -10,32 +10,35 @@
 .one-container {
   display: grid;
   grid-template-areas:
-    "search graph graph"
+    "empezar graph graph"
     "empezar graph graph"
     "tableCollab tableCollab tableCollab"
     "tableCollab tableCollab tableCollab";
-  grid-template-columns: 1fr 1fr 1fr;
-  grid-template-rows: auto auto 1fr 1fr;
+  grid-template-columns: 1.3fr .7fr 1fr;
+  grid-template-rows: .95fr auto auto auto;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin-left: 80px;
+  margin-left: 40px;
   gap: 1rem;
 }
-.search{
-  grid-area: search;
 
-}
 .graph{
   grid-area: graph;
   background-color: var(--card-bg);
   border: 1px solid var(--border-color);
   border-radius: 12px;
-  padding: 30px;
   text-align: left;
   transition: all 0.3s ease;
   width: 100%;
   height: 100%;
+  margin: auto;
+  padding: 20px auto;
+;
+}
+.graph h3{
+  margin-top: 25px;
+  margin-left: 30px;
 }
 .tableCollab{
   grid-area: tableCollab;
@@ -51,22 +54,28 @@
 
 .empezarInterview {
   grid-area: empezar;
+  width: 100%;
+  height: 100%;
   margin: auto;
   display: flex;
   gap: 60px;
   justify-content: center;
 }
 
-.card {
+.search{
+  grid-area: empezar;  
   background-color: var(--card-bg);
   border: 1px solid var(--border-color);
   border-radius: 12px;
   padding: 30px;
   margin: 0;
-  width: auto;
+  width: 100%;
+  height: auto;
   text-align: left;
   transition: all 0.3s ease;
-  height: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .card:hover {
@@ -74,25 +83,26 @@
   box-shadow: 0 0 15px rgba(74, 108, 247, 0.2);
 }
 
-.card h3 {
+ h3 {
   margin-bottom: 15px;
   font-size: 20px;
   color: var(--text-primary);
   font-weight: 600;
 }
 
-.buttons {
+.search .buttons {
   display: flex;
   justify-content: space-between;
+  margin-top: 20px;
 }
 
-.card p {
+.search p {
   color: var(--color-iconos);
   margin-bottom: 20px;
   font-weight: 500;
 }
 
-.card .btn {
+.search .btn {
   color: var(--color-fuente);
   text-decoration: none;
   width: auto;
@@ -100,14 +110,24 @@
   align-items: center;
   gap: 8px;
   font-weight: 600;
+  transition: all 0.3s ease;
 }
 
 .card .btn:hover {
-  text-decoration: underline;
+  transform: scale(1.01);
 }
 
 .buttons .apply {
-  color: var(--color-primario);
+  border: none;
+    padding: 10px 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    font-weight: 500;
+    background: linear-gradient(to right, #256DED, #1E9FFB);
+    color: var(--color-fuente);
+    transition: all 0.3s ease;
 }
 
 .search-result-item {
@@ -120,83 +140,451 @@
   color: white;
 }
 
-/* Animación combinada para pulso y escala */
-@keyframes pulseAndScale {
-  0% {
-    text-shadow: 0 0 5px rgba(52, 152, 219, 0.7);
-    color: #3498db;
-    transform: scale(1);
-  }
-  25% {
-    text-shadow: 0 0 10px rgba(52, 152, 219, 0.8);
-    color: #2ecc71;
-    transform: scale(1.15);
-  }
-  50% {
-    text-shadow: 0 0 15px rgba(52, 152, 219, 0.9);
-    color: #3498db;
-    transform: scale(1);
-  }
-  75% {
-    text-shadow: 0 0 10px rgba(52, 152, 219, 0.8);
-    color: #138fbc;
-    transform: scale(1.15);
-  }
-  100% {
-    text-shadow: 0 0 5px rgba(52, 152, 219, 0.7);
-    color: #3498db;
-    transform: scale(1);
-  }
+/* Employee Profile Styles */
+.tableCollab {
+  background-color: var(--card-bg);
+  border-radius: 12px;
+  padding: 20px;
+  margin-top: 20px;
+  color: var(--color-fuente);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-/* Estilo consolidado para el botón con highlight en el texto */
-.btn.apply.highlighted {
-  position: relative;
-  transition: all 0.3s ease;
-  color: #3498db;
-  text-shadow: 0 0 10px rgba(52, 152, 219, 0.7);
-  animation: pulseAndScale 2s infinite;
-  box-shadow: none; /* Elimina explícitamente cualquier box-shadow */
-  display: inline-block; /* Asegura que la transformación de escala funcione correctamente */
+.loading, .error, .no-selection {
+  padding: 20px;
+  text-align: center;
+  color: var(--color-fuente);
 }
 
-/* Animación específica para escala */
-@keyframes scaleEffect {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.2); }
-  100% { transform: scale(1); }
+.error {
+  color: #e74c3c;
 }
 
-/* Animación para el color y sombra */
-@keyframes glowEffect {
-  0% {
-    color: #3498db;
-    text-shadow: 0 0 5px rgba(52, 152, 219, 0.7);
-  }
-  50% {
-    color: #2ecc71;
-    text-shadow: 0 0 15px rgba(52, 152, 219, 0.9);
-  }
-  100% {
-    color: #3498db;
-    text-shadow: 0 0 5px rgba(52, 152, 219, 0.7);
-  }
+.employee-profile {
+  margin-bottom: 25px;
 }
 
-/* Estilo específico para el botón Apply Interview */
-.btn.apply.highlighted {
-  display: inline-block;
-  position: relative;
-  color: #3498db;
-  text-shadow: 0 0 10px rgba(52, 152, 219, 0.7);
-  box-shadow: none;
+.profile-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.employee-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background-color: #1da1f2;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: bold;
+  margin-right: 20px;
+}
+
+.employee-info h2 {
+  margin: 0 0 5px 0;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.employee-position, .employee-department {
+  margin: 0;
+  color: #a0aec0;
+}
+
+.profile-details {
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  padding: 15px;
+}
+
+.profile-details p {
+  margin: 8px 0;
+}
+
+/* Interview History Styles */
+.interview-history {
+  margin-top: 30px;
+}
+
+.interview-history h3 {
+  margin-bottom: 15px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.history-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.history-table th, .history-table td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.history-table th {
+  background-color: rgba(0, 0, 0, 0.2);
+  font-weight: 600;
+}
+
+.history-table tr:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.no-interviews {
+  background-color: rgba(0, 0, 0, 0.1);
+  padding: 15px;
+  border-radius: 8px;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.interview-actions {
+  margin-top: 20px;
+  text-align: right;
+}
+
+.btn.view-details {
+  background-color: #3182ce;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.btn.view-details:hover {
+  background-color: #2c5282;
+}
+
+.interviews-container {
+  width: 100%;
+}
+
+.interviews-header {
+  margin-bottom: 20px;
+}
+
+.interviews-header h2 {
+  margin: 0 0 5px 0;
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.interviews-header p {
+  color: #a0aec0;
+  margin: 0;
+}
+
+.history-table {
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.history-table th, .history-table td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.history-table th {
+  background-color: rgba(0, 0, 0, 0.2);
+  font-weight: 600;
+}
+
+.history-table tr:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.no-data {
+  text-align: center;
+  color: #a0aec0;
+  padding: 20px;
+}
+
+.btn-view {
+  background: linear-gradient(to right, #256DED, #1E9FFB);
+  color: white;
+  border: none;
+  padding: 10px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.btn-view:hover {
+  background-color: #2c5282;
+}
+
+.btn-back {
+  background-color: #4a5568;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s;
+  margin-top: 15px;
+}
+
+.btn-back:hover {
+  background-color: #2d3748;
+}
+
+.back-to-all {
+  margin-top: 15px;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  color: #a0aec0;
+}
+
+.error {
+  background-color: rgba(231, 76, 60, 0.1);
+  color: #e74c3c;
+  padding: 15px;
+  border-radius: 8px;
+  margin: 20px 0;
+  text-align: center;
+}
+
+/* --------------------Interview Details Styling ---------------*/
+.interview-details-container {
+  margin: 0 auto;
+  padding: 0 2rem;
+  color: var(--text-primary);
+}
+
+.back-button-container {
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+}
+
+.btn-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: linear-gradient(to right, #256DED, #1E9FFB);
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.btn-back:hover {
+  background-color: #2d3748;
+  text-decoration: none;
+}
+
+/* Employee and Interview Header */
+.interview-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+}
+
+.employee-profile {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.employee-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: linear-gradient(to right, #256DED, #1E9FFB);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.employee-info h2 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.employee-position, .employee-department {
+  margin: 0.25rem 0;
+  color: var(--text-secondary);
+}
+
+.interview-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.meta-item {
+  font-size: 0.9rem;
+}
+
+.meta-item strong {
+  margin-right: 0.5rem;
+}
+
+.status-completed {
+  color: #4ADE80;
+  font-weight: 600;
+}
+
+.status-progress {
+  color: #FCD34D;
+  font-weight: 600;
+}
+
+/* Responses Container */
+.responses-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.open-responses, .closed-responses {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+
+.open-responses h3, .closed-responses h3 {
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 0.75rem;
+}
+.closedQuestions-container{
+  display: flex;
+  gap: 15px;
+  height: 100%;
+}
+.closed-responses{
+  width: 50%;
+}
+.graph.details{
+  margin: 0;
+  padding: 0;
+  width: 50%;
+  height: auto;
+}
+.responses-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.95rem;
+}
+
+.responses-table th {
+  text-align: left;
+  padding: 0.75rem 1rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.responses-table td {
+  padding: 1rem;
+  border-bottom: 1px solid var(--border-color);
+  vertical-align: top;
+}
+
+.responses-table tr:last-child td {
+  border-bottom: none;
+}
+
+.responses-table tr:hover {
+  background-color: rgba(255, 255, 255, 0.03);
+}
+
+.question-text {
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.question-description {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+/* Rating Display */
+.rating-display {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.star {
+  color: #4B5563;
+  font-size: 1.25rem;
+}
+
+.star.filled {
+  color: var(--color-secundario);
+}
+
+.rating-number {
+  font-weight: 500;
+  margin-left: 0.5rem;
+}
+
+.no-responses {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 2rem;
+  text-align: center;
+  color: var(--text-secondary);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .interview-header {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
   
-  /* Aplicamos animaciones separadas */
-  animation: 
-    glowEffect 2s infinite,
-    scaleEffect 1.5s infinite;
-  
-  /* Aseguramos que la transformación funcione correctamente */
-  transform-origin: center;
-  animation-timing-function: ease-in-out;
+  .responses-table th:first-child,
+  .responses-table td:first-child {
+    width: 40%;
+  }
+}
+.employee-profile.one{
+  margin: 0 10px;
+  display: flex;
+  justify-content: space-between;
+}
+.chart-container.details h3{
+
+  font-size: 1.5rem;
 }

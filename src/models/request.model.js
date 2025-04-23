@@ -1,4 +1,5 @@
 const db = require('../util/database');
+const helpers = require('../lib/helpers');
 
 module.exports = class Request {
 
@@ -61,6 +62,18 @@ VALUES (
     `);
     
   }
+
+  static countPendientesVacaciones(id) {
+    return db.execute(`
+      SELECT COUNT(*) AS totalPendientes
+      FROM Solicitudes s
+      WHERE 
+        s.idUsuario = ?
+        AND s.Tipo = 'vacations'
+        AND (s.Aprobacion_L = 'Pendiente' OR s.Aprobacion_A = 'Pendiente');
+    `, [id]);
+  }
+
   static fetchPersonal(id) {
     return db.execute(`
       SELECT 
@@ -165,7 +178,7 @@ module.exports.approveSolicitud = async (idSolicitud, rol) => {
     const fechaFin = new Date(s.Fecha_fin);
     console.log('fechafinal', fechaFin)
 
-    const diasSolicitados = Math.ceil((fechaFin - fechaInicio) / (1000 * 60 * 60 * 24)) + 1;
+    const diasSolicitados = helpers.countWeekdays(fechaInicio, fechaFin);
     console.log('diasSolicitados', diasSolicitados)
     // Obtener días restantes del usuario
     const [usuario] = await db.execute(`
@@ -199,3 +212,26 @@ module.exports.rejectSolicitud = (idSolicitud, rol) => {
   }
 };
 
+// Obtener el layout guardado por usuario
+module.exports.fetchDashboardLayout = (userId) => {
+  return db.execute(`
+    SELECT widget_id, x, y, w, h
+    FROM dashboard_layout
+    WHERE user_id = ?`, [userId]);
+};
+
+// Guardar o actualizar el layout (puedes llamar a esto desde una ruta tipo POST /dashboard/save-layout)
+module.exports.saveDashboardLayout = async (userId, layoutArray) => {
+  // Borrar el layout anterior
+  await db.execute(`DELETE FROM dashboard_layout WHERE user_id = ?`, [userId]);
+
+  // Insertar el nuevo layout
+  const insertPromises = layoutArray.map(widget => {
+    return db.execute(`
+      INSERT INTO dashboard_layout (user_id, widget_id, x, y, w, h)
+      VALUES (?, ?, ?, ?, ?, ?)`,
+      [userId, widget.widget_id, widget.x, widget.y, widget.w, widget.h]);
+  });
+
+  return Promise.all(insertPromises);
+};

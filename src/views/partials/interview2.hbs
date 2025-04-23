@@ -4,31 +4,39 @@
 </head>
 <!-- employee-evaluation.hbs -->
 
-
+<form id="interviewForm" action="/nuclea/interview/{{contacts.id}}" method="POST">
+<input type="hidden" id="questions-data" value="{{{json preguntas}}}">
 <input type="hidden" name="_csrf" value="{{csrfToken}}">
 <div class="evaluation-container">
-  <h1>Evaluación del empleado</h1>
+  <h1>Employee evaluation</h1>
   
-  <p class="evaluation-instruction">Evalúa del 1 al 5 los siguientes aspectos:</p>
-  {{#each preguntasCerradas}}
-  <div class="evaluation-field">
-    <label for="workload">{{pregunta}}</label>
-    <div class="select-wrapper">
-      <select id={{name}} name={{name}}>
-        <option value="1">1</option>
-        <option value="2" selected>2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-        <option value="5">5</option>
-      </select>
-      <div class="select-arrow"></div>
+
+ 
+{{#each preguntas}}
+  {{#if (eq tipoPregunta 'cerrada')}}
+    <div class="evaluation-field">
+      <div class="question">
+      <label for="workload">{{pregunta}}</label>
+      <p>{{descripcionPregunta}}</p>
+      </div>
+      <div class="select-wrapper">
+        <select id={{preguntaId}} name={{name}}>
+          <option value="1">1</option>
+          <option value="2" selected>2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+        </select>
+        <div class="select-arrow"></div>
+      </div>
     </div>
-  </div>
-  {{/each}}
+  {{/if}}
+{{/each}}
   
-  <h2>Visualización de resultados</h2>
+
   
-  {{> graph }}
+  {{> graph 
+    className="chart-container" }}
 
   <div class="button-container">
 
@@ -36,6 +44,6 @@
     <button id="save-button" class="btn btn-primary" >Guardar evaluación</button>
   </div>
 </div>
+</form>
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>

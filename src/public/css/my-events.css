@@ -1,0 +1,579 @@
+:root {
+    --dark-bg: #111827;
+    --darker-bg: #0f172a;
+    --card-bg: #1e293b;
+    --blue-gradient: linear-gradient(to right, #3b82f6, #8b5cf6);
+    --blue-color: #3b82f6;
+    --purple-color: #8b5cf6;
+    --green-color: #22c55e;
+    --text-color: #f3f4f6;
+    --text-secondary: #9ca3af;
+    --border-color: #2d3748;
+}
+.container {
+    margin: 0;
+    display: grid;
+    background: none;
+    grid-template-areas: 
+        "main main main main main sidebar";
+    gap: 20px;
+    width: 100%; 
+    margin-left: 70px;
+    margin-top: -20px;
+    height: auto;
+    
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+
+}
+.main-content {
+    grid-area: main;
+    width: 100%;
+    background-color: none;
+    border-radius: 12px;
+    padding: 20px;
+    flex-grow: 1;
+}
+.sidebar {
+    grid-area: sidebar;
+    background-color: var(--color-bg-secundario);
+    border-radius: 12px;
+    padding: 20px;
+    width: 100%;
+}
+.title h1 {
+    font-size: 24px;
+    font-weight: bold;
+    margin: 10px 0;
+    margin-left: 0;
+    margin-bottom: 10px;
+}
+
+.title p {
+    color: var(--text-secondary);
+    font-weight: normal;
+    font-size: 14px;
+}
+
+.sync-button {
+    display: flex;
+    align-items: center;
+    background-color: #111F30;
+    color: var(--blue-color);
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: -20px;
+}
+
+.sync-button i {
+    margin-right: 8px;
+    color: #1D8DD8;
+}
+
+/* Toggle Switch Styling */
+.toggle-container {
+    background-color: var(--color-bg-secundario);
+    border: 1px solid #ffffff15;
+    border-radius: 30px;
+    margin-bottom: 20px;
+    padding: 4px;
+    position: relative;
+    width: 50%;
+    display: flex;
+    cursor: pointer;
+}
+
+.toggle-option {
+    padding: 8px 16px;
+    width: auto;
+    text-align: center;
+    z-index: 1;
+    flex: 1;
+    font-size: 14px;
+    transition: color 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 20px;
+}
+
+.toggle-option i {
+    margin-right: 8px;
+}
+
+.toggle-option.active {
+    color: var(--text-color);
+}
+
+.toggle-option.inactive {
+    color: var(--text-secondary);
+}
+
+.toggle-slider {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    width: 50%;
+    height: calc(100% - 8px);
+    background: linear-gradient(to bottom right, var(--color-primario), var(--color-secundario));
+    border-radius: 20px;
+    transition: transform 0.3s ease;
+}
+
+.toggle-slider.right {
+    transform: translateX(100%);
+}
+
+.upcoming-events {
+    background-color: var(--color-bg-secundario);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+
+}
+
+.upcoming-events h2 {
+    font-size: 20px;
+    margin-bottom: 20px;
+    font-weight: bold;
+    color: #fff;
+}
+
+.event-item {
+    border-bottom: 1px solid var(--border-color);
+    padding: 15px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.event-item:last-child {
+    border-bottom: none;
+}
+
+.event-icon {
+    color: var(--blue-color);
+    margin-right: 10px;
+}
+
+.event-icon.vacation {
+    color: var(--purple-color);
+}
+
+.event-icon.holiday {
+    color: var(--green-color);
+}
+
+.event-details {
+    flex-grow: 1;
+}
+
+.event-title {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.event-date {
+    display: flex;
+    background: var(--color-bg-secundario);
+    align-items: center;
+    color: #fff;
+    font-size: 14px;
+}
+
+.event-date i {
+    margin-right: 8px;
+}
+
+.event-tag {
+    background-color: #2c5282;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+}
+
+.event-tag.vacation {
+    background-color: #5b21b6;
+}
+
+.event-tag.holiday {
+    background-color: #166534;
+}
+
+.calendar-view {
+    background-color: var(--card-bg);
+    border-radius: 12px;
+    overflow: hidden;
+    
+}
+
+.month-header {
+    background: var(--blue-gradient);
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.month-title {
+    color: #fff;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.month-nav {
+    display: flex;
+    gap: 15px;
+    color: #fff;
+    font-size: 20px;
+}
+
+.calendar-grid {
+    background: var(--color-bg-secundario);
+    color: #fff;
+    padding: 15px;
+}
+
+.weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 12px;
+    padding-bottom: 10px;
+}
+
+.days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+}
+
+.day {
+    aspect-ratio: 1/1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
+    border-radius: 8px;
+    position: relative;
+    box-shadow: inset 0 0 0 1px #2d374883; 
+}
+
+.day.event::after {
+    content: '';
+    position: absolute;
+    bottom: 5px;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background-color: var(--blue-color);
+}
+
+.day.today {
+    border: 1px solid var(--blue-color);
+}
+
+.day.vacation {
+    background-color: rgba(91, 33, 182, 0.2);
+}
+
+.day.holiday {
+    background-color: rgba(22, 101, 52, 0.2);
+}
+
+.day.non-working {
+    background-color: rgba(100, 100, 100, 0.2);
+}
+
+.day-event-tag {
+    position: absolute;
+    bottom: 2px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-size: 10px;
+    color: var(--text-secondary);
+}
+
+.sidebar {
+
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.my-events {
+    background: var(--blue-gradient);
+    color: white;
+    padding: 15px 20px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+}
+
+.my-events i {
+    margin-right: 10px;
+    font-size: 18px;
+}
+
+.my-events h2 {
+    font-size: 18px;
+}
+
+.stats {
+    background-color: var(--color-bg-secundario);
+    border-radius: 12px;
+    padding: 20px;
+    color: #fff;
+}
+
+.stats-title {
+    font-size: 16px;
+    margin-bottom: 15px;
+    color: var(--text-secondary);
+}
+
+.stat-item {
+    display: flex;
+    justify-content: space-between;
+    font-weight: bold;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.stat-count {
+    background-color: rgba(59, 130, 246, 0.2);
+    color: var(--blue-color);
+    width: 25px;
+    height: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-size: 12px;
+}
+
+.stat-count.purple {
+    background-color: rgba(139, 92, 246, 0.2);
+    color: var(--purple-color);
+}
+
+.stat-count.green {
+    background-color: rgba(34, 197, 94, 0.2);
+    color: var(--green-color);
+}
+
+.event-types {
+    background-color: var(--color-bg-secundario);
+    color: #fff;
+    border-radius: 12px;
+    padding: 20px;
+}
+
+.event-type {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.event-type-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.blue-dot {
+    background-color: var(--blue-color);
+}
+
+.purple-dot {
+    background-color: var(--purple-color);
+}
+
+.green-dot {
+    background-color: var(--green-color);
+}
+
+.gray-dot {
+    background-color: #6b7280;
+}
+/* Calendar Event Styles - Events Below Numbers */
+.day {
+    aspect-ratio: 1/1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    font-size: 14px;
+    border-radius: 8px;
+    position: relative;
+    padding: 5px;
+    min-height: 45px;
+}
+
+/* Today styling */
+.day.today {
+    border: 1px solid var(--blue-color);
+}
+
+/* Day number positioning - at the top */
+.day-number {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+/* Event tag container - below the number */
+.day-event-tag {
+    width: 100%;
+    padding: 3px 5px;
+    border-radius: 4px;
+    text-align: left;
+    font-size: 10px;
+    margin-top: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: flex;
+    align-items: center;
+    max-width: 90%;
+}
+
+/* Meeting event tag */
+.day-event-tag.meeting {
+    background-color: rgba(59, 130, 246, 0.2);
+    color: #3b82f6;
+}
+
+/* Vacation event tag */
+.day-event-tag.vacation {
+    background-color: rgba(91, 33, 182, 0.2);
+    color: #8b5cf6;
+}
+
+/* Holiday event tag */
+.day-event-tag.holiday {
+    background-color: rgba(22, 101, 52, 0.2);
+    color: #22c55e;
+}
+
+/* Event icons */
+.day-event-tag i {
+    margin-right: 4px;
+    font-size: 10px;
+}
+/* Add these CSS styles to align day numbers to the right */
+.day {
+    aspect-ratio: 1/1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start; /* Changed from center to flex-start */
+    font-size: 14px;
+    border-radius: 8px;
+    position: relative;
+    padding: 5px;
+    min-height: 45px;
+}
+
+/* Empty day styling */
+.day.empty-day {
+    background-color: transparent;
+    box-shadow: none;
+}
+
+/* Day number right alignment */
+.day-number {
+    width: 100%;
+    text-align: right; /* Changed from center to right */
+    margin-bottom: 8px;
+    font-weight: 500;
+    padding-right: 5px;
+}
+
+/* Event tag container - below the number */
+.day-event-tag {
+    width: 95%;
+    padding: 3px 5px;
+    border-radius: 4px;
+    text-align: left;
+    font-size: 10px;
+    margin-top: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: flex;
+    align-items: center;
+}
+
+/* Estilos para los eventos en el calendario */
+.day {
+    min-height: 80px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .day-number {
+    font-weight: bold;
+    margin-bottom: 2px;
+  }
+  
+  .day-events {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin-top: 2px;
+  }
+  
+  .day-event-tag {
+    font-size: 11px;
+    padding: 2px 4px;
+    border-radius: 3px;
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .day-event-tag.meeting {
+    background-color: #d1e3ff;
+    color: #0052cc;
+  }
+  
+  .day-event-tag.vacation {
+    background-color: #ffd1e3;
+    color: #cc0052;
+  }
+  
+  .day-event-tag.holiday {
+    background-color: #d1ffea;
+    color: #00cc85;
+  }
+  
+  .more-events {
+    font-size: 10px;
+    font-style: italic;
+    color: #666;
+  }
+  
+  /* Estilos para días con eventos */
+  .vacation-day {
+    background-color: rgba(255, 209, 227, 0.2);
+  }
+  
+  .holiday-day {
+    background-color: rgba(209, 255, 234, 0.2);
+  }

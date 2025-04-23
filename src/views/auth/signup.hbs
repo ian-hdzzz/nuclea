@@ -183,9 +183,7 @@
         {{!-- <h1 class="gradient-text">HRMS Management System</h1> --}}
         <h1 class="title">Sign In to your Account</h1>
         <p class="subtitle">Welcome back! please enter your detail</p>
-        {{#if error}}
-            <div class="alert alert-danger">{{error}}</div>
-        {{/if}}
+        
         <form method="POST" id="authenticationForm" action="/nuclea/signup">
             <div class="field">
                 <div class="control has-icons-left">
@@ -212,7 +210,9 @@
                     </button>
                 </div>
             </div>
-
+            {{#if failed}}
+                <div class="alert alert-danger" style="color: red; margin-bottom: 20px; text-align:center">{{failed}}</div>
+            {{/if}}
             <div class="field is-grouped">
                 <div class="control">
                     <label class="checkbox">
