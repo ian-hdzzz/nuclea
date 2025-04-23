@@ -11,7 +11,7 @@
 <body>
 
 
-    <div class="top-container">
+     <div class="top-container">
 
         {{!-- <nav class="nav-bar">
             <div class="first-container">
@@ -21,10 +21,11 @@
                     <i class="fa-solid fa-magnifying-glass search-icon"></i>
                 </div>
             </div>
+            
         </nav> --}}
-        <div class="search-input-container">
+      <div class="search-input-container">
 
-        {{> search placeholder="Employee name..." searchId="search-input" }}
+        {{> search placeholder="User name..." searchId="search-input"}}
 
       </div>
       <div class="second-container">
@@ -36,11 +37,11 @@
         </div>
       </div>
     </nav>
-      <div class="add-btn-container">
-                <i class="fa-regular fa-square-plus"></i>
-                <input type="button" value="Add Users" id="openModal" class="add-btn">
-                <!-- Botón de enviar <input type="button" value="Assign user to Dep" id="openModal2" class="add-btn"> -->
-            </div>
+      <div class="add-btn-container" id="openModal">
+          <i class="fa-regular fa-square-plus"></i>
+          <input type="button" value="Add User"class="add-btn">
+          <!-- Botón de enviar <input type="button" value="Assign user to Dep" id="openModal2" class="add-btn"> -->
+      </div>
     </div>
     {{#if info}}
         <div "top-container">
