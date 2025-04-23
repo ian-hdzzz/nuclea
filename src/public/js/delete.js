@@ -47,7 +47,6 @@ function confirmDeleteReq(idSolicitud) {
             <table>
             <thead>
                 <tr>
-                <th>Request of</th>
                 <th>Type</th>
                 <th>Start Date</th>
                 <th>End Date</th>
@@ -69,7 +68,6 @@ function confirmDeleteReq(idSolicitud) {
                         data-fecha-fin="${formatDate2(dato.Fecha_fin)}" 
                         data-descripcion="${dato.Descripcion}"
                     >
-                        <td>${dato.Nombre} ${dato.Apellido}</td>
                         <td>${dato.Tipo}</td>
                         <td>${formatDate(dato.Fecha_inicio)}</td>
                         <td>${formatDate(dato.Fecha_fin)}</td>

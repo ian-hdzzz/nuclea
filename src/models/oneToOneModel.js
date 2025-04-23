@@ -7,7 +7,7 @@ class OneToOneModel {
       `
           SELECT
             u.*,
-            GROUP_CONCAT(d.Nombre_departamento SEPARATOR ', ') AS Departamentos
+            GROUP_CONCAT(d.Nombre_Departamento SEPARATOR ', ') AS \`Departamentos\`
           FROM Usuarios u
           LEFT JOIN Pertenece p ON u.idUsuario = p.idUsuario
           LEFT JOIN Departamentos d ON p.idDepartamento = d.idDepartamento
@@ -17,6 +17,18 @@ class OneToOneModel {
       [employeeId]
     );
     return rows[0];
+  }
+  static async getDepartmentById(departmentId) {
+    const [rows] = await db.execute(
+      `
+      SELECT *
+      FROM Departamentos
+      WHERE idDepartamento = ?
+      `,
+      [departmentId]
+    );
+  
+    return rows[0]; // devuelve solo uno
   }
 
   static async saveOneToOneInterview(data) {

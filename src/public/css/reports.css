@@ -35,9 +35,9 @@ body {
     grid-template-columns: 2fr 2fr 1fr 1fr;
     grid-template-rows: auto auto auto;
     grid-template-areas:
-      "activeE activeE ao turnover"
-      "monthly monthly graph graph"
-      "monthly monthly graph graph";
+    "monthly monthly graph graph"
+    "monthly monthly graph graph"
+      " ao turnover activeE activeE";
     gap: 20px;
   }
 
@@ -140,7 +140,7 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  margin: auto;
+  margin: auto 0;
 }
 .chart-container.report{
   width: 125%;
@@ -151,4 +151,9 @@ body {
   align-items: center;
   justify-content: center;
   margin-left: -55px;
+  margin-bottom: 0;
+}
+.chart-container.report canvas{
+  margin-bottom: 0;
+  padding-bottom: 0;
 }

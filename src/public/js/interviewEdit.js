@@ -138,7 +138,7 @@ document.addEventListener('DOMContentLoaded', function() {
         aspectForm.reset();
         aspectId.value = '';
         
-        document.getElementById('aspectModalTitle').textContent = item ? 'Editar aspecto' : 'Agregar aspecto';
+        document.getElementById('aspectModalTitle').textContent = item ? 'Edit aspect' : 'Add aspect';
         
         // If editing, fill the form with existing data
         if (item) {
@@ -272,8 +272,11 @@ async function addItem(context, text, description = '') {
             li.dataset.id = data.questionId;
             
             li.innerHTML = `
+            <i class="fa-solid fa-ellipsis-vertical"></i>
                 <div class="${contentClass}">
                     <span class="${textClass}">${text}</span>
+                     <p>${description}</p>
+                    <input type="hidden" class="question-description-data" value="${description}">
                     ${context === 'questions' ? 
                         `<input type="hidden" class="question-description-data" value="${description || ''}">` : ''}
                 </div>
@@ -327,7 +330,7 @@ async function addItem(context, text, description = '') {
             }
             
             // Mostrar mensaje de éxito
-            showSuccessMessage(context === 'questions' ? 'Pregunta' : 'Aspecto');
+            showSuccessMessage(context === 'questions' ? 'Question' : 'Aspect');
             
             return true;
         } else {
@@ -349,7 +352,7 @@ function showSuccessMessage(itemType) {
     // Crea un elemento de alerta de éxito
     const successAlert = document.createElement('div');
     successAlert.className = 'success-alert';
-    successAlert.textContent = `¡${itemType} creada exitosamente!`;
+    successAlert.textContent = `¡${itemType} added successfully!`;
     
     // Estilos para la alerta
     successAlert.style.position = 'fixed';
@@ -427,7 +430,7 @@ async function updateItem(context, id, text, description = '') {
 // Function to delete an item
 async function deleteItem(context, id) {
     try {
-        if (!confirm('¿Estás seguro de que deseas eliminar este elemento?')) {
+        if (!confirm('¿Are you sure you want to delete this item?')) {
             return;
         }
         
