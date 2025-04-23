@@ -33,7 +33,7 @@
 
             {{#if canApprove}}
               <div onclick="location.href='/nuclea/request/approval'" class="add-btn-container" >
-                <i class="fa-regular fa-square-plus"></i>
+                <i class="fa fa-check" aria-hidden="true"></i>
                 <input type="button" value="Approve requests" class="add-btn">
               </div>
             {{/if}}
@@ -75,7 +75,6 @@
         <table>
           <thead>
             <tr>
-              <th>Request of</th>
               <th>Type</th>
               <th>Start Date</th>
               <th>End Date</th>
@@ -95,7 +94,6 @@
                 data-fecha-fin="{{formatDate2 Fecha_fin}}" 
                 data-descripcion="{{Descripcion}}"
               >
-                <td>{{Nombre}} {{Apellido}}</td>
                 <td>{{Tipo}}</td>
                 <td>{{formatDate Fecha_inicio}}</td>
                 <td>{{formatDate Fecha_fin}}</td>

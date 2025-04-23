@@ -55,7 +55,7 @@ exports.getRequests = (req, res) => {
             sessionId: req.session.idUsuario,
             nombreUsuario: req.session.nombre,
             apellidosUsuario: req.session.apellidos,
-            title: 'Request',
+            title: 'Vacation Requests',
             diasferiados: diasf,
             info: mensaje,
             error: mensajeerror,
