@@ -38,6 +38,7 @@
       </div>
     </nav>
         <div class="add-btn-container" id="openModal">
+                <i class="fa-regular fa-square-plus"></i>
                 <input type="button" value="Add Company" class="add-btn">
         </div>
     </div>
@@ -81,16 +82,16 @@
                 {{#each datosh}}
                 <tr >
                     <td>{{Nombre_empresa}}</td>
-                    <td class="state-container">
+                    <td class="state">
                         {{#if Estado}}
                        
                           <span class="active"> <div class="dot"></div>Active</span>
                         {{else}}
-                          <span class="inactive"> <div class="dot"></div>Inactive</span>
+                          <span class="vacation-status inactive"> <div class="dot"></div>Inactive</span>
                         {{/if}}</td>
                     <td class="actions-col">
                         <div class="dropdown">
-                        <button class="action-btn">Mange</button>
+                        <button class="action-btn">Manage</button>
                         <div class="dropdown-content">
                             <button class="edit-btn"  onclick="location.href='/nuclea/company/update/{{idEmpresa}}'">
                             <i class="fa-solid fa-pen-to-square"></i> Edit

@@ -388,3 +388,35 @@ th, td {
     width: 80%;
     text-align: center; /* Centra el texto */
 }
+
+.vacation-status {
+    display: flex;
+    cursor: auto;
+    align-items: center;
+    padding: 4px 15px;
+    background: #c0392b;
+    box-sizing: border-box;
+    font-size: .85rem;
+    border-radius: 2rem;
+    color: #ffffff;
+  }
+
+  /* Punto rojo para inactivos */
+  .vacation-status.inactive .dot {
+    background-color: #ff5151;
+  }
+  
+  /* Fondo rojo para inactivos */
+  .inactive {
+    background-color: #c0392b;
+    color: white;
+    display: flex;
+    cursor: auto;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 10px;
+    box-sizing: border-box;
+    font-size: .85rem;
+    border-radius: 2rem;
+    width: 40%;
+  }
