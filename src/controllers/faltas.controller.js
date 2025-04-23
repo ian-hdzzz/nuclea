@@ -202,7 +202,7 @@ exports.getUpdate = (req, res, next) => {
                     Usuario.fetchAll()
                         .then(([rows]) => {
                             const noFaltas = faltas.length === 0;
-
+                            
                             res.render('../views/pages/editAO.hbs', {
                                 usuariosfa: rows,
                                 csrfToken: req.csrfToken(),
@@ -212,6 +212,7 @@ exports.getUpdate = (req, res, next) => {
                                 title: 'Administrative offenses'
                             });
                             console.log(falta)
+                            console.log(faltas)
                         })
                         .catch((err) => {
                             console.error('Error fetching Users:', err);
