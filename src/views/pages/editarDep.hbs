@@ -9,48 +9,65 @@
   </head>
   <body>
     <div class="top-container">
-      <nav class="nav-bar">
-        <div class="first-container">
-          <div class="views">Views</div>
-          <div class="search-container">
-            <input type="text" placeholder="Search..." class="input-search">
-            <i class="fa-solid fa-magnifying-glass search-icon"></i>
-          </div>
+
+        {{!-- <nav class="nav-bar">
+            <div class="first-container">
+                <div class="views">Views</div>
+                <div class="search-container">
+                    <input type="text" placeholder="Search..." class="input-search" id="search-input">
+                    <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                </div>
+            </div>
+            
+        </nav> --}}
+      <div class="search-input-container">
+
+        {{> search placeholder="Departament name..." searchId="search-input"}}
+
+      </div>
+      <div class="second-container">
+        <div>
+          <i class="fa-solid fa-bell hidden" ></i>
         </div>
-      </nav>
+        <div>
+          <i class="fa-solid fa-user hidden"></i>
+        </div>
+      </div>
+    </nav>
+      <div class="add-btn-container" id="openModal">
+          <i class="fa-regular fa-square-plus"></i>
+          <input type="button" value="Add Department" class="add-btn">
+          <!-- Botón de enviar <input type="button" value="Assign user to Dep" id="openModal2" class="add-btn"> -->
+      </div>
     </div>
 
     {{#if info}}
-      <div class="top-container">
-        <div class="nav-bar">
-          <div class="first-container">
-            <div class="notification is-success">
-              {{info}}
-            </div>
-          </div>
-        </div>
-      </div>
+       <div "top-container">
+         <div class="nav-bar">
+           <div class="first-container">
+             <div class="notification is-success">
+               {{info}}
+             </div>
+           </div>
+         </div>
+       </div>
     {{/if}}
-
     {{#if error}}
-      <div class="top-container">
-        <div class="nav-bar">
-          <div class="first-container">
-            <div class="notification is-danger">
-              {{error}}
-            </div>
-          </div>
-        </div>
-      </div>
+       <div "top-container">
+         <div class="nav-bar">
+           <div class="first-container">
+             <div class="notification is-danger">
+               {{error}}
+             </div>
+           </div>
+         </div>
+       </div>
     {{/if}}
 
     <div class="content">
       <div class="nav-content">
         <h2>Department Management</h2>
-        <div class="add-btn-container" id="openModal">
-          <i class="fa-regular fa-square-plus"></i>
-          <input type="button" value="Add Department" class="add-btn">
-        </div>
+
       </div>
 
       <table>
@@ -69,7 +86,12 @@
           <tr>
             <td>{{idDepartamento}}</td>
             <td>{{Nombre_departamento}}</td>
-            <td>{{Empresa.Nombre_empresa}}</td> <!-- Asumiendo que haces populate de empresa -->
+            {{!-- Buscar empresa correspondiente y mostrar su nombre --}}
+                {{#each ../emp}}
+                  {{#if (eq idEmpresa ../idEmpresa)}}
+                    <td>{{Nombre_empresa}}</td>
+                  {{/if}}
+                {{/each}}
             <td>{{Descripcion}}</td>
             <td class="state">
               <span class="{{#if Estado}}active{{else}}inactive{{/if}}">
@@ -79,7 +101,7 @@
             </td>
             <td>
               <div class="dropdown">
-                <button class="action-btn">Actions</button>
+                <button class="action-btn">Manage</button>
                 <div class="dropdown-content">
                   <button class="edit-btn" onclick="location.href='/nuclea/departament/update/{{idDepartamento}}'">
                     <i class="fa-solid fa-pen-to-square"></i> Edit
@@ -102,7 +124,7 @@
       <!-- Modal -->
       <div id="modal" class="modal">
         <div class="modal-content">
-          <button id="closeModal" class="close-btn">✖</button>
+          <button id="closeModal" class="close-btn" onclick="window.location.href='/nuclea/departament'">✖</button>
           <h2 class="title-modal">Add Department</h2>
           <p class="description">Fill in the required details to register this Department</p>
 

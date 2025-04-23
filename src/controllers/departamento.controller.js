@@ -19,7 +19,7 @@ exports.getDepartaments = (req, res) => {
                   datos: rowsDepa,
                   emps: emp,
                   csrfToken: req.csrfToken(),
-                  title: 'Departaments',
+                  title: 'Departments',
                   iconClass: 'fa-solid fa-building',
                 });
               } else {
@@ -122,7 +122,8 @@ exports.getUpdate = (req, res, next) => {
                       depa:rows,
                       datos: depas[0],
                       emps:rowsDepa,
-                      title: 'Administrative offenses'
+                      title: 'Departments',
+                      iconClass: 'fa-solid fa-building',
                   });
                   console.log(depas)
               })
