@@ -1,4 +1,5 @@
 // interview controller
+const OneToOneModel = require('../models/oneToOneModel');
 const Questions = require('../models/oneToOneModel');
 const SearchModel = require('../models/search.model'); 
 const { differenceInYears, differenceInMonths, differenceInDays } = require('date-fns');
@@ -39,7 +40,8 @@ exports.getInterview = async (req, res) => {
         const preguntas = await Questions.getQuestions();
         const employeeId = req.query.employee;
 
-        const employee = await SearchModel.getEmployeeById(employeeId);
+        const employee = await OneToOneModel.getEmployeeById(employeeId);
+
 
         // Obtener inicial de usuario
         employee.initial = employee.Nombre.charAt(0).toUpperCase();
@@ -51,7 +53,7 @@ exports.getInterview = async (req, res) => {
         const years = differenceInYears(currentDate, startDate);
         const months = differenceInMonths(currentDate, startDate) % 12;
         const days = differenceInDays(currentDate, startDate) % 30; // Aproximación de días en el mes
-        employee.timeInCompany = `${years} años, ${months} meses, ${days} días`;
+        employee.timeInCompany = `${years} year(s), ${months} month(s), ${days} day(s)`;
 
         res.render('pages/interview',{ 
             title: 'Interview', 
@@ -204,7 +206,7 @@ exports.getEmployeeHistory = async (req, res) => {
             entrevistadorNombre: `${interview.entrevistadorNombre || ''} ${interview.entrevistadorApellidos || ''}`.trim(),
             completada: interview.completada
         }));
-        
+        console.log(employee)
         res.json({
             success: true,
             employee: {
@@ -213,7 +215,7 @@ exports.getEmployeeHistory = async (req, res) => {
                 apellidos: employee.Apellidos || '',
                 puesto: employee.Puesto || '',
                 modalidad: employee.Modalidad || '',
-                departamento: employee.Departamentos || '',
+                departamento: employee.Nombre_Departamento || '',
                 fechaInicio: employee.Fecha_inicio_colab,
                 initial: employee.Nombre ? employee.Nombre.charAt(0).toUpperCase() : ''
             },

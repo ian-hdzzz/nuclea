@@ -12,7 +12,7 @@
             </div>
             <div class="profile">
                 <h1>{{employee.Nombre}}  {{employee.Apellidos}}</h1>
-                <p>Software Department</p>
+                <p>Department: {{#if employee.Departamentos}}{{ employee.Departamentos}}{{else}}Not specified{{/if}}</p>
             </div>
         </div>
         {{/if}}
@@ -36,7 +36,7 @@
               </div>
              <div class="target">
                 <p class="label">Department:</p>
-                <p class="description">{{usuario.departamentos}}</p>
+                <p class="description">{{#if employee.Departamentos}}{{ employee.Departamentos}}{{else}}Not specified{{/if}}</p>
               </div>
              <div class="target">
                 <p class="label">Time in the company:</p>
@@ -133,7 +133,7 @@ document.addEventListener('DOMContentLoaded', function () {
         responses[q.preguntaId] && responses[q.preguntaId].trim() !== '');
       
       if (!allQuestionsAnswered) {
-        const confirm = window.confirm('No has respondido todas las preguntas. ¿Deseas continuar de todos modos?');
+        const confirm = window.confirm('You haven’t answered all the questions. Do you still want to continue?');
         if (!confirm) return;
       }
       
@@ -270,7 +270,25 @@ document.addEventListener('DOMContentLoaded', function () {
     });
     
   }
-  
+  const goBackBtn = document.getElementById('go-back-btn');
+if (goBackBtn) {
+  goBackBtn.addEventListener('click', function () {
+    const interview1 = document.getElementById('interview1');
+    const interview2 = document.getElementById('interview2');
+
+    if (interview2.style.display === 'block') {
+      // Regresar a preguntas abiertas
+      interview2.style.display = 'none';
+      interview1.style.display = 'block';
+    } else {
+      // Si ya está en preguntas abiertas y quieres permitir ir a la anterior
+      if (currentQuestion > 1) {
+        currentQuestion--;
+        updateQuestion();
+      }
+    }
+  });
+}
   const saveButton = document.getElementById('save-button');
   if (saveButton) {
     saveButton.addEventListener('click', function(e) {
