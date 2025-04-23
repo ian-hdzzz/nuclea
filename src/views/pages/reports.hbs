@@ -1,8 +1,11 @@
-
+<!DOCTYPE html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Gráfica de prueba</title>
    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
-   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+   
    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
 
   <link rel="stylesheet" href="/css/reports.css">
@@ -43,14 +46,14 @@
       
       <div class="info-card info-card-2 team-overview">
         <p >Team Performance Overview</p>
-        {{> graph 
+        {{!-- {{> graph 
                 workload=closedResponses.[0].valorRespuesta
                 health=closedResponses.[1].valorRespuesta 
                 recognition=closedResponses.[2].valorRespuesta
                 emotionalHealth=closedResponses.[3].valorRespuesta
                 workLifeBalance=closedResponses.[4].valorRespuesta
                 className="chart-container report"
-                }}
+                }}  --}}
       </div>
       
       <div class="info-card info-card-3">
@@ -87,7 +90,7 @@
   </div>
   
       
-  <canvas id="miGrafico" width="200" height="100"></canvas>
+
   <script src="/js/graph.js"></script>
   <script src="/js/one.js"></script>
   <script>
@@ -207,8 +210,8 @@
          plugins: {
            legend: { display: false },
            datalabels: {
-             anchor: 'top',
-             align: 'top',
+             anchor: 'end',
+             align: 'end',
              formatter: value => value + '%',
              font: { weight: 'bold' }
            }
@@ -216,7 +219,7 @@
          scales: {
            y: {
              beginAtZero: true,
-             max: Math.max(...data) * 1.05, // Aumenta un 20% el máximo
+             max: Math.max(...data) * 1.08, // Aumenta un 20% el máximo
              ticks: {
                callback: function(value) {
                  return value + '%';
