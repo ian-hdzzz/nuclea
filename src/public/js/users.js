@@ -178,5 +178,23 @@ document.addEventListener("DOMContentLoaded", () => {
   
     // Listener para la búsqueda
     searchInput.addEventListener("keyup", handleSearch);
+
+
+        // Confirmación antes de eliminar usuario
+        document.querySelectorAll(".delete-btn").forEach(button => {
+          const originalUrlMatch = button.getAttribute("onclick")?.match(/'(.*?)'/);
+          if (!originalUrlMatch) return;
+    
+          const originalUrl = originalUrlMatch[1];
+          button.removeAttribute("onclick");
+    
+          button.addEventListener("click", (e) => {
+            e.preventDefault();
+            const confirmDelete = confirm("Are you sure you want to delete this user?");
+            if (confirmDelete) {
+              window.location.href = originalUrl;
+            }
+          });
+        });
   });
   
