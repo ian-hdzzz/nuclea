@@ -186,7 +186,7 @@ exports.getDelete = (req, res, next) => {
 
   exports.getView = (req, res, next) => {
     console.log(req.params.idUsuario);
-    Usuario.fetchById(req.params.idUsuario)
+    Usuario.fetchbyId(req.params.idUsuario)
         .then(([rows]) => {
             console.log(rows[0]);
             req.session.nombre = rows[0].Nombre;
