@@ -46,8 +46,6 @@ if (process.env.NODE_ENV === 'production') {
 } else if (process.env.NODE_ENV === 'development') {
   // URL para desarrollo
   callbackURL = "http://localhost:4002/auth/google/callback";
-} else{
-  callbackURL = "https://nuclea-production.up.railway.app/auth/google/callback";
 }
 passport.use(new GoogleStrategy({
   
