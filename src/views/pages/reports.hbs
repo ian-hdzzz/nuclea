@@ -2,6 +2,7 @@
 <head>
   <title>Gráfica de prueba</title>
    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
 
   <link rel="stylesheet" href="/css/reports.css">
@@ -69,20 +70,23 @@
         <div style="text-align: center;">
           <button class="button is-link" onclick="abrirModal()" >check rotation from 6 months ago</button>
         </div>
-    <!-- Modal -->
-    <div id="modalGrafica" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background-color: rgba(0, 0, 0, 0.658); justify-content: center; align-items: center; z-index: 1000;">
-      
-      <div style="background: #131A26; padding: 20px; border-radius: 10px; width: 80%; max-width: 600px; position: relative;">
-        <button style="position: absolute; top: 10px; right: 10px;" onclick="cerrarModal()">✖</button>
-        
-        <h3 style="text-align:center;">Employee Turnover Chart</h3>
-        <canvas id="miGrafico" width="1000" height="600"></canvas>
       </div>
-    </div>
+      <!-- Modal -->
+      <div id="modalGrafica" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background-color: rgba(0, 0, 0, 0.658); justify-content: center; align-items: center; z-index: 1000;">
+        
+        <div style="background: #131A26; padding: 20px; border-radius: 10px; width: 80%; max-width: 600px; position: relative;">
+          <button style="position: absolute; top: 10px; right: 10px;" onclick="cerrarModal()">✖</button>
+          
+          <h3 style="text-align:center;">Employee Turnover Chart</h3>
+          <canvas id="miGrafico" width="1000" height="600"></canvas>
+        </div>
+      </div>
+    
     
   </div>
-      </div>
+  
+      
   <canvas id="miGrafico" width="200" height="100"></canvas>
   <script src="/js/graph.js"></script>
   <script src="/js/one.js"></script>
@@ -169,62 +173,62 @@
       });
     });
 
-    function abrirModal() {
-    document.getElementById('modalGrafica').style.display = 'flex';
-    if (!window.chartGenerado) {
-      generarGrafica();
-      window.chartGenerado = true;
-    }
-  }
-
-  function cerrarModal() {
-    document.getElementById('modalGrafica').style.display = 'none';
-  }
-
-  function generarGrafica() {
-    const labels = {{{mesYear}}};
-    const data = {{{indice}}};
-
-    const ctx = document.getElementById('miGrafico').getContext('2d');
-    new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: labels,
-        datasets: [{
-          label: 'Índice',
-          data: data,
-          backgroundColor: 'rgba(54, 162, 235, 0.6)',
-          borderColor: 'rgba(54, 162, 235, 1)',
-          borderWidth: 1
-        }]
-      },
-      options: {
-        responsive: true,
-        plugins: {
-          legend: { display: false },
-          datalabels: {
-            anchor: 'end',
-            align: 'end',
-            formatter: value => value + '%',
-            font: { weight: 'bold' }
-          }
-        },
-        scales: {
-          y: {
-            beginAtZero: true,
-            max: Math.max(...data) * 1.05, // Aumenta un 20% el máximo
-            ticks: {
-              callback: function(value) {
-                return value + '%';
-              },
-              color: 'white' // Asegúrate de que las etiquetas sean legibles
-            }
-          }
-        }
-      },
-      plugins: [ChartDataLabels]
-    });
-  }
+   function abrirModal() {
+     document.getElementById('modalGrafica').style.display = 'flex';
+     if (!window.chartGenerado) {
+       generarGrafica();
+       window.chartGenerado = true;
+     }
+   }
+ 
+   function cerrarModal() {
+     document.getElementById('modalGrafica').style.display = 'none';
+   }
+ 
+   function generarGrafica() {
+     const labels = {{{mesYear}}};
+     const data = {{{indice}}};
+ 
+     const ctx = document.getElementById('miGrafico').getContext('2d');
+     new Chart(ctx, {
+       type: 'bar',
+       data: {
+         labels: labels,
+         datasets: [{
+           label: 'Índice',
+           data: data,
+           backgroundColor: 'rgba(54, 162, 235, 0.6)',
+           borderColor: 'rgba(54, 162, 235, 1)',
+           borderWidth: 1
+         }]
+       },
+       options: {
+         responsive: true,
+         plugins: {
+           legend: { display: false },
+           datalabels: {
+             anchor: 'top',
+             align: 'top',
+             formatter: value => value + '%',
+             font: { weight: 'bold' }
+           }
+         },
+         scales: {
+           y: {
+             beginAtZero: true,
+             max: Math.max(...data) * 1.05, // Aumenta un 20% el máximo
+             ticks: {
+               callback: function(value) {
+                 return value + '%';
+               },
+               color: 'white' // Asegúrate de que las etiquetas sean legibles
+             }
+           }
+         }
+       },
+       plugins: [ChartDataLabels]
+     });
+   }
   </script>
 </body>
 </html>
