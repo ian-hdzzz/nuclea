@@ -382,6 +382,22 @@
           ORDER BY u.Nombre ASC
       `, [`%${name}%`]);
     }
+
+    static UpdateTempPass(idusu, confPass) {
+      return bcrypt.hash(confPass, 12)
+        .then((password_cifrado) => {
+          return db.execute(
+            `UPDATE Usuarios 
+             SET Contrasena = ?, 
+                 Primera_vez = 0 
+             WHERE idUsuario = ?`,
+            [password_cifrado, idusu]
+          );
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
     
   
 
