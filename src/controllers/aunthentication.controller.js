@@ -24,8 +24,8 @@ exports.postAuth = (req, res) => {
     if (rows.length > 0) {
       bcrypt.compare(req.body.password, rows[0].Contrasena).then((doMatch) => {
         if (doMatch) {
-          console.log(req.session.idUsuario)
           req.session.idUsuario = rows[0].idUsuario;
+          console.log(req.session.idUsuario)
           req.session.nombre = rows[0].Nombre;
           req.session.apellidos = rows[0].Apellidos;
           req.session.email = rows[0].Correo_electronico;
@@ -34,6 +34,8 @@ exports.postAuth = (req, res) => {
           req.session.pais = rows[0].Pais;
           req.session.calle = rows[0].Calle;
           req.session.isLoggedIn = true;
+          req.session.firstTime = rows[0].Primera_vez;
+          console.log(req.session.firstTime)
 
           // Promesas en paralelo
           Promise.all([
@@ -130,7 +132,43 @@ exports.getGoogleCallback = (req, res, next) => {
     });
   })(req, res, next);
 };
-    
+  
+exports.getUpdateTempPass = (req, res) => {
+  const failed = req.session.failed || false;
+  req.session.failed = false;
+  res.render("auth/temp", {
+    hideMenu: true,
+    hideContainer: true,
+    csrfToken: req.csrfToken(),
+    failed,
+    error: req.flash("error")
+  });
+};
+
+exports.postUpdateTempPass = (req, res, next) => {
+  console.log(req.body)
+  const idUser = req.session.idUsuario
+  const { newPass, confirmPass } = req.body;
+  if (newPass != confirmPass){
+    req.session.failed = `Error updating temporary password`;
+    res.redirect("/nuclea/signup/temp");
+    res.status(500);
+  } else {
+    Usuario.UpdateTempPass(idUser, confirmPass)
+      .then(() => {
+        req.session.firstTime = 0
+        console.log('enviando a dashboard')
+        res.redirect("/nuclea/dashboard");
+      })
+      .catch((error) => {
+          req.session.failed = `Error updating temporary password`;
+          res.redirect("/nuclea/signup/temp");
+          res.status(500);
+      });
+  }
+
+  
+};
 
 // Función para logout que respeta Passport
 exports.getLogout = (req, res, next) => {
