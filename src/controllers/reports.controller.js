@@ -160,6 +160,7 @@ exports.getDashboardInfo = async (req, res, next) => {
             mesYear: JSON.stringify(nombresMeses),
             indice: JSON.stringify(indice),
             title: 'Reports',
+            iconClass: 'fa-solid fa-clipboard-list',
             reportsDetailsInactive:reportsDetailsInactive[0],
             reportsDetailsActive:reportsDetailsActive[0],
             aoYear:aoYear[0],
