@@ -335,7 +335,8 @@ exports.getRequestsapr = (req, res) => {
             apellidosUsuario: req.session.apellidos,
             title: 'Request',
             diasferiados: diasf,
-            puedeAceptar: true
+            puedeAceptar: true,
+            error: mensajeerror
           });
         })
         .catch((err) => {
