@@ -33,15 +33,15 @@ module.exports = class Departament {
         await db.execute(`DELETE FROM Departamentos WHERE idDepartamento = ?`, [idDepartamento]);
     }
 
-        static fetchFAI(idDepartamento) {
-            return db.execute(`
-                SELECT d.*, e.idEmpresa, e.Nombre_empresa
-                FROM Departamentos d
-                JOIN PerteneceDepa pd ON d.idDepartamento = pd.idDepartamento
-                JOIN Empresa e ON pd.idEmpresa = e.idEmpresa
-                WHERE d.idDepartamento = ?;
-            `, [idDepartamento]);
-        }
+    static fetchFAI(idDepartamento) {
+        return db.execute(`
+            SELECT d.*, e.idEmpresa, e.Nombre_empresa
+            FROM Departamentos d
+            LEFT JOIN PerteneceDepa pd ON d.idDepartamento = pd.idDepartamento
+            LEFT JOIN Empresa e ON pd.idEmpresa = e.idEmpresa
+            WHERE d.idDepartamento = ?;
+        `, [idDepartamento]);
+    }
         
 
     static fetchDept(){
@@ -73,6 +73,7 @@ module.exports = class Departament {
     }
 
     static async Update(idDepartamento, nombre, descripcion, estado, idEmpresa) {
+        // Actualizar departamento
         await db.execute(
             `UPDATE Departamentos 
              SET Nombre_departamento = ?, Descripcion = ?, Estado = ?
@@ -80,12 +81,28 @@ module.exports = class Departament {
             [nombre, descripcion, estado, idDepartamento]
         );
     
-        await db.execute(
-            `UPDATE PerteneceDepa 
-             SET idEmpresa = ?
-             WHERE idDepartamento = ?`,
-            [idEmpresa, idDepartamento]
+        // Verificar si ya existe una relación en PerteneceDepa
+        const [rows] = await db.execute(
+            `SELECT * FROM PerteneceDepa WHERE idDepartamento = ?`,
+            [idDepartamento]
         );
+    
+        if (rows.length > 0) {
+            // Si ya existe, actualiza
+            await db.execute(
+                `UPDATE PerteneceDepa 
+                 SET idEmpresa = ?
+                 WHERE idDepartamento = ?`,
+                [idEmpresa, idDepartamento]
+            );
+        } else {
+            // Si no existe, inserta nueva relación
+            await db.execute(
+                `INSERT INTO PerteneceDepa (idDepartamento, idEmpresa)
+                 VALUES (?, ?)`,
+                [idDepartamento, idEmpresa]
+            );
+        }
     }
 
     static fetch(id) {
