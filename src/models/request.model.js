@@ -164,13 +164,14 @@ module.exports.approveSolicitud = async (idSolicitud, rol) => {
 
   // Verificar si ambas aprobaciones están dadas y aún no se ha procesado
   const [solicitud] = await db.execute(`
-    SELECT idUsuario, Aprobacion_L, Aprobacion_A, Fecha_inicio, Fecha_fin
+    SELECT idUsuario, Tipo, Aprobacion_L, Aprobacion_A, Fecha_inicio, Fecha_fin
     FROM Solicitudes 
     WHERE idSolicitud = ?`, [idSolicitud]);
 
   const s = solicitud[0];
 
   if (
+    s.Tipo === 'Vacations' &&
     s.Aprobacion_L === 'Aprobado' &&
     s.Aprobacion_A === 'Aprobado' 
   ) {
@@ -194,7 +195,7 @@ module.exports.approveSolicitud = async (idSolicitud, rol) => {
       WHERE idUsuario = ?`, [s.idUsuario]);
     const u = usuario[0];
     console.log('dias_vaciones', u.dias_vaciones)
-
+    if (u.dias_vaciones >= diasSolicitados) {
     const diasfinales = u.dias_vaciones - (diasSolicitados - feri);
 
     console.log('diasfinales', diasfinales)
@@ -204,9 +205,18 @@ module.exports.approveSolicitud = async (idSolicitud, rol) => {
       SET dias_vaciones = ? 
       WHERE idUsuario = ?`, [diasfinales, s.idUsuario]);
 
-  }
+    } else {
+      // Rechazar automaticamente por falta de días de Vacaciones
+      await db.execute(`
+        UPDATE Solicitudes 
+        SET Aprobacion_L = 'Rechazado', Fecha_aprob_L = NOW(), 
+            Aprobacion_A = 'Rechazado', Fecha_aprob_A = NOW() 
+        WHERE idSolicitud = ?`, [idSolicitud]);
 
-  return;
+        return true; //Retornar variable de rechazo de solicitud
+    }
+  }
+  return false; //Retornar variable de rechazo de solicitud
 };
 
 // Rechazar solicitud según el rol

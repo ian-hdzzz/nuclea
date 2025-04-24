@@ -192,7 +192,12 @@ exports.approveRequest = (req, res) => {
 
       return Request.approveSolicitud(solicitudId, rol);
     })
-    .then(() => res.redirect('/nuclea/request/approval'))
+    .then((rechazada) => {
+      if (rechazada) {
+        req.session.errorRe = 'Request rejected: not enough vacation days.';
+    }
+      res.redirect('/nuclea/request/approval');
+    })
     .catch((err) => {
       console.error('Error al aprobar la solicitud:', err);
       res.status(500).send('Error interno');
@@ -278,6 +283,11 @@ exports.getRequestsapr = (req, res) => {
     return res.redirect('/nuclea/request/personal');
   }
 
+  const mensajeerror = req.session.errorRe || ''; // ✅ Agregar esto
+  if (req.session.errorRe) {
+    req.session.errorRe = '';
+  }
+
   let encontrado = false; // Variable para saber si encontramos el privilegio 'addAO'
   console.log('privilegios session', req.session.privilegios);
   let privilegiosTot = req.session.privilegios;
@@ -298,7 +308,8 @@ exports.getRequestsapr = (req, res) => {
                 apellidosUsuario: req.session.apellidos,
                 title: 'Request',
                 diasferiados: diasf,
-                puedeAceptar: true
+                puedeAceptar: true,
+                error: mensajeerror
               });
             })
             .catch((err) => {
@@ -326,7 +337,8 @@ exports.getRequestsapr = (req, res) => {
             apellidosUsuario: req.session.apellidos,
             title: 'Request',
             diasferiados: diasf,
-            puedeAceptar: true
+            puedeAceptar: true,
+            error: mensajeerror
           });
         })
         .catch((err) => {
