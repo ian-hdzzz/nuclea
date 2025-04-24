@@ -59,6 +59,7 @@ VALUES (
         s.Fecha_aprob_A
       FROM Solicitudes s
       JOIN Usuarios u ON s.idUsuario = u.idUsuario
+      ORDER BY idSolicitud DESC
     `);
     
   }
