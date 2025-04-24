@@ -195,15 +195,16 @@ module.exports.approveSolicitud = async (idSolicitud, rol) => {
       WHERE idUsuario = ?`, [s.idUsuario]);
     const u = usuario[0];
     console.log('dias_vaciones', u.dias_vaciones)
-    if (u.dias_vaciones >= diasSolicitados) {
     const diasfinales = u.dias_vaciones - (diasSolicitados - feri);
+    if (diasfinales>=0) {
+      
 
-    console.log('diasfinales', diasfinales)
-    // Restar días
-    await db.execute(`
-      UPDATE Usuarios 
-      SET dias_vaciones = ? 
-      WHERE idUsuario = ?`, [diasfinales, s.idUsuario]);
+      console.log('diasfinales', diasfinales)
+      // Restar días
+      await db.execute(`
+        UPDATE Usuarios 
+        SET dias_vaciones = ? 
+        WHERE idUsuario = ?`, [diasfinales, s.idUsuario]);
 
     } else {
       // Rechazar automaticamente por falta de días de Vacaciones
