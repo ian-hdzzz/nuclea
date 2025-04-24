@@ -116,8 +116,10 @@ exports.postRequest = (request, response,next) => {
         const fechaFin = new Date(request.body.fechaFin);  
         console.log(request.body.fechaInicio);
         console.log(request.body.fechaFin);
-        // Calcular la diferencia en milisegundos y convertirla a días
-        const totalDias = helpers.countWeekdays(fechaInicio, fechaFin); // Por ahora solo excluimos fines de semana. Luego restaremos feriados si es necesario.
+        // Calcular la diferencia en milisegundos ys convertirla a días
+        const totalDias = helpers.countWeekdays(fechaInicio, fechaFin) - feriados; // Por ahora solo excluimos fines de semana. Luego restaremos feriados si es necesario.
+        console.log('----Dias restantes totales-----')
+        console.log()
         console.log('Weekdays entre fechas:', helpers.countWeekdays(fechaInicio, fechaFin));
         console.log(totalDias)
         Request.fetchDays(sessionId).then(([diasRestantes])=>{
