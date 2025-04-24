@@ -43,11 +43,9 @@ let callbackURL;
 if (process.env.NODE_ENV === 'production') {
   // URL absoluta para producción
   callbackURL = "https://tec3.nuclea.solutions/auth/google/callback";
-} else if (process.env.NODE_ENV === 'development') {
+} else {
   // URL para desarrollo
   callbackURL = "http://localhost:4002/auth/google/callback";
-} else{
-  callbackURL = "https://nuclea-production.up.railway.app/auth/google/callback";
 }
 passport.use(new GoogleStrategy({
   

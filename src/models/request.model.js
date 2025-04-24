@@ -1,6 +1,6 @@
 const db = require('../util/database');
 const helpers = require('../lib/helpers');
-
+const DiasFeriados = require('../models/diasferiados.model');
 module.exports = class Request {
 
   constructor(Id, Tipo, Fecha_I, Fecha_F,Descripcion) {
@@ -59,6 +59,7 @@ VALUES (
         s.Fecha_aprob_A
       FROM Solicitudes s
       JOIN Usuarios u ON s.idUsuario = u.idUsuario
+      ORDER BY idSolicitud DESC
     `);
     
   }
@@ -163,13 +164,14 @@ module.exports.approveSolicitud = async (idSolicitud, rol) => {
 
   // Verificar si ambas aprobaciones están dadas y aún no se ha procesado
   const [solicitud] = await db.execute(`
-    SELECT idUsuario, Aprobacion_L, Aprobacion_A, Fecha_inicio, Fecha_fin
+    SELECT idUsuario, Tipo, Aprobacion_L, Aprobacion_A, Fecha_inicio, Fecha_fin
     FROM Solicitudes 
     WHERE idSolicitud = ?`, [idSolicitud]);
 
   const s = solicitud[0];
 
   if (
+    s.Tipo === 'Vacations' &&
     s.Aprobacion_L === 'Aprobado' &&
     s.Aprobacion_A === 'Aprobado' 
   ) {
@@ -179,6 +181,12 @@ module.exports.approveSolicitud = async (idSolicitud, rol) => {
     console.log('fechafinal', fechaFin)
 
     const diasSolicitados = helpers.countWeekdays(fechaInicio, fechaFin);
+    //query dias feriados
+
+    //-----------------------------------------------------------------------------------------------------------------
+    const [result] = await DiasFeriados.fetchBetween(fechaInicio, fechaFin);
+    const feri = result[0]['COUNT(*)'];
+    console.log ('Dias feriados:', feri)
     console.log('diasSolicitados', diasSolicitados)
     // Obtener días restantes del usuario
     const [usuario] = await db.execute(`
@@ -187,18 +195,29 @@ module.exports.approveSolicitud = async (idSolicitud, rol) => {
       WHERE idUsuario = ?`, [s.idUsuario]);
     const u = usuario[0];
     console.log('dias_vaciones', u.dias_vaciones)
+    const diasfinales = u.dias_vaciones - (diasSolicitados - feri);
+    if (diasfinales>=0) {
+      
 
-    const diasfinales = u.dias_vaciones - diasSolicitados;
-    console.log('diasfinales', diasfinales)
-    // Restar días
-    await db.execute(`
-      UPDATE Usuarios 
-      SET dias_vaciones = ? 
-      WHERE idUsuario = ?`, [diasfinales, s.idUsuario]);
+      console.log('diasfinales', diasfinales)
+      // Restar días
+      await db.execute(`
+        UPDATE Usuarios 
+        SET dias_vaciones = ? 
+        WHERE idUsuario = ?`, [diasfinales, s.idUsuario]);
 
+    } else {
+      // Rechazar automaticamente por falta de días de Vacaciones
+      await db.execute(`
+        UPDATE Solicitudes 
+        SET Aprobacion_L = 'Rechazado', Fecha_aprob_L = NOW(), 
+            Aprobacion_A = 'Rechazado', Fecha_aprob_A = NOW() 
+        WHERE idSolicitud = ?`, [idSolicitud]);
+
+        return true; //Retornar variable de rechazo de solicitud
+    }
   }
-
-  return;
+  return false; //Retornar variable de rechazo de solicitud
 };
 
 // Rechazar solicitud según el rol

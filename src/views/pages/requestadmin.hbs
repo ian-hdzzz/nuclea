@@ -29,105 +29,223 @@
           <i class="fa-regular fa-square-plus"></i>
           <input type="button" value="Personal requests" class="add-btn">
         </div>
+
+        <a href="#accepted" class="add-btn-container">
+          <i class="fa-regular "></i>
+          <input type="button" value="Accepted Absences" class="add-btn">
+        </a>
     </div>
+    
+    {{#if error}}
+      <div class="top-container">
+        <div class="nav-bar">
+          <div class="first-container">
+            <div class="notification is-danger">
+              {{error}}
+            </div>
+          </div>
+        </div>
+      </div>
+    {{/if}}
 
     <div class="content">
-    <div class="nav-content">
-      <h2>Absences Management</h2>
- 
-    </div>
+      <div class="nav-content">
+        <h2>Pending Absences</h2>
+      </div>
 
-    <div class="table-holidays-wrapper">
-      <div class="table-container">
-        <table>
-          <thead>
-            <tr>
-              <th>Request of</th>
-              <th>Type</th>
-              <th>Start Date</th>
-              <th>End Date</th>
-              <th class="descripcion-columna">Description</th>
-              <th>Leader Approval</th>
-              <th>Admin Approval</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {{#if datos.length}}
-              {{#each datos}}
-              <tr
-                data-id="{{idSolicitud}}" 
-                data-tipo="{{'Tipo'}}" 
-                data-fecha-inicio="{{formatDate2 Fecha_inicio}}" 
-                data-fecha-fin="{{formatDate2 Fecha_fin}}" 
-                data-descripcion="{{Descripcion}}"
-              >
-                <td>{{Nombre}} {{Apellido}}</td>
-                <td>{{Tipo}}</td>
-                <td>{{formatDate Fecha_inicio}}</td>
-                <td>{{formatDate Fecha_fin}}</td>
-               <td class="descripcion-columna">{{Descripcion}}</td>
-                <td>
-                  <span class=" vacation-status {{#if (eq Aprobacion_L 'Aprobado')}}active{{else if (eq Aprobacion_L 'Rechazado')}}inactive{{else}}pending{{/if}}">
-                  <div class="dot"></div>
-                    {{#if (eq Aprobacion_L 'Aprobado')}}Approved
-                    {{else if (eq Aprobacion_L 'Rechazado')}}Rejected
-                    {{else}}Pending
-                    {{/if}}
-                  </span>
-                </td>
-                <td>
-                  <span class=" vacation-status {{#if (eq Aprobacion_A 'Aprobado')}}active{{else if (eq Aprobacion_A 'Rechazado')}}inactive{{else}}pending{{/if}}">
-                  <div class="dot"></div>
-                    {{#if (eq Aprobacion_A 'Aprobado')}}Approved
-                    {{else if (eq Aprobacion_A 'Rechazado')}}Rejected
-                    {{else}}Pending
-                    {{/if}}
-                  </span>
-                </td>
-                <td>
-                  {{#if (or 
-                          (and (eq Aprobacion_A 'Aprobado') (eq Aprobacion_L 'Aprobado')) 
-                          (and (eq Aprobacion_A 'Rechazado') (eq Aprobacion_L 'Rechazado'))
-                        )}}
-                    <span class="vacation-status {{#if (eq Aprobacion_A 'Aprobado')}}active{{else if (eq Aprobacion_A 'Rechazado')}}inactive{{/if}}">
-                      <div class="dot"></div>
-                      {{#if (eq Aprobacion_A 'Aprobado')}}Approved
-                      {{else if (eq Aprobacion_A 'Rechazado')}}Rejected
-                      {{/if}}
-                    </span>
-                  {{else}}
-                    <div class="dropdown"> 
-                      <button class="action-btn">Actions</button>
-                      <div class="dropdown-content">
-                        {{#if ../puedeAceptar}}
-                          <button class="approve-btn" onclick="approveRequest('{{idSolicitud}}')">
-                            <i class="fa-solid fa-check"></i> Approve
-                          </button>
-                          <button class="reject-btn" onclick="rejectRequest('{{idSolicitud}}')">
-                            <i class="fa-solid fa-xmark"></i> Reject
-                          </button>
-                        {{/if}}
-                      </div>
-                    </div>
-                  {{/if}}
-                </td>
-              </tr>
-              {{/each}}
-              <!-- Registro vacio para aparecer menu de actions-->
-              <tr class="table-spacer-row">
-                <td class="height-spacer" colspan="8"></td>
-              </tr>
-              
-            {{else}}
+
+
+      <div class="table-holidays-wrapper">
+        <div class="table-container">
+          <table>
+            <thead>
               <tr>
-                <td colspan="7" class="empty-message">No requests available</td>
+                <th>Request of</th>
+                <th>Type</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th class="descripcion-columna">Description</th>
+                <th>Leader Approval</th>
+                <th>Admin Approval</th>
+                <th>Actions</th>
               </tr>
-            {{/if}}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {{#if datos.length}}
+                {{#each datos}}
+                  {{#if (or (and (eq Aprobacion_L 'Aprobado') (eq Aprobacion_A 'Aprobado')) (and (eq Aprobacion_L 'Rechazado') (eq Aprobacion_A 'Rechazado')))}}
+                  {{else}}
+                    
+                    <tr
+                      data-id="{{idSolicitud}}" 
+                      data-tipo="{{'Tipo'}}" 
+                      data-fecha-inicio="{{formatDate2 Fecha_inicio}}" 
+                      data-fecha-fin="{{formatDate2 Fecha_fin}}" 
+                      data-descripcion="{{Descripcion}}"
+                    >
+                      <td>{{Nombre}} {{Apellido}}</td>
+                      <td>{{Tipo}}</td>
+                      <td>{{formatDate Fecha_inicio}}</td>
+                      <td>{{formatDate Fecha_fin}}</td>
+                    <td class="descripcion-columna">{{Descripcion}}</td>
+                      <td>
+                        <span class=" vacation-status {{#if (eq Aprobacion_L 'Aprobado')}}active{{else if (eq Aprobacion_L 'Rechazado')}}inactive{{else}}pending{{/if}}">
+                        <div class="dot"></div>
+                          {{#if (eq Aprobacion_L 'Aprobado')}}Approved
+                          {{else if (eq Aprobacion_L 'Rechazado')}}Rejected
+                          {{else}}Pending
+                          {{/if}}
+                        </span>
+                      </td>
+                      <td>
+                        <span class=" vacation-status {{#if (eq Aprobacion_A 'Aprobado')}}active{{else if (eq Aprobacion_A 'Rechazado')}}inactive{{else}}pending{{/if}}">
+                        <div class="dot"></div>
+                          {{#if (eq Aprobacion_A 'Aprobado')}}Approved
+                          {{else if (eq Aprobacion_A 'Rechazado')}}Rejected
+                          {{else}}Pending
+                          {{/if}}
+                        </span>
+                      </td>
+                      <td>
+                        {{#if (or 
+                                (and (eq Aprobacion_A 'Aprobado') (eq Aprobacion_L 'Aprobado')) 
+                                (and (eq Aprobacion_A 'Rechazado') (eq Aprobacion_L 'Rechazado'))
+                              )}}
+                          <span class="vacation-status {{#if (eq Aprobacion_A 'Aprobado')}}active{{else if (eq Aprobacion_A 'Rechazado')}}inactive{{/if}}">
+                            <div class="dot"></div>
+                            {{#if (eq Aprobacion_A 'Aprobado')}}Approved
+                            {{else if (eq Aprobacion_A 'Rechazado')}}Rejected
+                            {{/if}}
+                          </span>
+                        {{else}}
+                          <div class="dropdown"> 
+                            <button class="action-btn">Actions</button>
+                            <div class="dropdown-content">
+                              {{#if ../puedeAceptar}}
+                                <button class="approve-btn" onclick="approveRequest('{{idSolicitud}}')">
+                                  <i class="fa-solid fa-check"></i> Approve
+                                </button>
+                                <button class="reject-btn" onclick="rejectRequest('{{idSolicitud}}')">
+                                  <i class="fa-solid fa-xmark"></i> Reject
+                                </button>
+                              {{/if}}
+                            </div>
+                          </div>
+                        {{/if}}
+                      </td>
+                    </tr>
+                  {{/if}}
+                {{/each}}
+                <!-- Registro vacio para aparecer menu de actions-->
+                <tr class="table-spacer-row">
+                  <td class="height-spacer" colspan="8"></td>
+                </tr>
+                
+              {{else}}
+                <tr>
+                  <td colspan="7" class="empty-message">No requests available</td>
+                </tr>
+              {{/if}}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
+    <p></p>
+
+
+
+
+
+
+
+
+
+
+
+    <div class="content" id="accepted">
+      <div class="nav-content">
+        <h2>Acepted Absences</h2>
+      </div>
+
+
+      
+      <div class="table-holidays-wrapper">
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Request of</th>
+                <th>Type</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th class="descripcion-columna">Description</th>
+                <th>Leader Approval</th>
+                <th>Admin Approval</th>
+              </tr>
+            </thead>
+            <tbody>
+              {{#if datos.length}}
+                {{#each datos}}
+                  {{#if (and (eq Aprobacion_L 'Aprobado') (eq Aprobacion_A 'Aprobado')) }}
+
+                    <tr
+                      data-id="{{idSolicitud}}" 
+                      data-tipo="{{'Tipo'}}" 
+                      data-fecha-inicio="{{formatDate2 Fecha_inicio}}" 
+                      data-fecha-fin="{{formatDate2 Fecha_fin}}" 
+                      data-descripcion="{{Descripcion}}"
+                    >
+                      <td>{{Nombre}} {{Apellido}}</td>
+                      <td>{{Tipo}}</td>
+                      <td>{{formatDate Fecha_inicio}}</td>
+                      <td>{{formatDate Fecha_fin}}</td>
+                    <td class="descripcion-columna">{{Descripcion}}</td>
+                      <td>
+                        <span class=" vacation-status {{#if (eq Aprobacion_L 'Aprobado')}}active{{else if (eq Aprobacion_L 'Rechazado')}}inactive{{else}}pending{{/if}}">
+                        <div class="dot"></div>
+                          {{#if (eq Aprobacion_L 'Aprobado')}}Approved
+                          {{else if (eq Aprobacion_L 'Rechazado')}}Rejected
+                          {{else}}Pending
+                          {{/if}}
+                        </span>
+                      </td>
+                      <td>
+                        <span class=" vacation-status {{#if (eq Aprobacion_A 'Aprobado')}}active{{else if (eq Aprobacion_A 'Rechazado')}}inactive{{else}}pending{{/if}}">
+                        <div class="dot"></div>
+                          {{#if (eq Aprobacion_A 'Aprobado')}}Approved
+                          {{else if (eq Aprobacion_A 'Rechazado')}}Rejected
+                          {{else}}Pending
+                          {{/if}}
+                        </span>
+                      </td>
+                      
+                    </tr>
+                  {{else}}
+                  {{/if}}
+                {{/each}}
+                <!-- Registro vacio para aparecer menu de actions-->
+                <tr class="table-spacer-row">
+                  <td class="height-spacer" colspan="8"></td>
+                </tr>
+                
+              {{else}}
+                <tr>
+                  <td colspan="7" class="empty-message">No requests available</td>
+                </tr>
+              {{/if}}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    
+
+
+
+
+
+
 
 
                     
