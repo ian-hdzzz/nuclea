@@ -399,7 +399,6 @@
         });
     }
     
-
     static UpdatePrimerTuto(idusu) {
       return db.execute(
         `UPDATE Usuarios
@@ -410,6 +409,31 @@
       .catch(error => {
         console.log('Error actualizando primer_tuto:', error);
       });
+    }
+
+    static fetchLeader(idUsu) {
+      return  db.query(`
+        SELECT 
+          GROUP_CONCAT(u2.Correo_electronico SEPARATOR ', ') AS Lideres
+        FROM Usuarios u1
+        INNER JOIN Pertenece p1 ON u1.idUsuario = p1.idUsuario
+        INNER JOIN Pertenece p2 ON p1.idDepartamento = p2.idDepartamento
+        INNER JOIN User_Rol ur ON p2.idUsuario = ur.idUsuario
+        INNER JOIN Roles r ON ur.idRol = r.idRol
+        INNER JOIN Usuarios u2 ON ur.idUsuario = u2.idUsuario
+        WHERE u1.idUsuario = ? AND r.Nombre_rol = 'Lider';
+      `, [idUsu]);
+    }
+
+    static fetchAdmins(){
+      return  db.query(`
+        SELECT 
+        GROUP_CONCAT(u.Correo_electronico SEPARATOR ', ') AS Admins
+        FROM Usuarios u
+        INNER JOIN User_Rol ur ON u.idUsuario = ur.idUsuario
+        INNER JOIN Roles r ON ur.idRol = r.idRol
+        WHERE r.Nombre_rol = 'SuperAdmin';
+      `);
     }
     
 
