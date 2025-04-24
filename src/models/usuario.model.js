@@ -399,8 +399,19 @@
         });
     }
     
-  
 
+    static UpdatePrimerTuto(idusu) {
+      return db.execute(
+        `UPDATE Usuarios
+         SET primer_tuto = 1
+         WHERE idUsuario = ?`,
+        [idusu]
+      )
+      .catch(error => {
+        console.log('Error actualizando primer_tuto:', error);
+      });
+    }
+    
 
   
 };

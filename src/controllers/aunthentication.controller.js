@@ -35,7 +35,9 @@ exports.postAuth = (req, res) => {
           req.session.calle = rows[0].Calle;
           req.session.isLoggedIn = true;
           req.session.firstTime = rows[0].Primera_vez;
+          req.session.firsTutorial = rows[0].primer_tuto;
           console.log(req.session.firstTime)
+          console.log(req.session.firsTutorial)
 
           // Promesas en paralelo
           Promise.all([

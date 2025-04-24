@@ -113,6 +113,8 @@ app.use('/nuclea/company', companyRoutes);
 const inactiveRoutes = require('./routes/unemployed.routes');
 app.use('/nuclea', inactiveRoutes);
 
+const tutorialRoutes = require('./routes/tutorial.routes');
+app.use('/nuclea/tutorial', tutorialRoutes);
 // public
 app.use(express.static(path.join(__dirname, 'public')));
 
