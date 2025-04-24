@@ -205,8 +205,11 @@ module.exports.approveSolicitud = async (idSolicitud, rol) => {
         SET Aprobacion_L = 'Rechazado', Fecha_aprob_L = NOW(), 
             Aprobacion_A = 'Rechazado', Fecha_aprob_A = NOW() 
         WHERE idSolicitud = ?`, [idSolicitud]);
+
+        return true; //Retornar variable de rechazo de solicitud
     }
   }
+  return false; //Retornar variable de rechazo de solicitud
 };
 
 // Rechazar solicitud según el rol

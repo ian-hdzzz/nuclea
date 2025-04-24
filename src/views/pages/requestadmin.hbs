@@ -30,6 +30,18 @@
           <input type="button" value="Personal requests" class="add-btn">
         </div>
     </div>
+    
+    {{#if error}}
+      <div class="top-container">
+        <div class="nav-bar">
+          <div class="first-container">
+            <div class="notification is-danger">
+              {{error}}
+            </div>
+          </div>
+        </div>
+      </div>
+    {{/if}}
 
     <div class="content">
     <div class="nav-content">
