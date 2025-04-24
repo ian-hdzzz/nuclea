@@ -577,3 +577,238 @@
   .holiday-day {
     background-color: rgba(209, 255, 234, 0.2);
   }
+
+  /* Añade estos estilos a tu archivo CSS existente */
+
+/* Colores de tipos de eventos */
+.day-event-tag.type-1 {
+    background-color: #3B82F6;
+    color: white;
+}
+
+.day-event-tag.type-2 {
+    background-color: #8B5CF5;
+    color: white;
+}
+
+.day-event-tag.type-3 {
+    background-color: #21C55E;
+    color: white;
+}
+
+.day-event-tag.type-4 {
+    background-color: #6C7280;
+    color: white;
+}
+
+/* Estilos para días con eventos específicos */
+.vacation-day {
+    background-color: rgba(59, 130, 246, 0.1);
+}
+
+.holiday-day {
+    background-color: rgba(33, 197, 94, 0.1);
+}
+
+.non-working-day {
+    background-color: rgba(108, 114, 128, 0.1);
+}
+
+/* Colores de los iconos de eventos */
+.event-icon.vacation {
+    color: #3B82F6;
+}
+
+.event-icon.holiday {
+    color: #21C55E;
+}
+
+.event-tag.vacation {
+    background-color: #3B82F6;
+}
+
+.event-tag.holiday {
+    background-color: #21C55E;
+}
+
+.event-tag.non-working-day {
+    background-color: #6C7280;
+}
+
+/* Mejora visual para la descripción de eventos */
+.event-description {
+    font-size: 0.8rem;
+    color: #6B7280;
+    margin-top: 4px;
+}
+
+/* my-events-sidebar.css */
+.events-sidebar {
+    background-color: #1e1e2d;
+    color: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    width: 300px;
+  }
+  
+  .sidebar-header h2 {
+    font-size: 22px;
+    margin-bottom: 25px;
+  }
+  
+  .statistics, .event-type-legend {
+    margin-bottom: 30px;
+  }
+  
+  .statistics h3, .event-type-legend h3 {
+    font-size: 14px;
+    color: #a0a0a0;
+    margin-bottom: 15px;
+    letter-spacing: 1px;
+  }
+  
+  .event-type-container {
+    margin-bottom: 10px;
+  }
+  
+  .event-type-header {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-radius: 8px;
+    background-color: #2a2a3a;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .event-type-header:hover {
+    background-color: #323248;
+  }
+  
+  .event-type-color {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 10px;
+  }
+  
+  .event-type-name {
+    flex-grow: 1;
+    font-size: 15px;
+  }
+  
+  .event-count {
+    height: 24px;
+    width: 24px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 10px;
+    font-size: 12px;
+  }
+  
+  .dropdown-arrow {
+    font-size: 10px;
+    transition: transform 0.3s;
+  }
+  
+  .event-type-header.active .dropdown-arrow {
+    transform: rotate(180deg);
+  }
+  
+  .event-list {
+    background-color: #2a2a3a;
+    border-radius: 0 0 8px 8px;
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 0.3s ease-out;
+    margin-top: -5px;
+  }
+  
+  .event-list.show {
+    max-height: 500px;
+    transition: max-height 0.5s ease-in;
+  }
+  
+  .hidden {
+    display: none;
+  }
+  
+  .event-item {
+    display: flex;
+    padding: 10px 10px 10px 20px;
+    border-bottom: 1px solid #3a3a4a;
+  }
+  
+  .event-item:last-child {
+    border-bottom: none;
+  }
+  
+  .event-item-color {
+    width: 3px;
+    border-radius: 2px;
+    margin-right: 10px;
+  }
+  
+  .event-item-details {
+    flex-grow: 1;
+  }
+  
+  .event-item-name {
+    font-size: 14px;
+    margin-bottom: 5px;
+  }
+  
+  .event-item-datetime {
+    font-size: 12px;
+    color: #b0b0b0;
+  }
+  
+  .all-day-tag, .time-tag {
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin-left: 5px;
+    font-size: 11px;
+  }
+  
+  .legend-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  .legend-color {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 10px;
+  }
+  
+  .legend-name {
+    font-size: 14px;
+  }
+  /* Estas son las clases clave para controlar la visibilidad */
+.event-list {
+    background-color: #2a2a3a;
+    border-radius: 0 0 8px 8px;
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 0.3s ease-out;
+    margin-top: -5px;
+    opacity: 0;
+  }
+  
+  .event-list.show {
+    max-height: 500px; /* Altura máxima que puede alcanzar al expandirse */
+    opacity: 1;
+    transition: max-height 0.5s ease-in, opacity 0.3s ease-in;
+    margin-bottom: 10px;
+    padding-top: 5px;
+  }
+  
+  .hidden {
+    display: none;
+  }

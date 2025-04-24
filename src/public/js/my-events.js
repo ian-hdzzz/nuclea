@@ -675,3 +675,47 @@ document.querySelector('.sync-button').insertAdjacentHTML('afterend', `
     
     alert('Eventos importados de Google Calendar eliminados.');
   });
+
+
+// ----------sidebar.js----------
+document.addEventListener('DOMContentLoaded', function() {
+  // Seleccionar todos los encabezados de tipos de eventos
+  const eventTypeHeaders = document.querySelectorAll('.event-type-header');
+  
+  // Agregar listeners de clic a cada encabezado
+  eventTypeHeaders.forEach(header => {
+    header.addEventListener('click', function() {
+      // Obtener el ID del tipo de evento
+      const eventTypeId = this.getAttribute('data-event-type');
+      // Obtener la lista de eventos asociada
+      const eventList = document.getElementById(`event-list-${eventTypeId}`);
+      
+      // Alternar la clase active en el encabezado
+      this.classList.toggle('active');
+      
+      // Comprobar si la lista está oculta
+      if (eventList.classList.contains('hidden')) {
+        // Mostrar la lista
+        eventList.classList.remove('hidden');
+        // Pequeño retraso para permitir que el navegador procese el cambio de display
+        setTimeout(() => {
+          eventList.classList.add('show');
+        }, 10);
+      } else {
+        // Ocultar la lista
+        eventList.classList.remove('show');
+        // Esperar a que finalice la transición antes de ocultarla completamente
+        eventList.addEventListener('transitionend', function handler() {
+          eventList.classList.add('hidden');
+          eventList.removeEventListener('transitionend', handler);
+        });
+      }
+      
+      // Para verificar que está funcionando (puedes eliminar después)
+      console.log('Click en tipo de evento:', eventTypeId);
+    });
+  });
+  
+  // Verifica que el script se esté ejecutando
+  console.log('Script de eventos cargado correctamente');
+});

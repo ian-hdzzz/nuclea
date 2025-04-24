@@ -174,45 +174,50 @@
             </div>
                 
             <div class="stats">
-                <h3 class="stats-title">STATISTICS</h3>
-                
-                <div class="stat-item">
-                    <div>One-to-One</div>
-                    <div class="stat-count">2</div>
+               <div class="statistics">
+                    <h3>STATISTICS</h3>
+                    
+                    {{#each eventTypes}}
+                    <div class="event-type-container">
+                    <div class="event-type-header" data-event-type="{{tipo_id}}">
+                        <div class="event-type-color" style="background-color: {{color}}"></div>
+                        <div class="event-type-name">{{nombre}}</div>
+                        <div class="event-count">{{count}}</div>
+                        <div class="dropdown-arrow">▼</div>
+                    </div>
+                    
+                    <div class="event-list hidden" id="event-list-{{tipo_id}}">
+                        {{#each events}}
+                        <div class="event-item">
+                        <div class="event-item-color" style="background-color: {{../color}}"></div>
+                        <div class="event-item-details">
+                            <div class="event-item-name">{{name}}</div>
+                            <div class="event-item-datetime">
+                            {{date}}
+                            {{#if allDay}}
+                            <span class="all-day-tag">Todo el día</span>
+                            {{else}}
+                            <span class="time-tag">{{time}}</span>
+                            {{/if}}
+                            </div>
+                        </div>
+                        </div>
+                        {{/each}}
+                    </div>
+                    </div>
+                    {{/each}}
                 </div>
                 
-                <div class="stat-item">
-                    <div>Vacation Days</div>
-                    <div class="stat-count purple">7</div>
+                <div class="event-type-legend">
+                    <h3>EVENT TYPE</h3>
+                    
+                    {{#each eventTypes}}
+                    <div class="legend-item">
+                    <div class="legend-color" style="background-color: {{color}}"></div>
+                    <div class="legend-name">{{nombre}}</div>
+                    </div>
+                    {{/each}}
                 </div>
-                
-                <div class="stat-item">
-                    <div>Holidays</div>
-                    <div class="stat-count green">9</div>
-                </div>
-            </div>
-            
-            <div class="event-types">
-                <h3 class="stats-title">EVENT TYPE</h3>
-                
-                <div class="event-type">
-                    <div class="event-type-dot blue-dot"></div>
-                    <div>One-to-One Meetings</div>
-                </div>
-                
-                <div class="event-type">
-                    <div class="event-type-dot purple-dot"></div>
-                    <div>Vacations</div>
-                </div>
-                
-                <div class="event-type">
-                    <div class="event-type-dot green-dot"></div>
-                    <div>Holidays</div>
-                </div>
-                
-                <div class="event-type">
-                    <div class="event-type-dot gray-dot"></div>
-                    <div>Non-Working Days</div>
                 </div>
             </div>
         </div>
@@ -225,7 +230,7 @@
 <script async defer src="https://apis.google.com/js/api.js"></script>
 <script src="https://accounts.google.com/gsi/client"></script>
 
-<script src="/js/my-events.js"></script>
+<script src="/js/my-events2.js"></script>
 
 
 
