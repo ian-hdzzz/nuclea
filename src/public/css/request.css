@@ -561,8 +561,9 @@ td.descripcion-columna, th.descripcion-columna {
     padding: 10px;
     border-radius: 5px;
     border: 1px solid #f5c6cb; /* Borde rojo */
-    width: 80%;
+    width: 100%;
     text-align: center; /* Centra el texto */
+    align-items: center;
 }
 
 /* Estilo para el contenedor de botones Approval y Add*/
