@@ -163,9 +163,9 @@ exports.postRequest = async (request, response, next) => {
         <h2>New Vacation Request Created</h2>
         <p>A vacation request has been submitted by ${nombreUsuario} ${apellidoUsuario}.</p>
         <ul>
-          <li><strong>From:</strong> ${request.body.fechaInicio}</li>
-          <li><strong>To:</strong> ${request.body.fechaFin}</li>
-          <li><strong>Description:</strong> ${request.body.descripcion}</li>
+          <li><strong>From:</strong> ${fechaInicio}</li>
+          <li><strong>To:</strong> ${fechaFin}</li>
+          <li><strong>Description:</strong> ${descripcion}</li>
         </ul>
         <p>Please review the request in the system and proceed with the corresponding action.</p>
         <p>Thank you!</p>
