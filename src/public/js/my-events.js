@@ -487,7 +487,10 @@ function generateCalendar(month, year) {
     const prevMonthLastDay = new Date(year, month, 0).getDate();
     
     // Siempre usamos 42 días (6 filas x 7 días)
-    const totalCalendarDays = 35;
+    const totalCalendarDays = 42;
+    
+    // Configurar el grid para mantener dimensiones consistentes
+    daysContainer.style.gridTemplateRows = `repeat(6, minmax(100px, 1fr))`;
     
     // Días del mes anterior
     for (let i = 0; i < startingDay; i++) {
@@ -536,28 +539,22 @@ function generateCalendar(month, year) {
                 dayDiv.classList.add('non-working-day');
             }
             
-            // Mostrar hasta 2 eventos en el día
-            dayEvents.slice(0, 2).forEach(event => {
+            // Limitar a máximo 3 eventos visibles
+            const visibleEvents = dayEvents.slice(0, 3);
+            visibleEvents.forEach(event => {
                 const eventTag = createEventTag(event);
                 eventsContainer.appendChild(eventTag);
             });
             
-            // Mostrar indicador de más eventos si hay más de 2
-            if (dayEvents.length > 2) {
+            // Si hay más eventos, mostrar el contador
+            if (dayEvents.length > 3) {
                 const moreEvents = document.createElement("div");
                 moreEvents.classList.add("more-events");
-                moreEvents.textContent = `+${dayEvents.length - 2} más`;
+                moreEvents.textContent = `+${dayEvents.length - 3}`;
                 eventsContainer.appendChild(moreEvents);
             }
             
             dayDiv.appendChild(eventsContainer);
-
-            // Agregar tooltip al día completo
-            dayDiv.addEventListener('mouseover', (e) => {
-                // Mostrar tooltip con el primer evento del día
-                showTooltip(e, dayEvents[0]);
-            });
-            dayDiv.addEventListener('mouseout', hideTooltip);
         }
         
         daysContainer.appendChild(dayDiv);
