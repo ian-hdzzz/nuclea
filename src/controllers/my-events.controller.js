@@ -2,21 +2,13 @@
 const Evento = require('../models/evento.model');
 const Tipo = require('../models/tipo.model');
 
-// Controlador para eventos
 const eventosController = {
-    // Obtener todos los eventos
     getAll: async (req, res) => {
         try {
-            // Obtener el ID del usuario de la sesión
-            const usuarioId = req.session.userId;
-            
-            // Consultar eventos para este usuario
-            const eventos = await Evento.findByUsuarioId(usuarioId);
-            
-            // Consultar todos los tipos de eventos
+            const eventos = await Evento.findByUsuarioId(req.session.idUsuario);
             const tipos = await Tipo.findAll();
             
-            // Mapear los tipos para tener un acceso rápido por ID
+            // Mapear los tipos para acceso rápido
             const tiposMap = {};
             tipos.forEach(tipo => {
                 tiposMap[tipo.tipo_id] = {
@@ -25,121 +17,146 @@ const eventosController = {
                 };
             });
             
-            // Agregar información de color a cada evento
-            const eventosConTipo = eventos.map(evento => {
-                const tipoInfo = tiposMap[evento.tipoId] || { nombre: 'Otro', color: '#CCCCCC' };
-                return {
-                    ...evento,
-                    tipoNombre: tipoInfo.nombre,
-                    color: tipoInfo.color
-                };
-            });
+            // Procesar eventos y asegurar que las fechas sean válidas
+            const eventosFormateados = eventos
+                .filter(evento => evento.fechaInicio && evento.fechaFin)
+                .map(evento => {
+                    // Crear fechas y ajustar la zona horaria
+                    const start = new Date(evento.fechaInicio);
+                    start.setDate(start.getDate() + 1); // Ajustar el día
+                    
+                    const end = new Date(evento.fechaFin);
+                    end.setDate(end.getDate() + 1); // Ajustar el día
+                    
+                    // Verificar si las fechas son válidas
+                    if (isNaN(start.getTime()) || isNaN(end.getTime())) {
+                        console.error('Fechas inválidas para evento:', evento);
+                        return null;
+                    }
+
+                    // Si hay horas específicas y no es un evento de día completo
+                    if (evento.horaInicio && evento.horaFin && !evento.diaCompleto) {
+                        const [startHours, startMinutes] = evento.horaInicio.split(':');
+                        const [endHours, endMinutes] = evento.horaFin.split(':');
+                        
+                        start.setHours(parseInt(startHours), parseInt(startMinutes));
+                        end.setHours(parseInt(endHours), parseInt(endMinutes));
+                    }
+
+                    return {
+                        id: evento.eventoId,
+                        title: evento.titulo,
+                        description: evento.descripcion,
+                        start: start.toISOString(),
+                        end: end.toISOString(),
+                        allDay: evento.diaCompleto === 1,
+                        type: evento.tipoId,
+                        color: evento.tipoColor || tiposMap[evento.tipoId]?.color || '#6C7280'
+                    };
+                })
+                .filter(Boolean);
             
-            res.json(eventosConTipo);
+            console.log('Eventos formateados:', eventosFormateados);
+            
+            res.json(eventosFormateados);
         } catch (error) {
             console.error('Error al obtener eventos:', error);
             res.status(500).json({ error: 'Error al obtener eventos' });
         }
     },
-    // Renderizar la vista de calendario
+
     renderCalendario: async (req, res) => {
-        // Sample data structure to be used with the Handlebars template
-const sidebarData = {
-    eventTypes: [
-      {
-        tipo_id: 1,
-        nombre: "Vacations",
-        color: "#3B82F6",
-        count: 7,
-        events: [
-          {
-            name: "Summer Vacation",
-            date: "10 Feb - 15 Feb 2025",
-            allDay: true
-          },
-          {
-            name: "Weekend Trip",
-            date: "22 Feb - 23 Feb 2025",
-            allDay: true
-          }
-        ]
-      },
-      {
-        tipo_id: 2,
-        nombre: "One-to-one",
-        color: "#8B5CF6",
-        count: 2,
-        events: [
-          {
-            name: "Meeting with Manager",
-            date: "5 Feb 2025",
-            allDay: false,
-            time: "10:00 - 11:00"
-          },
-          {
-            name: "Team Feedback Session",
-            date: "12 Feb 2025",
-            allDay: false,
-            time: "15:30 - 16:30"
-          }
-        ]
-      },
-      {
-        tipo_id: 3,
-        nombre: "Holidays",
-        color: "#21C55E",
-        count: 9,
-        events: [
-          {
-            name: "Valentine's Day",
-            date: "14 Feb 2025",
-            allDay: true
-          },
-          {
-            name: "President's Day",
-            date: "17 Feb 2025",
-            allDay: true
-          }
-        ]
-      },
-      {
-        tipo_id: 4,
-        nombre: "Non-working-days",
-        color: "#6C7280",
-        count: 4,
-        events: [
-          {
-            name: "Weekend",
-            date: "1 Feb - 2 Feb 2025",
-            allDay: true
-          },
-          {
-            name: "Weekend",
-            date: "8 Feb - 9 Feb 2025",
-            allDay: true
-          }
-        ]
-      }
-    ]
-  };
         try {
-            // Obtener el ID del usuario de la sesión
-            const usuarioId = req.session.userId;
-            
-            // Consultar tipos de eventos para mostrar la leyenda
+            // Obtener todos los eventos del usuario
+            const eventos = await Evento.findByUsuarioId(req.session.idUsuario);
             const tipos = await Tipo.findAll();
-            
-            res.render('./pages/my-events', { 
+
+            // Agrupar eventos por tipo
+            const eventosPorTipo = {};
+            tipos.forEach(tipo => {
+                eventosPorTipo[tipo.tipo_id] = {
+                    tipo_id: tipo.tipo_id,
+                    nombre: tipo.nombre,
+                    color: tipo.color,
+                    count: 0,
+                    events: []
+                };
+            });
+
+            // Procesar y contar eventos
+            eventos
+                .filter(evento => evento.fechaInicio && evento.fechaFin)
+                .forEach(evento => {
+                    if (eventosPorTipo[evento.tipoId]) {
+                        eventosPorTipo[evento.tipoId].count++;
+                        eventosPorTipo[evento.tipoId].events.push({
+                            name: evento.titulo,
+                            date: formatDateRange(
+                                new Date(evento.fechaInicio),
+                                new Date(evento.fechaFin)
+                            ),
+                            allDay: evento.diaCompleto === 1,
+                            time: !evento.diaCompleto ? formatTimeRange(evento.horaInicio, evento.horaFin) : null
+                        });
+                    }
+                });
+
+            const sidebarData = {
+                eventTypes: Object.values(eventosPorTipo)
+            };
+
+            res.render('./pages/my-events', {
                 title: 'Mi Calendario',
                 tipos: tipos,
-                usuarioId: usuarioId,
-                sidebarData: sidebarData 
+                usuarioId: req.session.idUsuario,
+                sidebarData: sidebarData,
+                GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
+                GOOGLE_API_KEY: process.env.GOOGLE_API_KEY,
+                iconClass: 'fa-regular fa-calendar'
             });
         } catch (error) {
             console.error('Error al renderizar calendario:', error);
             res.status(500).send('Error al cargar la página');
         }
+    },
+
+    createEvent: async (req, res) => {
+        try {
+            // Implementar lógica para crear evento
+            res.status(501).json({ message: 'Función no implementada' });
+        } catch (error) {
+            console.error('Error al crear evento:', error);
+            res.status(500).json({ error: 'Error al crear el evento' });
+        }
+    },
+
+    syncGoogleEvents: async (req, res) => {
+        try {
+            // Implementar lógica de sincronización
+            res.status(501).json({ message: 'Función no implementada' });
+        } catch (error) {
+            console.error('Error al sincronizar con Google:', error);
+            res.status(500).json({ error: 'Error al sincronizar eventos' });
+        }
     }
 };
+
+// Funciones auxiliares
+function formatDateRange(startDate, endDate) {
+    if (!(startDate instanceof Date) || !(endDate instanceof Date)) {
+        startDate = new Date(startDate);
+        endDate = new Date(endDate);
+    }
+    
+    if (startDate.toDateString() === endDate.toDateString()) {
+        return startDate.toLocaleDateString();
+    }
+    return `${startDate.toLocaleDateString()} - ${endDate.toLocaleDateString()}`;
+}
+
+function formatTimeRange(startTime, endTime) {
+    if (!startTime || !endTime) return '';
+    return `${startTime} - ${endTime}`;
+}
 
 module.exports = eventosController;

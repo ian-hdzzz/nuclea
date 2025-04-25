@@ -36,6 +36,10 @@ async function loadEventsFromBackend() {
         
         if (!Array.isArray(data) || data.length === 0) {
             console.log('No se encontraron eventos en el backend');
+            events = [];
+            generateCalendar(selectedMonth, selectedYear);
+            generateUpcomingEvents();
+            updateStats();
             return;
         }
         
@@ -43,13 +47,9 @@ async function loadEventsFromBackend() {
         events = data.map(event => {
             console.log('Procesando evento:', event);
             
-            // Asegurarse de que las fechas sean strings válidos
-            const fechaInicio = event.fechaInicio || new Date().toISOString().split('T')[0];
-            const fechaFin = event.fechaFin || fechaInicio;
-            
-            // Crear fechas
-            const startDate = new Date(fechaInicio);
-            const endDate = new Date(fechaFin);
+            // Crear objetos Date a partir de las fechas ISO
+            const startDate = new Date(event.start);
+            const endDate = new Date(event.end);
             
             // Verificar si las fechas son válidas
             if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
@@ -57,20 +57,11 @@ async function loadEventsFromBackend() {
                 return null;
             }
             
-            // Si hay horas, agregarlas a las fechas
-            if (event.horaInicio && !event.diaCompleto) {
-                const [startHours, startMinutes] = event.horaInicio.split(':');
-                startDate.setHours(parseInt(startHours), parseInt(startMinutes));
-            }
-            
-            if (event.horaFin && !event.diaCompleto) {
-                const [endHours, endMinutes] = event.horaFin.split(':');
-                endDate.setHours(parseInt(endHours), parseInt(endMinutes));
-            }
-            
             // Mapear el tipo de evento
-            let type, icon;
-            switch(parseInt(event.tipoId)) {
+            let type = event.type;
+            let icon = "📅";
+            
+            switch(type) {
                 case 1:
                     type = "vacation";
                     icon = "🌙";
@@ -87,25 +78,20 @@ async function loadEventsFromBackend() {
                     type = "non-working";
                     icon = "🏠";
                     break;
-                default:
-                    type = "other";
-                    icon = "📅";
             }
             
-            const processedEvent = {
-                id: event.eventoId,
-                title: event.titulo,
+            return {
+                id: event.id,
+                title: event.title,
                 type: type,
                 start: startDate,
                 end: endDate,
                 icon: icon,
-                allDay: Boolean(event.diaCompleto),
-                description: event.descripcion
+                allDay: event.allDay,
+                description: event.description,
+                color: event.color || "#6C7280"
             };
-            
-            console.log('Evento procesado:', processedEvent);
-            return processedEvent;
-        }).filter(Boolean); // Eliminar eventos nulos (con fechas inválidas)
+        }).filter(Boolean); // Eliminar eventos nulos
         
         console.log('Total de eventos procesados:', events.length);
         console.log('Eventos finales:', events);
@@ -114,7 +100,6 @@ async function loadEventsFromBackend() {
         generateCalendar(selectedMonth, selectedYear);
         generateUpcomingEvents();
         updateStats();
-        initializeAccordion();
         
     } catch (error) {
         console.error('Error al cargar eventos:', error);
@@ -384,15 +369,13 @@ function getEventsForDay(day, month, year) {
         const normalizedEnd = new Date(eventEnd.getFullYear(), eventEnd.getMonth(), eventEnd.getDate());
         const normalizedTarget = new Date(year, month, day);
         
-        // Un evento ocurre en este día si:
-        // 1. Es un evento de día completo y el día objetivo está entre la fecha de inicio y fin
-        // 2. Es un evento con hora específica y comienza en este día
+        // Un evento ocurre en este día si el día objetivo está entre la fecha de inicio y fin
         const isInRange = normalizedTarget >= normalizedStart && normalizedTarget <= normalizedEnd;
         
         console.log(`Evaluando evento "${event.title}":`, {
-            start: normalizedStart,
-            end: normalizedEnd,
-            target: normalizedTarget,
+            start: normalizedStart.toLocaleDateString(),
+            end: normalizedEnd.toLocaleDateString(),
+            target: normalizedTarget.toLocaleDateString(),
             isInRange: isInRange
         });
         
@@ -403,10 +386,95 @@ function getEventsForDay(day, month, year) {
     return eventsForDay;
 }
 
-// Función para generar el calendario
-function generateCalendar(month, year) {
-    console.log(`Generando calendario para ${monthNames[month]} ${year}`);
+// Create tooltip element
+const tooltip = document.createElement('div');
+tooltip.className = 'event-tooltip';
+document.body.appendChild(tooltip);
+
+// Function to show tooltip
+function showTooltip(event, data) {
+    const rect = event.target.getBoundingClientRect();
     
+    // Format the time string
+    let timeString = data.allDay ? 'All Day' : 
+        `${formatTime(new Date(data.start))} - ${formatTime(new Date(data.end))}`;
+
+    // Get event type name
+    let typeName = 'Event';
+    let typeClass = '';
+    switch(data.type) {
+        case 1:
+        case 'vacation':
+            typeName = 'Vacation';
+            typeClass = 'vacation';
+            break;
+        case 2:
+        case 'meeting':
+            typeName = 'One-to-One';
+            typeClass = 'meeting';
+            break;
+        case 3:
+        case 'holiday':
+            typeName = 'Holiday'; // Simplificado de "Cultural Holiday" a "Holiday"
+            typeClass = 'holiday';
+            break;
+        case 4:
+        case 'non-working':
+            typeName = 'Non-Working Day';
+            typeClass = 'non-working';
+            break;
+    }
+
+    // Set tooltip content
+    tooltip.innerHTML = `
+        <div class="event-tooltip-title">${data.title}</div>
+        <div class="event-tooltip-type ${typeClass}">${typeName}</div>
+        <div class="event-tooltip-time">
+            <i class="fa-regular fa-clock"></i> ${timeString}
+        </div>
+        ${data.description ? `
+            <div class="event-tooltip-description">
+                ${data.description}
+            </div>
+        ` : ''}
+    `;
+
+    // Position the tooltip
+    const padding = 10;
+    let top = rect.top - tooltip.offsetHeight - padding;
+    let left = rect.left + (rect.width / 2) - (tooltip.offsetWidth / 2);
+
+    // Check if tooltip would go off screen
+    if (top < 0) {
+        // Show below element instead
+        top = rect.bottom + padding;
+    }
+    if (left < padding) {
+        left = padding;
+    } else if (left + tooltip.offsetWidth > window.innerWidth - padding) {
+        left = window.innerWidth - tooltip.offsetWidth - padding;
+    }
+
+    tooltip.style.top = `${top}px`;
+    tooltip.style.left = `${left}px`;
+    tooltip.classList.add('visible');
+}
+
+// Function to hide tooltip
+function hideTooltip() {
+    tooltip.classList.remove('visible');
+}
+
+// Función para generar el calendario
+function createEventTag(event) {
+    const eventTag = document.createElement('div');
+    eventTag.className = `day-event-tag ${event.type}`;
+    eventTag.dataset.eventId = event.id;
+    eventTag.innerHTML = `${event.icon} ${event.title}`;
+    return eventTag;
+}
+
+function generateCalendar(month, year) {
     document.querySelector(".month-title").textContent = `${monthNames[month]} ${year}`;
     
     const daysContainer = document.querySelector(".days");
@@ -417,6 +485,9 @@ function generateCalendar(month, year) {
     const lastDay = new Date(year, month + 1, 0);
     const totalDays = lastDay.getDate();
     const prevMonthLastDay = new Date(year, month, 0).getDate();
+    
+    // Siempre usamos 42 días (6 filas x 7 días)
+    const totalCalendarDays = 35;
     
     // Días del mes anterior
     for (let i = 0; i < startingDay; i++) {
@@ -450,63 +521,24 @@ function generateCalendar(month, year) {
         
         // Obtener eventos para este día
         const dayEvents = getEventsForDay(i, month, year);
-        console.log(`Día ${i}: ${dayEvents.length} eventos encontrados`);
         
         if (dayEvents.length > 0) {
             const eventsContainer = document.createElement("div");
             eventsContainer.classList.add("day-events");
             
-            // Crear tooltip container
-            const tooltipContainer = document.createElement("div");
-            tooltipContainer.classList.add("event-tooltip");
-            
-            // Agregar cada evento al tooltip
-            dayEvents.forEach(event => {
-                const tooltipItem = document.createElement("div");
-                tooltipItem.classList.add("event-tooltip-item");
-                
-                const tooltipTitle = document.createElement("div");
-                tooltipTitle.classList.add("event-tooltip-title");
-                tooltipTitle.textContent = event.title;
-                
-                const tooltipTime = document.createElement("div");
-                tooltipTime.classList.add("event-tooltip-time");
-                tooltipTime.textContent = event.allDay ? "All day" : `${formatTime(event.start)} - ${formatTime(event.end)}`;
-                
-                tooltipItem.appendChild(tooltipTitle);
-                tooltipItem.appendChild(tooltipTime);
-                tooltipContainer.appendChild(tooltipItem);
-            });
+            // Aplicar clase al día según el tipo de evento
+            const eventTypes = new Set(dayEvents.map(e => e.type));
+            if (eventTypes.has('vacation')) {
+                dayDiv.classList.add('vacation-day');
+            } else if (eventTypes.has('holiday')) {
+                dayDiv.classList.add('holiday-day');
+            } else if (eventTypes.has('non-working')) {
+                dayDiv.classList.add('non-working-day');
+            }
             
             // Mostrar hasta 2 eventos en el día
             dayEvents.slice(0, 2).forEach(event => {
-                const eventTag = document.createElement("div");
-                eventTag.classList.add("day-event-tag");
-                
-                // Agregar clases y estilos según el tipo de evento
-                switch(event.type) {
-                    case "vacation":
-                        eventTag.classList.add("vacation");
-                        dayDiv.classList.add("vacation-day");
-                        eventTag.textContent = "Vacation";
-                        break;
-                    case "meeting":
-                        eventTag.classList.add("meeting");
-                        const shortTitle = event.title;
-                        eventTag.textContent = shortTitle;
-                        break;
-                    case "holiday":
-                        eventTag.classList.add("holiday");
-                        dayDiv.classList.add("holiday-day");
-                        eventTag.textContent = "Holiday";
-                        break;
-                    case "non-working":
-                        eventTag.classList.add("non-working");
-                        dayDiv.classList.add("non-working-day");
-                        eventTag.textContent = "Non-working";
-                        break;
-                }
-                
+                const eventTag = createEventTag(event);
                 eventsContainer.appendChild(eventTag);
             });
             
@@ -514,19 +546,25 @@ function generateCalendar(month, year) {
             if (dayEvents.length > 2) {
                 const moreEvents = document.createElement("div");
                 moreEvents.classList.add("more-events");
-                moreEvents.textContent = `+${dayEvents.length - 2} more`;
+                moreEvents.textContent = `+${dayEvents.length - 2} más`;
                 eventsContainer.appendChild(moreEvents);
             }
             
-            dayDiv.appendChild(tooltipContainer);
             dayDiv.appendChild(eventsContainer);
+
+            // Agregar tooltip al día completo
+            dayDiv.addEventListener('mouseover', (e) => {
+                // Mostrar tooltip con el primer evento del día
+                showTooltip(e, dayEvents[0]);
+            });
+            dayDiv.addEventListener('mouseout', hideTooltip);
         }
         
         daysContainer.appendChild(dayDiv);
     }
     
     // Días del mes siguiente
-    const remainingDays = 35 - (startingDay + totalDays); // 6 filas completas
+    const remainingDays = totalCalendarDays - (startingDay + totalDays);
     for (let i = 1; i <= remainingDays; i++) {
         const dayDiv = document.createElement("div");
         dayDiv.classList.add("day", "empty-day");
@@ -557,7 +595,7 @@ function generateUpcomingEvents() {
     startOfWeek.setHours(0, 0, 0, 0);
     
     const endOfWeek = new Date(startOfWeek);
-    endOfWeek.setDate(startOfWeek.getDate() + 6); // Avanzar al sábado
+    endOfWeek.setDate(endOfWeek.getDate() + 6); // Avanzar al sábado
     endOfWeek.setHours(23, 59, 59, 999);
     
     // Si es viernes (5), mostrar eventos de la próxima semana
@@ -581,6 +619,7 @@ function generateUpcomingEvents() {
     weekEvents.forEach(event => {
         const eventItem = document.createElement("div");
         eventItem.classList.add("event-item");
+        eventItem.dataset.eventId = event.id;
         
         let eventTagClass = "";
         let eventType = "";
@@ -631,23 +670,38 @@ function generateUpcomingEvents() {
         noEvents.textContent = "No events scheduled for this " + (today === 5 ? "next" : "") + " week";
         container.appendChild(noEvents);
     }
+
+    // Add tooltip functionality to event items
+    document.querySelectorAll('.event-item').forEach(eventItem => {
+        const eventData = events.find(e => e.id === eventItem.dataset.eventId);
+        if (eventData) {
+            eventItem.addEventListener('mouseover', (e) => showTooltip(e, eventData));
+            eventItem.addEventListener('mouseout', hideTooltip);
+        }
+    });
 }
 
 // Función para actualizar estadísticas
 function updateStats() {
     try {
-        // Contar reuniones one-to-one
+        // Count and group events by type
+        const eventsByType = {
+            meeting: events.filter(e => e.type === "meeting"),
+            vacation: events.filter(e => e.type === "vacation"),
+            holiday: events.filter(e => e.type === "holiday"),
+            "non-working": events.filter(e => e.type === "non-working")
+        };
+
+        // Update counts
         const oneToOneElement = document.querySelector(".circle.meeting");
         if (oneToOneElement) {
-            const oneToOneCount = events.filter(e => e.type === "meeting").length;
-            oneToOneElement.textContent = oneToOneCount;
+            oneToOneElement.textContent = eventsByType.meeting.length;
         }
         
-        // Contar días de vacaciones
         const vacationElement = document.querySelector(".circle.vacation");
         if (vacationElement) {
             let vacationDays = 0;
-            events.filter(e => e.type === "vacation").forEach(vacation => {
+            eventsByType.vacation.forEach(vacation => {
                 const start = new Date(vacation.start);
                 const end = new Date(vacation.end);
                 const diffTime = Math.abs(end - start);
@@ -656,23 +710,75 @@ function updateStats() {
             });
             vacationElement.textContent = vacationDays;
         }
-        
-        // Contar días festivos
+
         const holidayElement = document.querySelector(".circle.holiday");
         if (holidayElement) {
-            const holidayCount = events.filter(e => e.type === "holiday").length;
-            holidayElement.textContent = holidayCount;
+            holidayElement.textContent = eventsByType.holiday.length;
         }
 
-        // Contar días no laborables
         const nonWorkingElement = document.querySelector(".circle.non-working");
         if (nonWorkingElement) {
-            const nonWorkingCount = events.filter(e => e.type === "non-working").length;
-            nonWorkingElement.textContent = nonWorkingCount;
+            nonWorkingElement.textContent = eventsByType["non-working"].length;
         }
+
+        // Update category details
+        updateCategoryDetails("oneToOne", eventsByType.meeting);
+        updateCategoryDetails("vacations", eventsByType.vacation);
+        updateCategoryDetails("holidays", eventsByType.holiday);
+        updateCategoryDetails("nonWorkingDays", eventsByType["non-working"]);
+
     } catch (error) {
         console.error('Error al actualizar estadísticas:', error);
     }
+}
+
+function updateCategoryDetails(category, events) {
+    const categoryDetails = document.querySelector(`[data-category="${category}"]`)?.nextElementSibling;
+    if (!categoryDetails) return;
+
+    if (!events || events.length === 0) {
+        categoryDetails.innerHTML = `
+            <div class="detail-item no-events">
+                <div class="detail-name">No hay eventos programados</div>
+            </div>
+        `;
+        return;
+    }
+
+    const detailsHtml = events.map(event => {
+        const start = new Date(event.start);
+        const end = new Date(event.end);
+        const dateStr = start.getTime() === end.getTime() ? 
+            formatDate(start) : 
+            `${formatDate(start)} - ${formatDate(end)}`;
+        
+        const timeStr = event.allDay ? 'Todo el día' : `${formatTime(start)} - ${formatTime(end)}`;
+
+        return `
+            <div class="detail-item" data-event-id="${event.id}">
+                <div class="detail-name">${event.title}</div>
+                <div class="detail-info">
+                    <div class="detail-date">
+                        <i class="fa-regular fa-calendar"></i> ${dateStr}
+                    </div>
+                    <div class="detail-time">
+                        <i class="fa-regular fa-clock"></i> ${timeStr}
+                    </div>
+                </div>
+            </div>
+        `;
+    }).join('');
+
+    categoryDetails.innerHTML = detailsHtml;
+
+    // Agregar funcionalidad de tooltip a los elementos detallados
+    categoryDetails.querySelectorAll('.detail-item').forEach(detailItem => {
+        const eventData = events.find(e => e.id === detailItem.dataset.eventId);
+        if (eventData) {
+            detailItem.addEventListener('mouseover', (e) => showTooltip(e, eventData));
+            detailItem.addEventListener('mouseout', hideTooltip);
+        }
+    });
 }
 
 // Configurar navegación de meses
@@ -776,6 +882,26 @@ document.addEventListener('DOMContentLoaded', function() {
     if (document.querySelector('.sync-button')) {
         loadGoogleAPIs();
     }
+
+    // Add click handlers for category cards
+    const categoryCards = document.querySelectorAll('.category-card');
+    categoryCards.forEach(card => {
+        card.addEventListener('click', function() {
+            // Toggle the active class on the clicked card
+            this.classList.toggle('active');
+            
+            // Find the event list associated with this card
+            const eventList = this.querySelector('.event-list');
+            if (eventList) {
+                // Remove hidden class first
+                eventList.classList.remove('hidden');
+                // Add show class after a small delay to trigger animation
+                setTimeout(() => {
+                    eventList.classList.toggle('show');
+                }, 10);
+            }
+        });
+    });
 });
 
 // Manejar errores globales
@@ -828,8 +954,11 @@ function initializeAccordion() {
 function toggleAccordionItem(header) {
     if (!header) return;
     
-    const isActive = header.classList.contains('active');
     const details = header.nextElementSibling;
+    if (!details) return;
+
+    // Verificar si el panel está colapsado
+    const isCollapsed = details.classList.contains('collapsed');
     
     // Cerrar todos los paneles primero
     document.querySelectorAll('.category-header').forEach(h => {
@@ -840,16 +969,17 @@ function toggleAccordionItem(header) {
         }
     });
 
-    // Si no estaba activo, abrir el panel seleccionado
-    if (!isActive) {
+    // Si estaba colapsado, abrir este panel
+    if (isCollapsed) {
         header.classList.add('active');
-        if (details) {
-            details.classList.remove('collapsed');
-        }
+        details.classList.remove('collapsed');
     }
+    
+    // Ajustar altura del contenedor si es necesario
+    adjustContainerHeight();
 }
 
-// Helper para manejar la altura del contenedor si es necesario
+// Helper para manejar la altura del contenedor
 function adjustContainerHeight() {
     const container = document.querySelector('.statistics-container');
     const activeDetails = document.querySelector('.category-details:not(.collapsed)');
