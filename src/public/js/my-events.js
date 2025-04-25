@@ -1,15 +1,135 @@
-
-
 // Variables para Google API
 const configElement = document.getElementById('google-calendar-config');
 const CLIENT_ID = configElement.dataset.clientId;
 const API_KEY = configElement.dataset.apiKey;
 const DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"];
 const SCOPES = "https://www.googleapis.com/auth/calendar.readonly";
-console.log('CLIENT_ID:', CLIENT_ID);
 let tokenClient;
 let gapiInited = false;
 let gisInited = false;
+
+// Variable global para los eventos
+let events = [];
+
+// Variables globales para el calendario
+let currentDate = new Date();
+let selectedMonth = currentDate.getMonth();
+let selectedYear = currentDate.getFullYear();
+
+// Nombres de meses en español
+const monthNames = [
+    "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+    "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+];
+
+// Función para cargar eventos desde el backend
+async function loadEventsFromBackend() {
+    try {
+        console.log('Iniciando carga de eventos desde el backend...');
+        const response = await fetch('/nuclea/api/events');
+        if (!response.ok) {
+            throw new Error('Error al cargar eventos');
+        }
+        
+        const data = await response.json();
+        console.log('Eventos recibidos del backend:', data);
+        
+        if (!Array.isArray(data) || data.length === 0) {
+            console.log('No se encontraron eventos en el backend');
+            return;
+        }
+        
+        // Transformar los datos al formato que espera nuestro calendario
+        events = data.map(event => {
+            console.log('Procesando evento:', event);
+            
+            // Asegurarse de que las fechas sean strings válidos
+            const fechaInicio = event.fechaInicio || new Date().toISOString().split('T')[0];
+            const fechaFin = event.fechaFin || fechaInicio;
+            
+            // Crear fechas
+            const startDate = new Date(fechaInicio);
+            const endDate = new Date(fechaFin);
+            
+            // Verificar si las fechas son válidas
+            if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
+                console.error('Fechas inválidas para el evento:', event);
+                return null;
+            }
+            
+            // Si hay horas, agregarlas a las fechas
+            if (event.horaInicio && !event.diaCompleto) {
+                const [startHours, startMinutes] = event.horaInicio.split(':');
+                startDate.setHours(parseInt(startHours), parseInt(startMinutes));
+            }
+            
+            if (event.horaFin && !event.diaCompleto) {
+                const [endHours, endMinutes] = event.horaFin.split(':');
+                endDate.setHours(parseInt(endHours), parseInt(endMinutes));
+            }
+            
+            // Mapear el tipo de evento
+            let type, icon;
+            switch(parseInt(event.tipoId)) {
+                case 1:
+                    type = "vacation";
+                    icon = "🌙";
+                    break;
+                case 2:
+                    type = "meeting";
+                    icon = "👤";
+                    break;
+                case 3:
+                    type = "holiday";
+                    icon = "📌";
+                    break;
+                case 4:
+                    type = "non-working";
+                    icon = "🏠";
+                    break;
+                default:
+                    type = "other";
+                    icon = "📅";
+            }
+            
+            const processedEvent = {
+                id: event.eventoId,
+                title: event.titulo,
+                type: type,
+                start: startDate,
+                end: endDate,
+                icon: icon,
+                allDay: Boolean(event.diaCompleto),
+                description: event.descripcion
+            };
+            
+            console.log('Evento procesado:', processedEvent);
+            return processedEvent;
+        }).filter(Boolean); // Eliminar eventos nulos (con fechas inválidas)
+        
+        console.log('Total de eventos procesados:', events.length);
+        console.log('Eventos finales:', events);
+        
+        // Actualizar la interfaz
+        generateCalendar(selectedMonth, selectedYear);
+        generateUpcomingEvents();
+        updateStats();
+        initializeAccordion();
+        
+    } catch (error) {
+        console.error('Error al cargar eventos:', error);
+        alert('Error al cargar los eventos. Por favor recarga la página.');
+    }
+}
+
+// Función para inicializar la aplicación
+function init() {
+    loadEventsFromBackend().then(() => {
+        generateCalendar(selectedMonth, selectedYear);
+        generateUpcomingEvents();
+        updateStats();
+    });
+}
 
 // Función para inicializar la API de Google
 function initializeGapiClient() {
@@ -46,10 +166,9 @@ function loadGoogleAPIs() {
   gisInit();
 }
 
-// 2. Añadir el evento de clic al botón de sincronización
+// Añadir el evento de clic al botón de sincronización
 document.querySelector('.sync-button').addEventListener('click', handleCalendarSync);
 
-// 3. Función para manejar la sincronización
 // Función para manejar la sincronización
 function handleCalendarSync() {
     // Mostrar cargando
@@ -88,36 +207,48 @@ function handleCalendarSync() {
     }
   }
 
-// 4. Función para obtener eventos de Google Calendar
+// Función para obtener eventos de Google Calendar
 async function fetchGoogleCalendarEvents() {
-  try {
-    // Definir el rango de fechas (30 días)
-    const now = new Date();
-    const timeMin = now.toISOString();
-    const futureDate = new Date();
-    futureDate.setDate(now.getDate() + 30);
-    const timeMax = futureDate.toISOString();
-
-    // Realizar la petición
-    const response = await gapi.client.calendar.events.list({
-      'calendarId': 'primary',
-      'timeMin': timeMin,
-      'timeMax': timeMax,
-      'showDeleted': false,
-      'singleEvents': true,
-      'maxResults': 50,
-      'orderBy': 'startTime'
-    });
-
-    // Procesar los eventos recibidos
-    processGoogleCalendarEvents(response.result.items);
-  } catch (error) {
-    console.error('Error al obtener eventos de Google Calendar:', error);
-    alert('Error al sincronizar con Google Calendar. Por favor intenta nuevamente.');
-  }
+    try {
+      console.log('Obteniendo eventos de Google Calendar...');
+      
+      // Definir el rango de fechas (30 días)
+      const now = new Date();
+      const timeMin = now.toISOString();
+      const futureDate = new Date();
+      futureDate.setDate(now.getDate() + 30);
+      const timeMax = futureDate.toISOString();
+  
+      console.log(`Buscando eventos desde ${timeMin} hasta ${timeMax}`);
+  
+      // Realizar la petición
+      const response = await gapi.client.calendar.events.list({
+        'calendarId': 'primary',
+        'timeMin': timeMin,
+        'timeMax': timeMax,
+        'showDeleted': false,
+        'singleEvents': true,
+        'maxResults': 1000,
+        'orderBy': 'startTime'
+      });
+  
+      console.log('Respuesta de Google Calendar:', response);
+      
+      // Comprobar si hay eventos
+      if (!response.result.items || response.result.items.length === 0) {
+        alert('No se encontraron eventos en Google Calendar para el período seleccionado.');
+        return;
+      }
+  
+      // Procesar los eventos recibidos
+      processGoogleCalendarEvents(response.result.items);
+    } catch (error) {
+      console.error('Error al obtener eventos de Google Calendar:', error);
+      alert(`Error al sincronizar con Google Calendar: ${error.message}`);
+    }
 }
 
-// 5. Función para procesar los eventos de Google Calendar
+// Función para procesar los eventos de Google Calendar
 function processGoogleCalendarEvents(googleEvents) {
     if (!googleEvents || googleEvents.length === 0) {
       alert('No se encontraron eventos en Google Calendar.');
@@ -197,72 +328,27 @@ function processGoogleCalendarEvents(googleEvents) {
     
     // Mostrar mensaje de éxito
     alert(`Sincronización completada. Se agregaron ${uniqueNewEvents.length} eventos.`);
-  }
-
-// 6. Modificar la función de inicialización para cargar las APIs de Google
-function init() {
-  generateCalendar(selectedMonth, selectedYear);
-  generateUpcomingEvents();
-  updateStats();
 }
 
-// Iniciar cuando el DOM esté listo
-document.addEventListener("DOMContentLoaded", () => {
-  init();
-  // Cargar las APIs de Google cuando la página esté lista
-  if (document.querySelector('.sync-button')) {
-    loadGoogleAPIs();
-  }
+// Agregar en tu HTML después del botón de sincronización
+document.querySelector('.sync-button').insertAdjacentHTML('afterend', `
+    <button class="clear-button" id="clearGoogleEvents" style="margin-left: 10px;">
+      <i class="fa-regular fa-trash-can"></i> Limpiar eventos de Google
+    </button>
+  `);
+  
+// Agregar el evento para limpiar
+document.getElementById('clearGoogleEvents').addEventListener('click', function() {
+    // Filtrar y mantener solo los eventos originales
+    events = events.filter(event => !event.source || event.source !== 'google');
+    
+    // Actualizar UI
+    generateCalendar(selectedMonth, selectedYear);
+    generateUpcomingEvents();
+    updateStats();
+    
+    alert('Eventos importados de Google Calendar eliminados.');
 });
-
-
-const events = [
-    {
-        id: 1,
-        title: "One-to-One con Manager",
-        type: "meeting",
-        start: new Date(2025, 3, 20, 10, 0), // 20 de abril de 2025, 10:00
-        end: new Date(2025, 3, 20, 11, 0),   // 20 de abril de 2025, 11:00
-        icon: "👤"
-    },
-    {
-        id: 2,
-        title: "One-to-One con Director",
-        type: "meeting",
-        start: new Date(2025, 3, 22, 15, 30), // 22 de abril de 2025, 15:30
-        end: new Date(2025, 3, 22, 16, 30),   // 22 de abril de 2025, 16:30
-        icon: "👤"
-    },
-    {
-        id: 3,
-        title: "Vacaciones",
-        type: "vacation",
-        start: new Date(2025, 3, 25),        // 25 de abril de 2025
-        end: new Date(2025, 3, 30),          // 30 de abril de 2025
-        icon: "🌙",
-        allDay: true
-    },
-    {
-        id: 4,
-        title: "Día de la Independencia",
-        type: "holiday",
-        start: new Date(2025, 4, 1),         // 1 de mayo de 2025
-        end: new Date(2025, 4, 1),           // 1 de mayo de 2025
-        icon: "📌",
-        allDay: true
-    }
-];
-
-// Variables globales
-let currentDate = new Date();
-let selectedMonth = currentDate.getMonth();
-let selectedYear = currentDate.getFullYear();
-
-// Nombres de meses en español
-const monthNames = [
-    "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
-    "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
-];
 
 // Función para formatear la fecha
 function formatDate(date) {
@@ -283,195 +369,244 @@ function formatTime(date) {
 }
 
 // Función para obtener eventos de un día específico
-// Función mejorada para obtener eventos de un día específico
 function getEventsForDay(day, month, year) {
+    console.log(`Buscando eventos para el día ${day}/${month + 1}/${year}`);
     const targetDate = new Date(year, month, day);
-    const targetDateStr = targetDate.toDateString(); // Para comparación de fechas
+    console.log('Fecha objetivo:', targetDate);
     
-    return events.filter(event => {
-      // Crear copias de las fechas para no modificar los objetos originales
-      const eventStart = new Date(event.start);
-      const eventEnd = new Date(event.end);
-      
-      // Para eventos de todo el día
-      if (event.allDay) {
+    const eventsForDay = events.filter(event => {
+        // Crear copias de las fechas para no modificar los objetos originales
+        const eventStart = new Date(event.start);
+        const eventEnd = new Date(event.end);
+        
         // Normalizar las fechas (quitar horas/minutos)
         const normalizedStart = new Date(eventStart.getFullYear(), eventStart.getMonth(), eventStart.getDate());
         const normalizedEnd = new Date(eventEnd.getFullYear(), eventEnd.getMonth(), eventEnd.getDate());
         const normalizedTarget = new Date(year, month, day);
         
-        // Verificar si la fecha objetivo está dentro del rango del evento
-        return normalizedTarget >= normalizedStart && normalizedTarget <= normalizedEnd;
-      }
-      
-      // Para eventos normales (con hora específica)
-      return eventStart.getDate() === day && 
-             eventStart.getMonth() === month && 
-             eventStart.getFullYear() === year;
+        // Un evento ocurre en este día si:
+        // 1. Es un evento de día completo y el día objetivo está entre la fecha de inicio y fin
+        // 2. Es un evento con hora específica y comienza en este día
+        const isInRange = normalizedTarget >= normalizedStart && normalizedTarget <= normalizedEnd;
+        
+        console.log(`Evaluando evento "${event.title}":`, {
+            start: normalizedStart,
+            end: normalizedEnd,
+            target: normalizedTarget,
+            isInRange: isInRange
+        });
+        
+        return isInRange;
     });
-  }
+    
+    console.log(`Encontrados ${eventsForDay.length} eventos para el día ${day}/${month + 1}/${year}:`, eventsForDay);
+    return eventsForDay;
+}
 
-
-// Function to generate the calendar with events below numbers
-// Función mejorada para generar el calendario
+// Función para generar el calendario
 function generateCalendar(month, year) {
     console.log(`Generando calendario para ${monthNames[month]} ${year}`);
     
-    // Update title of the month
     document.querySelector(".month-title").textContent = `${monthNames[month]} ${year}`;
     
-    // Clear existing days
     const daysContainer = document.querySelector(".days");
     daysContainer.innerHTML = "";
     
-    // Get the first day of the month
     const firstDay = new Date(year, month, 1);
-    const startingDay = firstDay.getDay(); // 0 = Sunday, 1 = Monday, etc.
-    
-    // Get the last day of the month
+    const startingDay = firstDay.getDay();
     const lastDay = new Date(year, month + 1, 0);
     const totalDays = lastDay.getDate();
-    
-    // Get the last day of the previous month
     const prevMonthLastDay = new Date(year, month, 0).getDate();
     
-    // Days from previous month (to fill the first week)
+    // Días del mes anterior
     for (let i = 0; i < startingDay; i++) {
-      const day = prevMonthLastDay - startingDay + i + 1;
-      const dayDiv = document.createElement("div");
-      dayDiv.classList.add("day");
-      dayDiv.style.opacity = "0.5";
-      
-      const dayNumber = document.createElement("div");
-      dayNumber.classList.add("day-number");
-      dayNumber.textContent = day;
-      dayDiv.appendChild(dayNumber);
-      
-      daysContainer.appendChild(dayDiv);
+        const day = prevMonthLastDay - startingDay + i + 1;
+        const dayDiv = document.createElement("div");
+        dayDiv.classList.add("day", "empty-day");
+        
+        const dayNumber = document.createElement("div");
+        dayNumber.classList.add("day-number");
+        dayNumber.textContent = day;
+        dayDiv.appendChild(dayNumber);
+        
+        daysContainer.appendChild(dayDiv);
     }
     
-    // Days of the current month
+    // Días del mes actual
     const today = new Date();
     for (let i = 1; i <= totalDays; i++) {
-      const dayDiv = document.createElement("div");
-      dayDiv.classList.add("day");
-      
-      // Add day number
-      const dayNumber = document.createElement("div");
-      dayNumber.classList.add("day-number");
-      dayNumber.textContent = i;
-      dayDiv.appendChild(dayNumber);
-      
-      // Check if it's today
-      if (i === today.getDate() && month === today.getMonth() && year === today.getFullYear()) {
-        dayDiv.classList.add("today");
-      }
-      
-      // Check for events on this day
-      const dayEvents = getEventsForDay(i, month, year);
-      
-      if (dayEvents.length > 0) {
-        console.log(`Día ${i} tiene ${dayEvents.length} eventos:`, dayEvents);
+        const dayDiv = document.createElement("div");
+        dayDiv.classList.add("day");
         
-        // Add appropriate class based on event type
-        const hasVacation = dayEvents.some(e => e.type === "vacation");
-        const hasHoliday = dayEvents.some(e => e.type === "holiday");
+        const dayNumber = document.createElement("div");
+        dayNumber.classList.add("day-number");
+        dayNumber.textContent = i;
+        dayDiv.appendChild(dayNumber);
         
-        if (hasVacation) dayDiv.classList.add("vacation-day");
-        if (hasHoliday) dayDiv.classList.add("holiday-day");
-        
-        // Create event indicators
-        const eventsContainer = document.createElement("div");
-        eventsContainer.classList.add("day-events");
-        
-        // Mostrar hasta 2 eventos
-        dayEvents.slice(0, 2).forEach(event => {
-          const eventTag = document.createElement("div");
-          eventTag.classList.add("day-event-tag");
-          
-          // Add class based on event type
-          if (event.type === "meeting") {
-            eventTag.classList.add("meeting");
-            const shortTitle = event.title.length > 10 ? 
-                               event.title.substring(0, 8) + "..." : 
-                               event.title;
-            eventTag.textContent = shortTitle;
-          } else if (event.type === "vacation") {
-            eventTag.classList.add("vacation");
-            eventTag.textContent = "Vacation";
-          } else if (event.type === "holiday") {
-            eventTag.classList.add("holiday");
-            eventTag.textContent = "Holiday";
-          }
-          
-          eventsContainer.appendChild(eventTag);
-        });
-        
-        // Si hay más de 2 eventos, mostrar indicador
-        if (dayEvents.length > 2) {
-          const moreEvents = document.createElement("div");
-          moreEvents.classList.add("more-events");
-          moreEvents.textContent = `+${dayEvents.length - 2} más`;
-          eventsContainer.appendChild(moreEvents);
+        // Verificar si es hoy
+        if (i === today.getDate() && month === today.getMonth() && year === today.getFullYear()) {
+            dayDiv.classList.add("today");
         }
         
-        dayDiv.appendChild(eventsContainer);
-      }
-      
-      daysContainer.appendChild(dayDiv);
+        // Obtener eventos para este día
+        const dayEvents = getEventsForDay(i, month, year);
+        console.log(`Día ${i}: ${dayEvents.length} eventos encontrados`);
+        
+        if (dayEvents.length > 0) {
+            const eventsContainer = document.createElement("div");
+            eventsContainer.classList.add("day-events");
+            
+            // Crear tooltip container
+            const tooltipContainer = document.createElement("div");
+            tooltipContainer.classList.add("event-tooltip");
+            
+            // Agregar cada evento al tooltip
+            dayEvents.forEach(event => {
+                const tooltipItem = document.createElement("div");
+                tooltipItem.classList.add("event-tooltip-item");
+                
+                const tooltipTitle = document.createElement("div");
+                tooltipTitle.classList.add("event-tooltip-title");
+                tooltipTitle.textContent = event.title;
+                
+                const tooltipTime = document.createElement("div");
+                tooltipTime.classList.add("event-tooltip-time");
+                tooltipTime.textContent = event.allDay ? "All day" : `${formatTime(event.start)} - ${formatTime(event.end)}`;
+                
+                tooltipItem.appendChild(tooltipTitle);
+                tooltipItem.appendChild(tooltipTime);
+                tooltipContainer.appendChild(tooltipItem);
+            });
+            
+            // Mostrar hasta 2 eventos en el día
+            dayEvents.slice(0, 2).forEach(event => {
+                const eventTag = document.createElement("div");
+                eventTag.classList.add("day-event-tag");
+                
+                // Agregar clases y estilos según el tipo de evento
+                switch(event.type) {
+                    case "vacation":
+                        eventTag.classList.add("vacation");
+                        dayDiv.classList.add("vacation-day");
+                        eventTag.textContent = "Vacation";
+                        break;
+                    case "meeting":
+                        eventTag.classList.add("meeting");
+                        const shortTitle = event.title;
+                        eventTag.textContent = shortTitle;
+                        break;
+                    case "holiday":
+                        eventTag.classList.add("holiday");
+                        dayDiv.classList.add("holiday-day");
+                        eventTag.textContent = "Holiday";
+                        break;
+                    case "non-working":
+                        eventTag.classList.add("non-working");
+                        dayDiv.classList.add("non-working-day");
+                        eventTag.textContent = "Non-working";
+                        break;
+                }
+                
+                eventsContainer.appendChild(eventTag);
+            });
+            
+            // Mostrar indicador de más eventos si hay más de 2
+            if (dayEvents.length > 2) {
+                const moreEvents = document.createElement("div");
+                moreEvents.classList.add("more-events");
+                moreEvents.textContent = `+${dayEvents.length - 2} more`;
+                eventsContainer.appendChild(moreEvents);
+            }
+            
+            dayDiv.appendChild(tooltipContainer);
+            dayDiv.appendChild(eventsContainer);
+        }
+        
+        daysContainer.appendChild(dayDiv);
     }
     
-    // Days of the next month
-    const remainingDays = 35 - (startingDay + totalDays); // 6 rows of 7 days
+    // Días del mes siguiente
+    const remainingDays = 35 - (startingDay + totalDays); // 6 filas completas
     for (let i = 1; i <= remainingDays; i++) {
-      const dayDiv = document.createElement("div");
-      dayDiv.classList.add("day");
-      dayDiv.style.opacity = "0.5";
-      
-      const dayNumber = document.createElement("div");
-      dayNumber.classList.add("day-number");
-      dayNumber.textContent = i;
-      dayDiv.appendChild(dayNumber);
-      
-      daysContainer.appendChild(dayDiv);
+        const dayDiv = document.createElement("div");
+        dayDiv.classList.add("day", "empty-day");
+        
+        const dayNumber = document.createElement("div");
+        dayNumber.classList.add("day-number");
+        dayNumber.textContent = i;
+        dayDiv.appendChild(dayNumber);
+        
+        daysContainer.appendChild(dayDiv);
     }
-  }
+}
+
 // Función para generar la lista de próximos eventos
 function generateUpcomingEvents() {
     const container = document.querySelector(".upcoming-events");
-    // Mantener el títul
+    // Mantener el título
     const title = container.querySelector("h2");
     container.innerHTML = "";
     container.appendChild(title);
     
-    // Filtrar eventos futuros y ordenarlos por fecha
     const now = new Date();
-    const futureEvents = events
-        .filter(event => new Date(event.start) >= now)
+    const today = now.getDay(); // 0 = Domingo, 6 = Sábado
+    
+    // Calcular el inicio y fin de la semana actual
+    const startOfWeek = new Date(now);
+    startOfWeek.setDate(now.getDate() - now.getDay()); // Retroceder al domingo
+    startOfWeek.setHours(0, 0, 0, 0);
+    
+    const endOfWeek = new Date(startOfWeek);
+    endOfWeek.setDate(startOfWeek.getDate() + 6); // Avanzar al sábado
+    endOfWeek.setHours(23, 59, 59, 999);
+    
+    // Si es viernes (5), mostrar eventos de la próxima semana
+    if (today === 5) {
+        startOfWeek.setDate(startOfWeek.getDate() + 7);
+        endOfWeek.setDate(endOfWeek.getDate() + 7);
+    }
+    
+    // Filtrar eventos que ocurren en el rango de fechas seleccionado
+    const weekEvents = events
+        .filter(event => {
+            const eventStart = new Date(event.start);
+            return eventStart >= startOfWeek && eventStart <= endOfWeek;
+        })
         .sort((a, b) => new Date(a.start) - new Date(b.start));
     
+    // Actualizar el título según la semana que se muestra
+    title.textContent = today === 5 ? "Next Week's Events" : "This Week's Events";
+    
     // Generar HTML para cada evento
-    futureEvents.forEach(event => {
+    weekEvents.forEach(event => {
         const eventItem = document.createElement("div");
         eventItem.classList.add("event-item");
         
         let eventTagClass = "";
-        if (event.type === "vacation") {
-            eventTagClass = "vacation";
-        } else if (event.type === "holiday") {
-            eventTagClass = "holiday";
+        let eventType = "";
+        switch(event.type) {
+            case "vacation":
+                eventTagClass = "vacation";
+                eventType = "Vacation";
+                break;
+            case "meeting":
+                eventTagClass = "meeting";
+                eventType = "Meeting";
+                break;
+            case "holiday":
+                eventTagClass = "holiday";
+                eventType = "Holiday";
+                break;
+            case "non-working":
+                eventTagClass = "non-working";
+                eventType = "Non-working";
+                break;
+            default:
+                eventType = "Event";
         }
         
-        let dateInfo;
-        if (event.allDay) {
-            if (event.start.getTime() === event.end.getTime()) {
-                dateInfo = `<span><i class="fa-regular fa-calendar"></i>${formatDate(event.start)}</span>`;
-            } else {
-                dateInfo = `<span><i class="fa-regular fa-calendar"></i> ${formatDate(event.start)} - ${formatDate(event.end)}</span>`;
-            }
-        } else {
-            dateInfo = `<span><i class="fa-regular fa-calendar"></i>  ${formatDate(event.start)}</span><span style="margin-left: 10px;"><i class="fa-regular fa-clock"></i>${formatTime(event.start)} - ${formatTime(event.end)}</span>`;
-        }
+        // Generar la información del horario
+        let timeInfo = event.allDay ? "All day" : `${formatTime(event.start)} - ${formatTime(event.end)}`;
         
         eventItem.innerHTML = `
             <div class="event-title">
@@ -479,47 +614,65 @@ function generateUpcomingEvents() {
                 <div class="event-details">
                     <div>${event.title}</div>
                     <div class="event-date">
-                        ${dateInfo}
+                        <span><i class="fa-regular fa-calendar"></i> ${formatDate(event.start)}</span>
+                        <span style="margin-left: 10px;"><i class="fa-regular fa-clock"></i> ${timeInfo}</span>
                     </div>
                 </div>
             </div>
-            <span class="event-tag ${eventTagClass}">${
-                event.type === "meeting" ? "Meeting" : 
-                event.type === "vacation" ? "Vacation" : "Holiday"
-            }</span>
+            <span class="event-tag ${eventTagClass}">${eventType}</span>
         `;
         
         container.appendChild(eventItem);
     });
     
-    // Si no hay eventos futuros
-    if (futureEvents.length === 0) {
+    // Si no hay eventos para mostrar
+    if (weekEvents.length === 0) {
         const noEvents = document.createElement("p");
-        noEvents.textContent = "No hay eventos próximos.";
+        noEvents.textContent = "No events scheduled for this " + (today === 5 ? "next" : "") + " week";
         container.appendChild(noEvents);
     }
 }
 
 // Función para actualizar estadísticas
 function updateStats() {
-    // Contar reuniones one-to-one
-    const oneToOneCount = events.filter(e => e.type === "meeting").length;
-    document.querySelector(".stat-count").textContent = oneToOneCount;
-    
-    // Contar días de vacaciones
-    let vacationDays = 0;
-    events.filter(e => e.type === "vacation").forEach(vacation => {
-        const start = new Date(vacation.start);
-        const end = new Date(vacation.end);
-        const diffTime = Math.abs(end - start);
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1; // +1 para incluir el día final
-        vacationDays += diffDays;
-    });
-    document.querySelector(".stat-count.purple").textContent = vacationDays;
-    
-    // Contar días festivos
-    const holidayCount = events.filter(e => e.type === "holiday").length;
-    document.querySelector(".stat-count.green").textContent = holidayCount;
+    try {
+        // Contar reuniones one-to-one
+        const oneToOneElement = document.querySelector(".circle.meeting");
+        if (oneToOneElement) {
+            const oneToOneCount = events.filter(e => e.type === "meeting").length;
+            oneToOneElement.textContent = oneToOneCount;
+        }
+        
+        // Contar días de vacaciones
+        const vacationElement = document.querySelector(".circle.vacation");
+        if (vacationElement) {
+            let vacationDays = 0;
+            events.filter(e => e.type === "vacation").forEach(vacation => {
+                const start = new Date(vacation.start);
+                const end = new Date(vacation.end);
+                const diffTime = Math.abs(end - start);
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+                vacationDays += diffDays;
+            });
+            vacationElement.textContent = vacationDays;
+        }
+        
+        // Contar días festivos
+        const holidayElement = document.querySelector(".circle.holiday");
+        if (holidayElement) {
+            const holidayCount = events.filter(e => e.type === "holiday").length;
+            holidayElement.textContent = holidayCount;
+        }
+
+        // Contar días no laborables
+        const nonWorkingElement = document.querySelector(".circle.non-working");
+        if (nonWorkingElement) {
+            const nonWorkingCount = events.filter(e => e.type === "non-working").length;
+            nonWorkingElement.textContent = nonWorkingCount;
+        }
+    } catch (error) {
+        console.error('Error al actualizar estadísticas:', error);
+    }
 }
 
 // Configurar navegación de meses
@@ -602,120 +755,116 @@ if (currentView === 'upcoming') {
     toggleSlider.classList.add('left');
 }
 
-// Inicializar la aplicación
-function init() {
-    generateCalendar(selectedMonth, selectedYear);
-    generateUpcomingEvents();
-    updateStats();
-}
-
-// Iniciar cuando el DOM esté listo
-document.addEventListener("DOMContentLoaded", init);
-
-// Si la página ya está cargada, iniciar inmediatamente
-if (document.readyState === "complete" || document.readyState === "interactive") {
+// Asegurar que la aplicación se inicie correctamente
+document.addEventListener('DOMContentLoaded', function() {
     init();
-}
+    initializeAccordion();
 
-async function fetchGoogleCalendarEvents() {
-    try {
-      console.log('Obteniendo eventos de Google Calendar...');
-      
-      // Definir el rango de fechas (30 días)
-      const now = new Date();
-      const timeMin = now.toISOString();
-      const futureDate = new Date();
-      futureDate.setDate(now.getDate() + 30);
-      const timeMax = futureDate.toISOString();
-  
-      console.log(`Buscando eventos desde ${timeMin} hasta ${timeMax}`);
-  
-      // Realizar la petición
-      const response = await gapi.client.calendar.events.list({
-        'calendarId': 'primary',
-        'timeMin': timeMin,
-        'timeMax': timeMax,
-        'showDeleted': false,
-        'singleEvents': true,
-        'maxResults': 1000,
-        'orderBy': 'startTime'
-      });
-  
-      console.log('Respuesta de Google Calendar:', response);
-      
-      // Comprobar si hay eventos
-      if (!response.result.items || response.result.items.length === 0) {
-        alert('No se encontraron eventos en Google Calendar para el período seleccionado.');
-        return;
-      }
-  
-      // Procesar los eventos recibidos
-      processGoogleCalendarEvents(response.result.items);
-    } catch (error) {
-      console.error('Error al obtener eventos de Google Calendar:', error);
-      alert(`Error al sincronizar con Google Calendar: ${error.message}`);
+    // Delegación de eventos para el acordeón
+    const statisticsContainer = document.querySelector('.statistics-container');
+    if (statisticsContainer) {
+        statisticsContainer.addEventListener('click', function(e) {
+            const header = e.target.closest('.category-header');
+            if (header) {
+                e.preventDefault();
+                e.stopPropagation();
+                toggleAccordionItem(header);
+            }
+        });
     }
-  }
-  // Agregar en tu HTML después del botón de sincronización
-document.querySelector('.sync-button').insertAdjacentHTML('afterend', `
-    <button class="clear-button" id="clearGoogleEvents" style="margin-left: 10px;">
-      <i class="fa-regular fa-trash-can"></i> Limpiar eventos de Google
-    </button>
-  `);
-  
-  // Agregar el evento para limpiar
-  document.getElementById('clearGoogleEvents').addEventListener('click', function() {
-    // Filtrar y mantener solo los eventos originales
-    events = events.filter(event => !event.source || event.source !== 'google');
-    
-    // Actualizar UI
-    generateCalendar(selectedMonth, selectedYear);
-    generateUpcomingEvents();
-    updateStats();
-    
-    alert('Eventos importados de Google Calendar eliminados.');
-  });
 
+    if (document.querySelector('.sync-button')) {
+        loadGoogleAPIs();
+    }
+});
+
+// Manejar errores globales
+window.addEventListener('error', function(event) {
+    console.error('Error global capturado:', event.error);
+});
+
+// Manejar promesas rechazadas no manejadas
+window.addEventListener('unhandledrejection', function(event) {
+    console.error('Promesa rechazada no manejada:', event.reason);
+});
 
 // ----------sidebar.js----------
+// Esperamos a que el DOM esté completamente cargado
 document.addEventListener('DOMContentLoaded', function() {
-  // Seleccionar todos los encabezados de tipos de eventos
-  const eventTypeHeaders = document.querySelectorAll('.event-type-header');
-  
-  // Agregar listeners de clic a cada encabezado
-  eventTypeHeaders.forEach(header => {
-    header.addEventListener('click', function() {
-      // Obtener el ID del tipo de evento
-      const eventTypeId = this.getAttribute('data-event-type');
-      // Obtener la lista de eventos asociada
-      const eventList = document.getElementById(`event-list-${eventTypeId}`);
-      
-      // Alternar la clase active en el encabezado
-      this.classList.toggle('active');
-      
-      // Comprobar si la lista está oculta
-      if (eventList.classList.contains('hidden')) {
-        // Mostrar la lista
-        eventList.classList.remove('hidden');
-        // Pequeño retraso para permitir que el navegador procese el cambio de display
-        setTimeout(() => {
-          eventList.classList.add('show');
-        }, 10);
-      } else {
-        // Ocultar la lista
-        eventList.classList.remove('show');
-        // Esperar a que finalice la transición antes de ocultarla completamente
-        eventList.addEventListener('transitionend', function handler() {
-          eventList.classList.add('hidden');
-          eventList.removeEventListener('transitionend', handler);
-        });
-      }
-      
-      // Para verificar que está funcionando (puedes eliminar después)
-      console.log('Click en tipo de evento:', eventTypeId);
-    });
-  });
-  
-  // Verifica que el script se esté ejecutando
-  console.log('Script de eventos cargado correctamente');
+  initializeAccordion();
 });
+
+// Función para inicializar el acordeón
+function initializeAccordion() {
+    const categoryHeaders = document.querySelectorAll('.category-header');
+    console.log('Headers encontrados:', categoryHeaders.length);
+
+    // Remover listeners existentes primero
+    categoryHeaders.forEach(header => {
+        const newHeader = header.cloneNode(true);
+        header.parentNode.replaceChild(newHeader, header);
+    });
+
+    // Actualizar la referencia después de clonar
+    const newHeaders = document.querySelectorAll('.category-header');
+
+    // Cerrar todos los paneles primero
+    document.querySelectorAll('.category-details').forEach(details => {
+        details.classList.add('collapsed');
+    });
+
+    // Abrir el primer panel por defecto
+    if (newHeaders.length > 0) {
+        const firstHeader = newHeaders[0];
+        const firstDetails = firstHeader.nextElementSibling;
+        firstHeader.classList.add('active');
+        if (firstDetails) {
+            firstDetails.classList.remove('collapsed');
+        }
+    }
+}
+
+// Función para alternar el estado de un elemento del acordeón
+function toggleAccordionItem(header) {
+    if (!header) return;
+    
+    const isActive = header.classList.contains('active');
+    const details = header.nextElementSibling;
+    
+    // Cerrar todos los paneles primero
+    document.querySelectorAll('.category-header').forEach(h => {
+        h.classList.remove('active');
+        const d = h.nextElementSibling;
+        if (d) {
+            d.classList.add('collapsed');
+        }
+    });
+
+    // Si no estaba activo, abrir el panel seleccionado
+    if (!isActive) {
+        header.classList.add('active');
+        if (details) {
+            details.classList.remove('collapsed');
+        }
+    }
+}
+
+// Helper para manejar la altura del contenedor si es necesario
+function adjustContainerHeight() {
+    const container = document.querySelector('.statistics-container');
+    const activeDetails = document.querySelector('.category-details:not(.collapsed)');
+    
+    if (container && activeDetails) {
+        const minHeight = 400;
+        const contentHeight = activeDetails.scrollHeight + 200;
+        container.style.minHeight = `${Math.max(minHeight, contentHeight)}px`;
+    }
+}
+
+// Si estás usando Handlebars en el cliente para renderizar dinámicamente
+function renderHandlebarsContent(data) {
+  // Este es un ejemplo de cómo podrías manejar la renderización con Handlebars
+  // Asumiendo que tienes una plantilla y datos listos
+  // Después de renderizar, inicializa el acordeón
+  initializeAccordion();
+}
