@@ -578,30 +578,26 @@ function generateCalendar(month, year) {
 // Función para generar la lista de próximos eventos
 function generateUpcomingEvents() {
     const container = document.querySelector(".upcoming-events");
-    // Mantener el título
     const title = container.querySelector("h2");
     container.innerHTML = "";
     container.appendChild(title);
     
     const now = new Date();
-    const today = now.getDay(); // 0 = Domingo, 6 = Sábado
+    const today = now.getDay();
     
-    // Calcular el inicio y fin de la semana actual
     const startOfWeek = new Date(now);
-    startOfWeek.setDate(now.getDate() - now.getDay()); // Retroceder al domingo
+    startOfWeek.setDate(now.getDate() - now.getDay());
     startOfWeek.setHours(0, 0, 0, 0);
     
     const endOfWeek = new Date(startOfWeek);
-    endOfWeek.setDate(endOfWeek.getDate() + 6); // Avanzar al sábado
+    endOfWeek.setDate(endOfWeek.getDate() + 6);
     endOfWeek.setHours(23, 59, 59, 999);
     
-    // Si es viernes (5), mostrar eventos de la próxima semana
     if (today === 5) {
         startOfWeek.setDate(startOfWeek.getDate() + 7);
         endOfWeek.setDate(endOfWeek.getDate() + 7);
     }
     
-    // Filtrar eventos que ocurren en el rango de fechas seleccionado
     const weekEvents = events
         .filter(event => {
             const eventStart = new Date(event.start);
@@ -609,44 +605,43 @@ function generateUpcomingEvents() {
         })
         .sort((a, b) => new Date(a.start) - new Date(b.start));
     
-    // Actualizar el título según la semana que se muestra
     title.textContent = today === 5 ? "Next Week's Events" : "This Week's Events";
     
-    // Generar HTML para cada evento
     weekEvents.forEach(event => {
         const eventItem = document.createElement("div");
         eventItem.classList.add("event-item");
         eventItem.dataset.eventId = event.id;
         
-        let eventTagClass = "";
-        let eventType = "";
+        let eventTypeClass = "";
+        let eventTypeName = "";
+        
         switch(event.type) {
             case "vacation":
-                eventTagClass = "vacation";
-                eventType = "Vacation";
+                eventTypeClass = "vacation";
+                eventTypeName = "Vacation";
                 break;
             case "meeting":
-                eventTagClass = "meeting";
-                eventType = "Meeting";
+                eventTypeClass = "meeting";
+                eventTypeName = "Meeting";
                 break;
             case "holiday":
-                eventTagClass = "holiday";
-                eventType = "Holiday";
+                eventTypeClass = "holiday";
+                eventTypeName = "Holiday";
                 break;
             case "non-working":
-                eventTagClass = "non-working";
-                eventType = "Non-working";
+                eventTypeClass = "non-working";
+                eventTypeName = "Non-working";
                 break;
             default:
-                eventType = "Event";
+                eventTypeClass = "default";
+                eventTypeName = "Event";
         }
         
-        // Generar la información del horario
         let timeInfo = event.allDay ? "All day" : `${formatTime(event.start)} - ${formatTime(event.end)}`;
         
         eventItem.innerHTML = `
             <div class="event-title">
-                <span class="event-icon ${eventTagClass}">${event.icon}</span>
+                <span class="event-icon ${eventTypeClass}">${event.icon}</span>
                 <div class="event-details">
                     <div>${event.title}</div>
                     <div class="event-date">
@@ -655,20 +650,18 @@ function generateUpcomingEvents() {
                     </div>
                 </div>
             </div>
-            <span class="event-tag ${eventTagClass}">${eventType}</span>
+            <div class="event-type ${eventTypeClass}">${eventTypeName}</div>
         `;
         
         container.appendChild(eventItem);
     });
     
-    // Si no hay eventos para mostrar
     if (weekEvents.length === 0) {
         const noEvents = document.createElement("p");
         noEvents.textContent = "No events scheduled for this " + (today === 5 ? "next" : "") + " week";
         container.appendChild(noEvents);
     }
 
-    // Add tooltip functionality to event items
     document.querySelectorAll('.event-item').forEach(eventItem => {
         const eventData = events.find(e => e.id === eventItem.dataset.eventId);
         if (eventData) {
@@ -736,7 +729,7 @@ function updateCategoryDetails(category, events) {
     if (!events || events.length === 0) {
         categoryDetails.innerHTML = `
             <div class="detail-item no-events">
-                <div class="detail-name">No hay eventos programados</div>
+                <div class="detail-name">No events scheduled</div>
             </div>
         `;
         return;
@@ -749,7 +742,7 @@ function updateCategoryDetails(category, events) {
             formatDate(start) : 
             `${formatDate(start)} - ${formatDate(end)}`;
         
-        const timeStr = event.allDay ? 'Todo el día' : `${formatTime(start)} - ${formatTime(end)}`;
+        const timeStr = event.allDay ? 'All day' : `${formatTime(start)} - ${formatTime(end)}`;
 
         return `
             <div class="detail-item" data-event-id="${event.id}">
