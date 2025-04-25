@@ -225,11 +225,14 @@
 
   static fetchUserDetails(idUsuario) {
     return db.execute(`
-          SELECT 
-          u.*, 
+      SELECT 
+          u.*,
           GROUP_CONCAT(DISTINCT d.Nombre_departamento SEPARATOR ', ') AS Departamentos,
           GROUP_CONCAT(DISTINCT r.Nombre_rol SEPARATOR ', ') AS Roles,
-          GROUP_CONCAT(DISTINCT e.Nombre_empresa SEPARATOR ', ') AS Empresas
+          GROUP_CONCAT(DISTINCT e.Nombre_empresa SEPARATOR ', ') AS Empresas,
+          p.idDepartamento,
+          ur.idRol,
+          pd.idEmpresa
       FROM Usuarios u
       LEFT JOIN Pertenece p ON u.idUsuario = p.idUsuario
       LEFT JOIN Departamentos d ON p.idDepartamento = d.idDepartamento

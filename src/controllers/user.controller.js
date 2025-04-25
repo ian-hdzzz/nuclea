@@ -229,6 +229,7 @@ exports.getUpdate = async (req, res, next) => {
         const [roles] = await Role.fetchAll();
         const [usuarios] = await Usuario.fetchAll();
         const [deptos] = await Dept.fetchDept();
+        const [all] = await Usuario.fetchDeptAll();
 
         // Consulta para obtener los detalles del usuario con departamentos, roles y empresa
         const [usuarioDetails] = await Usuario.fetchUserDetails(idUsuario);
@@ -255,7 +256,8 @@ exports.getUpdate = async (req, res, next) => {
         res.render('../views/pages/editarUsers.hbs', {
             rols: roles,
             csrfToken: req.csrfToken(),
-            usuarioDetails:usuario, 
+            usuarioDetails:usuario,
+            usuarios:all,
             tempPassword,
             deptos,
             noUsers: nousers,
