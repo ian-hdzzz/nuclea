@@ -246,7 +246,7 @@ function showTutorialStep(stepIndex) {
       // Check if tooltip would go off-screen to the right
       if (tooltipLeft + 320 > window.innerWidth) {
         tooltipLeft = rect.left - 320;
-        if (tooltipLeft < 10) tooltipLeft = 10; // Prevent going off-screen to the left
+        if (tooltipLeft < 10) tooltipLeft = 70; // Prevent going off-screen to the left
       }
       
       // Check if tooltip would go off-screen at the bottom

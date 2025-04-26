@@ -6,55 +6,193 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="/css/holiday.css">
     <meta name="csrf-token" content="{{ csrfToken }}">
+    <style>
+        /* Tutorial styles */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 2000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .tutorial-tooltip {
+            position: absolute;
+            background-color: white;
+            color: #333;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            width: 300px;
+            z-index: 2100;
+            animation: fadeIn 0.5s;
+            transition: all 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .tutorial-tooltip h3 {
+            margin-bottom: 10px;
+            color: #2762ea;
+        }
+
+        .tutorial-tooltip p {
+            margin-bottom: 15px;
+            line-height: 1.5;
+            color: #555;
+        }
+
+        .tooltip-buttons {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .tooltip-button {
+            padding: 8px 15px;
+            background: linear-gradient(to right, #2762ea 0%, #4162f0 29%, #8061fd 100%);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .tooltip-button:hover {
+            opacity: 0.9;
+        }
+
+        .tooltip-button.secondary {
+            background: #6c757d;
+        }
+
+        .tooltip-button.secondary:hover {
+            background: #5a6268;
+        }
+
+        .highlight {
+            position: absolute;
+            border: 2px solid #2762ea;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(74, 108, 247, 0.5);
+            z-index: 2050;
+            pointer-events: none;
+            transition: all 0.3s ease;
+        }
+
+        .completion-message {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            max-width: 400px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .completion-message h2 {
+            color: #2762ea;
+            margin-bottom: 15px;
+        }
+
+        .completion-message p {
+            margin-bottom: 20px;
+            color: #555;
+        }
+
+        /* Tutorial toggle button */
+        .tutorial-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 10px 15px;
+            background: linear-gradient(to right, #2762ea 0%, #4162f0 29%, #8061fd 100%);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 1500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .tutorial-toggle:hover {
+            opacity: 0.9;
+        }
+
+        .tutorial-toggle i {
+            font-size: 16px;
+        }
+
+        /* Progress indicators */
+        .progress-dots {
+            display: flex;
+            justify-content: center;
+            margin-top: 15px;
+            gap: 5px;
+        }
+
+        .progress-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #ccc;
+        }
+
+        .progress-dot.active {
+            width: 24px;
+            background: linear-gradient(to right, #2762ea 0%, #4162f0 29%, #8061fd 100%);
+            border-radius: 4px;
+        }
+    </style>
 </head>
 <body>
-    <div class="top-container">
-        {{!-- <nav class="nav-bar">
-            <div class="first-container">
-                <div class="views">Views</div>
-                <div class="search-container">
-                    <input type="text" placeholder="Search..." class="input-search" id="search-input">
-                    <i class="fa-solid fa-magnifying-glass search-icon"></i>
-                </div>
-            </div>
-            
-        </nav> --}}
-        <div class="search-input-container">
+    
 
+    <div class="top-container">
+        <div class="search-input-container" id="search-section">
             {{> search placeholder="Holiday name..." searchId="search-input"}}
         </div>
-        <div class="add-btn-container" id="openModal">
-                <i class="fa-regular fa-square-plus"></i>
-                <input type="button" value="Add Holiday" class="add-btn">
-                <!-- Botón de enviar <input type="button" value="Assign user to Dep" id="openModal2" class="add-btn"> -->
-            </div>
+        <div class="add-btn-container" id="add-holiday-btn">
+            <i class="fa-regular fa-square-plus"></i>
+            <input type="button" value="Add Holiday" class="add-btn" id="openModal">
+        </div>
     </div>
+
     {{#if info}}
         <div "top-container">
-        <div class="nav-bar">
-            <div class="first-container">
-            <div class="notification is-success">
-                {{info}}
+            <div class="nav-bar">
+                <div class="first-container">
+                    <div class="notification is-success">
+                        {{info}}
+                    </div>
+                </div>
             </div>
-            </div>
-        </div>
         </div>
     {{/if}}
     {{#if error}}
         <div "top-container">
-        <div class="nav-bar">
-            <div class="first-container">
-            <div class="notification is-danger">
-                {{error}}
+            <div class="nav-bar">
+                <div class="first-container">
+                    <div class="notification is-danger">
+                        {{error}}
+                    </div>
+                </div>
             </div>
-            </div>
-        </div>
         </div>
     {{/if}}
-    <div class="content">
+
+    <div class="content" id="table-section">
         <div class="nav-content">
             <h2>Holidays</h2>
-            
         </div>
         <table>
             <thead>
@@ -64,80 +202,300 @@
                     <th>Actions</th>
                 </tr>
             </thead>
-            
             <tbody id="despliegue">
-            
-                    {{#each datosh}}
+                {{#each datosh}}
                 <tr>
                     <td>{{Nombre_asueto}}</td>
                     <td>{{formatDate Fecha_asueto}}</td>
                     <td>
-                        <div class="dropdown">
+                        <div class="dropdown" id="actions-dropdown">
                             <button class="action-btn">Manage</button>
                             <div class="dropdown-content">
-                                <button class="edit-btn"  onclick="location.href='/nuclea/holiday/update/{{idDiaFeriado}}'">
-                                <i class="fa-solid fa-pen-to-square"></i> Edit
+                                <button class="edit-btn" onclick="location.href='/nuclea/holiday/update/{{idDiaFeriado}}'">
+                                    <i class="fa-solid fa-pen-to-square"></i> Edit
                                 </button>
                                 <button class="delete-btn" onclick="confirmDeleteHol('{{idDiaFeriado}}')">
-                                <i class="fa-solid fa-trash"></i> Delete
+                                    <i class="fa-solid fa-trash"></i> Delete
                                 </button>
-
                             </div>
                         </div>
                     </td>
                 </tr>
                 {{/each}}
-
-
             </tbody>
-            
         </table>
         {{#if error}}
-            <p style="text-align: center; margin-top: 20px;">No departaments existing</p>
+            <p style="text-align: center; margin-top: 20px;">No holidays existing</p>
         {{/if}}
 
-    <div id="modal" class="modal hidden">
-        <div class="modal-content">
-            
-            <button id="closeModal" class="close-btn">✖</button>
+        <div id="modal" class="modal hidden">
+            <div class="modal-content" id="modal-content">
+                <button id="closeModal" class="close-btn">✖</button>
 
-            <h2 class="title-modal">Add Holiday</h2>
-            <p class="description">Fill in the required details to register a Holiday</p>
+                <h2 class="title-modal">Add Holiday</h2>
+                <p class="description">Fill in the required details to register a Holiday</p>
 
-            <form id="holidayForm" method="POST" action="/nuclea/holiday">
-            <input type="hidden" name="_csrf" value="{{csrfToken}}">
-                <div class="form-group">
-                    <label for="deptName">Holiday Name</label>
-                    <input type="text" id="holiName" name="nombreHoliday" placeholder="Christmas" class="text-modal" required>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group form-date date-modal">
-                        <label for="fecha" class="label">Date</label>
-                        <input
-                        class="text-modal"
-                        type="date"
-                        placeholder="dd/mm/yy"
-                        id="fecha"
-                        name="fecha"
-                        required
-                        oninvalid="this.setCustomValidity('Please select a date')" 
-                        onchange="this.setCustomValidity('')"
-                        style="width: auto;"
-                        />
+                <form id="holidayForm" method="POST" action="/nuclea/holiday">
+                    <input type="hidden" name="_csrf" value="{{csrfToken}}">
+                    <div class="form-group" id="holiday-name-field">
+                        <label for="deptName">Holiday Name</label>
+                        <input type="text" id="holiName" name="nombreHoliday" placeholder="Christmas" class="text-modal" required>
                     </div>
-                </div>
 
-                <input type="submit" class="btn-submit" value="Add Holiday">
-            </form>
+                    <div class="form-row" id="date-field">
+                        <div class="form-group form-date date-modal">
+                            <label for="fecha" class="label">Date</label>
+                            <input
+                                class="text-modal"
+                                type="date"
+                                placeholder="dd/mm/yy"
+                                id="fecha"
+                                name="fecha"
+                                required
+                                oninvalid="this.setCustomValidity('Please select a date')" 
+                                onchange="this.setCustomValidity('')"
+                                style="width: auto;"
+                            />
+                        </div>
+                    </div>
+
+                    <input type="submit" class="btn-submit" id="submit-btn" value="Add Holiday">
+                </form>
+            </div>
         </div>
     </div>
 
+    <!-- Tutorial Toggle Button -->
+    <button class="tutorial-toggle" id="tutorial-toggle">
+        <i class="fa-solid fa-question-circle"></i>
+        <span>Start Tour</span>
+    </button>
 
+    <!-- Tutorial Overlay -->
+    <div class="overlay" id="tutorial-overlay">
+        <div class="highlight" id="highlight"></div>
+        <div class="tutorial-tooltip" id="tutorial-tooltip">
+            <h3>Welcome to the Tutorial</h3>
+            <p>This tour will guide you through the Holiday Management system.</p>
+            <div class="tooltip-buttons">
+                <button class="tooltip-button" id="next-button">Start Tour</button>
+            </div>
+        </div>
     </div>
-
 
     <script src="/js/holidays.js"></script>
     <script src="/js/delete.js"></script>
+    <script src="/js/searchholiday.js"></script>
+    <script>
+        // Tutorial steps configuration
+        const tutorialSteps = [
+            {
+                element: "welcome",
+                title: "Holiday Management System",
+                content: "This guided tour will help you understand how to manage holidays in the system."
+            },
+            {
+                element: "search-section",
+                title: "Search Functionality",
+                content: "Use this search box to quickly find holidays by name."
+            },
+            {
+                element: "add-holiday-btn",
+                title: "Add New Holiday",
+                content: "Click this button to add a new holiday to the system."
+            },
+            {
+                element: "table-section",
+                title: "Holidays Table",
+                content: "This table displays all registered holidays with their names and dates."
+            },
+            {
+                element: "actions-dropdown",
+                title: "Holiday Actions",
+                content: "Click the 'Manage' button to access options for editing or deleting a holiday."
+            },
+            {
+                element: "modal-content",
+                title: "Add Holiday Form",
+                content: "This form allows you to add a new holiday to the system.",
+                showModal: true
+            },
+            {
+                element: "submit-btn",
+                title: "Save Holiday",
+                content: "After filling out all required fields, click this button to save the new holiday to the system.",
+                showModal: true
+            },
+            {
+                element: "complete",
+                title: "Tour Complete!",
+                content: "You're now ready to use the Holiday Management system. You can restart the tour anytime using the 'Start Tour' button."
+            }
+        ];
+
+        let currentStep = 0;
+        let isTutorialActive = false;
+
+        // Hide loader when page is loaded
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                document.getElementById('loaderWrapper').style.display = 'none';
+                // Auto-start tutorial after loader is hidden
+                setTimeout(startTutorial, 1000);
+            }, 1500);
+        });
+
+        // Initialize tutorial toggle button
+        document.getElementById('tutorial-toggle').addEventListener('click', function() {
+            startTutorial();
+        });
+
+        // Function to start the tutorial
+        function startTutorial() {
+            const tutorialOverlay = document.getElementById('tutorial-overlay');
+            tutorialOverlay.style.display = 'flex';
+            isTutorialActive = true;
+            currentStep = 0;
+            showTutorialStep(currentStep);
+        }
+
+        // Function to show a specific tutorial step
+        function showTutorialStep(stepIndex) {
+            if (stepIndex >= tutorialSteps.length) {
+                endTutorial();
+                return;
+            }
+
+            const step = tutorialSteps[stepIndex];
+            const tooltip = document.getElementById('tutorial-tooltip');
+            const highlight = document.getElementById('highlight');
+            
+            // Show modal if needed for this step
+            if (step.showModal) {
+                document.getElementById('modal').classList.remove('hidden');
+            } else if (stepIndex > 0 && tutorialSteps[stepIndex - 1].showModal && !step.showModal) {
+                document.getElementById('modal').classList.add('hidden');
+            }
+            
+            // Update tooltip content
+            tooltip.innerHTML = `
+                <h3>${step.title}</h3>
+                <p>${step.content}</p>
+                <div class="tooltip-buttons">
+                    ${stepIndex > 0 ? '<button class="tooltip-button secondary" id="prev-button">Previous</button>' : ''}
+                    <button class="tooltip-button" id="next-button">
+                        ${stepIndex === tutorialSteps.length - 1 ? 'Finish' : 'Next'}
+                    </button>
+                </div>
+                <div class="progress-dots">
+                    ${tutorialSteps.map((_, i) => 
+                        `<div class="progress-dot ${i === stepIndex ? 'active' : ''}"></div>`
+                    ).join('')}
+                </div>
+            `;
+            
+            // Position highlight and tooltip
+            if (step.element === "welcome" || step.element === "complete") {
+                // Center in the screen for intro and completion
+                tooltip.style.top = '50%';
+                tooltip.style.left = '50%';
+                tooltip.style.transform = 'translate(-50%, -50%)';
+                highlight.style.display = 'none';
+            } else {
+                // Highlight specific element
+                const element = document.getElementById(step.element);
+                if (element) {
+                    const rect = element.getBoundingClientRect();
+                    
+                    // Position highlight
+                    highlight.style.display = 'block';
+                    highlight.style.top = `${rect.top - 10}px`;
+                    highlight.style.left = `${rect.left - 10}px`;
+                    highlight.style.width = `${rect.width + 20}px`;
+                    highlight.style.height = `${rect.height + 20}px`;
+                    
+                    // Position tooltip
+                    let tooltipLeft = rect.left + rect.width + 30;
+                    let tooltipTop = rect.top;
+                    
+                    // Check if tooltip would go off-screen to the right
+                    if (tooltipLeft + 320 > window.innerWidth) {
+                        tooltipLeft = rect.left - 320;
+                        if (tooltipLeft < 10) tooltipLeft = 70; // Prevent going off-screen to the left
+                    }
+                    
+                    // Check if tooltip would go off-screen at the bottom
+                    if (tooltipTop + 200 > window.innerHeight) {
+                        tooltipTop = window.innerHeight - 220;
+                        if (tooltipTop < 10) tooltipTop = 10; // Prevent going off-screen at the top
+                    }
+                    
+                    tooltip.style.top = `${tooltipTop}px`;
+                    tooltip.style.left = `${tooltipLeft}px`;
+                    tooltip.style.transform = 'none';
+                }
+            }
+            
+            // Add event listeners to buttons
+            if (document.getElementById('next-button')) {
+                document.getElementById('next-button').addEventListener('click', function() {
+                    showTutorialStep(stepIndex + 1);
+                });
+            }
+            
+            if (document.getElementById('prev-button')) {
+                document.getElementById('prev-button').addEventListener('click', function() {
+                    showTutorialStep(stepIndex - 1);
+                });
+            }
+        }
+
+        // Function to end the tutorial
+        function endTutorial() {
+            // Make sure modal is hidden when tutorial ends
+            document.getElementById('modal').classList.add('hidden');
+            
+            const tutorialOverlay = document.getElementById('tutorial-overlay');
+            tutorialOverlay.innerHTML = `
+                <div class="completion-message">
+                    <h2>Tutorial Completed! 🎉</h2>
+                    <p>You're now ready to use the Holiday Management system.</p>
+                    <button class="tooltip-button" id="finish-button">Close</button>
+                </div>
+            `;
+            
+            document.getElementById('finish-button').addEventListener('click', function() {
+                tutorialOverlay.style.display = 'none';
+                isTutorialActive = false;
+            });
+        }
+
+        // Handle window resize to reposition tooltip and highlight
+        window.addEventListener('resize', function() {
+            if (isTutorialActive) {
+                showTutorialStep(currentStep);
+            }
+        });
+
+        // Original holiday.js functionality (simplified version)
+        document.addEventListener('DOMContentLoaded', function() {
+            // Open modal
+            const openModalBtn = document.getElementById('openModal');
+            const modal = document.getElementById('modal');
+            const closeModalBtn = document.getElementById('closeModal');
+            
+            if (openModalBtn) {
+                openModalBtn.addEventListener('click', function() {
+                    modal.classList.remove('hidden');
+                });
+            }
+            
+            if (closeModalBtn) {
+                closeModalBtn.addEventListener('click', function() {
+                    modal.classList.add('hidden');
+                });
+            }
+        });
+    </script>
 </body>
 </html>
