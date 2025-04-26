@@ -200,6 +200,7 @@ function confirmDeleteReq(idSolicitud) {
                 });
               
               // -------------------------------Fin-------------------------------
+              alert("Request successfully deleted.");
         })
         .catch(error => {
             console.error("Error:", error);
@@ -285,7 +286,7 @@ function confirmDeleteHol(idDiaFeriado) {
             });
           
           // -------------------------------Fin-------------------------------
-
+          alert("Holliday successfully deleted.");
            
         })
         .catch(error => {
@@ -389,7 +390,7 @@ function confirmDeleteFal(idFalta) {
             });
           
           // -------------------------------Fin-------------------------------
-
+          alert("Administrative offense successfully deleted.");
            
         })
         .catch(error => {
@@ -488,7 +489,7 @@ function confirmDeleteCom(idEmpresa) {
             });
           
           // -------------------------------Fin-------------------------------
-
+          alert("Company successfully deleted.");
            
         })
         .catch(error => {

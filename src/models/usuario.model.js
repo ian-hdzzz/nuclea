@@ -225,11 +225,14 @@
 
   static fetchUserDetails(idUsuario) {
     return db.execute(`
-          SELECT 
-          u.*, 
+      SELECT 
+          u.*,
           GROUP_CONCAT(DISTINCT d.Nombre_departamento SEPARATOR ', ') AS Departamentos,
           GROUP_CONCAT(DISTINCT r.Nombre_rol SEPARATOR ', ') AS Roles,
-          GROUP_CONCAT(DISTINCT e.Nombre_empresa SEPARATOR ', ') AS Empresas
+          GROUP_CONCAT(DISTINCT e.Nombre_empresa SEPARATOR ', ') AS Empresas,
+          p.idDepartamento,
+          ur.idRol,
+          pd.idEmpresa
       FROM Usuarios u
       LEFT JOIN Pertenece p ON u.idUsuario = p.idUsuario
       LEFT JOIN Departamentos d ON p.idDepartamento = d.idDepartamento
@@ -399,8 +402,43 @@
         });
     }
     
-  
+    static UpdatePrimerTuto(idusu) {
+      return db.execute(
+        `UPDATE Usuarios
+         SET primer_tuto = 1
+         WHERE idUsuario = ?`,
+        [idusu]
+      )
+      .catch(error => {
+        console.log('Error actualizando primer_tuto:', error);
+      });
+    }
 
+    static fetchLeader(idUsu) {
+      return  db.query(`
+        SELECT 
+          GROUP_CONCAT(u2.Correo_electronico SEPARATOR ', ') AS Lideres
+        FROM Usuarios u1
+        INNER JOIN Pertenece p1 ON u1.idUsuario = p1.idUsuario
+        INNER JOIN Pertenece p2 ON p1.idDepartamento = p2.idDepartamento
+        INNER JOIN User_Rol ur ON p2.idUsuario = ur.idUsuario
+        INNER JOIN Roles r ON ur.idRol = r.idRol
+        INNER JOIN Usuarios u2 ON ur.idUsuario = u2.idUsuario
+        WHERE u1.idUsuario = ? AND r.Nombre_rol = 'Lider';
+      `, [idUsu]);
+    }
+
+    static fetchAdmins(){
+      return  db.query(`
+        SELECT 
+        GROUP_CONCAT(u.Correo_electronico SEPARATOR ', ') AS Admins
+        FROM Usuarios u
+        INNER JOIN User_Rol ur ON u.idUsuario = ur.idUsuario
+        INNER JOIN Roles r ON ur.idRol = r.idRol
+        WHERE r.Nombre_rol = 'SuperAdmin';
+      `);
+    }
+    
 
   
 };

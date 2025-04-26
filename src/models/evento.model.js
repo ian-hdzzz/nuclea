@@ -6,23 +6,39 @@ const Evento = {
         try {
             const [rows] = await db.query(`
                 SELECT 
-                    eventId, 
-                    titulo, 
-                    descripcion, 
-                    fechaInicio, 
-                    horaInicio, 
-                    fechaFin, 
-                    horaFin, 
-                    tipoId, 
-                    usuarioId, 
-                    estado
+                    e.eventoId, 
+                    e.titulo, 
+                    e.descripcion, 
+                    DATE_FORMAT(e.fechaInicio, '%Y-%m-%d') as fechaInicio,
+                    e.horaInicio, 
+                    DATE_FORMAT(e.fechaFin, '%Y-%m-%d') as fechaFin,
+                    e.horaFin, 
+                    e.tipoId, 
+                    e.usuarioId, 
+                    e.estado,
+                    e.diaCompleto,
+                    t.nombre as tipoNombre,
+                    t.color as tipoColor
                 FROM 
-                    eventos 
+                    eventos e
+                    LEFT JOIN tiposEvento t ON e.tipoId = t.tipo_id
                 WHERE 
-                    usuarioId = ? AND estado = 'active'
+                    e.usuarioId = ? 
+                    AND e.estado = 'active'
+                    AND e.fechaInicio IS NOT NULL
+                    AND e.fechaFin IS NOT NULL
+                ORDER BY 
+                    e.fechaInicio ASC
             `, [usuarioId]);
-            return rows;
+            
+            // Transformar las fechas en el formato correcto
+            return rows.map(evento => ({
+                ...evento,
+                fechaInicio: evento.fechaInicio ? new Date(evento.fechaInicio) : null,
+                fechaFin: evento.fechaFin ? new Date(evento.fechaFin) : null
+            }));
         } catch (error) {
+            console.error('Error al obtener eventos:', error);
             throw error;
         }
     },
@@ -31,23 +47,38 @@ const Evento = {
         try {
             const [rows] = await db.query(`
                 SELECT 
-                    eventId, 
-                    titulo, 
-                    descripcion, 
-                    fechaInicio, 
-                    horaInicio, 
-                    fechaFin, 
-                    horaFin, 
-                    tipoId, 
-                    usuarioId, 
-                    estado
+                    e.eventoId, 
+                    e.titulo, 
+                    e.descripcion, 
+                    DATE_FORMAT(e.fechaInicio, '%Y-%m-%d') as fechaInicio,
+                    e.horaInicio, 
+                    DATE_FORMAT(e.fechaFin, '%Y-%m-%d') as fechaFin,
+                    e.horaFin, 
+                    e.tipoId, 
+                    e.usuarioId, 
+                    e.estado,
+                    e.diaCompleto,
+                    t.nombre as tipoNombre,
+                    t.color as tipoColor
                 FROM 
-                    eventos 
+                    eventos e
+                    LEFT JOIN tiposEvento t ON e.tipoId = t.tipo_id
                 WHERE 
-                    estado = 'active'
+                    e.estado = 'active'
+                    AND e.fechaInicio IS NOT NULL
+                    AND e.fechaFin IS NOT NULL
+                ORDER BY 
+                    e.fechaInicio ASC
             `);
-            return rows;
+            
+            // Transformar las fechas en el formato correcto
+            return rows.map(evento => ({
+                ...evento,
+                fechaInicio: evento.fechaInicio ? new Date(evento.fechaInicio) : null,
+                fechaFin: evento.fechaFin ? new Date(evento.fechaFin) : null
+            }));
         } catch (error) {
+            console.error('Error al obtener todos los eventos:', error);
             throw error;
         }
     }

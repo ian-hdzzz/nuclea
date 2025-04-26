@@ -7,29 +7,235 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="stylesheet" href="/css/AO.css">
   <meta name="csrf-token" content="{{ csrfToken }}">
+  <style>
+    /* Tutorial styles */
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.7);
+      z-index: 2000;
+      display: none;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .tutorial-tooltip {
+      position: absolute;
+      background-color: white;
+      color: #333;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+      width: 300px;
+      z-index: 2100;
+      animation: fadeIn 0.5s;
+      transition: all 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .tutorial-tooltip h3 {
+      margin-bottom: 10px;
+      color: #2762ea;
+    }
+
+    .tutorial-tooltip p {
+      margin-bottom: 15px;
+      line-height: 1.5;
+      color: #555;
+    }
+
+    .tooltip-buttons {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .tooltip-button {
+      padding: 8px 15px;
+      background: linear-gradient(to right, #2762ea 0%, #4162f0 29%, #8061fd 100%);
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .tooltip-button:hover {
+      opacity: 0.9;
+    }
+
+    .tooltip-button.secondary {
+      background: #6c757d;
+    }
+
+    .tooltip-button.secondary:hover {
+      background: #5a6268;
+    }
+
+    .highlight {
+      position: absolute;
+      border: 2px solid #2762ea;
+      border-radius: 8px;
+      box-shadow: 0 0 15px rgba(74, 108, 247, 0.5);
+      z-index: 2050;
+      pointer-events: none;
+      transition: all 0.3s ease;
+    }
+
+    .completion-message {
+      background-color: white;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+      max-width: 400px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+
+    .completion-message h2 {
+      color: #2762ea;
+      margin-bottom: 15px;
+    }
+
+    .completion-message p {
+      margin-bottom: 20px;
+      color: #555;
+    }
+
+    /* Tutorial toggle button */
+    .tutorial-toggle {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      padding: 10px 15px;
+      background: linear-gradient(to right, #2762ea 0%, #4162f0 29%, #8061fd 100%);
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      z-index: 1500;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+
+    .tutorial-toggle:hover {
+      opacity: 0.9;
+    }
+
+    .tutorial-toggle i {
+      font-size: 16px;
+    }
+
+    /* Progress indicators */
+    .progress-dots {
+      display: flex;
+      justify-content: center;
+      margin-top: 15px;
+      gap: 5px;
+    }
+
+    .progress-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: #ccc;
+    }
+
+    .progress-dot.active {
+      width: 24px;
+      background: linear-gradient(to right, #2762ea 0%, #4162f0 29%, #8061fd 100%);
+      border-radius: 4px;
+    }
+
+    /* Loader styles */
+    .loader-wrapper {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(12, 16, 25, 0.9);
+      z-index: 2000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .loader-container {
+      text-align: center;
+    }
+
+    .bars-loader {
+      display: flex;
+      justify-content: center;
+      gap: 5px;
+    }
+
+    .bar {
+      width: 5px;
+      height: 30px;
+      background: linear-gradient(to right, #2762ea 0%, #4162f0 29%, #8061fd 100%);
+      animation: loader 1s infinite alternate;
+    }
+
+    .bar:nth-child(2) {
+      animation-delay: 0.1s;
+    }
+
+    .bar:nth-child(3) {
+      animation-delay: 0.2s;
+    }
+
+    .bar:nth-child(4) {
+      animation-delay: 0.3s;
+    }
+
+    .bar:nth-child(5) {
+      animation-delay: 0.4s;
+    }
+
+    @keyframes loader {
+      from {
+        transform: scaleY(1);
+      }
+      to {
+        transform: scaleY(1.5);
+      }
+    }
+
+    .loading-text {
+      margin-top: 15px;
+      color: #2762ea;
+      font-weight: bold;
+    }
+  </style>
 </head>
 <body>
   <div class="top-container">
-        <div class="hidden"></div>
+    <div class="hidden"></div>
 
-        <div class="search-ao">
-
-          {{> search 
-            placeholder="Employee name..." searchId="search-input"}}
-          
+    <div class="search-ao" id="search-section">
+      {{> search 
+        placeholder="Employee name..." searchId="search-input"}}
+    </div>
+    
+    {{#each privilegios}}
+      {{#if (eq this.Nombre_privilegio "addAO")}}
+        <div class="add-btn-container" id="add-offense-btn">
+          <i class="fa-regular fa-square-plus"></i>
+          <input type="button" value="Add Administrative offense" id="openModal" class="add-btn">
         </div>
-        
-        {{#each privilegios}}
-          {{#if (eq this.Nombre_privilegio "addAO")}}
-            <div class="add-btn-container" id="openModal">
-                  <i class="fa-regular fa-square-plus"></i>
-                  <input type="button" value="Add Administrative offense" id="openModal" class="add-btn">
-                  <!-- Botón de enviar <input type="button" value="Assign user to Dep" id="openModal2" class="add-btn"> -->
-            </div>
-          {{/if}} 
-        {{/each}}
-
+      {{/if}} 
+    {{/each}}
   </div>
+
   {{#if info}}
      <div "top-container">
        <div class="nav-bar">
@@ -52,10 +258,10 @@
        </div>
      </div>
   {{/if}}
-  <div class="content">
+
+  <div class="content" id="table-section">
     <div class="nav-content">
       <h2>Administrative offenses</h2>
-      
     </div>
     <table>
       <thead>
@@ -69,7 +275,6 @@
               <th>Actions</th>
             {{/if}}
           {{/each}}
-
         </tr>
       </thead>
       <tbody id="despliegue">
@@ -80,7 +285,7 @@
           <td>{{formatDate Fecha_asignacion_falta}}</td>
           <td>
             {{#if archivo}}
-              <a href="/Uploads/{{archivo}}" target="_blank" class="pdf-link">
+              <a href="/Uploads/{{archivo}}" target="_blank" class="pdf-link" id="pdf-link">
                 <i class="fa-solid fa-file-pdf"></i> Open PDF
               </a>
             {{else}}
@@ -90,16 +295,15 @@
           {{#each ../privilegios}}
             {{#if (eq this.Nombre_privilegio "addAO")}}
               <td>
-                <div class="dropdown">
+                <div class="dropdown" id="actions-dropdown">
                   <button class="action-btn">Manage</button>
                   <div class="dropdown-content">
-                    <button class="edit-btn"  onclick="location.href='/nuclea/faltasAdministrativas/update/{{../idFalta}}'">
+                    <button class="edit-btn" id="edit-btn" onclick="location.href='/nuclea/faltasAdministrativas/update/{{../idFalta}}'">
                       <i class="fa-solid fa-pen-to-square"></i> Edit
                     </button>
-                    <button class="delete-btn" onclick="confirmDeleteFal('{{../idFalta}}')">
+                    <button class="delete-btn" id="delete-btn" onclick="confirmDeleteFal('{{../idFalta}}')">
                       <i class="fa-solid fa-trash"></i> Delete
                     </button>
-
                   </div>
                 </div>
               </td>
@@ -115,7 +319,7 @@
   </div>
 
   <div id="modal" class="modal hidden">
-    <div class="modal-content">
+    <div class="modal-content" id="modal-content">
       <button id="closeModal" class="close-btn">✖</button>
       <h2 class="title-modal">Add Administrative Offense</h2>
       <p class="description">Fill in the required details to <br>assign an Administrative Offense</p>
@@ -178,6 +382,24 @@
         </div>
         <input type="submit" class="btn-submit" value="Add Administrative Offense">
       </form>
+    </div>
+  </div>
+
+  <!-- Tutorial Toggle Button -->
+  <button class="tutorial-toggle" id="tutorial-toggle">
+    <i class="fa-solid fa-question-circle"></i>
+    <span>Start Tour</span>
+  </button>
+
+  <!-- Tutorial Overlay -->
+  <div class="overlay" id="tutorial-overlay">
+    <div class="highlight" id="highlight"></div>
+    <div class="tutorial-tooltip" id="tutorial-tooltip">
+      <h3>Welcome to the Tutorial</h3>
+      <p>This tour will guide you through the Administrative Offenses management system.</p>
+      <div class="tooltip-buttons">
+        <button class="tooltip-button" id="next-button">Start Tour</button>
+      </div>
     </div>
   </div>
 

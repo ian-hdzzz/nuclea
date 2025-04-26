@@ -20,30 +20,16 @@
             width: 100%;
             display: flex;
             background: none;
-        }
-        .extra{
-            width: 50%;
-            height: auto;
-            background:#2463EB;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-
-        }
-        .extra h1{
-            font-size: 4rem;
-            font-weight: bold;
-            
+            justify-content: center; /* Centrar horizontalmente */
         }
         .login-container {
-            width: 50%;
+            width: 500px; /* Ancho fijo para mejor presentación */
             background: none;
-            padding: 9rem;
+            padding: 3rem;
+            max-width: 90%; /* Responsive */
         }
         
         .title {
-           
             text-align: center;
             font-size: 2rem;
             margin-bottom: 0.5rem;
@@ -63,7 +49,7 @@
             padding: 1.25rem;
             height: auto;
             border-radius: 0.5rem;
-           
+            width: 100%;
         }
         .input:focus {
             border-color: #3273dc;
@@ -73,12 +59,15 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            width: 100%;
         }
-        .icon{
-            margin-top: .8rem;
-        }
-        .input-icon {
-            color: #8b949e;
+        .field-label {
+            color: #ffffff;
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            text-align: left;
+            width: 100%;
         }
         .button {
             width: 100%;
@@ -89,158 +78,73 @@
             height: auto;
             border-radius: 0.5rem;
             font-size: 1rem;
-            margin-top: 1rem;
+            margin-top: 1.5rem;
             margin-bottom: 1rem;
-        }
-        .checkbox {
-            color: #8b949e;
-        }
-        .forgot-password {
-            color: #3273dc;
-            text-align: right;
-        }
-        .divider {
-            display: flex;
-            align-items: center;
-            text-align: center;
-            margin: 2rem 0;
-        }
-        .divider::before, .divider::after {
-            content: '';
-            flex: 1;
-            border-bottom: 1px solid #30363d;
-        }
-        .divider span {
-            margin: 0 0.5rem;
-            color: #8b949e;
-        }
-        .google-button {
-            width: 100%;
-            background-color: #161b22;
-            border: 1px solid #30363d;
-            color: #ffffff;
-            padding: 1.25rem 1rem;
-            height: auto;
-            border-radius: 0.5rem;
-            font-size: 1rem;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        .google-icon {
-            margin-right: 0.5rem;
-        }
-        .signup-text {
-            text-align: center;
-            margin-top: 2rem;
-            color: #8b949e;
-        }
-        .signup-link {
-            color: #2463EB;
         }
         .password-wrapper {
             position: relative;
+            width: 100%;
         }
-        .password-toggle {
-            position: absolute;
-            right: 1rem;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            color: #8b949e;
-            cursor: pointer;
-        }
-        .login-container .gradient-text {
-            font-size: 32px; /* Ajusta según el tamaño deseado */
-            font-weight: 700; /* Negrita */
-            background: linear-gradient(to right, #4A6CF7, #7660FB);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            display: inline-block;
-           
-        }
-
-        /* Opcional: Añadir efecto de brillo */
-        .login-container .gradient-text:hover {
-            text-shadow: 0 0 10px rgba(74, 108, 247, 0.5);
+        .alert {
+            background-color: #f14668;
+            color: white;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            text-align: center;
         }
     </style>
 </head>
 <body>
     <div class="contenedor-login">
- 
-
-
-    <div class="login-container">
-        {{!-- <h1 class="gradient-text">HRMS Management System</h1> --}}
-        <h1 class="title">Change temporary password</h1>
-        <p class="subtitle">For a more secure access please change your temporary password</p>
-        {{#if failed}}
-            <div class="alert alert-danger">{{failed}}</div>
-        {{/if}}
-        <form method="POST" id="changetempForm" action="/nuclea/signup/temp">
-            <div class="field">
-                <div class="control has-icons-left">
-                    <input type="hidden" name="_csrf" value="{{csrfToken}}">
-                    
-                    <input class="input" name="newPass" type="text" placeholder="New password">
+        <div class="login-container">
+            <h1 class="title">Change temporary password</h1>
+            <p class="subtitle">For a more secure access please change your temporary password</p>
+            {{#if failed}}
+                <div class="alert alert-danger">{{failed}}</div>
+            {{/if}}
+            <form method="POST" id="changetempForm" action="/nuclea/signup/temp">
+                <div class="field">
+                    <label class="field-label">New Password</label>
+                    <div class="control">
+                        <input type="hidden" name="_csrf" value="{{csrfToken}}">
+                        <input class="input" name="newPass" type="password" placeholder="Enter your new password">
+                    </div>
                 </div>
-            </div>
 
-            <div class="field">
-                <div class="control has-icons-left password-wrapper">
-                    <input class="input" type="password" name="confirmPass" placeholder="Confirm password">
+                <div class="field">
+                    <label class="field-label">Confirm Password</label>
+                    <div class="control password-wrapper">
+                        <input class="input" type="password" name="confirmPass" placeholder="Confirm your new password">
+                    </div>
                 </div>
-            </div>
 
-            <div class="field">
-                <div class="control">
-                    <button class="button is-primary">Update password</button>
+                <div class="field">
+                    <div class="control">
+                        <button class="button is-primary">Update password</button>
+                    </div>
                 </div>
-            </div>
-        </form>
-    </div>
+            </form>
+        </div>
     </div>
     <script src="/js/particles.js"></script>
     <script src="/js/app.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const errorMessage = document.getElementById("error-message");
+            if (errorMessage) {
+                setTimeout(() => {
+                    errorMessage.style.opacity = "0";
+                    setTimeout(() => errorMessage.remove(), 500);
+                }, 3000);
+            }
+        });
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                document.getElementById('changetempForm').submit();
+            }
+        });
+    </script>
 </body>
-{{!-- Google auth --}}
-<script>
-function openGoogleAuth() {
-  const width = 500, height = 600;
-  const left = (screen.width - width) / 2;
-  const top = (screen.height - height) / 2;
-
-  const authWindow = window.open(
-    `/auth/google?popup=true`, 
-    "GoogleAuth",
-    `width=${width},height=${height},top=${top},scrollbars=yes`
-  );
-
-  window.addEventListener("message", (event) => {
-    if (event.data.authSuccess === false) {
-        window.location.href = "/nuclea/signup"; // Redirige al login
-    } else if (event.data.authSuccess === true) {
-        window.location.href = "/nuclea/dashboard"; // Redirige al dashboard
-    }
-});
-}
-document.addEventListener("DOMContentLoaded", function() {
-    const errorMessage = document.getElementById("error-message");
-    if (errorMessage) {
-      setTimeout(() => {
-        errorMessage.style.opacity = "0";
-        setTimeout(() => errorMessage.remove(), 500); // Eliminar el mensaje después de la animación
-      }, 3000);
-    }
-  });
-    document.addEventListener('keydown', function(event) {
-        if (event.key === 'Enter') {
-            event.preventDefault();
-            document.getElementById('authenticationForm').submit();
-        }
-    });
-</script>
 </html>

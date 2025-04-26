@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flowit HRMS - Dashboard</title>
+  
+  <!-- GridStack CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/gridstack.js/7.3.0/gridstack.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/gridstack.js/7.3.0/gridstack-extra.min.css" />
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  
+  <style>
+    :root {
+      --color-bg: #333;
+      --color-iconos: #909090;
+      --primary-color: #4a6cf7;
+      --secondary-color: #3657d4;
+      --text-color: #333;
+      --light-text: #777;
+      --card-bg: #fff;
+      --overlay-bg: rgba(0, 0, 0, 0.7);
+      --tooltip-bg: #fff;
+      --tooltip-text: #333;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Arial', sans-serif;
+    }
+    
+    body {
+      background-color: #0B1019;
+      overflow-x: hidden;
+    }
+    
+    /* Navbar styles */
+    .menu {
+      width: 70px;
+      height: 100vh;
+      position: fixed;
+      left: 0;
+      top: 0; 
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 5px 0 10px rgba(0, 0, 0, 0.5);
+      justify-content: space-between;
+      align-items: center;
+      background: var(--color-bg);
+    }
+    
+    .routes > ul {
+      text-align: center;
+      padding: 10px;
+      list-style-type: none;
+    }
+    
+    .routes ul li {
+      margin: 18px 0;
+    }
+    
+    .tooltip {
+      position: relative;
+      display: inline-block;
+    }
+
+    .tooltip .tooltip-text {
+      visibility: hidden;
+      background-color: black;
+      color: white;
+      font-size: 13px;
+      text-align: center;
+      padding: 5px;
+      border-radius: 5px;
+      text-transform: none;
+      
+      position: absolute;
+      bottom: 30%;
+      left: 30px;
+      white-space: nowrap;
+      
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .tooltip:hover .tooltip-text {
+      visibility: visible;
+      opacity: 1;
+    }
+    
+    .menu i {
+      color: var(--color-iconos);
+      font-size: 20px;
+      transition: .5s ease all;
+    }
+    
+    .menu i:hover {
+      color: #fff;
+    }
+    
+    .logo {  
+      width: 35px;
+      margin: 20px auto;
+    }
+    
+    .logo img {
+      width: 100%;
+    }
+    
+    .menu a.active i {
+      color: #fff;
+    }
+    
+    .user ul {
+      list-style-type: none;
+      text-align: center;
+      padding: 10px;
+    }
+    
+    /* Dashboard styles */
+    .dashboard-container {
+      margin-left: 80px;
+      padding: 20px;
+    }
+    
+    .title {
+      color: #fff;
+      margin-bottom: 10px;
+    }
+    
+    .subtitle {
+      color: #aaa;
+      margin-bottom: 20px;
+    }
+    
+    /* Loader styles */
+    .loader-wrapper {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(11, 16, 25, 0.9);
+      z-index: 2000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .loader-container {
+      text-align: center;
+    }
+    
+    .bars-loader {
+      display: flex;
+      justify-content: center;
+      gap: 5px;
+    }
+    
+    .bar {
+      width: 5px;
+      height: 30px;
+      background-color: var(--primary-color);
+      animation: loader 1s infinite alternate;
+    }
+    
+    .bar:nth-child(2) {
+      animation-delay: 0.1s;
+    }
+    
+    .bar:nth-child(3) {
+      animation-delay: 0.2s;
+    }
+    
+    .bar:nth-child(4) {
+      animation-delay: 0.3s;
+    }
+    
+    .bar:nth-child(5) {
+      animation-delay: 0.4s;
+    }
+    
+    @keyframes loader {
+      from {
+        transform: scaleY(1);
+      }
+      to {
+        transform: scaleY(1.5);
+      }
+    }
+    
+    .loading-text {
+      margin-top: 15px;
+      color: var(--primary-color);
+      font-weight: bold;
+    }
+    
+    /* GridStack styles */
+    .grid-stack {
+      border-radius: 10px;
+      margin: 20px 0;
+      padding: 10px;
+    }
+    
+    .grid-stack-item-content {
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      background-color: var(--card-bg);
+    }
+    
+    .card {
+      height: 100%;
+      margin: 0;
+      width: 100%;
+      box-shadow: none;
+    }
+    
+    .card-content {
+      padding: 15px;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: linear-gradient(135deg, #333 0%, #111 100%);
+      color: white;
+    }
+    
+    .card-info {
+      flex: 1;
+    }
+    
+    .card-number {
+      font-size: 2.5rem;
+      font-weight: bold;
+      margin-top: 10px;
+      color: var(--primary-color);
+    }
+    
+    .card-icon {
+      font-size: 2.5rem;
+      margin-left: 15px;
+      color: var(--primary-color);
+    }
+    
+    .grid-stack-item-removing {
+      opacity: 0.5;
+    }
+    
+    .dashboard-controls {
+      display: flex;
+      justify-content: flex-end;
+      padding: 10px 0;
+    }
+    
+    .dashboard-controls button {
+      margin-left: 10px;
+      padding: 8px 15px;
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    
+    .dashboard-controls button:hover {
+      background: var(--secondary-color);
+    }
+    
+    /* Quote styles */
+    .daily-quote {
+      margin: 0;
+      font-style: italic;
+      font-size: 14px;
+      color: #ffffff;
+    }
+
+    .daily-quote p {
+      margin-bottom: 5px;
+      margin-right: 5px;
+    }
+
+    .daily-quote footer {
+      text-align: right;
+      font-size: 12px;
+      opacity: 0.8;
+    }
+    
+    /* Asuetos styles */
+    .asuetos-title {
+      color: var(--primary-color);
+      margin-bottom: 15px;
+      font-size: 18px;
+    }
+
+    .asuetos-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+
+    .asueto-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .asueto-item:last-child {
+      border-bottom: none;
+    }
+
+    .asueto-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .asueto-name {
+      font-weight: 600;
+      color: #ffffff;
+      font-size: 14px;
+    }
+
+    .asueto-date {
+      color: #aaa;
+      font-size: 12px;
+      margin-top: 2px;
+    }
+
+    .asueto-icon {
+      color: var(--primary-color);
+      font-size: 16px;
+    }
+
+    /* Scrollbar styles */
+    .asuetos-list::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .asuetos-list::-webkit-scrollbar-track {
+      background: #333;
+      border-radius: 10px;
+    }
+
+    .asuetos-list::-webkit-scrollbar-thumb {
+      background: #666;
+      border-radius: 10px;
+    }
+
+    .asuetos-list::-webkit-scrollbar-thumb:hover {
+      background: #888;
+    }
+    
+    /* Tutorial styles */
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: var(--overlay-bg);
+      z-index: 2000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .tutorial-tooltip {
+      position: absolute;
+      background-color: var(--tooltip-bg);
+      color: var(--tooltip-text);
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+      width: 280px;
+      z-index: 2100;
+      animation: fadeIn 0.5s;
+      transition: all 0.3s ease;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    .tutorial-tooltip h3 {
+      margin-bottom: 10px;
+      color: var(--primary-color);
+    }
+    
+    .tutorial-tooltip p {
+      margin-bottom: 15px;
+      line-height: 1.5;
+    }
+    
+    .tooltip-buttons {
+      display: flex;
+      justify-content: space-between;
+    }
+    
+    .tooltip-button {
+      padding: 8px 15px;
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    
+    .tooltip-button:hover {
+      background-color: var(--secondary-color);
+    }
+    
+    .tooltip-button.secondary {
+      background-color: #6c757d;
+    }
+    
+    .tooltip-button.secondary:hover {
+      background-color: #5a6268;
+    }
+    
+    .highlight {
+      position: absolute;
+      border: 2px solid var(--primary-color);
+      border-radius: 50%;
+      box-shadow: 0 0 10px var(--primary-color);
+      z-index: 2050;
+      pointer-events: none;
+      transition: all 0.3s ease;
+    }
+    
+    .completion-message {
+      background-color: white;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+      max-width: 400px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+    
+    .completion-message h2 {
+      color: var(--primary-color);
+      margin-bottom: 15px;
+    }
+    
+    .completion-message p {
+      margin-bottom: 20px;
+    }
+    
+    .restart-button {
+      padding: 10px 20px;
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    
+    /* Tutorial toggle button */
+    .tutorial-toggle {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      padding: 10px 15px;
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      z-index: 1500;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+    
+    .tutorial-toggle:hover {
+      background-color: var(--secondary-color);
+    }
+    
+    .tutorial-toggle i {
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Loader -->
+  <div class="loader-wrapper" id="loaderWrapper">
+    <div class="loader-container">
+      <div class="bars-loader">
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+      </div>
+      <p class="loading-text">Loading...</p>
+    </div>
+  </div>
+
+  <!-- Navbar -->
+  <nav class="menu">
+    <div class="routes">
+      <div class="logo">
+        <a href="#" id="logo-link" class="tooltip">
+          <img src="/api/placeholder/35/35" alt="Logo">
+          <span class="tooltip-text">Inicio/Registro</span>
+        </a>
+      </div>
+      <ul>
+        <li>
+          <a href="#" id="dashboard-icon" class="tooltip active">
+            <i class="fa-solid fa-house"></i>
+            <span class="tooltip-text">Dashboard</span>
+          </a>
+        </li>
+        <li>
+          <a href="#" id="vacation-icon" class="tooltip">
+            <i class="fa-solid fa-plane-up"></i>
+            <span class="tooltip-text">Solicitudes de Vacaciones</span>
+          </a>
+        </li>
+        <li>
+          <a href="#" id="one-to-one-icon" class="tooltip">
+            <i class="fa-solid fa-people-arrows"></i>
+            <span class="tooltip-text">One-to-One</span>
+          </a>
+        </li>
+        <li>
+          <a href="#" id="events-icon" class="tooltip">
+            <i class="fa-regular fa-calendar"></i>
+            <span class="tooltip-text">Mis Eventos</span>
+          </a>
+        </li>
+        
+        <li>
+          <a href="#" id="offenses-icon" class="tooltip">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <span class="tooltip-text">Faltas Administrativas</span>
+          </a>
+        </li>
+        <li>
+          <a href="#" id="reports-icon" class="tooltip">
+            <i class="fa-solid fa-clipboard-list"></i>
+            <span class="tooltip-text">Reportes</span>
+          </a>
+        </li>
+        <li>
+          <a href="#" id="admin-icon" class="tooltip">
+            <i class="fa-solid fa-user-tie"></i>
+            <span class="tooltip-text">Admin</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+    <div class="user">
+      <ul>
+        <li>
+          <a href="#" id="logout-icon" class="tooltip">
+            <i class="fa-solid fa-right-from-bracket logout"></i>
+            <span class="tooltip-text">Cerrar Sesión</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Dashboard Content -->
+  <div class="dashboard-container">
+    <h1 class="title">Welcome to Flowit HRMS</h1>
+    <p class="subtitle">A comprehensive solution for managing your company's human resources.</p>
+    
+    <div class="dashboard-controls">
+      <button id="save-grid">Save layout</button>
+    </div>
+    
+    <!-- GridStack Container -->
+    <div class="grid-stack"></div>
+  </div>
+
+
+
+  <!-- Tutorial Overlay -->
+  <div class="overlay" id="tutorial-overlay">
+    <div class="highlight" id="highlight"></div>
+    <div class="tutorial-tooltip" id="tutorial-tooltip">
+      <h3>Bienvenido al Tutorial</h3>
+      <p>Este recorrido te mostrará cómo utilizar cada sección de la barra de navegación.</p>
+      <div class="tooltip-buttons">
+        <button class="tooltip-button" id="next-button">Comenzémos</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- GridStack JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gridstack.js/7.3.0/gridstack-all.js"></script>
+  <script>
+    // Simulación de datos
+    const asuetosData = [
+      { Nombre_asueto: "Año Nuevo", Fecha_asueto: "2025-01-01" },
+      { Nombre_asueto: "Día de la Constitución", Fecha_asueto: "2025-02-03" },
+      { Nombre_asueto: "Natalicio de Benito Juárez", Fecha_asueto: "2025-03-17" },
+      { Nombre_asueto: "Semana Santa", Fecha_asueto: "2025-04-17" },
+      { Nombre_asueto: "Viernes Santo", Fecha_asueto: "2025-04-18" },
+      { Nombre_asueto: "Día del Trabajo", Fecha_asueto: "2025-05-01" }
+    ];
+    
+    const diasRestantes = 15;
+    const pendientes = 3;
+    
+    // Ocultar el loader cuando la página está cargada
+    window.addEventListener('load', function() {
+      setTimeout(function() {
+        document.getElementById('loaderWrapper').style.display = 'none';
+        // Iniciar el tutorial automáticamente después de que se oculte el loader
+        setTimeout(startTutorial, 1500);
+      }, 1000);
+    });
+    
+    // Inicializar GridStack
+    document.addEventListener('DOMContentLoaded', function() {
+      // Configuración de GridStack
+      const options = {
+        cellHeight: 'auto',
+        minRow: 1,    
+        column: 4,    
+        margin: 10,
+        disableOneColumnMode: false,
+        float: true,
+        animate: true,
+        resizable: {
+          handles: 'e,se,s,sw,w'
+        }
+      };
+      
+      // Crear la instancia de GridStack
+      const grid = GridStack.init(options);
+      
+      // Definición de widgets iniciales
+      const widgets = [
+        { x: 0, y: 0, width: 1, height: 2, content: createDepartmentCard() },
+        { x: 1, y: 0, width: 1, height: 2, content: createVacationCard() },
+        { x: 2, y: 0, width: 1, height: 2, content: createUsersCard() },
+        { x: 3, y: 0, width: 1, height: 2, content: createProjectsCard() }
+      ];
+      
+      // Cargar los widgets iniciales
+      loadWidgets(widgets);
+      
+      // Guardar layout
+      document.getElementById('save-grid').addEventListener('click', function() {
+        const serializedData = grid.save();
+        localStorage.setItem('dashboard-layout', JSON.stringify(serializedData));
+        alert('Layout guardado correctamente');
+      });
+      
+      // Función para cargar widgets
+      async function loadWidgets(widgets) {
+        widgets.forEach(widget => {
+          const element = document.createElement('div');
+          element.innerHTML = widget.content;
+          grid.addWidget({
+            x: widget.x,
+            y: widget.y,
+            width: widget.width,
+            height: widget.height,
+            content: widget.content,
+            autoPosition: false
+          });
+        });
+
+        const quoteData = getQuoteOfTheDay();
+        const quoteContainers = document.querySelectorAll('#quote-container');
+        quoteContainers.forEach(container => {
+          container.innerHTML = `
+            <blockquote class="daily-quote">
+              <p>"${quoteData.quote}"</p>
+              <footer>- ${quoteData.author}</footer>
+            </blockquote>
+          `;
+        });
+      }
+      
+      // Funciones para crear tarjetas
+      function createDepartmentCard() {
+        return `
+          <div class="card">
+            <div class="card-content">
+              <div class="card-info">
+                <h2>Quote of the day</h2>
+                <div id="quote-container">Loading quote...</div>
+              </div>
+              <div class="card-icon">
+                <i class="fa-solid fa-lightbulb"></i>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+      
+      function createVacationCard() {
+        return `
+          <div class="card">
+            <div class="card-content">
+              <div class="card-info">
+                <h2>Remaining vacation Days</h2>
+                <div class="card-number">${diasRestantes}</div>
+              </div>
+              <div class="card-icon">
+                <i class="fa-solid fa-plane-up"></i>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+      
+      function createUsersCard() {
+        const feriadosHTML = asuetosData.map(a => {
+          const fecha = new Date(a.Fecha_asueto).toLocaleDateString('es-MX', {
+            year: 'numeric', month: 'long', day: 'numeric'
+          });
+          
+          return `
+            <li class="asueto-item">
+              <div class="asueto-info">
+                <span class="asueto-name">${a.Nombre_asueto}</span>
+                <span class="asueto-date">${fecha}</span>
+              </div>
+              <div class="asueto-icon">
+                <i class="fa-solid fa-calendar-check"></i>
+              </div>
+            </li>`;
+        }).join('');
+
+        return `
+          <div class="card">
+            <div class="card-content">
+              <div class="card-info">
+                <h2>Upcoming holidays</h2>
+                <ul class="asuetos-list">${feriadosHTML}</ul>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      function createProjectsCard() {
+        return `
+          <div class="card">
+            <div class="card-content">
+              <div class="card-info">
+                <h2>Pending Vacation Requests</h2>
+                <div class="card-number">${pendientes}</div>
+              </div>
+              <div class="card-icon">
+                <i class="fa-solid fa-clock"></i>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+    });
+
+    // Función para obtener una frase motivacional del día
+    function getQuoteOfTheDay() {
+      const quotes = [
+        { quote: "The future belongs to those who believe in the beauty of their dreams.", author: "Eleanor Roosevelt" },
+        { quote: "Success is not final, failure is not fatal: it is the courage to continue that counts.", author: "Winston Churchill" },
+        { quote: "It does not matter how slowly you go as long as you do not stop.", author: "Confucius" },
+        { quote: "Believe you can and you're halfway there.", author: "Theodore Roosevelt" },
+        { quote: "Everything you've ever wanted is on the other side of fear.", author: "George Addair" },
+        { quote: "The only way to do great work is to love what you do.", author: "Steve Jobs" },
+        { quote: "If you're going through hell, keep going.", author: "Winston Churchill" },
+        { quote: "You are never too old to set another goal or to dream a new dream.", author: "C.S. Lewis" },
+        { quote: "The only limit to our realization of tomorrow will be our doubts of today.", author: "Franklin D. Roosevelt" },
+        { quote: "Your time is limited, don't waste it living someone else's life.", author: "Steve Jobs" },
+        { quote: "The best way to predict the future is to create it.", author: "Abraham Lincoln" },
+        { quote: "Life is what happens when you're busy making other plans.", author: "John Lennon" },
+        { quote: "Success is stumbling from failure to failure with no loss of enthusiasm.", author: "Winston Churchill" },
+        { quote: "The only person you are destined to become is the person you decide to be.", author: "Ralph Waldo Emerson" },
+        { quote: "Don't watch the clock; do what it does. Keep going.", author: "Sam Levenson" },
+        { quote: "The purpose of our lives is to be happy.", author: "Dalai Lama" },
+        { quote: "The power of imagination makes us infinite.", author: "John Muir" },
+        { quote: "Try to be a rainbow in someone's cloud.", author: "Maya Angelou" },
+        { quote: "Life is really simple, but we insist on making it complicated.", author: "Confucius" },
+        { quote: "Don't count the days, make the days count.", author: "Muhammad Ali" },
+        { quote: "It is never too late to be what you might have been.", author: "George Eliot" },
+        { quote: "In three words I can sum up everything I've learned about life: it goes on.", author: "Robert Frost" },
+        { quote: "You miss 100% of the shots you don't take.", author: "Wayne Gretzky" },
+        { quote: "Everything will be okay in the end. If it's not okay, it's not the end.", author: "John Lennon" },
+        { quote: "Happiness is not something ready-made. It comes from your own actions.", author: "Dalai Lama" },
+        { quote: "Life isn't about finding yourself. Life is about creating yourself.", author: "George Bernard Shaw" },
+        { quote: "Strive not to be a success, but rather to be of value.", author: "Albert Einstein" },
+        { quote: "The journey of a thousand miles begins with one step.", author: "Lao Tzu" },
+        { quote: "The way to get started is to quit talking and begin doing.", author: "Walt Disney" },
+        { quote: "If you can dream it, you can do it.", author: "Walt Disney" }
+      ];
+
+      const today = new Date().getDate();
+      const index = (today - 1) % quotes.length;
+      return quotes[index];
+    }
+
+    // Tutorial interactivo mejorado
+    // Tutorial steps
+    const tutorialSteps = [
+      {
+        element: '.logo',
+        title: 'Logo',
+        content: 'Haz clic en el logo para regresar a la página de inicio/registro.',
+        position: { top: 30, left: 90 }
+      },
+      {
+        element: '#dashboard-icon',
+        title: 'Dashboard',
+        content: 'Aquí puedes acceder al panel principal con un resumen de tu actividad y estadísticas.',
+        position: { top: 80, left: 90 }
+      },
+      {
+        element: '#vacation-icon',
+        title: 'Solicitudes de Vacaciones',
+        content: 'En esta sección puedes solicitar días libres y ver el estado de tus solicitudes anteriores.',
+        position: { top: 120, left: 90 }
+      },
+      {
+        element: '#one-to-one-icon',
+        title: 'One-to-One',
+        content: 'Programa y gestiona reuniones individuales con tu supervisor o equipo.',
+        position: { top: 160, left: 90 }
+      },
+      {
+        element: '#events-icon',
+        title: 'Mis Eventos',
+        content: 'Revisa y gestiona todos los eventos en los que estás inscrito o debes asistir.',
+        position: { top: 200, left: 90 }
+      },
+      {
+        element: '#offenses-icon',
+        title: 'Faltas Administrativas',
+        content: 'Gestiona y revisa incidencias administrativas (disponible según privilegios).',
+        position: { top: 280, left: 90 }
+      },
+      {
+        element: '#reports-icon',
+        title: 'Reportes',
+        content: 'Accede a diferentes informes y estadísticas del sistema (disponible para administradores).',
+        position: { top: 320, left: 90 }
+      },
+      {
+        element: '#admin-icon',
+        title: 'Administración',
+        content: 'Panel de control administrativo para gestionar usuarios y configuraciones del sistema.',
+        position: { top: 360, left: 90 }
+      },
+      {
+        element: '#logout-icon',
+        title: 'Cerrar Sesión',
+        content: 'Cierra tu sesión de forma segura cuando hayas terminado de usar el sistema.',
+        position: { top: 560, left: 90 }
+      }
+    ];
+
+    let currentStep = 0;
+    let isTutorialActive = false;
+
+    // Función para iniciar el tutorial automáticamente
+    function startTutorial() {
+      const tutorialOverlay = document.getElementById('tutorial-overlay');
+      tutorialOverlay.style.display = 'flex';
+      isTutorialActive = true;
+      showTutorialStep(0);
+      
+      // Configurar el botón de siguiente para el primer paso
+      document.getElementById('next-button').addEventListener('click', function() {
+        showTutorialStep(1);
+      });
+    }
+
+    // Función para mostrar un paso específico del tutorial
+    function showTutorialStep(stepIndex) {
+      if (stepIndex >= tutorialSteps.length) {
+        endTutorial();
+        return;
+      }
+
+      currentStep = stepIndex;
+      const step = tutorialSteps[stepIndex];
+      const element = document.querySelector(step.element);
+      
+      if (!element) {
+        showTutorialStep(stepIndex + 1);
+        return;
+      }
+
+      // Posicionar el highlight
+      const rect = element.getBoundingClientRect();
+      const highlight = document.getElementById('highlight');
+      highlight.style.width = `${rect.width + 20}px`;
+      highlight.style.height = `${rect.height + 20}px`;
+      highlight.style.top = `${rect.top - 10}px`;
+      highlight.style.left = `${rect.left - 10}px`;
+
+      // Actualizar y posicionar el tooltip junto al elemento resaltado
+      const tooltip = document.getElementById('tutorial-tooltip');
+      tooltip.innerHTML = `
+        <h3>${step.title}</h3>
+        <p>${step.content}</p>
+        <div class="tooltip-buttons">
+          ${stepIndex > 0 ? '<button class="tooltip-button secondary" id="prev-button">Anterior</button>' : ''}
+          <button class="tooltip-button" id="next-button">
+            ${stepIndex === tutorialSteps.length - 1 ? 'Finalizar' : 'Siguiente'}
+          </button>
+        </div>
+      `;
+
+      // Posicionar el tooltip cerca del elemento resaltado
+      tooltip.style.top = `${rect.top}px`;
+      tooltip.style.left = `${rect.left + rect.width + 30}px`;
+      
+      // Si el tooltip se sale de la pantalla por la derecha, colocarlo a la izquierda del elemento
+      if (rect.left + rect.width + 30 + tooltip.offsetWidth > window.innerWidth) {
+        tooltip.style.left = `${rect.left - tooltip.offsetWidth - 20}px`;
+      }
+      
+      // Si el tooltip se sale por abajo, ajustar la posición vertical
+      if (rect.top + tooltip.offsetHeight > window.innerHeight) {
+        tooltip.style.top = `${window.innerHeight - tooltip.offsetHeight - 20}px`;
+      }
+
+      // Configurar los botones de navegación
+      document.getElementById('next-button').addEventListener('click', function() {
+        showTutorialStep(stepIndex + 1);
+      });
+
+      if (stepIndex > 0) {
+        document.getElementById('prev-button').addEventListener('click', function() {
+          showTutorialStep(stepIndex - 1);
+        });
+      }
+    }
+
+    // Función para finalizar el tutorial
+    function endTutorial() {
+      const tutorialOverlay = document.getElementById('tutorial-overlay');
+      tutorialOverlay.innerHTML = `
+        <div class="completion-message">
+          <h2>¡Tutorial Completado! 🎉</h2>
+          <p>Ahora estás listo para utilizar todas las funciones de Flowit HRMS. ¿Deseas repetir el tutorial?</p>
+          <a href="/nuclea/tutorial/actualizar" class="tooltip-button">Finalizar</a>
+        </div>
+      `;
+      
+     document.getElementById('finish-button').addEventListener('click', function() {
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = '/nuclea/tutorial/actualizar';
+
+
+    document.body.appendChild(form);
+    form.submit();
+  });
+}
+
+    // Configurar el botón de toggle del tutorial
+    document.getElementById('tutorial-toggle').addEventListener('click', function() {
+      const tutorialOverlay = document.getElementById('tutorial-overlay');
+      
+      if (tutorialOverlay.style.display === 'flex') {
+        tutorialOverlay.style.display = 'none';
+        isTutorialActive = false;
+      } else {
+        tutorialOverlay.innerHTML = `
+          <div class="highlight" id="highlight"></div>
+          <div class="tutorial-tooltip" id="tutorial-tooltip"></div>
+        `;
+        startTutorial();
+      }
+    });
+  </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+

@@ -15,13 +15,14 @@
     display: grid;
     background: none;
     grid-template-areas: 
-        "main main main main main sidebar";
+        "main main main sidebar sidebar sidebar";
     gap: 20px;
-    width: 100%; 
-    margin-left: 70px;
+    width: calc(100% - 90px); 
+    margin-left: 90px;
     margin-top: -20px;
     height: auto;
-    
+    position: relative;
+    z-index: 1;
 }
 
 .header {
@@ -44,7 +45,7 @@
     background-color: var(--color-bg-secundario);
     border-radius: 12px;
     padding: 20px;
-    width: 100%;
+    min-width: 100%;
 }
 .title h1 {
     font-size: 24px;
@@ -153,6 +154,42 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-bottom: 10px;
+}
+
+.event-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.event-type {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    min-width: 80px;
+    text-align: center;
+}
+
+.event-type.meeting {
+    background-color: rgba(139, 92, 246, 0.2);
+    color: var(--purple-color);
+}
+
+.event-type.vacation {
+    background-color: rgba(59, 130, 246, 0.2);
+    color: var(--blue-color);
+}
+
+.event-type.holiday {
+    background-color: rgba(33, 197, 94, 0.2);
+    color: var(--green-color);
+}
+
+.event-type.non-working {
+    background-color: rgba(176, 107, 63, 0.2);
+    color: #B06B3F;
 }
 
 .event-item:last-child {
@@ -209,12 +246,18 @@
     background-color: #166534;
 }
 
+.event-tag.non-working-day {
+    background-color: #FF7700;
+}
+
 .calendar-view {
     background-color: var(--card-bg);
     border-radius: 12px;
     overflow: hidden;
-    
-}
+    height: fit-content;
+    width: 100%;
+    max-width: 100%;
+}   
 
 .month-header {
     background: var(--blue-gradient);
@@ -241,6 +284,10 @@
     background: var(--color-bg-secundario);
     color: #fff;
     padding: 15px;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    width: 100%;
 }
 
 .weekdays {
@@ -255,54 +302,120 @@
 .days {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
+    grid-template-rows: repeat(6, minmax(100px, 1fr));
     gap: 5px;
+    width: 100%;
 }
 
 .day {
-    aspect-ratio: 1/1;
+    position: relative;
+    min-width: 0;
+    width: 100%;
+    height: 100px;
+    overflow: hidden;
     display: flex;
-    justify-content: center;
-    align-items: center;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
     font-size: 14px;
     border-radius: 8px;
-    position: relative;
-    box-shadow: inset 0 0 0 1px #2d374883; 
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    cursor: pointer;
+    transition: background-color 0.2s ease;
 }
 
-.day.event::after {
-    content: '';
-    position: absolute;
-    bottom: 5px;
-    width: 5px;
-    height: 5px;
-    border-radius: 50%;
-    background-color: var(--blue-color);
+.day:hover {
+    background-color: var(--card-bg);
+    filter: brightness(1.1);
+}
+
+.day.empty-day {
+    background-color: transparent;
+    border: none;
+    opacity: 0.5;
+    cursor: default;
+}
+
+.day.empty-day:hover {
+    background-color: transparent;
+    filter: none;
 }
 
 .day.today {
-    border: 1px solid var(--blue-color);
+    border: 2px solid var(--blue-color);
 }
 
-.day.vacation {
-    background-color: rgba(91, 33, 182, 0.2);
+.day-number {
+    width: 100%;
+    text-align: right;
+    font-weight: 500;
+    padding-right: 5px;
+    margin-bottom: 4px;
+    color: var(--text-color);
 }
 
-.day.holiday {
-    background-color: rgba(22, 101, 52, 0.2);
-}
-
-.day.non-working {
-    background-color: rgba(100, 100, 100, 0.2);
+.day-events {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
 }
 
 .day-event-tag {
-    position: absolute;
-    bottom: 2px;
-    left: 0;
-    right: 0;
-    text-align: center;
+    width: calc(100% - 10px);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 3px 5px;
+    border-radius: 4px;
+    font-size: 10px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    margin: 1px 0;
+}
+
+/* Estilos específicos para tipos de eventos */
+.day.vacation-day {
+    background-color: rgba(59, 130, 246, 0.1);
+}
+
+.day.holiday-day {
+    background-color: rgba(33, 197, 94, 0.1);
+}
+
+.day.non-working-day {
+    background-color: rgba(176, 107, 63, 0.1);
+}
+
+.day-event-tag.vacation {
+    background-color: rgba(59, 130, 246, 0.2);
+    color: var(--blue-color);
+}
+
+.day-event-tag.meeting {
+    background-color: rgba(139, 92, 246, 0.2);
+    color: var(--purple-color);
+}
+
+.day-event-tag.holiday {
+    background-color: rgba(33, 197, 94, 0.2);
+    color: var(--green-color);
+}
+
+.day-event-tag.non-working {
+    background-color: rgba(176, 107, 63, 0.2);
+    color: #fff;
+}
+
+.more-events {
     font-size: 10px;
     color: var(--text-secondary);
+    text-align: center;
+    padding: 2px;
 }
 
 .sidebar {
@@ -335,6 +448,10 @@
     border-radius: 12px;
     padding: 20px;
     color: #fff;
+    width: 100%;
+
+    padding: 0;
+    
 }
 
 .stats-title {
@@ -349,6 +466,7 @@
     font-weight: bold;
     align-items: center;
     margin-bottom: 10px;
+    
 }
 
 .stat-count {
@@ -414,30 +532,41 @@
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    align-items: center;
+    align-items: flex-start;
     font-size: 14px;
     border-radius: 8px;
     position: relative;
     padding: 5px;
-    min-height: 45px;
+    min-height: 80px;
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.day:hover {
+    background-color: var(--card-bg);
+    filter: brightness(1.1);
 }
 
 /* Today styling */
 .day.today {
-    border: 1px solid var(--blue-color);
+    border: 2px solid var(--blue-color);
 }
 
 /* Day number positioning - at the top */
 .day-number {
     width: 100%;
-    text-align: center;
-    margin-bottom: 8px;
+    text-align: right;
+    margin-bottom: 4px;
     font-weight: 500;
+    padding-right: 5px;
+    color: var(--text-color);
 }
 
 /* Event tag container - below the number */
 .day-event-tag {
-    width: 100%;
+    width: calc(100% - 10px);
     padding: 3px 5px;
     border-radius: 4px;
     text-align: left;
@@ -448,25 +577,32 @@
     text-overflow: ellipsis;
     display: flex;
     align-items: center;
-    max-width: 90%;
+    cursor: pointer;
+    margin: 1px 0;
 }
 
 /* Meeting event tag */
 .day-event-tag.meeting {
-    background-color: rgba(59, 130, 246, 0.2);
-    color: #3b82f6;
+    background-color: rgba(139, 92, 246, 0.2);
+    color: var(--purple-color);
 }
 
 /* Vacation event tag */
 .day-event-tag.vacation {
-    background-color: rgba(91, 33, 182, 0.2);
-    color: #8b5cf6;
+    background-color: rgba(59, 130, 246, 0.2);
+    color: var(--blue-color);
 }
 
 /* Holiday event tag */
 .day-event-tag.holiday {
-    background-color: rgba(22, 101, 52, 0.2);
-    color: #22c55e;
+    background-color: rgba(33, 197, 94, 0.2);
+    color: var(--green-color);
+}
+
+/* Non-working event tag */
+.day-event-tag.non-working {
+    background-color: rgba(176, 107, 63, 0.2);
+    color: #B06B3F;
 }
 
 /* Event icons */
@@ -474,38 +610,56 @@
     margin-right: 4px;
     font-size: 10px;
 }
+
 /* Add these CSS styles to align day numbers to the right */
 .day {
     aspect-ratio: 1/1;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    align-items: flex-start; /* Changed from center to flex-start */
+    align-items: flex-start;
     font-size: 14px;
     border-radius: 8px;
     position: relative;
     padding: 5px;
-    min-height: 45px;
+    min-height: 80px;
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.day:hover {
+    background-color: var(--card-bg);
+    filter: brightness(1.1);
 }
 
 /* Empty day styling */
 .day.empty-day {
     background-color: transparent;
-    box-shadow: none;
+    border: none;
+    opacity: 0.5;
+    cursor: default;
+}
+
+.day.empty-day:hover {
+    background-color: transparent;
+    filter: none;
 }
 
 /* Day number right alignment */
 .day-number {
     width: 100%;
-    text-align: right; /* Changed from center to right */
-    margin-bottom: 8px;
+    text-align: right;
+    margin-bottom: 4px;
     font-weight: 500;
     padding-right: 5px;
+    color: var(--text-color);
 }
 
 /* Event tag container - below the number */
 .day-event-tag {
-    width: 95%;
+    width: calc(100% - 10px);
     padding: 3px 5px;
     border-radius: 4px;
     text-align: left;
@@ -516,6 +670,8 @@
     text-overflow: ellipsis;
     display: flex;
     align-items: center;
+    cursor: pointer;
+    margin: 1px 0;
 }
 
 /* Estilos para los eventos en el calendario */
@@ -524,11 +680,33 @@
     position: relative;
     display: flex;
     flex-direction: column;
-  }
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.day:hover {
+    background-color: var(--card-bg);
+    filter: brightness(1.1);
+}
+
+.day.empty-day {
+    background-color: transparent;
+    border: none;
+    opacity: 0.5;
+    cursor: default;
+}
+
+.day.empty-day:hover {
+    background-color: transparent;
+    filter: none;
+}
   
   .day-number {
     font-weight: bold;
-    margin-bottom: 2px;
+    margin-bottom: 4px;
+    color: var(--text-color);
   }
   
   .day-events {
@@ -536,50 +714,64 @@
     flex-direction: column;
     gap: 2px;
     margin-top: 2px;
+    overflow: hidden.
   }
   
   .day-event-tag {
-    font-size: 11px;
-    padding: 2px 4px;
-    border-radius: 3px;
-    max-width: 100%;
+    font-size: 10px;
+    padding: 3px 5px;
+    border-radius: 4px;
+    max-width: 95%;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    margin: 1px 0;
   }
   
   .day-event-tag.meeting {
-    background-color: #d1e3ff;
-    color: #0052cc;
+    background-color: rgba(139, 92, 246, 0.2);
+    color: var(--purple-color);
   }
   
   .day-event-tag.vacation {
-    background-color: #ffd1e3;
-    color: #cc0052;
+    background-color: rgba(59, 130, 246, 0.2);
+    color: var(--blue-color);
   }
   
   .day-event-tag.holiday {
-    background-color: #d1ffea;
-    color: #00cc85;
+    background-color: rgba(33, 197, 94, 0.2);
+    color: var(--green-color);
+  }
+  
+  .day-event-tag.non-working {
+    background-color: rgba(176, 107, 63, 0.2);
+    color: #fff;
   }
   
   .more-events {
     font-size: 10px;
     font-style: italic;
-    color: #666;
+    color: var(--text-secondary);
+    text-align: center;
+    padding: 2px.
   }
   
   /* Estilos para días con eventos */
   .vacation-day {
-    background-color: rgba(255, 209, 227, 0.2);
+    background-color: rgba(59, 130, 246, 0.1);
   }
   
   .holiday-day {
-    background-color: rgba(209, 255, 234, 0.2);
+    background-color: rgba(33, 197, 94, 0.1);
   }
-
-  /* Añade estos estilos a tu archivo CSS existente */
-
+  
+  .non-working-day {
+    background-color: rgba(176, 107, 63, 0.1);
+  }
+/* stats styles */
 /* Colores de tipos de eventos */
 .day-event-tag.type-1 {
     background-color: #3B82F6;
@@ -611,7 +803,7 @@
 }
 
 .non-working-day {
-    background-color: rgba(108, 114, 128, 0.1);
+    background-color: rgba(176, 107, 63, 0.1);
 }
 
 /* Colores de los iconos de eventos */
@@ -632,10 +824,10 @@
 }
 
 .event-tag.non-working-day {
-    background-color: #6C7280;
+    background-color: #FF7700;
 }
 
-/* Mejora visual para la descripción de eventos */
+
 .event-description {
     font-size: 0.8rem;
     color: #6B7280;
@@ -658,7 +850,7 @@
   
   .statistics, .event-type-legend {
     margin-bottom: 30px;
-  }
+;   }
   
   .statistics h3, .event-type-legend h3 {
     font-size: 14px;
@@ -715,7 +907,7 @@
   }
   
   .event-type-header.active .dropdown-arrow {
-    transform: rotate(180deg);
+    transform: rotate(180deg)
   }
   
   .event-list {
@@ -753,7 +945,7 @@
   }
   
   .event-item-details {
-    flex-grow: 1;
+    flex-grow: 1.
   }
   
   .event-item-name {
@@ -777,7 +969,7 @@
   .legend-item {
     display: flex;
     align-items: center;
-    margin-bottom: 10px;
+    margin-bottom: 10px.
   }
   
   .legend-color {
@@ -790,7 +982,7 @@
   .legend-name {
     font-size: 14px;
   }
-  /* Estas son las clases clave para controlar la visibilidad */
+
 .event-list {
     background-color: #2a2a3a;
     border-radius: 0 0 8px 8px;
@@ -802,7 +994,7 @@
   }
   
   .event-list.show {
-    max-height: 500px; /* Altura máxima que puede alcanzar al expandirse */
+    max-height: 500px; 
     opacity: 1;
     transition: max-height 0.5s ease-in, opacity 0.3s ease-in;
     margin-bottom: 10px;
@@ -812,3 +1004,256 @@
   .hidden {
     display: none;
   }
+
+/* Styles for category cards and details */
+.statistics-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 0 5px;
+}
+
+.category-card {
+    background: var(--card-bg);
+    border-radius: 8px;
+    overflow: hidden;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 auto;
+}
+
+.category-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.category-header:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.dropdown-icons {
+    display: flex;
+    align-items: center;
+}
+
+/* MODIFICACIÓN: Reglas simplificadas para los íconos de flecha */
+.dropdown-icons i {
+    font-size: 14px;
+    color: #fff; /* Para mejor visibilidad */
+    transition: transform 0.3s ease;
+}
+
+.dropdown-icons i.fa-angle-down {
+    display: block; /* Mostrar siempre la flecha hacia abajo por defecto */
+}
+
+.dropdown-icons i.fa-angle-up {
+    display: none; /* Ocultar la flecha hacia arriba por defecto */
+}
+
+.category-header.active .dropdown-icons i.fa-angle-down {
+    display: none; /* Ocultar la flecha hacia abajo cuando está activo */
+}
+
+.category-header.active .dropdown-icons i.fa-angle-up {
+    display: block; /* Mostrar la flecha hacia arriba cuando está activo */
+}
+
+.category-details {
+    padding: 0 15px;
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: all 0.3s ease-out;
+}
+
+.category-details:not(.collapsed) {
+    max-height: 1000px;
+    opacity: 1;
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
+.category-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.category-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+
+.category-name {
+    font-size: 14px;
+    color: #fff;
+}
+
+.category-count {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.circle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.1);
+    font-size: 12px;
+    color: #fff;
+}
+
+.circle.meeting{
+    background-color: #4286f48f;
+}
+.circle.vacation{
+    background-color: #bf42f496;
+    color: #fff;
+}
+.circle.holiday{
+    background-color: #42f46bbf;
+}
+.circle.non-working{
+    background-color: rgba(176, 107, 63, 0.5);
+    color: #fff;
+}
+
+/* Animación para la flecha de dropdown */
+.dropdown-icons i {
+    font-size: 14px;
+    color: #fff;
+    transition: transform 0.3s ease;
+}
+
+/* Simplificamos el enfoque usando transform para rotar el ícono */
+.dropdown-icons i.fa-angle-down {
+    display: block; 
+    transform: rotate(0deg);
+}
+
+.category-header.active .dropdown-icons i.fa-angle-down {
+    transform: rotate(180deg);
+    /* No necesitamos ocultarlo, solo rotarlo */
+    display: block;
+}
+
+/* Ya no necesitamos dos íconos diferentes */
+.dropdown-icons i.fa-angle-up {
+    display: none; /* Podemos eliminar este elemento del HTML */
+}
+
+/* Tooltip styles for events */
+.event-tooltip {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.98);
+    border-radius: 8px;
+    padding: 12px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+    min-width: 200px;
+    max-width: 300px;
+    display: none;
+    pointer-events: none;
+    border: 1px solid #e0e0e0;
+    font-size: 0.9em;
+    line-height: 1.4;
+}
+
+.event-tooltip.visible {
+    display: block;
+}
+
+.event-tooltip-title {
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: #333;
+}
+
+.event-tooltip-type {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.8em;
+    margin-bottom: 8px;
+}
+
+.event-tooltip-time,
+.event-tooltip-description {
+    color: #666;
+    margin-bottom: 4px;
+}
+
+.event-tooltip-description {
+    font-style: italic;
+}
+
+/* Styles for event types in the tooltip */
+.event-tooltip-type.vacation {
+    background-color: #9C27B0;
+    color: white;
+}
+
+.event-tooltip-type.meeting {
+    background-color: #4285F4;
+    color: white;
+}
+
+.event-tooltip-type.holiday {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.event-tooltip-type.non-working {
+    background-color: #FF7700;
+    color: white;
+}
+
+/* Adjustments for events in the calendar and sidebar */
+.day-event-tag{
+    position: relative;
+    cursor: pointer;
+  
+}
+.detail-item {
+    position: relative;
+    cursor: pointer;
+    margin: 15px 10px;
+    background: var(--color-bg-secundario);
+    padding: 15px 10px;
+    border-radius: 10px;
+}
+
+.detail-item .detail-info {
+    display: flex;
+    justify-content: space-between;
+    gap: 4px;
+    font-size: .8rem;
+    color: var(--color-iconos);
+}
+
+.detail-item .detail-info .detail-date {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    align-items: center;
+}
+
+.date-group, .time-group {
+    display: inline-flex;
+    align-items: center;
+    white-space: nowrap;
+}
+
+.date-group i, .time-group i {
+    margin-right: 4px;
+}

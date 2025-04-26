@@ -1,10 +1,12 @@
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{csrfToken}}">
     <title>User Profile</title>
     {{!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css"> --}}
     <link rel="stylesheet" href="/css/profile.css"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.js"></script>
 </head>
 <body>
     <div class="dashboard-container">
@@ -52,7 +54,7 @@
                     <span class="icon"><i class="fas fa-calendar"></i></span>
                     <div class="detail-content">
                         <p class="detail-label">Registration Date</p>
-                        <p class="detail-value">{{registration}}</p>
+                        <p class="detail-value">{{formatDate registration}}</p>
                     </div>
                 </div>
                 
@@ -108,7 +110,28 @@
             </div>
         </div>
     </div>
+    <!-- Incluir el componente del popup -->
+    {{> schedulePopup}}
+
+    <!-- Font Awesome y Flatpickr -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.js"></script>
+    <!-- Script del componente -->
+    <script src="/js/schedulePopup.js"></script>
     
-    <!-- Font Awesome para los iconos -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const scheduleBtn = document.querySelector('.quick-actions .button.is-info');
+        const popup = new SchedulePopup();
+        
+        // Abrir popup cuando se hace click en el botón
+        if (scheduleBtn) {
+            scheduleBtn.addEventListener('click', () => {
+                popup.open();
+            });
+        }
+    });
+    </script>
+</body>
+
 
 

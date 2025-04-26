@@ -65,68 +65,58 @@
     {{/if}}
 
     <div class="content">
-      <div class="nav-content">
-        <h2>Department Management</h2>
-
-      </div>
-
-      <table>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Department Name</th>
-            <th>Company Name</th>
-            <th>Description</th>
-            <th>State</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {{#each emps}}
-          <tr>
-            <td>{{idDepartamento}}</td>
-            <td>{{Nombre_departamento}}</td>
-            {{!-- Buscar empresa correspondiente y mostrar su nombre --}}
-                {{#each ../emp}}
-                  {{#if (eq idEmpresa ../idEmpresa)}}
-                    <td>{{Nombre_empresa}}</td>
-                  {{/if}}
-                {{/each}}
-            <td>{{Descripcion}}</td>
-            <td class="state">
-              <span class="{{#if Estado}}active{{else}}inactive{{/if}}">
-                <div class="dot"></div>
-                {{#if Estado}}Active{{else}}Inactive{{/if}}
-              </span>
-            </td>
-            <td>
-              <div class="dropdown">
-                <button class="action-btn">Manage</button>
-                <div class="dropdown-content">
-                  <button class="edit-btn" onclick="location.href='/nuclea/departament/update/{{idDepartamento}}'">
-                    <i class="fa-solid fa-pen-to-square"></i> Edit
-                  </button>
-                  <button class="delete-btn" onclick="location.href='/nuclea/departament/delete/{{idDepartamento}}'">
-                    <i class="fa-solid fa-trash"></i> Delete
-                  </button>
-                </div>
-              </div>
-            </td>
-          </tr>
-          {{/each}}
-        </tbody>
-      </table>
-
-      {{#unless emps.length}}
-        <p style="text-align: center; margin-top: 20px;">No departments existing</p>
-      {{/unless}}
+        <div class="nav-content">
+            <h2>Department Management</h2>
+            
+        </div>
+       <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Department Name</th>
+                <th>Company Name</th>
+                <th>Description</th>
+                <th>State</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody  id="department-body">
+            {{#each emps}}
+              <tr>
+                <td>{{idDepartamento}}</td>
+                <td>{{Nombre_departamento}}</td>
+                <td>{{Nombre_empresa}}</td> <!-- ✅ Aquí accedes directamente -->
+                <td>{{Descripcion}}</td>
+                <td class="state">
+                  <span class="{{#if Estado}}active{{else}}inactive{{/if}}">
+                    <div class="dot"></div>
+                    {{#if Estado}}Active{{else}}Inactive{{/if}}
+                  </span>
+                </td>
+                <td>
+                  <div class="dropdown">
+                    <button class="action-btn">Manage</button>
+                    <div class="dropdown-content">
+                      <button class="edit-btn" onclick="location.href='/nuclea/departament/update/{{idDepartamento}}'">
+                        <i class="fa-solid fa-pen-to-square"></i> Edit
+                      </button>
+                      <button class="delete-btn" onclick="confirmDeleteDepartamento('{{idDepartamento}}')">
+                        <i class="fa-solid fa-trash"></i> Delete
+                      </button>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              {{/each}}
+          </tbody>
+        </table>
 
       <!-- Modal -->
       <div id="modal" class="modal">
         <div class="modal-content">
           <button id="closeModal" class="close-btn" onclick="window.location.href='/nuclea/departament'">✖</button>
-          <h2 class="title-modal">Add Department</h2>
-          <p class="description">Fill in the required details to register this Department</p>
+          <h2 class="title-modal">Edit Department</h2>
+          <p class="description">Fill in the required details to edit this Department</p>
 
           <form id="departmentForm" method="POST" action="/nuclea/departament/update/{{datos.idDepartamento}}">
             <input type="hidden" name="_csrf" value="{{csrfToken}}">
@@ -158,8 +148,8 @@
             <div class="form-group">
               <label for="status">Status</label>
               <select id="statusSelect" name="Estado" class="text-modal option-modal" required>
-                <option value="1" {{#if (eq datos.Estado "1")}}selected{{/if}}>Active</option>
-                <option value="0" {{#if (eq datos.Estado "0")}}selected{{/if}}>Inactive</option>
+                <option value="1" {{#if (eq datos.Estado 1)}}selected{{/if}}>Active</option>
+                <option value="0" {{#if (eq datos.Estado 0)}}selected{{/if}}>Inactive</option>
               </select>
             </div>
 

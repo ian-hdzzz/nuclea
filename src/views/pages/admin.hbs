@@ -1,38 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
 
 <head>
     <link rel="stylesheet" href="/css/admin.css">
 </head>
+<style>
+    :root {
+  --bg-dark: #0A0E17;
+  --card-bg: #131A27;
+  --border-color: #1E2433;
+  --text-primary: #FFFFFF;
+  --text-secondary: #6B7280;
+  --accent-blue: #4A6CF7;
+}
 
-   <div class="admin-container">
+*{
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+
+}
+:root{
+  --color-bg:#0B1019;
+  --color-bg-secundario:#131A27;
+  --color-primario:#2762EA;
+  --color-secundario:#1DA4FC;
+  --color-terciario:#8360FE;
+  --accent-blue: #4A6CF7;
+  --border-color: #1E2433;
+  --color-iconos:#A1B0B9;
+  --color-fuente:#fff;
+}
+body{
+  background-color: var(--color-bg);
+}
+h1{ 
+
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: var(--color-fuente);
+}
+.container{ 
+  margin: auto;
+  background: var(--color-bg);
+  width: calc(100% - 40px); 
+  margin-left: 70px;
+  margin-top: -20px;
+  padding: 20px;
+  height: auto;
+}
+.container h1{
+  margin: 20px;
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: var(--color-fuente);
+}
+.top-container{
+  width: 92%;
+  margin: auto;
+  margin-top: 5px;
+  padding: 0;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.search-input-container{
+  width: 40%;
+}
+
+
+
+.admin-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-left: 80px;
+}
+
+.admin-container .title {
+  font-size: 36px;
+  font-weight: 700;
+  background: linear-gradient(to right, #4A6CF7, #7660FB);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  display: inline-block;
+  margin-bottom: 20px;
+}
+
+.subtitle {
+  color: var(--color-iconos);
+  font-size: 16px;
+  margin-bottom: 40px;
+
+}
+
+.card-container {
+  margin: 50px auto;
+  display: flex;
+  gap: 60px;
+  justify-content: center;
+}
+
+.card {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 30px;
+  width: 300px;
+  text-align: left;
+  transition: all 0.3s ease;
+  height: 20%;
+}
+
+.card:hover {
+  border-color: var(--accent-blue);
+  box-shadow: 0 0 15px rgba(74, 108, 247, 0.2);
+}
+
+.card h3 {
+  margin-bottom: 15px;
+  font-size: 20px;
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.card p {
+  color: var(--color-iconos);
+  margin-bottom: 20px;
+  font-weight: 500;
+}
+
+.card .btn {
+  color: var(--accent-blue);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+}
+
+.card .btn:hover {
+  text-decoration: underline;
+}
+
+.card.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+</style>
+<div class="admin-container">
+    
+    <div class="card-container">
+        <div class="card" id="departments-card" href="/nuclea/departament">
+            <h3>Departments</h3>
+            <p>Manage the departments that exist in the company</p>
+            <a href="/nuclea/departament" class="btn">Access now →</a>
+        </div>
+        
+        <div class="card" id="collaborators-card" href="/nuclea/users">
+            <h3>Collaborators</h3>
+            <p>Manage employee profiles, roles, and departments</p>
+            <a href="/nuclea/users" class="btn">Access now →</a>
+        </div>
+    </div>
+    
+    <div class="card-container">
+        <div class="card" id="holidays-card" href="/nuclea/holiday">
+            <h3>Holidays</h3>
+            <p>Manage holidays to ensure accurate attendance tracking</p>
+            <a href="/nuclea/holiday" class="btn">Access now →</a>
+        </div>
+    
+        <div class="card" id="company-card">
+            <h3>Company</h3>
+            <p>Manage the companies that exist in the company</p>
+            <a href="/nuclea/company" class="btn">Access now →</a>
+        </div>
+    </div>
+</div>
+
+<!-- Tutorial Toggle Button -->
+<button id="tutorial-toggle" class="tutorial-toggle">
+    <i class="fa-solid fa-question-circle"></i>
+    <span>Start Tour</span>
+</button>
+
+<!-- Tutorial Overlay -->
+<div class="overlay" id="tutorial-overlay" style="display: none;">
+    <div class="highlight" id="highlight"></div>
+    <div class="tutorial-tooltip" id="tutorial-tooltip">
+        <h3>Welcome to the Tutorial</h3>
+        <p>This tour will guide you through the admin dashboard features.</p>
+        <div class="tooltip-buttons">
+            <button class="tooltip-button" id="next-button">Start Tour</button>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    // Tutorial steps configuration
+const tutorialSteps = [
+  {
+    element: "welcome",
+    title: "Welcome to Admin Dashboard",
+    content: "This guided tour will help you understand how to use the admin dashboard effectively."
+  },
+  {
+    element: "departments-card",
+    title: "Departments",
+    content: "Manage all departments that exist in your company. Add, edit, or remove departments as needed."
+  },
+  {
+    element: "collaborators-card",
+    title: "Collaborators",
+    content: "Manage employee profiles, assign roles, and organize them into departments."
+  },
+  {
+    element: "holidays-card",
+    title: "Holidays",
+    content: "Manage company holidays to ensure accurate attendance tracking for all employees."
+  },
+  {
+    element: "company-card",
+    title: "Company",
+    content: "Manage company information, settings, and other organizational details."
+  },
+  {
+    element: "complete",
+    title: "Tour Complete!",
+    content: "You're now ready to use the admin dashboard. You can restart the tour anytime using the 'Start Tour' button."
+  }
+];
+
+let currentStep = 0;
+let isTutorialActive = false;
+
+// Hide loader when page is loaded
+window.addEventListener('load', function() {
+  setTimeout(function() {
+    document.getElementById('loaderWrapper').style.display = 'none';
+    // Auto-start tutorial after loader is hidden
+    setTimeout(startTutorial, 1000);
+  }, 1500);
+});
+
+// Initialize tutorial toggle button
+document.getElementById('tutorial-toggle').addEventListener('click', function() {
+  startTutorial();
+});
+
+// Function to start the tutorial
+function startTutorial() {
+  const tutorialOverlay = document.getElementById('tutorial-overlay');
+  tutorialOverlay.style.display = 'flex';
+  isTutorialActive = true;
+  currentStep = 0;
+  showTutorialStep(currentStep);
+}
+
+// Function to show a specific tutorial step
+function showTutorialStep(stepIndex) {
+  if (stepIndex >= tutorialSteps.length) {
+    endTutorial();
+    return;
+  }
+
+  const step = tutorialSteps[stepIndex];
+  const tooltip = document.getElementById('tutorial-tooltip');
+  const highlight = document.getElementById('highlight');
+  
+  // Update tooltip content
+  tooltip.innerHTML = `
+    <h3>${step.title}</h3>
+    <p>${step.content}</p>
+    <div class="tooltip-buttons">
+      ${stepIndex > 0 ? '<button class="tooltip-button secondary" id="prev-button">Previous</button>' : ''}
+      <button class="tooltip-button" id="next-button">
+        ${stepIndex === tutorialSteps.length - 1 ? 'Finish' : 'Next'}
+      </button>
+    </div>
+    <div class="progress-dots">
+      ${tutorialSteps.map((_, i) => 
+        `<div class="progress-dot ${i === stepIndex ? 'active' : ''}"></div>`
+      ).join('')}
+    </div>
+  `;
+  
+  // Position highlight and tooltip
+  if (step.element === "welcome" || step.element === "complete") {
+    // Center in the screen for intro and completion
+    tooltip.style.top = '50%';
+    tooltip.style.left = '50%';
+    tooltip.style.transform = 'translate(-50%, -50%)';
+    highlight.style.display = 'none';
+  } else {
+    // Highlight specific element
+    const element = document.getElementById(step.element);
+    if (element) {
+      const rect = element.getBoundingClientRect();
+      
+      // Position highlight
+      highlight.style.display = 'block';
+      highlight.style.top = `${rect.top - 10}px`;
+      highlight.style.left = `${rect.left - 10}px`;
+      highlight.style.width = `${rect.width + 20}px`;
+      highlight.style.height = `${rect.height + 20}px`;
+      
+      // Position tooltip
+      let tooltipLeft = rect.left + rect.width + 30;
+      let tooltipTop = rect.top;
+      
+      // Check if tooltip would go off-screen to the right
+      if (tooltipLeft + 320 > window.innerWidth) {
+        tooltipLeft = rect.left - 320;
+        if (tooltipLeft < 10) tooltipLeft = 10; // Prevent going off-screen to the left
+      }
+      
+      // Check if tooltip would go off-screen at the bottom
+      if (tooltipTop + 200 > window.innerHeight) {
+        tooltipTop = window.innerHeight - 220;
+        if (tooltipTop < 10) tooltipTop = 10; // Prevent going off-screen at the top
+      }
+      
+      tooltip.style.top = `${tooltipTop}px`;
+      tooltip.style.left = `${tooltipLeft}px`;
+      tooltip.style.transform = 'none';
+    }
+  }
+  
+  // Add event listeners to buttons
+  if (document.getElementById('next-button')) {
+    document.getElementById('next-button').addEventListener('click', function() {
+      showTutorialStep(stepIndex + 1);
+    });
+  }
+  
+  if (document.getElementById('prev-button')) {
+    document.getElementById('prev-button').addEventListener('click', function() {
+      showTutorialStep(stepIndex - 1);
+    });
+  }
+}
+
+// Function to end the tutorial
+function endTutorial() {
+  const tutorialOverlay = document.getElementById('tutorial-overlay');
+  tutorialOverlay.innerHTML = `
+    <div class="completion-message">
+      <h2>¡Tutorial Completed! 🎉</h2>
+      <p>You're now ready to use the admin dashboard.</p>
+      <button class="tooltip-button" id="finish-button">Close</button>
+    </div>
+  `;
+  
+  document.getElementById('finish-button').addEventListener('click', function() {
+    tutorialOverlay.style.display = 'none';
+    isTutorialActive = false;
+  });
+}
+
+// Handle window resize to reposition tooltip and highlight
+window.addEventListener('resize', function() {
+  if (isTutorialActive) {
+    showTutorialStep(currentStep);
+  }
+});
+</script>
      
       
-      <div class="card-container">
-          <div class="card" href="/nuclea/departament">
-              <h3>Departments</h3>
-              <p>Manage the departments that exist in the company</p>
-              <a href="/nuclea/departament" class="btn">Access now →</a>
-          </div>
-          
-          <div class="card" href="/nuclea/users">
-              <h3>Collaborators</h3>
-              <p>Manage employee profiles, roles, and departments</p>
-              <a href="/nuclea/users" class="btn">Access now →</a>
-          </div>
-          
-      </div>
-      <div class="card-container">
-          <div class="card" href="/nuclea/holiday">
-              <h3>Holidays</h3>
-              <p>Manage holidays to ensure accurate attendance tracking</p>
-              <a href="/nuclea/holiday" class="btn">Access now →</a>
-          </div>
-    
-          <div class="card">
-              <h3>Company</h3>
-              <p>Manage the companies that exist in the company</p>
-              <a href="/nuclea/company" class="btn">Access now →</a>
-          </div>
-      </div>
- 
-   </div>
-
+      
+</html>

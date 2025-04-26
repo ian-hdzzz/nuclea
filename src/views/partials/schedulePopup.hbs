@@ -1,0 +1,71 @@
+<!-- Schedule Meeting Popup Component -->
+<div class="popup-overlay" id="popupOverlay">
+    <meta name="csrf-token" content="{{csrfToken}}">
+    <div class="popup">
+        <button class="close-btn" id="closePopupBtn">✕</button>
+        <div class="popup-header">
+            <h2 class="popup-title">Schedule One-to-One Meeting</h2>
+            <p class="popup-subtitle">Select a team member and schedule your one-to-one meeting.</p>
+        </div>
+
+        <div class="form-group">
+            <div class="search-input-wrapper">
+                {{> search
+                title="Search team member" 
+                placeholder="Type a name..." 
+                searchId="employeeSearchPopup"
+                searchType="users"
+                contacts=employees}}
+                <div id="selectedUserTags" class="selected-tags"></div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Date</label>
+            <div class="date-picker-container">
+                <div class="date-input" id="dateInput">
+                    <span class="calendar-icon"><i class="fas fa-calendar"></i></span>
+                    <span>Pick a date</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Time</label>
+            <div class="time-picker-container">
+                <input type="text" class="time-input" id="timeInput" value="09:00 AM" readonly>
+                <div class="time-dropdown" id="timeDropdown">
+                    <div class="hours-column">
+                        <div class="time-option selected">09</div>
+                        <div class="time-option">10</div>
+                        <div class="time-option">11</div>
+                        <div class="time-option">12</div>
+                        <div class="time-option">01</div>
+                        <div class="time-option">02</div>
+                        <div class="time-option">03</div>
+                        <div class="time-option">04</div>
+                        <div class="time-option">05</div>
+                        <div class="time-option">06</div>
+                        <div class="time-option">07</div>
+                        <div class="time-option">08</div>
+                    </div>
+                    <div class="minutes-column">
+                        <div class="time-option selected">00</div>
+                        <div class="time-option">15</div>
+                        <div class="time-option">30</div>
+                        <div class="time-option">45</div>
+                    </div>
+                    <div class="period-column">
+                        <div class="time-option selected">AM</div>
+                        <div class="time-option">PM</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="action-buttons popup-buttons">
+            <button class="button" id="cancelBtn">Cancel</button>
+            <button class="button is-info">Schedule Meeting</button>
+        </div>
+    </div>
+</div>

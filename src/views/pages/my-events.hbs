@@ -1,4 +1,3 @@
-
 <head>
     <link rel="stylesheet" href="/css/my-events.css">
 </head>
@@ -82,146 +81,186 @@
             </div>
 
             <!-- Second view: Calendar -->
-            <div class="calendar-view" id="calendarView" style="display: block;">
+            <div class="calendar-view" id="calendarView">
                 <div class="month-header">
-                    <div class="month-title">April 2025</div>
+                    <div class="month-title"></div>
                     <div class="month-nav">
                         <i class="fa-solid fa-angle-left"></i>
-                       <i class="fa-solid fa-angle-right"></i>
+                        <i class="fa-solid fa-angle-right"></i>
                     </div>
                 </div>
                 
                 <div class="calendar-grid">
                     <div class="weekdays">
-                        <div>Sun</div>
-                        <div>Mon</div>
-                        <div>Tue</div>
-                        <div>Wed</div>
-                        <div>Thu</div>
-                        <div>Fri</div>
-                        <div>Sat</div>
+                        <div>Dom</div>
+                        <div>Lun</div>
+                        <div>Mar</div>
+                        <div>Mié</div>
+                        <div>Jue</div>
+                        <div>Vie</div>
+                        <div>Sáb</div>
                     </div>
                     
                     <div class="days">
-                        <!-- Week 1 -->
-                        <div class="day">1</div>
-                        <div class="day">2</div>
-                        <div class="day">3</div>
-                        <div class="day">4</div>
-                        <div class="day">5</div>
-                        <div class="day">6</div>
-                        <div class="day">7</div>
-                        
-                        <!-- Week 2 -->
-                        <div class="day">8</div>
-                        <div class="day">9</div>
-                        <div class="day">10</div>
-                        <div class="day">11</div>
-                        <div class="day">12</div>
-                        <div class="day">13</div>
-                        <div class="day">14</div>
-                        
-                        <!-- Week 3 -->
-                        <div class="day">15</div>
-                        <div class="day">16</div>
-                        <div class="day">17</div>
-                        <div class="day">18</div>
-                        <div class="day today">19</div>
-                        <div class="day event">
-                            20
-                            <div class="day-event-tag">One-to-One...</div>
-                        </div>
-                        <div class="day">21</div>
-                        
-                        <!-- Week 4 -->
-                        <div class="day">22</div>
-                        <div class="day">23</div>
-                        <div class="day">24</div>
-                        <div class="day vacation">
-                            25
-                            <div class="day-event-tag">Vacation</div>
-                        </div>
-                        <div class="day vacation">
-                            26
-                            <div class="day-event-tag">Vacation</div>
-                        </div>
-                        <div class="day vacation">
-                            27
-                            <div class="day-event-tag">Vacation</div>
-                        </div>
-                        <div class="day vacation">
-                            28
-                            <div class="day-event-tag">Vacation</div>
-                        </div>
-                        
-                        <!-- Week 5 -->
-                        <div class="day vacation">29</div>
-                        <div class="day vacation">30</div>
-                        <div class="day" style="opacity: 0.5;">1</div>
-                        <div class="day" style="opacity: 0.5;">2</div>
-                        <div class="day" style="opacity: 0.5;">3</div>
-                        <div class="day" style="opacity: 0.5;">4</div>
-                        <div class="day" style="opacity: 0.5;">5</div>
+                        <!-- Los días se generarán dinámicamente con JavaScript -->
                     </div>
                 </div>
             </div>
         </div>
         
         <div class="sidebar">
-            <div class="my-events">
-                <i class="fa-solid fa-user"></i></a>
-                <h2>My Events</h2>
-            </div>
-                
-            <div class="stats">
-               <div class="statistics">
-                    <h3>STATISTICS</h3>
-                    
-                    {{#each eventTypes}}
-                    <div class="event-type-container">
-                    <div class="event-type-header" data-event-type="{{tipo_id}}">
-                        <div class="event-type-color" style="background-color: {{color}}"></div>
-                        <div class="event-type-name">{{nombre}}</div>
-                        <div class="event-count">{{count}}</div>
-                        <div class="dropdown-arrow">▼</div>
+    <div class="my-events">
+        <i class="fa-solid fa-user"></i>
+        <h2>My Events</h2>
+    </div>
+    
+    <div class="stats">
+    <div class="statistics-container">
+        <!-- One-to-one Section -->
+        <div class="category-card">
+            <div class="category-header" data-category="oneToOne">
+                <div class="category-info">
+                    <span class="category-dot" style="background-color: #4285F4;"></span>
+                    <span class="category-name">One-to-one</span>
+                </div>
+                <div class="category-count">
+                    <span class="circle meeting">{{oneToOne.count}}</span>
+                    <div class="dropdown-icons">
+                        <i class="fa-solid fa-angle-down"></i>
                     </div>
-                    
-                    <div class="event-list hidden" id="event-list-{{tipo_id}}">
-                        {{#each events}}
-                        <div class="event-item">
-                        <div class="event-item-color" style="background-color: {{../color}}"></div>
-                        <div class="event-item-details">
-                            <div class="event-item-name">{{name}}</div>
-                            <div class="event-item-datetime">
-                            {{date}}
-                            {{#if allDay}}
-                            <span class="all-day-tag">Todo el día</span>
-                            {{else}}
-                            <span class="time-tag">{{time}}</span>
-                            {{/if}}
+                </div>
+            </div>
+            
+            <div class="category-details collapsed">
+                {{#if oneToOne.items.length}}
+                    {{#each oneToOne.items}}
+                        <div class="detail-item">
+                            <div class="detail-name">{{name}}</div>
+                            <div class="detail-info">
+                                <div class="detail-date">
+                                    <span><i class="fa-regular fa-calendar"></i> {{startDate}}</span>
+                                    <span><i class="fa-regular fa-clock"></i> {{startTime}}</span>
+                                </div>
                             </div>
                         </div>
-                        </div>
-                        {{/each}}
-                    </div>
-                    </div>
                     {{/each}}
-                </div>
-                
-                <div class="event-type-legend">
-                    <h3>EVENT TYPE</h3>
-                    
-                    {{#each eventTypes}}
-                    <div class="legend-item">
-                    <div class="legend-color" style="background-color: {{color}}"></div>
-                    <div class="legend-name">{{nombre}}</div>
+                {{else}}
+                    <div class="detail-item no-events">
+                        <div class="detail-name">No events scheduled</div>
                     </div>
-                    {{/each}}
-                </div>
-                </div>
+                {{/if}}
             </div>
         </div>
 
+        <!-- Vacations Section -->
+        <div class="category-card">
+            <div class="category-header" data-category="vacations">
+                <div class="category-info">
+                    <span class="category-dot" style="background-color: #9C27B0;"></span>
+                    <span class="category-name">Vacations</span>
+                </div>
+                <div class="category-count">
+                    <span class="circle vacation">{{vacations.count}}</span>
+                    <div class="dropdown-icons">
+                        <i class="fa-solid fa-angle-down"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="category-details collapsed">
+                {{#if vacations.items.length}}
+                    {{#each vacations.items}}
+                        <div class="detail-item">
+                            <div class="detail-name">{{name}}</div>
+                            <div class="detail-info">
+                                <div class="detail-date">
+                                    <span><i class="fa-regular fa-calendar"></i> {{startDate}}</span>
+                                    <span><i class="fa-regular fa-clock"></i> {{startTime}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    {{/each}}
+                {{else}}
+                    <div class="detail-item no-events">
+                        <div class="detail-name">No events scheduled</div>
+                    </div>
+                {{/if}}
+            </div>
+        </div>
+
+        <!-- Non-Working Days Section -->
+        <div class="category-card">
+            <div class="category-header" data-category="nonWorkingDays">
+                <div class="category-info">
+                    <span class="category-dot" style="background-color: #ff7700;"></span>
+                    <span class="category-name">Non-Working Days</span>
+                </div>
+                <div class="category-count">
+                    <span class="circle non-working">{{nonWorkingDays.count}}</span>
+                    <div class="dropdown-icons">
+                        <i class="fa-solid fa-angle-down"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="category-details collapsed">
+                {{#if nonWorkingDays.items.length}}
+                    {{#each nonWorkingDays.items}}
+                        <div class="detail-item">
+                            <div class="detail-name">{{name}}</div>
+                            <div class="detail-info">
+                                <div class="detail-date">
+                                    <span><i class="fa-regular fa-calendar"></i> {{startDate}}</span>
+                                    <span><i class="fa-regular fa-clock"></i> {{startTime}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    {{/each}}
+                {{else}}
+                    <div class="detail-item no-events">
+                        <div class="detail-name">No events scheduled</div>
+                    </div>
+                {{/if}}
+            </div>
+        </div>
+
+        <!-- Holidays Section -->
+        <div class="category-card">
+            <div class="category-header" data-category="holidays">
+                <div class="category-info">
+                    <span class="category-dot" style="background-color: #4CAF50;"></span>
+                    <span class="category-name">Holidays</span>
+                </div>
+                <div class="category-count">
+                    <span class="circle holiday">{{holidays.count}}</span>
+                    <div class="dropdown-icons">
+                        <i class="fa-solid fa-angle-down"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="category-details collapsed">
+                {{#if holidays.items.length}}
+                    {{#each holidays.items}}
+                        <div class="detail-item">
+                            <div class="detail-name">{{name}}</div>
+                            <div class="detail-info">
+                                <div class="detail-date">
+                                    <span><i class="fa-regular fa-calendar"></i> {{startDate}}</span>
+                                    <span><i class="fa-regular fa-clock"></i> {{startTime}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    {{/each}}
+                {{else}}
+                    <div class="detail-item no-events">
+                        <div class="detail-name">No events scheduled</div>
+                    </div>
+                {{/if}}
+            </div>
+        </div>
+    </div>
+</div>
     <div id="google-calendar-config" 
         data-client-id='{{GOOGLE_CLIENT_ID}}'
         data-api-key='{{GOOGLE_API_KEY}}'>
@@ -230,7 +269,13 @@
 <script async defer src="https://apis.google.com/js/api.js"></script>
 <script src="https://accounts.google.com/gsi/client"></script>
 
-<script src="/js/my-events2.js"></script>
+<script src="/js/my-events.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        initializeAccordion();
+    });
+</script>
+
 
 
 

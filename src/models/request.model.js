@@ -1,6 +1,6 @@
 const db = require('../util/database');
 const helpers = require('../lib/helpers');
-
+const DiasFeriados = require('../models/diasferiados.model');
 module.exports = class Request {
 
   constructor(Id, Tipo, Fecha_I, Fecha_F,Descripcion) {
@@ -181,6 +181,12 @@ module.exports.approveSolicitud = async (idSolicitud, rol) => {
     console.log('fechafinal', fechaFin)
 
     const diasSolicitados = helpers.countWeekdays(fechaInicio, fechaFin);
+    //query dias feriados
+
+    //-----------------------------------------------------------------------------------------------------------------
+    const [result] = await DiasFeriados.fetchBetween(fechaInicio, fechaFin);
+    const feri = result[0]['COUNT(*)'];
+    console.log ('Dias feriados:', feri)
     console.log('diasSolicitados', diasSolicitados)
     // Obtener días restantes del usuario
     const [usuario] = await db.execute(`
@@ -189,9 +195,10 @@ module.exports.approveSolicitud = async (idSolicitud, rol) => {
       WHERE idUsuario = ?`, [s.idUsuario]);
     const u = usuario[0];
     console.log('dias_vaciones', u.dias_vaciones)
+    const diasfinales = u.dias_vaciones - (diasSolicitados - feri);
+    if (diasfinales>=0) {
+      
 
-    if (u.dias_vaciones >= diasSolicitados) {
-      const diasfinales = u.dias_vaciones - diasSolicitados;
       console.log('diasfinales', diasfinales)
       // Restar días
       await db.execute(`

@@ -3,6 +3,15 @@ const Request = require('../models/request.model');
 const DiasFeriados = require('../models/diasferiados.model');
 const Usuario = require('../models/usuario.model');
 const helpers = require('../lib/helpers');
+const nodemailer = require('nodemailer');
+
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: process.env.GMAIL_USER,
+        pass: process.env.GMAIL_APP_PASSWORD
+    }
+});
 
 exports.getRequests = (req, res) => {
   const mensaje = req.session.info || '';
@@ -99,84 +108,97 @@ exports.getRequests = (req, res) => {
   });
 };
 
-exports.postRequest = (request, response,next) => {
-  
-  const sessionId = request.session.idUsuario; // Definir antes de usar
-  console.log(`Id: ${sessionId}`)
-  const nombreUsuario = request.session.nombre; // Para mostrar en el mensaje
+exports.postRequest = async (request, response, next) => {
+  try {
+    const sessionId = request.session.idUsuario;
+    const nombreUsuario = request.session.nombre;
+    const apellidoUsuario = request.session.apellidos;
 
-  const requests = new Request(sessionId, request.body.tipo, request.body.fechaInicio, request.body.fechaFin,request.body.descripcion);
-  DiasFeriados.fetchBetween(request.body.fechaInicio,request.body.fechaFin)
-    .then(([rows]) => {
-      const feriados = rows[0]['COUNT(*)'];
-      if(request.body.tipo==='Vacations'){
-        //const feriados = DiasFeriados.fetchBetween(request.body.fechaInicio, request.body.fechaFin)
+    const { tipo, fechaInicio, fechaFin, descripcion } = request.body;
+
+    const requests = new Request(sessionId, tipo, fechaInicio, fechaFin, descripcion);
+
+    const [feriadoRows] = await DiasFeriados.fetchBetween(fechaInicio, fechaFin);
+    const feriados = feriadoRows[0]['COUNT(*)'];
     
-        const fechaInicio = new Date(request.body.fechaInicio);
-        const fechaFin = new Date(request.body.fechaFin);  
-        console.log(request.body.fechaInicio);
-        console.log(request.body.fechaFin);
-        // Calcular la diferencia en milisegundos y convertirla a días
-        const totalDias = helpers.countWeekdays(fechaInicio, fechaFin); // Por ahora solo excluimos fines de semana. Luego restaremos feriados si es necesario.
-        console.log('Weekdays entre fechas:', helpers.countWeekdays(fechaInicio, fechaFin));
-        console.log(totalDias)
-        Request.fetchDays(sessionId).then(([diasRestantes])=>{
-          const diaRestantes=diasRestantes[0].dias_vaciones;
-          console.log('Estos son los dias restantes:')
-          console.log(diaRestantes);
-          
-          if(totalDias>0){
-            const dias = diaRestantes-totalDias
-            console.log('Estos son los dias restantes:')
-            console.log(dias);
-            if(dias>=0){
-              requests.save()
-              .then(() => {
-                request.session.info = `Request from ${nombreUsuario} saved.`;
-                response.redirect('/nuclea/request/personal');
-                console.log('Se guardó correctamente');            
-              })
-              .catch((err) => {
-                request.session.errorRe = `Error registering request.`;
-                console.error(err);
-                response.redirect('/nuclea/request/personal');
-                response.status(500);
-              });
-            }else {
-              request.session.errorRe = `Could not register request, vacation days left ${diaRestantes}`;
-              response.redirect('/nuclea/request/personal');
-            }
-          }
-        }).catch((err)=> {
-          request.session.errorRe = `Error registering request.`;
-          console.error(err);
-          response.redirect('/nuclea/request/personal');
-          response.status(500);
-        });
-    
-      }else{
-        requests.save()
-      
-        .then(() => {
-            request.session.info = `Solicitud de ${nombreUsuario} guardado.`;
-            response.redirect('/nuclea/request/personal');
-        })
-        .catch((err) => {
-          console.error('Error al guardar la solicitud:', err.message);
-          console.error(err);
-          response.status(500).send('Error al obtener los datos');
+    const fechaInicioDate = new Date(fechaInicio);
+    const fechaFinDate = new Date(fechaFin);
+
+    const totalWeekdays = helpers.countWeekdays(fechaInicioDate, fechaFinDate);
+    const totalDias = totalWeekdays - feriados;
+
+    if (tipo === 'Vacations') {
+      if (totalDias <= 0) {
+        request.session.errorRe = 'Vacation request must contain at least 1 valid weekday.';
+        return response.redirect('/nuclea/request/personal');
+      }
+
+      const [[{ dias_vaciones }]] = await Request.fetchDays(sessionId);
+      const diasRestantes = dias_vaciones;
+
+      if (diasRestantes < totalDias) {
+        request.session.errorRe = `Could not register request, vacation days left ${diasRestantes}`;
+        return response.redirect('/nuclea/request/personal');
+      }
+    }
+
+    await requests.save();
+    request.session.info = `Request from ${nombreUsuario} saved.`;
+    console.log('Solicitud guardada exitosamente.');
+
+    const admins = await Usuario.fetchAdmins();
+    const leaders = await Usuario.fetchLeader(sessionId);
+
+    const correoAdmins = admins[0][0].Admins;
+    const correoLideres = leaders[0][0].Lideres;
+
+    console.log('Admins:', correoAdmins);
+    console.log('Lideres:', correoLideres);
+
+    console.log(correoAdmins)
+    console.log(correoLideres)
+
+    if (tipo === 'Vacations') {
+      const correoHTML = `
+        <h2>New Vacation Request Created</h2>
+        <p>A vacation request has been submitted by ${nombreUsuario} ${apellidoUsuario}.</p>
+        <ul>
+          <li><strong>From:</strong> ${fechaInicio}</li>
+          <li><strong>To:</strong> ${fechaFin}</li>
+          <li><strong>Description:</strong> ${descripcion}</li>
+        </ul>
+        <p>Please review the request in the system and proceed with the corresponding action.</p>
+        <p>Thank you!</p>
+      `;
+
+      if (correoAdmins) {
+        console.log('enviando correo admins')
+        await transporter.sendMail({
+          from: '"Nuclea App" <flowitdb@gmail.com>',
+          to: correoAdmins,
+          subject: 'New Vacation Request Created',
+          html: correoHTML,
         });
       }
-    }).catch((err)=> {
-      request.session.errorRe = `Error registering request.`;
-      console.error(err);
-      response.redirect('/nuclea/request/personal');
-      response.status(500);
-    });
 
-  
-  
+      if (correoLideres) {
+        console.log('enviando correo lideres')
+        await transporter.sendMail({
+          from: '"Nuclea App" <flowitdb@gmail.com>',
+          to: correoLideres,
+          subject: 'New Vacation Request Created',
+          html: correoHTML,
+        });
+      }
+    }
 
+    response.redirect('/nuclea/request/personal');
+  } catch (err) {
+    console.error('Error al procesar la solicitud:', err);
+    request.session.errorRe = 'Error registering request.';
+    response.redirect('/nuclea/request/personal');
+    response.status(500);
+  }
 };
 
 exports.approveRequest = (req, res) => {

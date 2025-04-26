@@ -14,8 +14,8 @@ function generateRandomPassword(length = 10) {
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASSWORD
+        user: process.env.GMAIL_USER,
+        pass: process.env.GMAIL_APP_PASSWORD
     }
 });
 
@@ -229,6 +229,7 @@ exports.getUpdate = async (req, res, next) => {
         const [roles] = await Role.fetchAll();
         const [usuarios] = await Usuario.fetchAll();
         const [deptos] = await Dept.fetchDept();
+        const [all] = await Usuario.fetchDeptAll();
 
         // Consulta para obtener los detalles del usuario con departamentos, roles y empresa
         const [usuarioDetails] = await Usuario.fetchUserDetails(idUsuario);
@@ -255,7 +256,8 @@ exports.getUpdate = async (req, res, next) => {
         res.render('../views/pages/editarUsers.hbs', {
             rols: roles,
             csrfToken: req.csrfToken(),
-            usuarioDetails:usuario, 
+            usuarioDetails:usuario,
+            usuarios:all,
             tempPassword,
             deptos,
             noUsers: nousers,
