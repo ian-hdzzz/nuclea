@@ -1,28 +1,39 @@
 <nav class="menu">
     <div class="routes">
-        <div class="logo">
-            <img src="/media/logo.png" alt="">
+        <div class="logo-container">
+            <div class="logo">
+                <img src="/media/logo.png" alt="">
+            </div>
+            <span class="company-name">Flowit</span>
         </div>
         <ul>
-            <li><a href="/nuclea/dashboard" class="nav-link {{#if (eq currentPath '/nuclea/dashboard')}}active{{/if}}">
-                <i class="fa-solid fa-house"></i>
-                <span class="nav-text">Dashboard</span>
-            </a></li>
-            <li><a href="/nuclea/request/personal" class="nav-link {{#if (eq currentPath '/nuclea/dashboard')}}active{{/if}}">
-                <i class="fa-solid fa-plane-up"></i>
-                <span class="nav-text">Vacation Requests</span>
-            </a></li>
-            <li><a href="/nuclea/one" class="nav-link {{#if (eq currentPath '/nuclea/dashboard')}}active{{/if}}">
-                <i class="fa-solid fa-people-arrows"></i>
-                <span class="nav-text">One-to-one</span>
-            </a></li> 
-            <li><a href="/nuclea/my-events" class="nav-link {{#if (eq currentPath '/nuclea/my-events')}}active{{/if}}">
-                <i class="fa-regular fa-calendar"></i>
-                <span class="nav-text">My events</span>
-            </a></li> 
+            <li>
+                <a href="/nuclea/dashboard" class="nav-link {{#if (eq currentPath '/nuclea/dashboard')}}active{{/if}}">
+                    <i class="fa-solid fa-house"></i>
+                    <span class="nav-text">Dashboard</span>
+                </a>
+            </li>
+            <li>
+                <a href="/nuclea/request/personal" class="nav-link {{#if (eq currentPath '/nuclea/request/personal')}}active{{/if}}">
+                    <i class="fa-solid fa-plane-up"></i>
+                    <span class="nav-text">Vacation Requests</span>
+                </a>
+            </li>
+            <li>
+                <a href="/nuclea/one" class="nav-link {{#if (eq currentPath '/nuclea/one')}}active{{/if}}">
+                    <i class="fa-solid fa-people-arrows"></i>
+                    <span class="nav-text">One-to-one</span>
+                </a>
+            </li> 
+            <li>
+                <a href="/nuclea/my-events" class="nav-link {{#if (eq currentPath '/nuclea/my-events')}}active{{/if}}">
+                    <i class="fa-regular fa-calendar"></i>
+                    <span class="nav-text">My events</span>
+                </a>
+            </li> 
             {{#hasPrivilege privilegios "viewcollabs"}}
                 <li>
-                    <a href="/nuclea/viewcollabs" class="nav-link {{#if (eq currentPath '/nuclea/dashboard')}}active{{/if}}">
+                    <a href="/nuclea/viewcollabs" class="nav-link {{#if (eq currentPath '/nuclea/viewcollabs')}}active{{/if}}">
                         <i class="fa fa-users"></i>
                         <span class="nav-text">Department<br>Collaborators</span>
                     </a>
@@ -40,7 +51,7 @@
             
             {{#hasPrivilege privilegios "viewAdmin"}}
                 <li>
-                    <a href="/nuclea/reports" class="nav-link {{#if (eq currentPath '/nuclea/dashboard')}}active{{/if}}">
+                    <a href="/nuclea/reports" class="nav-link {{#if (eq currentPath '/nuclea/reports')}}active{{/if}}">
                         <i class="fa-solid fa-clipboard-list"></i>
                         <span class="nav-text">Reports</span>
                     </a>
@@ -66,109 +77,189 @@
     </div>
 </nav>
 <style>
-    .menu {
-        width: 70px;
-        height: 100vh;
-        position: fixed;
-        left: 0;
-        top: 0; 
-        z-index: 1000;
-        display: flex;
-        flex-direction: column;
-        box-shadow: 5px 0 10px rgba(0, 0, 0, 0.5);
-        justify-content: space-between;
-        align-items: center;
-        background: var(--color-bg);
-        transition: width 0.3s ease;
-        overflow: hidden;
-    }
+.menu {
+    width: 70px;
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0; 
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 5px 0 10px rgba(0, 0, 0, 0.5);
+    justify-content: space-between;
+    align-items: center;
+    background: var(--color-bg);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+}
 
-    .menu:hover {
-        width: 250px;
-    }
+.menu:hover {
+    width: 250px;
+}
 
-    .routes {
-        width: 100%;
-        overflow-y: auto;
-        overflow-x: hidden;
-    }
+.routes {
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
 
-    .routes > ul {
-        text-align: left;
-        padding: 10px;
-        width: 250px;
-    }
+.routes > ul {
+    list-style: none;
+    margin: 0;
+    padding: 10px;
+    width: 100%;
+}
 
-    .routes > ul > li {
-        margin: 15px 0;
-    }
+.routes > ul > li {
+    margin: 15px 0;
+    width: 100%;
+}
 
-    .nav-link {
-        display: flex;
-        align-items: center;
-        white-space: nowrap;
-        position: relative;
-        text-decoration: none;
-        padding: 10px;
-        border-radius: 8px;
-        transition: background-color 0.3s ease;
-    }
+.routes > ul > li a {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+}
 
-    .nav-link:hover {
-        background-color: rgba(255, 255, 255, 0.1);
-    }
+.nav-link {
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+    position: relative;
+    text-decoration: none;
+    padding: 10px;
+    border-radius: 8px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    justify-content: center;
+    width: 100%;
+    cursor: pointer;
+}
 
-    .menu i {
-        color: var(--color-iconos);
-        font-size: 20px;
-        min-width: 50px;
-        text-align: center;
-        transition: .5s ease all;
-    }
+.menu:hover .nav-link {
+    justify-content: flex-start;
+}
 
-    .menu i:hover {
-        color: #fff;
-    }
+.nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
 
-    .nav-text {
-        color: var(--color-iconos);
-        font-size: 14px;
-        transition: 0.3s ease;
-        opacity: 0;
-        visibility: hidden;
-        white-space: normal;
-        line-height: 1.2;
-    }
+.nav-link:hover i,
+.nav-link:hover .nav-text {
+    color: #fff;
+}
 
-    .menu:hover .nav-text {
-        opacity: 1;
-        visibility: visible;
-        margin-left: 10px;
-    }
+.nav-link i {
+    color: var(--color-iconos);
+    font-size: 20px;
+    min-width: 50px;
+    text-align: center;
+    transition: color 0.3s ease;
+    display: inline-block;
+}
 
-    .logo {  
-        width: 35px;
-        margin: 20px auto;
-        transition: width 0.3s ease;
-    }
+.nav-link i:hover {
+    color: #fff;
+}
 
-    .menu:hover .logo {
-        width: 50px;
-    }
+.nav-text {
+    color: var(--color-iconos);
+    font-size: 14px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    opacity: 0;
+    visibility: hidden;
+    white-space: normal;
+    line-height: 1.2;
+    display: none;
+    transform: translateX(-10px);
+}
 
-    .menu a.active i,
-    .menu a.active .nav-text {
-        color: #fff;
-    }
+.menu:hover .nav-text {
+    opacity: 1;
+    visibility: visible;
+    margin-left: 10px;
+    display: block;
+    transform: translateX(0);
+}
 
-    .user {
-        width: 100%;
-        margin-top: auto;
-        border-top: 1px solid rgba(255, 255, 255, 0.1);
-    }
+.logo-container {
+    display: flex;
+    align-items: center;
+    margin: 20px auto;
+    width: 100%;
+    padding: 0 10px;
+    justify-content: center;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: translateX(0);
+    transform-origin: center;
+}
 
-    .user ul {
-        width: 250px;
-        padding: 10px;
-    }
+.menu:hover .logo-container {
+    transform: translateX(5px); /* Reducido de 10px a 5px para un movimiento más sutil */
+    justify-content: flex-start;
+}
+
+.logo {  
+    width: 35px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 1;
+    visibility: visible;
+}
+
+.menu:hover .logo {
+    width: 35px; /* Mantener el mismo tamaño */
+}
+
+.logo img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.company-name {
+    color: var(--color-fuente);
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-left: 10px;
+    opacity: 0;
+    visibility: hidden;
+    white-space: nowrap;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: translateX(-20px);
+    display: none;
+}
+
+.menu:hover .company-name {
+    opacity: 1;
+    visibility: visible;
+    display: block;
+    transform: translateX(0);
+}
+
+/* Estilo específico para el ícono de la sección activa */
+.nav-link.active i {
+    color: #fff;
+}
+
+.nav-link.active .nav-text {
+    color: #fff;
+}
+
+.user {
+    width: 100%;
+    margin-top: auto;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.user ul {
+    list-style: none;
+    margin: 0;
+    padding: 10px;
+    width: 100%;
+}
 </style>
