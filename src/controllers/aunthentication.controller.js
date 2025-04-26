@@ -8,8 +8,8 @@ const nodemailer = require('nodemailer');
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASSWORD
+        user: process.env.GMAIL_USER,
+        pass: process.env.GMAIL_APP_PASSWORD
     }
 });
 
@@ -157,50 +157,47 @@ exports.getUpdateTempPass = (req, res) => {
 };
 
 exports.postUpdateTempPass = (req, res, next) => {
-  console.log(req.body)
-  const idUser = req.session.idUsuario
+  console.log(req.body);
+  const idUser = req.session.idUsuario;
   const { newPass, confirmPass } = req.body;
-  const usMail = req.session.email
-  if (newPass != confirmPass){
+  const usMail = req.session.email;
+
+  if (newPass !== confirmPass) {
     req.session.failed = `Error updating temporary password`;
-    res.redirect("/nuclea/signup/temp");
-    res.status(500);
-  } else {
-    Usuario.UpdateTempPass(idUser, confirmPass)
-      .then(() => {
-        req.session.firstTime = 0
-        console.log('enviando a dashboard')
-        res.redirect("/nuclea/dashboard");
-      })
-      .then(() => {
-
-          console.log("Enviando correo a:", usMail); // Agregamos un log para depuración
-          const mailOptions = {
-              from: '"Nuclea App" <flowitdb@gmail.com>',
-              to: usMail,
-              subject: 'Login Credentials',
-              html: `
-                  <h2>!Temporary password changed successfully!</h2>
-                  <p>Here are your new login credentials:</p>
-                  <ul>
-                      <li><strong>Email:</strong> ${usMail}</li>
-                      <li><strong>Password:</strong> ${confirmPass}</li>
-                  </ul>
-                  <p>Please store this information securely and do not share it with anyone.</p>
-              `
-          };
-
-          return transporter.sendMail(mailOptions);
-      })
-      .catch((error) => {
-        console.log(error)
-          req.session.failed = `Error updating temporary password`;
-          res.redirect("/nuclea/signup/temp");
-          res.status(500);
-      });
+    return res.redirect("/nuclea/signup/temp");
   }
 
-  
+  Usuario.UpdateTempPass(idUser, confirmPass)
+    .then(() => {
+      console.log("Enviando correo a:", usMail);
+      
+      const mailOptions = {
+        from: '"Nuclea App" <flowitdb@gmail.com>',
+        to: usMail,
+        subject: 'Login Credentials',
+        html: `
+          <h2>¡Temporary password changed successfully!</h2>
+          <p>Here are your new login credentials:</p>
+          <ul>
+              <li><strong>Email:</strong> ${usMail}</li>
+              <li><strong>Password:</strong> ${confirmPass}</li>
+          </ul>
+          <p>Please store this information securely and do not share it with anyone.</p>
+        `
+      };
+
+      return transporter.sendMail(mailOptions);
+    })
+    .then(() => {
+      req.session.firstTime = 0;
+      console.log('Enviando a dashboard');
+      res.redirect("/nuclea/dashboard");
+    })
+    .catch((error) => {
+      console.error(error);
+      req.session.failed = `Error updating temporary password`;
+      res.redirect("/nuclea/signup/temp");
+    });
 };
 
 // Función para logout que respeta Passport
