@@ -1,44 +1,54 @@
 <nav class="menu">
-    {{!-- <i class="fa-solid fa-bars"></i> --}}
     <div class="routes">
-    <div class="logo">
-        <img src="/media/logo.png" alt="">
-    </div>
+        <div class="logo">
+            <img src="/media/logo.png" alt="">
+        </div>
         <ul>
-            <li><a href="/nuclea/dashboard" class="tooltip {{#if (eq currentPath '/nuclea/dashboard')}}active{{/if}}" ><i class="fa-solid fa-house"></i><span class="tooltip-text">Dashboard</span></a></li>
-            <li><a href="/nuclea/request/personal" class="tooltip {{#if (eq currentPath '/nuclea/dashboard')}}active{{/if}}"><i class="fa-solid fa-plane-up"></i><span class="tooltip-text">Vacation Requests</span></a></li>
-            <li><a href="/nuclea/one" class="tooltip {{#if (eq currentPath '/nuclea/dashboard')}}active{{/if}}"><i class="fa-solid fa-people-arrows"></i><span class="tooltip-text">One-to-one</span></a></li> 
-            <li><a href="/nuclea/my-events" class="tooltip {{#if (eq currentPath '/nuclea/my-events')}}active{{/if}}"><i class="fa-regular fa-calendar"></i><span class="tooltip-text">My events</span></a></li> 
+            <li><a href="/nuclea/dashboard" class="nav-link {{#if (eq currentPath '/nuclea/dashboard')}}active{{/if}}">
+                <i class="fa-solid fa-house"></i>
+                <span class="nav-text">Dashboard</span>
+            </a></li>
+            <li><a href="/nuclea/request/personal" class="nav-link {{#if (eq currentPath '/nuclea/dashboard')}}active{{/if}}">
+                <i class="fa-solid fa-plane-up"></i>
+                <span class="nav-text">Vacation Requests</span>
+            </a></li>
+            <li><a href="/nuclea/one" class="nav-link {{#if (eq currentPath '/nuclea/dashboard')}}active{{/if}}">
+                <i class="fa-solid fa-people-arrows"></i>
+                <span class="nav-text">One-to-one</span>
+            </a></li> 
+            <li><a href="/nuclea/my-events" class="nav-link {{#if (eq currentPath '/nuclea/my-events')}}active{{/if}}">
+                <i class="fa-regular fa-calendar"></i>
+                <span class="nav-text">My events</span>
+            </a></li> 
             {{#hasPrivilege privilegios "viewcollabs"}}
                 <li>
-                    <a href="/nuclea/viewcollabs" class="tooltip {{#if (eq currentPath '/nuclea/dashboard')}}active{{/if}}">
-                    <i class="fa fa-users"></i></i>
-                    <span class="tooltip-text">Department <br> Collaborators</span>
+                    <a href="/nuclea/viewcollabs" class="nav-link {{#if (eq currentPath '/nuclea/dashboard')}}active{{/if}}">
+                        <i class="fa fa-users"></i>
+                        <span class="nav-text">Department<br>Collaborators</span>
                     </a>
                 </li>
             {{/hasPrivilege}}
 
             {{#hasPrivilege privilegios "addAO"}}
                 <li>
-                    <a href="/nuclea/faltasAdministrativas" class="tooltip {{#if (eq currentPath '/nuclea/faltasAdministrativas')}}active{{/if}}">
+                    <a href="/nuclea/faltasAdministrativas" class="nav-link {{#if (eq currentPath '/nuclea/faltasAdministrativas')}}active{{/if}}">
                         <i class="fa-solid fa-triangle-exclamation"></i>
-                        <span class="tooltip-text">Administrative Offenses</span>
+                        <span class="nav-text">Administrative Offenses</span>
                     </a>
                 </li>
             {{/hasPrivilege}}
             
-            
             {{#hasPrivilege privilegios "viewAdmin"}}
                 <li>
-                    <a href="/nuclea/reports" class="tooltip {{#if (eq currentPath '/nuclea/dashboard')}}active{{/if}}">
-                    <i class="fa-solid fa-clipboard-list"></i>
-                    <span class="tooltip-text">Reports</span>
+                    <a href="/nuclea/reports" class="nav-link {{#if (eq currentPath '/nuclea/dashboard')}}active{{/if}}">
+                        <i class="fa-solid fa-clipboard-list"></i>
+                        <span class="nav-text">Reports</span>
                     </a>
                 </li>
                 <li>
-                    <a href="/nuclea/admin" class="tooltip {{#if (eq currentPath '/nuclea/admin')}}active{{/if}}">
-                    <i class="fa-solid fa-user-tie"></i>
-                    <span class="tooltip-text">Admin</span>
+                    <a href="/nuclea/admin" class="nav-link {{#if (eq currentPath '/nuclea/admin')}}active{{/if}}">
+                        <i class="fa-solid fa-user-tie"></i>
+                        <span class="nav-text">Admin</span>
                     </a>
                 </li>
             {{/hasPrivilege}}
@@ -46,13 +56,17 @@
     </div>
     <div class="user">
         <ul>
-             <li><a href="/nuclea/users/logout" title="Logout"><i class="fa-solid fa-right-from-bracket logout"></i></a></li>
-             
+            <li>
+                <a href="/nuclea/users/logout" class="nav-link">
+                    <i class="fa-solid fa-right-from-bracket logout"></i>
+                    <span class="nav-text">Logout</span>
+                </a>
+            </li>
         </ul>
     </div>
 </nav>
 <style>
-    .menu{
+    .menu {
         width: 70px;
         height: 100vh;
         position: fixed;
@@ -61,65 +75,100 @@
         z-index: 1000;
         display: flex;
         flex-direction: column;
-        box-shadow: 5px 0 10px rgba(0, 0, 0, 0.5); /* Desplazamiento a la derecha */
+        box-shadow: 5px 0 10px rgba(0, 0, 0, 0.5);
         justify-content: space-between;
         align-items: center;
         background: var(--color-bg);
+        transition: width 0.3s ease;
+        overflow: hidden;
     }
+
+    .menu:hover {
+        width: 250px;
+    }
+
+    .routes {
+        width: 100%;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+
     .routes > ul {
-        text-align: center;
+        text-align: left;
         padding: 10px;
-    }
-    .tooltip {
-        position: relative;
-        display: inline-block;
+        width: 250px;
     }
 
-    .tooltip .tooltip-text {
-        visibility: hidden;
-        background-color: black;
-        color: white;
-        font-size: 13px;
-        text-align: center;
-        padding: 5px;
-        border-radius: 5px;
-        text-transform: none; /* Asegura que el texto no se fuerce a mayúsculas */
-        
-        position: absolute;
-        bottom: 30%;
-        left: 30px;
+    .routes > ul > li {
+        margin: 15px 0;
+    }
+
+    .nav-link {
+        display: flex;
+        align-items: center;
         white-space: nowrap;
-        
-        opacity: 0;
-        transition: opacity 0.3s;
+        position: relative;
+        text-decoration: none;
+        padding: 10px;
+        border-radius: 8px;
+        transition: background-color 0.3s ease;
     }
 
-    .tooltip:hover .tooltip-text {
-        visibility: visible;
-        opacity: 1;
+    .nav-link:hover {
+        background-color: rgba(255, 255, 255, 0.1);
     }
-    .menu i{
+
+    .menu i {
         color: var(--color-iconos);
         font-size: 20px;
-        margin: 22px auto;
+        min-width: 50px;
+        text-align: center;
         transition: .5s ease all;
     }
-    .menu i:hover{
+
+    .menu i:hover {
         color: #fff;
-        font-size: 20px;
     }
 
-    .logo{  
+    .nav-text {
+        color: var(--color-iconos);
+        font-size: 14px;
+        transition: 0.3s ease;
+        opacity: 0;
+        visibility: hidden;
+        white-space: normal;
+        line-height: 1.2;
+    }
+
+    .menu:hover .nav-text {
+        opacity: 1;
+        visibility: visible;
+        margin-left: 10px;
+    }
+
+    .logo {  
         width: 35px;
         margin: 20px auto;
+        transition: width 0.3s ease;
     }
-    .menu a.active i {
+
+    .menu:hover .logo {
+        width: 50px;
+    }
+
+    .menu a.active i,
+    .menu a.active .nav-text {
         color: #fff;
     }
 
+    .user {
+        width: 100%;
+        margin-top: auto;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
 
-
-
-    
-
+    .user ul {
+        width: 250px;
+        padding: 10px;
+    }
 </style>
