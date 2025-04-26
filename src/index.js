@@ -94,6 +94,7 @@ app.use('/nuclea', require('./routes/reports.routes'));
 app.use('/nuclea', require('./routes/admin.routes'));
 app.use('/nuclea', require('./routes/profile.routes'));
 app.use('/nuclea', require('./routes/my-events.routes'));
+app.use('/nuclea', require('./routes/agendar.routes')); // Nueva ruta para agendar one-to-one
 const departamentRoutes = require('./routes/departament.routes');
 app.use('/nuclea/departament', departamentRoutes);
 const faltaAdministrativa = require('./routes/faltaAdministrativa.routes');

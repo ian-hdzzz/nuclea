@@ -9,9 +9,11 @@ class SchedulePopup {
         this.searchContainer = document.querySelector('#search-container-employeeSearchPopup');
         this.searchInput = document.querySelector('#employeeSearchPopup');
         this.selectedUser = null;
+        this.scheduleButton = document.querySelector('.popup-buttons .button.is-info');
 
         this.initializeFlatpickr();
         this.setupEventListeners();
+        this.setupScheduleButton();
     }
 
     initializeFlatpickr() {
@@ -93,6 +95,57 @@ class SchedulePopup {
                 this.handleUserSelection(event.detail);
             }
         });
+    }
+
+    setupScheduleButton() {
+        if (this.scheduleButton) {
+            this.scheduleButton.addEventListener('click', async () => {
+                if (!this.selectedUser) {
+                    alert('Please select a team member');
+                    return;
+                }
+
+                const selectedDate = this.datePicker.selectedDates[0];
+                if (!selectedDate) {
+                    alert('Please select a date');
+                    return;
+                }
+
+                const dateStr = selectedDate.toISOString().split('T')[0];
+                const timeStr = this.timeInput.value;
+                
+                try {
+                    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+                    
+                    const response = await fetch('/nuclea/agendar-one-to-one', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'CSRF-Token': csrfToken
+                        },
+                        body: JSON.stringify({
+                            selectedUserId: this.selectedUser.id,
+                            date: dateStr,
+                            time: timeStr,
+                            _csrf: csrfToken
+                        })
+                    });
+
+                    const data = await response.json();
+
+                    if (data.success) {
+                        alert('Meeting scheduled successfully!');
+                        this.close();
+                        window.location.reload();
+                    } else {
+                        alert(data.message || 'Failed to schedule meeting');
+                    }
+                } catch (error) {
+                    console.error('Error scheduling meeting:', error);
+                    alert('An error occurred while scheduling the meeting');
+                }
+            });
+        }
     }
 
     updateTimeInput() {

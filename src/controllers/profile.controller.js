@@ -10,5 +10,6 @@ exports.getProfile = (req, res, next)=>{
         departamentos: req.session.departamentos || [],
         title: 'Profile',
         iconClass: 'fa-solid fa-user',
+        csrfToken: req.csrfToken() // Añadiendo el token explícitamente
     });
 };
