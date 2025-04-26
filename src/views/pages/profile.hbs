@@ -109,213 +109,28 @@
             </div>
         </div>
     </div>
-    <!-- Add this code at the end of your body, right before the closing body tag -->
+    <!-- Incluir el componente del popup -->
+    {{> schedulePopup}}
 
-<!-- Popup Overlay -->
-<div class="popup-overlay" id="popupOverlay">
-    <div class="popup">
-        <button class="close-btn" id="closePopupBtn">✕</button>
-        <div class="popup-header">
-            <h2 class="popup-title">Schedule One-to-One Meeting</h2>
-            <p class="popup-subtitle">Select a team member and schedule your one-to-one meeting.</p>
-        </div>
-
-        <div class="form-group">
-            <div class="search-input-wrapper">
-                {{> search
-                title="Search team member" 
-                placeholder="Mauricio Hernández..." 
-                searchId="employeeSearchPopup"
-                searchType="users"
-                contacts=employees}}
-                <div id="selectedUserTags" class="selected-tags"></div>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label class="form-label">Date</label>
-            <div class="date-picker-container">
-                <div class="date-input" id="dateInput">
-                    <span class="calendar-icon"><i class="fas fa-calendar"></i></span>
-                    <span>Pick a date</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label class="form-label">Time</label>
-            <div class="time-picker-container">
-                <input type="text" class="time-input" id="timeInput" value="09:00 a.m." readonly>
-                <div class="time-dropdown" id="timeDropdown">
-                    <div class="hours-column">
-                        <div class="time-option selected">09</div>
-                        <div class="time-option">10</div>
-                        <div class="time-option">11</div>
-                        <div class="time-option">12</div>
-                        <div class="time-option">01</div>
-                        <div class="time-option">02</div>
-                        <div class="time-option">03</div>
-                    </div>
-                    <div class="minutes-column">
-                        <div class="time-option selected">00</div>
-                        <div class="time-option">15</div>
-                        <div class="time-option">30</div>
-                        <div class="time-option">45</div>
-                    </div>
-                    <div class="period-column">
-                        <div class="time-option selected">a.m.</div>
-                        <div class="time-option">p.m.</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="action-buttons popup-buttons">
-            <button class="button" id="cancelBtn">Cancel</button>
-            <button class="button is-info">Schedule Meeting</button>
-        </div>
-    </div>
-</div>
-
-<!-- Add this script at the end of your body -->
-<script>
-   
-
-document.addEventListener('DOMContentLoaded', function() {
-    // Get the button and popup elements
-    const scheduleBtn = document.querySelector('.quick-actions .button.is-info');
-    const popupOverlay = document.getElementById('popupOverlay');
-    const closePopupBtn = document.getElementById('closePopupBtn');
-    const cancelBtn = document.getElementById('cancelBtn');
-    const timeInput = document.getElementById('timeInput');
-    const timeDropdown = document.getElementById('timeDropdown');
-    const dateInput = document.getElementById('dateInput');
+    <!-- Font Awesome y Flatpickr -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.js"></script>
+    <!-- Script del componente -->
+    <script src="/js/schedulePopup.js"></script>
     
-    // Initialize Flatpickr with custom styling
-    const datePicker = flatpickr(dateInput, {
-        dateFormat: "F j, Y",
-        disableMobile: true,
-        minDate: "today",
-        theme: "dark",
-        inline: false,
-        onChange: function(selectedDates, dateStr) {
-            // Update the text content when a date is selected
-            dateInput.innerHTML = `
-                <span class="calendar-icon"><i class="fas fa-calendar"></i></span>
-                <span>${dateStr}</span>
-            `;
-        },
-        onOpen: function() {
-            // Add custom styling to the calendar
-            setTimeout(() => {
-                const calendar = document.querySelector('.flatpickr-calendar');
-                if (calendar) {
-                    calendar.style.backgroundColor = '#0B1019';
-                    calendar.style.color = 'white';
-                    calendar.style.borderColor = '#2C3E50';
-                }
-            }, 0);
-        }
-    });
-    
-    // Open popup when Schedule One-to-One button is clicked
-    scheduleBtn.addEventListener('click', function() {
-        popupOverlay.classList.add('active');
-    });
-    
-    // Close popup when close button or cancel button is clicked
-    closePopupBtn.addEventListener('click', function() {
-        popupOverlay.classList.remove('active');
-    });
-    
-    cancelBtn.addEventListener('click', function() {
-        popupOverlay.classList.remove('active');
-    });
-    
-    // Toggle time dropdown when time input is clicked
-    timeInput.addEventListener('click', function() {
-        timeDropdown.classList.toggle('active');
-    });
-    
-    // Close dropdown when clicking outside
-    document.addEventListener('click', function(event) {
-        if (!timeInput.contains(event.target) && !timeDropdown.contains(event.target)) {
-            timeDropdown.classList.remove('active');
-        }
-    });
-    
-    // Select time options
-    const timeOptions = document.querySelectorAll('.time-option');
-    timeOptions.forEach(option => {
-        option.addEventListener('click', function() {
-            // Remove selected class from siblings
-            const parent = this.parentElement;
-            parent.querySelectorAll('.time-option').forEach(opt => {
-                opt.classList.remove('selected');
-            });
-            
-            // Add selected class to clicked option
-            this.classList.add('selected');
-            
-            // Update time input
-            updateTimeInput();
-        });
-    });
-    
-    function updateTimeInput() {
-        const selectedHour = document.querySelector('.hours-column .selected').textContent;
-        const selectedMinute = document.querySelector('.minutes-column .selected').textContent;
-        const selectedPeriod = document.querySelector('.period-column .selected').textContent;
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const scheduleBtn = document.querySelector('.quick-actions .button.is-info');
+        const popup = new SchedulePopup();
         
-        timeInput.value = `${selectedHour}:${selectedMinute} ${selectedPeriod}`;
-    }
-
-    // Handle selected users in popup
-    const searchContainer = document.querySelector('#search-container-employeeSearchPopup');
-    if (searchContainer) {
-        searchContainer.setAttribute('data-in-popup', 'true');
-    }
-
-    const selectedUserTags = document.getElementById('selectedUserTags');
-    const selectedUsers = new Set();
-
-    document.addEventListener('contact-selected', function(event) {
-        if (event.detail.searchId === 'employeeSearchPopup') {
-            const userId = event.detail.id;
-            const userName = event.detail.name;
-            
-            if (!selectedUsers.has(userId)) {
-                selectedUsers.add(userId);
-                
-                const tag = document.createElement('div');
-                tag.className = 'selected-user-tag';
-                tag.dataset.userId = userId;
-                tag.innerHTML = `
-                    <span>${userName}</span>
-                    <span class="remove-tag">✕</span>
-                `;
-                
-                tag.querySelector('.remove-tag').addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    selectedUsers.delete(userId);
-                    tag.remove();
-                });
-                
-                selectedUserTags.appendChild(tag);
-                
-                // Clear the search input
-                const searchInput = document.getElementById('employeeSearchPopup');
-                if (searchInput) {
-                    searchInput.value = '';
-                    // Trigger input event to restore original contact list
-                    searchInput.dispatchEvent(new Event('input'));
-                }
-            }
+        // Abrir popup cuando se hace click en el botón
+        if (scheduleBtn) {
+            scheduleBtn.addEventListener('click', () => {
+                popup.open();
+            });
         }
     });
-});
-</script>
-    <!-- Font Awesome para los iconos -->
+    </script>
+</body>
 
 
 
