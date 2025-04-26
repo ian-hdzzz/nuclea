@@ -737,22 +737,14 @@ function updateCategoryDetails(category, events) {
 
     const detailsHtml = events.map(event => {
         const start = new Date(event.start);
-        const end = new Date(event.end);
-        const dateStr = start.getTime() === end.getTime() ? 
-            formatDate(start) : 
-            `${formatDate(start)} - ${formatDate(end)}`;
         
-        const timeStr = event.allDay ? 'All day' : `${formatTime(start)} - ${formatTime(end)}`;
-
         return `
             <div class="detail-item" data-event-id="${event.id}">
                 <div class="detail-name">${event.title}</div>
                 <div class="detail-info">
                     <div class="detail-date">
-                        <i class="fa-regular fa-calendar"></i> ${dateStr}
-                    </div>
-                    <div class="detail-time">
-                        <i class="fa-regular fa-clock"></i> ${timeStr}
+                        <div class="date-group"><i class="fa-regular fa-calendar"></i>${formatDate(start)}</div>
+                        <div class="time-group"><i class="fa-regular fa-clock"></i>${event.allDay ? 'All day' : formatTime(start)}</div>
                     </div>
                 </div>
             </div>

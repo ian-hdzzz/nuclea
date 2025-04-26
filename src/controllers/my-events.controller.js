@@ -67,11 +67,9 @@ const eventosController = {
 
     renderCalendario: async (req, res) => {
         try {
-            // Obtener todos los eventos del usuario
             const eventos = await Evento.findByUsuarioId(req.session.idUsuario);
             const tipos = await Tipo.findAll();
 
-            // Agrupar eventos por tipo
             const eventosPorTipo = {};
             tipos.forEach(tipo => {
                 eventosPorTipo[tipo.tipo_id] = {
@@ -79,41 +77,42 @@ const eventosController = {
                     nombre: tipo.nombre,
                     color: tipo.color,
                     count: 0,
-                    events: []
+                    items: []
                 };
             });
 
-            // Procesar y contar eventos
             eventos
                 .filter(evento => evento.fechaInicio && evento.fechaFin)
                 .forEach(evento => {
                     if (eventosPorTipo[evento.tipoId]) {
                         eventosPorTipo[evento.tipoId].count++;
-                        eventosPorTipo[evento.tipoId].events.push({
+                        
+                        const startDate = new Date(evento.fechaInicio);
+                        
+                        // Format all events to show only start date and time
+                        eventosPorTipo[evento.tipoId].items.push({
                             name: evento.titulo,
-                            date: formatDateRange(
-                                new Date(evento.fechaInicio),
-                                new Date(evento.fechaFin)
-                            ),
-                            allDay: evento.diaCompleto === 1,
-                            time: !evento.diaCompleto ? formatTimeRange(evento.horaInicio, evento.horaFin) : null
+                            startDate: startDate.toLocaleDateString(),
+                            startTime: evento.horaInicio,
                         });
                     }
                 });
 
-            const sidebarData = {
-                eventTypes: Object.values(eventosPorTipo)
-            };
-
-            res.render('./pages/my-events', {
+            // Map the eventos por tipo to match template variables
+            const templateData = {
+                oneToOne: eventosPorTipo[2] || { count: 0, items: [] },
+                vacations: eventosPorTipo[1] || { count: 0, items: [] },
+                holidays: eventosPorTipo[3] || { count: 0, items: [] },
+                nonWorkingDays: eventosPorTipo[4] || { count: 0, items: [] },
                 title: 'Mi Calendario',
                 tipos: tipos,
                 usuarioId: req.session.idUsuario,
-                sidebarData: sidebarData,
                 GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
                 GOOGLE_API_KEY: process.env.GOOGLE_API_KEY,
                 iconClass: 'fa-regular fa-calendar'
-            });
+            };
+
+            res.render('./pages/my-events', templateData);
         } catch (error) {
             console.error('Error al renderizar calendario:', error);
             res.status(500).send('Error al cargar la página');

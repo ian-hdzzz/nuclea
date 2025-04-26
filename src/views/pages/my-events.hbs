@@ -127,7 +127,6 @@
                     <span class="circle meeting">{{oneToOne.count}}</span>
                     <div class="dropdown-icons">
                         <i class="fa-solid fa-angle-down"></i>
-
                     </div>
                 </div>
             </div>
@@ -138,10 +137,10 @@
                         <div class="detail-item">
                             <div class="detail-name">{{name}}</div>
                             <div class="detail-info">
-                                <div class="detail-date">{{date}}</div>
-                                {{#if duration}}
-                                    <div class="detail-duration">{{duration}}</div>
-                                {{/if}}
+                                <div class="detail-date">
+                                    <span><i class="fa-regular fa-calendar"></i> {{startDate}}</span>
+                                    <span><i class="fa-regular fa-clock"></i> {{startTime}}</span>
+                                </div>
                             </div>
                         </div>
                     {{/each}}
@@ -164,7 +163,6 @@
                     <span class="circle vacation">{{vacations.count}}</span>
                     <div class="dropdown-icons">
                         <i class="fa-solid fa-angle-down"></i>
-
                     </div>
                 </div>
             </div>
@@ -175,10 +173,10 @@
                         <div class="detail-item">
                             <div class="detail-name">{{name}}</div>
                             <div class="detail-info">
-                                <div class="detail-date">{{date}}</div>
-                                {{#if duration}}
-                                    <div class="detail-duration">{{duration}}</div>
-                                {{/if}}
+                                <div class="detail-date">
+                                    <span><i class="fa-regular fa-calendar"></i> {{startDate}}</span>
+                                    <span><i class="fa-regular fa-clock"></i> {{startTime}}</span>
+                                </div>
                             </div>
                         </div>
                     {{/each}}
@@ -201,7 +199,6 @@
                     <span class="circle non-working">{{nonWorkingDays.count}}</span>
                     <div class="dropdown-icons">
                         <i class="fa-solid fa-angle-down"></i>
-
                     </div>
                 </div>
             </div>
@@ -212,10 +209,10 @@
                         <div class="detail-item">
                             <div class="detail-name">{{name}}</div>
                             <div class="detail-info">
-                                <div class="detail-date">{{date}}</div>
-                                {{#if duration}}
-                                    <div class="detail-duration">{{duration}}</div>
-                                {{/if}}
+                                <div class="detail-date">
+                                    <span><i class="fa-regular fa-calendar"></i> {{startDate}}</span>
+                                    <span><i class="fa-regular fa-clock"></i> {{startTime}}</span>
+                                </div>
                             </div>
                         </div>
                     {{/each}}
@@ -238,7 +235,6 @@
                     <span class="circle holiday">{{holidays.count}}</span>
                     <div class="dropdown-icons">
                         <i class="fa-solid fa-angle-down"></i>
-                        <i class="fa-solid fa-angle-up"></i>
                     </div>
                 </div>
             </div>
@@ -249,10 +245,10 @@
                         <div class="detail-item">
                             <div class="detail-name">{{name}}</div>
                             <div class="detail-info">
-                                <div class="detail-date">{{date}}</div>
-                                {{#if duration}}
-                                    <div class="detail-duration">{{duration}}</div>
-                                {{/if}}
+                                <div class="detail-date">
+                                    <span><i class="fa-regular fa-calendar"></i> {{startDate}}</span>
+                                    <span><i class="fa-regular fa-clock"></i> {{startTime}}</span>
+                                </div>
                             </div>
                         </div>
                     {{/each}}
