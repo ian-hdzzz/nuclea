@@ -43,12 +43,12 @@ class SchedulePopup {
     }
 
     setupEventListeners() {
-        // Configurar el contenedor de búsqueda
+        // Configure the search container
         if (this.searchContainer) {
             this.searchContainer.setAttribute('data-in-popup', 'true');
         }
 
-        // Manejo de cierre del popup
+        // Handle popup close
         if (this.closePopupBtn) {
             this.closePopupBtn.addEventListener('click', () => this.close());
         }
@@ -65,7 +65,7 @@ class SchedulePopup {
             });
         }
 
-        // Manejo del selector de tiempo
+        // Handle time selector
         this.timeInput.addEventListener('click', () => {
             this.timeDropdown.classList.toggle('active');
         });
@@ -76,7 +76,7 @@ class SchedulePopup {
             }
         });
 
-        // Configurar opciones de tiempo
+        // Configure time options
         const timeOptions = document.querySelectorAll('.time-option');
         timeOptions.forEach(option => {
             option.addEventListener('click', () => {
@@ -89,7 +89,7 @@ class SchedulePopup {
             });
         });
 
-        // Manejar selección de usuario
+        // Handle user selection
         document.addEventListener('contact-selected', (event) => {
             if (event.detail.searchId === 'employeeSearchPopup') {
                 this.handleUserSelection(event.detail);
@@ -207,5 +207,5 @@ class SchedulePopup {
     }
 }
 
-// Exportar la clase para uso global
+// Export the class for global use
 window.SchedulePopup = SchedulePopup;

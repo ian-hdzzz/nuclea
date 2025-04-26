@@ -7,6 +7,8 @@ const { json } = require('stream/consumers');
 const flash = require('connect-flash');
 const session = require('express-session');
 const passport = require('./util/passport'); // Importar configuración de Passport
+const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser'); // Añadimos cookie-parser
 
 // initialitations
 const app = express();
@@ -25,11 +27,15 @@ const exphbs = create({
 app.engine('.hbs', exphbs.engine); 
 app.set('view engine', '.hbs');
 
+// Configurar raw body parsing para webhooks de WhatsApp antes de otros middleware
+app.use('/api/whatsapp/webhook', express.raw({ type: 'application/json' }));
+
 // middlewares
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({extended:false}));
 app.use(express.static('public'));
+app.use(cookieParser()); // Añadimos el middleware de cookie-parser
 
 // Configuración de la sesión
 app.use(session({
@@ -47,8 +53,6 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-
-const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
@@ -65,8 +69,23 @@ const fileStorage = multer.diskStorage({
 
 app.use(multer({ storage: fileStorage}).single('archivo')); 
 
+// Configuración de CSRF
 const csrf = require('csurf');
-const csrfProtection = csrf();
+const csrfProtection = csrf({
+    cookie: true,
+    ignoreMethods: ['GET', 'HEAD', 'OPTIONS'],
+    ignore: (req) => {
+        // Ignorar rutas de API y webhooks
+        return req.path.startsWith('/api/') || 
+               req.path.includes('/webhook') ||
+               req.path.includes('/agendar-one-to-one');
+    }
+});
+
+// Aplicar protección CSRF después de las rutas de API
+const whatsappRoutes = require('./routes/whatsapp.routes');
+app.use('/api/whatsapp', whatsappRoutes);
+
 app.use(csrfProtection);
 
 // Variables globales
@@ -82,9 +101,6 @@ app.use((req, res, next) => {
 });
 
 // Rutas
-const whatsappRoutes = require('./routes/whatsapp.routes');
-app.use('/api/whatsapp', whatsappRoutes);
-
 app.use(require('./routes/index.routes'));
 app.use(require('./routes/google.routes'));
 app.use('/nuclea', require('./routes/authentication.routes'));

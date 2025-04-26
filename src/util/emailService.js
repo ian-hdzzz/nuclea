@@ -8,7 +8,7 @@ const createTransporter = () => {
             user: process.env.GMAIL_USER,
             pass: process.env.GMAIL_APP_PASSWORD
         },
-        pool: true, // Use pooled connections
+        pool: true,
         maxConnections: 3,
         rateDelta: 1000,
         rateLimit: 3

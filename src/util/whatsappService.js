@@ -3,10 +3,11 @@ require('dotenv').config();
 
 const WHATSAPP_TOKEN = process.env.WHATSAPP_TOKEN;
 const WHATSAPP_PHONE_NUMBER_ID = process.env.WHATSAPP_PHONE_NUMBER_ID;
+const TEST_PHONE_NUMBER = '5551424979';
 const VERSION = 'v17.0';
 
 const formatDate = (date) => {
-    return new Date(date).toLocaleDateString('es-ES', {
+    return new Date(date).toLocaleDateString('en-US', {
         weekday: 'long',
         year: 'numeric',
         month: 'long',
@@ -15,10 +16,10 @@ const formatDate = (date) => {
 };
 
 const formatNumber = (phoneNumber) => {
-    // Eliminar cualquier carácter que no sea número
+    // Remove any non-numeric characters
     const cleaned = phoneNumber.replace(/\D/g, '');
     
-    // Asegurarse que empiece con el código de país (52 para México)
+    // Ensure it starts with country code (52 for Mexico)
     if (!cleaned.startsWith('52')) {
         return '52' + cleaned;
     }
@@ -27,10 +28,14 @@ const formatNumber = (phoneNumber) => {
 
 const sendWhatsAppNotification = async (recipientPhone, meetingDetails) => {
     try {
+        // For testing, use the test phone number
+        const isTestMode = process.env.NODE_ENV !== 'production';
+        const phoneToUse = isTestMode ? TEST_PHONE_NUMBER : recipientPhone;
+
         const url = `https://graph.facebook.com/${VERSION}/${WHATSAPP_PHONE_NUMBER_ID}/messages`;
         
         const formattedDate = formatDate(meetingDetails.date);
-        const formattedPhone = formatNumber(recipientPhone);
+        const formattedPhone = formatNumber(phoneToUse);
 
         const message = {
             messaging_product: "whatsapp",
@@ -40,7 +45,7 @@ const sendWhatsAppNotification = async (recipientPhone, meetingDetails) => {
             template: {
                 name: "reunion_onetoone",
                 language: {
-                    code: "es"
+                    code: "en"
                 },
                 components: [
                     {
@@ -64,6 +69,12 @@ const sendWhatsAppNotification = async (recipientPhone, meetingDetails) => {
             'Authorization': `Bearer ${WHATSAPP_TOKEN}`,
             'Content-Type': 'application/json'
         };
+
+        console.log('Sending WhatsApp notification:', {
+            phoneNumber: formattedPhone,
+            date: formattedDate,
+            time: meetingDetails.time
+        });
 
         const response = await axios.post(url, message, { headers });
         console.log('WhatsApp notification sent successfully:', response.data);
