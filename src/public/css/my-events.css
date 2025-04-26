@@ -714,7 +714,7 @@
     flex-direction: column;
     gap: 2px;
     margin-top: 2px;
-    overflow: hidden.
+    overflow: hidden;
   }
   
   .day-event-tag {
@@ -1125,7 +1125,7 @@
 }
 .circle.non-working{
     background-color: rgba(176, 107, 63, 0.5);
-    color: #B06B3F;
+    color: #fff;
 }
 
 /* Animación para la flecha de dropdown */

@@ -1,4 +1,3 @@
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -122,12 +121,15 @@
         </div>
 
         <div class="form-group">
-            {{> search
-            title="Search team member" 
-                    placeholder="Mauricio Hernández..." 
-                    searchId="employeeSearch"
-                    searchType="users"
-                    contacts=employees}}
+            <div class="search-input-wrapper">
+                {{> search
+                title="Search team member" 
+                placeholder="Mauricio Hernández..." 
+                searchId="employeeSearchPopup"
+                searchType="users"
+                contacts=employees}}
+                <div id="selectedUserTags" class="selected-tags"></div>
+            </div>
         </div>
 
         <div class="form-group">
@@ -267,6 +269,50 @@ document.addEventListener('DOMContentLoaded', function() {
         
         timeInput.value = `${selectedHour}:${selectedMinute} ${selectedPeriod}`;
     }
+
+    // Handle selected users in popup
+    const searchContainer = document.querySelector('#search-container-employeeSearchPopup');
+    if (searchContainer) {
+        searchContainer.setAttribute('data-in-popup', 'true');
+    }
+
+    const selectedUserTags = document.getElementById('selectedUserTags');
+    const selectedUsers = new Set();
+
+    document.addEventListener('contact-selected', function(event) {
+        if (event.detail.searchId === 'employeeSearchPopup') {
+            const userId = event.detail.id;
+            const userName = event.detail.name;
+            
+            if (!selectedUsers.has(userId)) {
+                selectedUsers.add(userId);
+                
+                const tag = document.createElement('div');
+                tag.className = 'selected-user-tag';
+                tag.dataset.userId = userId;
+                tag.innerHTML = `
+                    <span>${userName}</span>
+                    <span class="remove-tag">✕</span>
+                `;
+                
+                tag.querySelector('.remove-tag').addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    selectedUsers.delete(userId);
+                    tag.remove();
+                });
+                
+                selectedUserTags.appendChild(tag);
+                
+                // Clear the search input
+                const searchInput = document.getElementById('employeeSearchPopup');
+                if (searchInput) {
+                    searchInput.value = '';
+                    // Trigger input event to restore original contact list
+                    searchInput.dispatchEvent(new Event('input'));
+                }
+            }
+        }
+    });
 });
 </script>
     <!-- Font Awesome para los iconos -->
