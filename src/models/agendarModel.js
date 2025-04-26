@@ -47,6 +47,35 @@ class AgendarModel {
             throw error;
         }
     }
+
+    static async getUserEmail(userId) {
+        try {
+            const [rows] = await pool.query(
+                'SELECT Correo_electronico FROM Usuarios WHERE idUsuario = ?',
+                [userId]
+            );
+            return rows.length > 0 ? rows[0].Correo_electronico : null;
+        } catch (error) {
+            console.error('Error getting user email:', error);
+            throw error;
+        }
+    }
+
+    static async getUserContact(userId) {
+        try {
+            const [rows] = await pool.query(
+                'SELECT Correo_electronico, telefono FROM Usuarios WHERE idUsuario = ?',
+                [userId]
+            );
+            return rows.length > 0 ? {
+                email: rows[0].Correo_electronico,
+                phone: rows[0].telefono
+            } : null;
+        } catch (error) {
+            console.error('Error getting user contact info:', error);
+            throw error;
+        }
+    }
 }
 
 module.exports = AgendarModel;

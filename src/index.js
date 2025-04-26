@@ -82,6 +82,9 @@ app.use((req, res, next) => {
 });
 
 // Rutas
+const whatsappRoutes = require('./routes/whatsapp.routes');
+app.use('/api/whatsapp', whatsappRoutes);
+
 app.use(require('./routes/index.routes'));
 app.use(require('./routes/google.routes'));
 app.use('/nuclea', require('./routes/authentication.routes'));
