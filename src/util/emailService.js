@@ -25,7 +25,16 @@ const getFormattedDate = (date) => {
 };
 
 const getFormattedTime = (time) => {
-    return time;
+    // Parse the time string (HH:mm)
+    const [hours, minutes] = time.split(':').map(Number);
+    // Calculate end time (1 hour later)
+    const endHours = (hours + 1) % 24;
+    
+    // Format start and end times in 24-hour format
+    const startTime = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+    const endTime = `${String(endHours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+    
+    return `${startTime} - ${endTime}`;
 };
 
 const sendMeetingInvitation = async (recipientEmail, meetingDetails) => {

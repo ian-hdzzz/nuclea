@@ -3,10 +3,12 @@ const pool = require('../util/database');
 class AgendarModel {
     static async createOneToOne(selectedUserId, fechaInicio, horaInicio) {
         try {
-            // La reunión durará 1 hora por defecto
-            const horaFin = new Date(
-                new Date(`${fechaInicio} ${horaInicio}`).getTime() + 60 * 60 * 1000
-            ).toTimeString().split(' ')[0];
+            // Convertir la hora de inicio a objeto Date
+            const startDateTime = new Date(`${fechaInicio}T${horaInicio}`);
+            // Agregar una hora
+            const endDateTime = new Date(startDateTime.getTime() + 60 * 60 * 1000);
+            // Obtener la hora final en formato HH:mm
+            const horaFin = endDateTime.toTimeString().slice(0, 5);
 
             const query = `
                 INSERT INTO eventos 
@@ -18,7 +20,7 @@ class AgendarModel {
             const [result] = await pool.query(query, [
                 fechaInicio,
                 horaInicio,
-                fechaInicio, // La fecha fin es la misma que la fecha inicio ya que es el mismo día
+                fechaInicio,
                 horaFin,
                 selectedUserId
             ]);
