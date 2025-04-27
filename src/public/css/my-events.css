@@ -860,7 +860,7 @@
   }
   
   .event-type-container {
-    margin-bottom: 10px.
+    margin-bottom: 10px;
   }
   
   .event-type-header {
@@ -1256,90 +1256,4 @@
 
 .date-group i, .time-group i {
     margin-right: 4px;
-}
-
-/* Styles for 24-hour time picker with scrolling */
-.time-picker-container {
-    position: relative;
-    width: 100%;
-}
-
-.time-input {
-    width: 100%;
-    padding: 8px 12px;
-    border: 1px solid var(--border-color);
-    border-radius: 6px;
-    background-color: var(--card-bg);
-    color: var(--text-color);
-    font-size: 14px;
-    cursor: pointer;
-}
-
-.time-dropdown {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    width: 120px;
-    background-color: var(--card-bg);
-    border: 1px solid var(--border-color);
-    border-radius: 6px;
-    display: none;
-    z-index: 1000;
-}
-
-.time-dropdown.show {
-    display: flex;
-}
-
-.hours-column, .minutes-column {
-    flex: 1;
-    max-height: 200px;
-    overflow-y: auto;
-    scrollbar-width: thin;
-    scrollbar-color: var(--blue-color) var(--card-bg);
-}
-
-.hours-column::-webkit-scrollbar,
-.minutes-column::-webkit-scrollbar {
-    width: 6px;
-}
-
-.hours-column::-webkit-scrollbar-track,
-.minutes-column::-webkit-scrollbar-track {
-    background: var(--card-bg);
-}
-
-.hours-column::-webkit-scrollbar-thumb,
-.minutes-column::-webkit-scrollbar-thumb {
-    background-color: var(--blue-color);
-    border-radius: 3px;
-}
-
-.time-option {
-    padding: 8px 12px;
-    text-align: center;
-    cursor: pointer;
-    color: var(--text-color);
-    transition: background-color 0.2s;
-}
-
-.time-option:hover {
-    background-color: var(--border-color);
-}
-
-.time-option.selected {
-    background-color: var(--blue-color);
-    color: white;
-}
-
-/* Separator between hours and minutes */
-.hours-column {
-    border-right: 1px solid var(--border-color);
-}
-
-/* For mobile devices */
-@media (max-width: 768px) {
-    .time-dropdown {
-        width: 100%;
-    }
 }
