@@ -2,7 +2,7 @@
     <link rel="stylesheet" href="/css/interview.css">
 </head>
 
-<div class="container-one">
+
     <div class="container-questions">
       {{#if employee}}
         <div class="header">
@@ -33,10 +33,7 @@
                 <p class="label">Name:</p>
                 <p class="description">{{employee.Nombre}}  {{employee.Apellidos}}</p>
               </div>
-             <div class="target">
-                <p class="label">Department:</p>
-                <p class="description">{{#if employee.Departamentos}}{{ employee.Departamentos}}{{else}}Not specified{{/if}}</p>
-              </div>
+             
              <div class="target">
                 <p class="label">Administrative faults:</p>
                 <p class="description">None</p>
@@ -49,8 +46,8 @@
               <h3 class="comment-title">
                 <i class="fa-solid fa-shield-halved"></i>
                 Admin Comments
-                <span class="subtitle">(personal notes)</span>
               </h3>
+                <span class="subtitle">(personal notes)</span>
               <textarea 
                 class="comment-textarea" 
                 placeholder="Keep track on {{employee.Nombre}}'s performance..."
@@ -83,7 +80,7 @@
           </div>
         </div>
     </div>
-</div>
+
 <script>
 
 document.addEventListener('DOMContentLoaded', function () {

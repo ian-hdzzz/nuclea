@@ -130,10 +130,17 @@ body {
     height: auto;
     margin: 0;
     background-color:  var(--color-bg-secundario);
-    border-radius: 8px;
-    padding: 20px;
+    border-radius: 12px;
+    padding: 1.5rem;
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     flex: 2;
+    transition: transform 0.3s ease;
+    height: 400px;
+    position: relative;
+  }
+
+  .graph-container:hover {
+    transform: translateY(-5px);
   }
 
 .team-overview{
@@ -156,4 +163,65 @@ body {
 .chart-container.report canvas{
   margin-bottom: 0;
   padding-bottom: 0;
+}
+
+/* Estilos para el modal y la gráfica */
+#modalGrafica {
+  backdrop-filter: blur(5px);
+}
+
+#modalGrafica > div {
+  background: var(--color-bg-secundario);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+#modalGrafica button {
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-size: 1.2rem;
+  cursor: pointer;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s;
+}
+
+#modalGrafica button:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+#modalGrafica h3 {
+  color: #fff;
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 2rem;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.button.is-link {
+  background: linear-gradient(to right, var(--color-primario), var(--color-secundario));
+  border: none;
+  padding: 0.75rem 1.5rem;
+  color: white;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.button.is-link:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(74, 108, 247, 0.25);
+}
+
+#miGrafico {
+  margin-top: 1rem;
+  border-radius: 8px;
+  padding: 1rem;
+  background-color: var(--color-bg);
 }
