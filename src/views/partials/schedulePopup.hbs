@@ -33,31 +33,18 @@
         <div class="form-group">
             <label class="form-label">Time</label>
             <div class="time-picker-container">
-                <input type="text" class="time-input" id="timeInput" value="09:00 AM" readonly>
+                <input type="text" class="time-input" id="timeInput" value="09:00" placeholder="HH:MM">
                 <div class="time-dropdown" id="timeDropdown">
                     <div class="hours-column">
-                        <div class="time-option selected">09</div>
-                        <div class="time-option">10</div>
-                        <div class="time-option">11</div>
-                        <div class="time-option">12</div>
-                        <div class="time-option">01</div>
-                        <div class="time-option">02</div>
-                        <div class="time-option">03</div>
-                        <div class="time-option">04</div>
-                        <div class="time-option">05</div>
-                        <div class="time-option">06</div>
-                        <div class="time-option">07</div>
-                        <div class="time-option">08</div>
+                        {{#times 24}}
+                            <div class="time-option">{{#if (lte this 9)}}0{{/if}}{{this}}</div>
+                        {{/times}}
                     </div>
                     <div class="minutes-column">
                         <div class="time-option selected">00</div>
                         <div class="time-option">15</div>
                         <div class="time-option">30</div>
                         <div class="time-option">45</div>
-                    </div>
-                    <div class="period-column">
-                        <div class="time-option selected">AM</div>
-                        <div class="time-option">PM</div>
                     </div>
                 </div>
             </div>

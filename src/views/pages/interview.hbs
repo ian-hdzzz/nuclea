@@ -1,9 +1,8 @@
-
 <head>
     <link rel="stylesheet" href="/css/interview.css">
 </head>
 
-<div class="container-one">
+
     <div class="container-questions">
       {{#if employee}}
         <div class="header">
@@ -34,23 +33,54 @@
                 <p class="label">Name:</p>
                 <p class="description">{{employee.Nombre}}  {{employee.Apellidos}}</p>
               </div>
-             <div class="target">
-                <p class="label">Department:</p>
-                <p class="description">{{#if employee.Departamentos}}{{ employee.Departamentos}}{{else}}Not specified{{/if}}</p>
-              </div>
-             <div class="target">
-                <p class="label">Time in the company:</p>
-                <p class="description">{{employee.timeInCompany}}</p>
-              </div>
+             
              <div class="target">
                 <p class="label">Administrative faults:</p>
                 <p class="description">None</p>
               </div>
         </div>
+        <div class="comments-section">
+          <div class="comments-container">
+            <!-- Admin Comments (Paso 1) -->
+            <div class="comment-box admin-comments" id="adminComments">
+              <h3 class="comment-title">
+                <i class="fa-solid fa-shield-halved"></i>
+                Admin Comments
+              </h3>
+                <span class="subtitle">(personal notes)</span>
+              <textarea 
+                class="comment-textarea" 
+                placeholder="Keep track on {{employee.Nombre}}'s performance..."
+                rows="4"
+              ></textarea>
+              <div class="comments-navigation">
+                <button class="nav-btn next-btn" onclick="showCollaboratorComments()">
+                  Next <i class="fa-solid fa-arrow-right"></i>
+                </button>
+              </div>
+            </div>
 
-            
+            <!-- Collaborator Comments (Paso 2) -->
+            <div class="comment-box collaborator-comments hidden" id="collaboratorComments">
+              <h3 class="comment-title">
+                <i class="fa-solid fa-comment-dots"></i>
+                Collaborator Comments
+              </h3>
+              <textarea 
+                class="comment-textarea" 
+                placeholder="{{employee.Nombre}}, here are some areas for improvement..."
+                rows="4"
+              ></textarea>
+              <div class="comments-navigation">
+                <button class="nav-btn prev-btn" onclick="showAdminComments()">
+                  <i class="fa-solid fa-arrow-left"></i> Previous
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
     </div>
-</div>
+
 <script>
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -320,4 +350,22 @@ if (goBackBtn) {
     console.error('No open questions found');
   }
 });
+
+function showCollaboratorComments() {
+  const adminComments = document.getElementById('adminComments');
+  const collaboratorComments = document.getElementById('collaboratorComments');
+  if (adminComments && collaboratorComments) {
+    adminComments.classList.add('hidden');
+    collaboratorComments.classList.remove('hidden');
+  }
+}
+
+function showAdminComments() {
+  const adminComments = document.getElementById('adminComments');
+  const collaboratorComments = document.getElementById('collaboratorComments');
+  if (adminComments && collaboratorComments) {
+    collaboratorComments.classList.add('hidden');
+    adminComments.classList.remove('hidden');
+  }
+}
 </script>

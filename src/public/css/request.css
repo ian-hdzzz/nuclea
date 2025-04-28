@@ -27,6 +27,7 @@ body {
     padding: 0 20px;
 }
 .search-ao{
+    margin-left: -40px;
     width: 40%;
 }
 
@@ -77,6 +78,7 @@ body {
     font-family: "Radio Canada", sans-serif;
     display: flex;
     justify-content: space-between;
+    margin-left: 40px;
 }
 
 h2 {
@@ -87,41 +89,64 @@ h2 {
 table {
     font-family: 'Montserrat', sans-serif;
     width: 100%;
-    max-width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
+    border-collapse: separate;
+    border-spacing: 0 8px;
+    margin-top: 10px;
 }
 
 thead {
-    background-color: var(--color-bg-secundario);
-    color: white;
+    background-color: transparent;
+    color: #878787;
 }
 
-th, td {
-    padding: 12px;
-    text-align: center;
-    border-bottom: 1px solid #444;
+th {
+    font-size: 0.9rem;
+    font-weight: 600;
+    padding: 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    text-align: left;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
+td {
+    padding: 16px;
+    font-size: 0.95rem;
+    background: rgba(255, 255, 255, 0.02);
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
 
-.vacation-status{
-    display: flex;
+tr td:first-child {
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+    border-left: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+tr td:last-child {
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.vacation-status {
+    display: inline-flex;
     justify-content: center;
     align-items: center;
-
-    padding: 4px 5px;
+    padding: 6px 12px;
     border-radius: 20px;
-    font-size: .855rem;
-    width: 100%;
+    font-size: 0.85rem;
+    min-width: 100px;
+    font-weight: 500;
 }
-.dot{
-    background: #f99b03;
-    border-radius: 50%;  
-    width: 7px;  
-    height: 7px;
-    margin-right: 8px;
-    padding: 2px;
 
+td.descripcion-columna, th.descripcion-columna {
+    min-width: 200px;
+    max-width: 300px;
+    width: 25%;
+    white-space: normal;
+    font-size: 0.9rem;
+    line-height: 1.4;
 }
 
 /* Estilo del punto según el estado */
@@ -156,97 +181,124 @@ th, td {
 .modal {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.838);
+    background: rgba(0, 0, 0, 0.75);
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: 999;
 }
 
-/* Contenido del modal */
 .modal-content {
-    background: #151720;
-    padding: 20px;
-    border-radius: 12px;
+    background: var(--color-bg-secundario);
+    padding: 32px;
+    border-radius: 16px;
     width: 450px;
     position: relative;
     text-align: left;
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* Botón cerrar */
 .close-btn {
     position: absolute;
-    top: 12px;
-    right: 12px;
-    color: white;
+    top: 16px;
+    right: 16px;
+    background: none;
+    color: #888;
     border: none;
     width: 30px;
     height: 30px;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 20px;
     display: flex;
     justify-content: center;
     align-items: center;
+    transition: color 0.2s;
+}
+
+.close-btn:hover {
+    color: #fff;
 }
 
 /* Estilos del formulario */
 .form-group {
-    margin-bottom: 12px;
+    margin-bottom: 20px;
     font-family: "Radio Canada", sans-serif;
 }
 
 .form-group label {
     display: block;
     font-size: 14px;
-    margin-bottom: 4px;
+    margin-bottom: 8px;
+    color: #fff;
 }
 
 .text-modal {
     width: 100%;
-    padding: 8px;
-    border: 1px solid #e3def9;
-    border-radius: 6px;
-    background: #e3edf9;
+    padding: 12px 16px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    background: var(--color-bg
+    );
     outline: none;
-    color: #000000;
+    color: #fff;
+    font-size: 14px;
+    transition: border-color 0.2s;
+}
+
+.text-modal:focus {
+    border-color: #4B6BFB;
+}
+
+.text-modal::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+select.text-modal {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='white' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    padding-right: 40px;
+    background: var(--color-bg);
+}
+
+.title-modal {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #fff;
+}
+
+.description {
+    color: #888;
+    font-size: 14px;
+    margin-bottom: 24px;
 }
 
 .form-row {
     display: flex;
-    gap: 10px;
+    gap: 16px;
 }
 
 .btn-submit {
-    width: 200px;
-    padding: 10px;
-    margin-left: 10px;
-    background: linear-gradient(to right, #2563eb, #9333ea);
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(to right, #256DED, #1E9FFB);
     border: none;
     color: white;
-    font-weight: bold;
+    font-weight: 500;
+    font-size: 14px;
     border-radius: 8px;
     cursor: pointer;
-    transition: background 0.3s ease;
+    transition: background-color 0.2s;
+    margin: 0;
 }
 
-.btn-submit:hover {
-    opacity: 0.9;
-}
+
 
 .hidden {
     display: none;
 }
-
-.title-modal {
-    font-size: 20px;
-    font-weight: 900;
-    margin-bottom: 15px;
-}
-
-.text-modal::placeholder {
-    color: rgba(0, 0, 0, 0.603);
-}
-
 
 .add-btn-container{
     display: flex;
@@ -277,8 +329,13 @@ th, td {
     transform: scale(1.01);
 }
 .content{
+    width: 100%;
     display: flex;
     flex-direction: column;
+    margin: 0;
+    padding: 0;
+    background: none;
+    border: none;
 }
 /*Forzar que el texto en los encabezados no se divida */
 th {
@@ -294,36 +351,29 @@ th {
 
 /*Rectangulo de Holidays*/
   .holidays-box {
-    margin-top: 0px;
-    border-radius: 20px;
-    background: none;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.245), 
-    0 2px 3px rgba(0, 0, 0, 0.113);
-    color: white;
-    width: 80%;
-    font-family: 'Montserrat', sans-serif;
-    font-size: .9rem;
-    flex: 0 0 270px;
+    flex: 0 0 320px;
+    margin-top: 0;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.03);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 
 .holidays-header {
-    background: linear-gradient(to bottom right, var(--color-primario), var(--color-secundario));
-    border-top-left-radius: 20px;
-    border-top-right-radius: 20px;
-
+    background: linear-gradient(135deg, var(--color-primario), var(--color-secundario));
+    border-radius: 16px 16px 0 0;
+    padding: 20px;
     text-align: center;
-    width: 100%;
-    height: auto;
-    padding: 20px 0 10px 0;
 }
 
 .holidays-title {
     margin: 0;
-    padding: 0;
-    font-size: 18px;
-    font-weight: bold;
+    font-size: 1.2rem;
+    font-weight: 600;
     color: white;
+    letter-spacing: 0.5px;
 }
 
 .holidays-list {
@@ -342,6 +392,7 @@ th {
     flex-wrap: nowrap;
     width: 100%;
     max-width: 100%;
+    background-color: var(--color-bg-secundario);
 }
 
 .table-holidays-container table {
@@ -354,12 +405,24 @@ th {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    gap: 30px;
-    margin-top: 30px;
+    gap: 40px;
+    margin: 30px auto;
     flex-wrap: nowrap;
-    width: 100%;
+    width: 95%;
+    max-width: 1400px;
 }
 
+.table-container {
+    width: 100%;
+    flex: 1;
+    background-color: var(--color-bg-secundario);
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    margin: 0;
+}
 
 /* Asegura que la tabla ocupe el espacio necesario */
 #table-container {
@@ -376,11 +439,10 @@ th {
 
 
 .icon-circle{
+    background: rgba(28, 162, 250, 0.1);
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
-    width: 30px;
-    height: 30px;
-    padding: 5px;
-    background: #19344D;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -391,20 +453,26 @@ th {
     font-size: 1rem;
 }
 .day{
-    display: table-cell;
+    padding: 8px 0;
+    gap: 12px;
     display: flex;
     align-items: center;
-    gap: 10px; 
 }
-.fecha{
-    padding: 10px 0;
-    display: table-cell;
+.nombre {
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+.fecha {
+    font-size: 0.85rem;
+    color: #878787;
+    text-align: right;
 }
 .holiday-row{
-    display: table-row;
-    justify-content: space-between;
-    align-items: center;
-
+    padding: 12px 16px;
+    transition: background-color 0.2s;
+}
+.holiday-row:hover {
+    background: rgba(255, 255, 255, 0.05);
 }
 
 .dropdown {
@@ -572,149 +640,148 @@ td.descripcion-columna, th.descripcion-columna {
     gap: 10px;
     margin-top: 5px;
   }
+  * Tutorial styles */
+  .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.7);
+      z-index: 2000;
+      display: none;
+      justify-content: center;
+      align-items: center;
+    }
   
-/* Tutorial styles */
-.overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.7);
-    z-index: 2000;
-    display: none;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .tutorial-tooltip {
-    position: absolute;
-    background-color: white;
-    color: #333;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-    width: 300px;
-    z-index: 2100;
-    animation: fadeIn 0.5s;
-    transition: all 0.3s ease;
-  }
-
-  @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-  }
-
-  .tutorial-tooltip h3 {
-    margin-bottom: 10px;
-    color: #2762ea;
-  }
-
-  .tutorial-tooltip p {
-    margin-bottom: 15px;
-    line-height: 1.5;
-    color: #555;
-  }
-
-  .tooltip-buttons {
-    display: flex;
-    justify-content: space-between;
-  }
-
-  .tooltip-button {
-    padding: 8px 15px;
-    background: linear-gradient(to right, #2762ea 0%, #4162f0 29%, #8061fd 100%);
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-  }
-
-  .tooltip-button:hover {
-    opacity: 0.9;
-  }
-
-  .tooltip-button.secondary {
-    background: #6c757d;
-  }
-
-  .tooltip-button.secondary:hover {
-    background: #5a6268;
-  }
-
-  .highlight {
-    position: absolute;
-    border: 2px solid #2762ea;
-    border-radius: 8px;
-    box-shadow: 0 0 15px rgba(74, 108, 247, 0.5);
-    z-index: 2050;
-    pointer-events: none;
-    transition: all 0.3s ease;
-  }
-
-  .completion-message {
-    background-color: white;
-    padding: 20px;
-    border-radius: 10px;
-    text-align: center;
-    max-width: 400px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-  }
-
-  .completion-message h2 {
-    color: #2762ea;
-    margin-bottom: 15px;
-  }
-
-  .completion-message p {
-    margin-bottom: 20px;
-    color: #555;
-  }
-
-  /* Tutorial toggle button */
-  .tutorial-toggle {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    padding: 10px 15px;
-    background: linear-gradient(to right, #2762ea 0%, #4162f0 29%, #8061fd 100%);
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    z-index: 1500;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-  }
-
-  .tutorial-toggle:hover {
-    opacity: 0.9;
-  }
-
-  .tutorial-toggle i {
-    font-size: 16px;
-  }
-
-  /* Progress indicators */
-  .progress-dots {
-    display: flex;
-    justify-content: center;
-    margin-top: 15px;
-    gap: 5px;
-  }
-
-  .progress-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background-color: #ccc;
-  }
-
-  .progress-dot.active {
-    width: 24px;
-    background: linear-gradient(to right, #2762ea 0%, #4162f0 29%, #8061fd 100%);
-    border-radius: 4px;
-  }
+    .tutorial-tooltip {
+      position: absolute;
+      background-color: white;
+      color: #333;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+      width: 300px;
+      z-index: 2100;
+      animation: fadeIn 0.5s;
+      transition: all 0.3s ease;
+    }
+  
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+  
+    .tutorial-tooltip h3 {
+      margin-bottom: 10px;
+      color: #2762ea;
+    }
+  
+    .tutorial-tooltip p {
+      margin-bottom: 15px;
+      line-height: 1.5;
+      color: #555;
+    }
+  
+    .tooltip-buttons {
+      display: flex;
+      justify-content: space-between;
+    }
+  
+    .tooltip-button {
+      padding: 8px 15px;
+      background: linear-gradient(to right, #2762ea 0%, #4162f0 29%, #8061fd 100%);
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+  
+    .tooltip-button:hover {
+      opacity: 0.9;
+    }
+  
+    .tooltip-button.secondary {
+      background: #6c757d;
+    }
+  
+    .tooltip-button.secondary:hover {
+      background: #5a6268;
+    }
+  
+    .highlight {
+      position: absolute;
+      border: 2px solid #2762ea;
+      border-radius: 8px;
+      box-shadow: 0 0 15px rgba(74, 108, 247, 0.5);
+      z-index: 2050;
+      pointer-events: none;
+      transition: all 0.3s ease;
+    }
+  
+    .completion-message {
+      background-color: white;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+      max-width: 400px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+  
+    .completion-message h2 {
+      color: #2762ea;
+      margin-bottom: 15px;
+    }
+  
+    .completion-message p {
+      margin-bottom: 20px;
+      color: #555;
+    }
+  
+    /* Tutorial toggle button */
+    .tutorial-toggle {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      padding: 10px 15px;
+      background: linear-gradient(to right, #2762ea 0%, #4162f0 29%, #8061fd 100%);
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      z-index: 1500;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+  
+    .tutorial-toggle:hover {
+      opacity: 0.9;
+    }
+  
+    .tutorial-toggle i {
+      font-size: 16px;
+    }
+  
+    /* Progress indicators */
+    .progress-dots {
+      display: flex;
+      justify-content: center;
+      margin-top: 15px;
+      gap: 5px;
+    }
+  
+    .progress-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: #ccc;
+    }
+  
+    .progress-dot.active {
+      width: 24px;
+      background: linear-gradient(to right, #2762ea 0%, #4162f0 29%, #8061fd 100%);
+      border-radius: 4px;
+    }
