@@ -205,16 +205,16 @@ tbody tr:hover {
     color: #fff;
     font-size: 1rem;
     width: auto;
-    height: 50px;
-    border-radius: 16px;
-    background: linear-gradient(to right, var(--color-primario) 0%, var(--color-secundario)100%);
+    height: 45px;
+    border-radius: 12px;
+    background: linear-gradient(to right, var(--color-primario) 0%, var(--color-secundario) 100%);
     border: none;
-    padding: 5px 15px;
-    display: flex;
-    justify-content: space-evenly;
+    padding: 8px 20px;
+    justify-content: center;
     align-items: center;
-    gap: 7px;
-    transition: transform 0.3s ease-in-out;
+    gap: 10px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(39, 98, 234, 0.2);
 }
 
 .add-btn{
@@ -222,10 +222,18 @@ tbody tr:hover {
     border: none;
     color: #fff;
     font-size: 1rem;
+    font-weight: 500;
     cursor: pointer;
+    font-family: "Radio Canada", sans-serif;
 }
-.add-btn-container:hover{
-    transform: scale(1.01);
+
+.add-btn-container:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(39, 98, 234, 0.3);
+}
+
+.add-btn-container:active {
+    transform: translateY(0);
 }
 
 
