@@ -593,10 +593,10 @@
   <div class="overlay" id="tutorial-overlay">
     <div class="highlight" id="highlight"></div>
     <div class="tutorial-tooltip" id="tutorial-tooltip">
-      <h3>Bienvenido al Tutorial</h3>
-      <p>Este recorrido te mostrará cómo utilizar cada sección de la barra de navegación.</p>
+      <h3>Welcome to the Tutorial</h3>
+      <p>This tour will show you how to use each section of the navigation bar.</p>
       <div class="tooltip-buttons">
-        <button class="tooltip-button" id="next-button">Comenzémos</button>
+        <button class="tooltip-button" id="next-button">Let's get started</button>
       </div>
     </div>
   </div>
@@ -813,58 +813,53 @@
     // Tutorial interactivo mejorado
     // Tutorial steps
     const tutorialSteps = [
-      {
-        element: '.logo',
-        title: 'Logo',
-        content: 'Haz clic en el logo para regresar a la página de inicio/registro.',
-        position: { top: 30, left: 90 }
-      },
+      
       {
         element: '#dashboard-icon',
         title: 'Dashboard',
-        content: 'Aquí puedes acceder al panel principal con un resumen de tu actividad y estadísticas.',
+        content: 'Access the main panel with an overview of your activity and statistics here.',
         position: { top: 80, left: 90 }
       },
       {
         element: '#vacation-icon',
-        title: 'Solicitudes de Vacaciones',
-        content: 'En esta sección puedes solicitar días libres y ver el estado de tus solicitudes anteriores.',
+        title: 'Vacation Requests',
+        content: 'In this section, you can request time off and view the status of your previous requests.',
         position: { top: 120, left: 90 }
       },
       {
         element: '#one-to-one-icon',
         title: 'One-to-One',
-        content: 'Programa y gestiona reuniones individuales con tu supervisor o equipo.',
+        content: 'Schedule and manage individual meetings with your supervisor or team.',
         position: { top: 160, left: 90 }
       },
       {
         element: '#events-icon',
-        title: 'Mis Eventos',
-        content: 'Revisa y gestiona todos los eventos en los que estás inscrito o debes asistir.',
+        title: 'My Events',
+        content: 'Review and manage all the events you are registered for or must attend.',
         position: { top: 200, left: 90 }
       },
       {
         element: '#offenses-icon',
-        title: 'Faltas Administrativas',
-        content: 'Gestiona y revisa incidencias administrativas (disponible según privilegios).',
+        title: 'Administrative Offenses',
+        content: 'Manage and review administrative incidents (available based on privileges).',
         position: { top: 280, left: 90 }
       },
       {
         element: '#reports-icon',
-        title: 'Reportes',
-        content: 'Accede a diferentes informes y estadísticas del sistema (disponible para administradores).',
+        title: 'Reports',
+        content: 'Access various reports and system statistics (available for administrators).',
         position: { top: 320, left: 90 }
       },
       {
         element: '#admin-icon',
-        title: 'Administración',
-        content: 'Panel de control administrativo para gestionar usuarios y configuraciones del sistema.',
+        title: 'Administration',
+        content: 'Administrative control panel to manage users and system settings.',
         position: { top: 360, left: 90 }
       },
       {
         element: '#logout-icon',
-        title: 'Cerrar Sesión',
-        content: 'Cierra tu sesión de forma segura cuando hayas terminado de usar el sistema.',
+        title: 'Log Out',
+        content: 'Securely log out once you have finished using the system.',
         position: { top: 560, left: 90 }
       }
     ];
@@ -915,9 +910,9 @@
         <h3>${step.title}</h3>
         <p>${step.content}</p>
         <div class="tooltip-buttons">
-          ${stepIndex > 0 ? '<button class="tooltip-button secondary" id="prev-button">Anterior</button>' : ''}
+          ${stepIndex > 0 ? '<button class="tooltip-button secondary" id="prev-button">Previous</button>' : ''}
           <button class="tooltip-button" id="next-button">
-            ${stepIndex === tutorialSteps.length - 1 ? 'Finalizar' : 'Siguiente'}
+            ${stepIndex === tutorialSteps.length - 1 ? 'Finish' : 'Next'}
           </button>
         </div>
       `;
@@ -953,9 +948,9 @@
       const tutorialOverlay = document.getElementById('tutorial-overlay');
       tutorialOverlay.innerHTML = `
         <div class="completion-message">
-          <h2>¡Tutorial Completado! 🎉</h2>
-          <p>Ahora estás listo para utilizar todas las funciones de Flowit HRMS. ¿Deseas repetir el tutorial?</p>
-          <a href="/nuclea/tutorial/actualizar" class="tooltip-button">Finalizar</a>
+          <h2>Tutorial Completed! 🎉</h2>
+          <p>You are now ready to use all the features of Flowit HRMS. Would you like to repeat the tutorial?</p>
+          <a href="/nuclea/tutorial/actualizar" class="tooltip-button">Finish</a>
         </div>
       `;
       
@@ -988,12 +983,3 @@
   </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-

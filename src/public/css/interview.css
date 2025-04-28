@@ -126,7 +126,7 @@
   }
   
   textarea:focus {
-    border-color: var(--button-bg);
+    border-color: var(--accent-blue);
   }
   
   .buttons {
@@ -319,4 +319,118 @@
     margin-top: 5px;
     padding: 5px;
     border-radius: 8px;
+  }
+
+  /* Estilos para la sección de comentarios */
+  .comments-section {
+      margin-top: 30px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      padding: 0 10px;
+  }
+
+  .comment-box {
+      background: var(--color-bg);
+      border: 1px solid #2F3646;
+      border-radius: 12px;
+      padding: 20px;
+      transition: border-color 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
+  }
+
+  .comment-box:hover {
+      border-color: var(--color-primario);
+  }
+
+  .comment-box.hidden {
+      display: none;
+      opacity: 0;
+      transform: translateX(20px);
+  }
+
+  .comment-title {
+      color: var(--color-fuente);
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+  }
+
+  .comment-title i {
+      color: var(--color-secundario);
+      font-size: 1rem;
+  }
+
+  .comment-title .subtitle {
+      color: var(--color-iconos);
+      font-size: 0.85rem;
+      font-weight: normal;
+      margin-left: 5px;
+  }
+
+  .comment-textarea {
+      width: 100%;
+      min-height: 100px;
+      background-color: #0C1019;
+      color: var(--color-fuente);
+      border: 1px solid #2F3646;
+      border-radius: 8px;
+      padding: 12px;
+      resize: vertical;
+      font-size: 0.9rem;
+      line-height: 1.5;
+      outline: none;
+      transition: all 0.3s ease;
+  }
+
+  .comment-textarea:focus {
+      border-color: var(--color-primario);
+      box-shadow: 0 0 0 2px rgba(39, 98, 234, 0.1);
+  }
+
+  .comment-textarea::placeholder {
+      color: var(--color-iconos);
+      opacity: 0.7;
+  }
+
+  /* Estilos específicos para cada tipo de comentario */
+  .admin-comments .comment-textarea {
+      border-left: 3px solid var(--color-primario);
+  }
+
+  .collaborator-comments .comment-textarea {
+      border-left: 3px solid var(--color-secundario);
+  }
+
+  /* Navegación de comentarios */
+  .comments-navigation {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 1rem;
+  }
+
+  .nav-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.6rem 1rem;
+      border: none;
+      border-radius: 8px;
+      background: linear-gradient(to right, var(--color-primario), var(--color-secundario));
+      color: white;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+  }
+
+  .nav-btn:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+  }
+
+  .nav-btn i {
+      font-size: 0.8rem;
   }
