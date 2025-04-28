@@ -213,7 +213,7 @@ function confirmDeleteReq(idSolicitud) {
 function confirmDeleteHol(idDiaFeriado) {
     console.log("------------Esta es el id solicitud----------");
     console.log(idDiaFeriado);
-    const confirmed = confirm("Are you sure you want to delete this request?");
+    const confirmed = confirm("Are you sure you want to delete this holiday?");
     if (confirmed) {
         const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
         
@@ -300,7 +300,7 @@ function confirmDeleteHol(idDiaFeriado) {
 function confirmDeleteFal(idFalta) {
     console.log("------------Esta es el id solicitud----------");
     console.log(idFalta);
-    const confirmed = confirm("Are you sure you want to delete this request?");
+    const confirmed = confirm("Are you sure you want to delete this administrative offenses?");
     if (confirmed) {
         const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
         
@@ -405,7 +405,7 @@ function confirmDeleteFal(idFalta) {
 function confirmDeleteCom(idEmpresa) {
     console.log("------------Esta es el id solicitud----------");
     console.log(idEmpresa);
-    const confirmed = confirm("Are you sure you want to delete this request?");
+    const confirmed = confirm("Are you sure you want to delete this company?");
     if (confirmed) {
         const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
         
