@@ -31,54 +31,29 @@ module.exports = class Report {
         return db.execute('SELECT * FROM DiasFeriados');
     }
 
-    static activosSemestre(fechaSeisMeses, fechaActual) {
+    static activosSemestre(fechaSeisMeses,fechaActual){
         return db.execute(
-            `WITH RECURSIVE calendar AS (
-                SELECT ? AS date
-                UNION ALL
-                SELECT DATE_ADD(date, INTERVAL 1 MONTH)
-                FROM calendar
-                WHERE date < ?
-            )
-            SELECT 
-                MONTH(c.date) as mes,
-                YEAR(c.date) as año,
-                'activo' AS estado,
-                COUNT(u.idUsuario) as cantidad
-            FROM calendar c
-            LEFT JOIN Usuarios u ON 
-                MONTH(u.fecha_inicio_colab) = MONTH(c.date) 
-                AND YEAR(u.fecha_inicio_colab) = YEAR(c.date)
-                AND u.estatus = 1
-            GROUP BY c.date
-            ORDER BY c.date;`,
-            [fechaSeisMeses, fechaActual]
-        );
+            `SELECT MONTH(fecha_inicio_colab) AS mes,
+             YEAR(fecha_inicio_colab) AS año, 
+             'activo' AS estado, 
+             COUNT(*) AS cantidad 
+             FROM Usuarios 
+             WHERE estatus = 1 
+             AND fecha_inicio_colab BETWEEN ? AND ? 
+             GROUP BY mes, año 
+             ORDER BY año, mes;`,[fechaSeisMeses, fechaActual])
     }
-
-    static inactivosSemestre(fechaSeisMeses, fechaActual) {
+    static inactivosSemestre(fechaSeisMeses,fechaActual){
         return db.execute(
-            `WITH RECURSIVE calendar AS (
-                SELECT ? AS date
-                UNION ALL
-                SELECT DATE_ADD(date, INTERVAL 1 MONTH)
-                FROM calendar
-                WHERE date < ?
-            )
-            SELECT 
-                MONTH(c.date) as mes,
-                YEAR(c.date) as año,
-                'inactivo' AS estado,
-                COUNT(u.idUsuario) as cantidad
-            FROM calendar c
-            LEFT JOIN Usuarios u ON 
-                MONTH(COALESCE(u.fecha_vencimiento_colab, u.fecha_inicio_colab)) = MONTH(c.date)
-                AND YEAR(COALESCE(u.fecha_vencimiento_colab, u.fecha_inicio_colab)) = YEAR(c.date)
-                AND u.estatus = 0
-            GROUP BY c.date
-            ORDER BY c.date;`,
-            [fechaSeisMeses, fechaActual]
-        );
+            `SELECT MONTH(fecha_inicio_colab) AS mes, 
+            YEAR(fecha_inicio_colab) AS año, 
+            'inactivo' AS estado, 
+            COUNT(*) AS cantidad 
+            FROM Usuarios 
+            WHERE estatus = 0 
+            AND fecha_inicio_colab BETWEEN ? AND ? 
+            GROUP BY mes, año 
+            ORDER BY año, mes;`,[fechaSeisMeses, fechaActual])
     }
 
     static fetchAoYear(year){

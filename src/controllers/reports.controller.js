@@ -63,97 +63,90 @@ exports.getDashboardInfo = async (req, res, next) => {
         console.log(reportsDetailsActive);
         console.log(reportsDetailsInactive);
         //---------Fecha actual------------
-        const today = new Date('2025-04-27');
+        const today = new Date();
         const yyyy = today.getFullYear();
-        const mm = String(today.getMonth() + 1).padStart(2, '0');
+        const mm = String(today.getMonth() + 1).padStart(2, '0'); // Los meses van de 0 a 11
         const dd = String(today.getDate()).padStart(2, '0');
         const fechaActual = `${yyyy}-${mm}-${dd}`;
 
-        // Calculamos la fecha de 6 meses atrás
-        const fechaSeisMesesAtras = new Date(today);
-        fechaSeisMesesAtras.setMonth(today.getMonth() - 5);
-        fechaSeisMesesAtras.setDate(1); // Primer día del mes
+        //---------Fecha 6 meses atras------------
+        const fechaSeisMesesAtras = new Date(today.setMonth(today.getMonth() - 5));
         const yyyy6 = fechaSeisMesesAtras.getFullYear();
         const mm6 = String(fechaSeisMesesAtras.getMonth() + 1).padStart(2, '0');
         const fechaSeisMeses = `${yyyy6}-${mm6}-01`;
+        let mm6check = parseInt(String(fechaSeisMesesAtras.getMonth() + 1));
 
-        console.log('Fecha actual:', fechaActual);
-        console.log('Fecha 6 meses atrás:', fechaSeisMeses);
-        
+
+        console.log('Fecha actual:')
+        console.log(fechaActual); // Ejemplo: 2025-04-21
+        console.log('Fecha 6 meses atras:')
+        console.log(fechaSeisMeses);
         const meses = [
             "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
             "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
-        ];
-
-        // Crear un array de 6 fechas mensuales
-        const mesesGrafica = [];
-        const tempDate = new Date(fechaSeisMesesAtras);
-
-        for (let i = 0; i < 6; i++) {
-            mesesGrafica.push({
-                mes: tempDate.getMonth() + 1,
-                año: tempDate.getFullYear()
-            });
-            tempDate.setMonth(tempDate.getMonth() + 1);
+          ];
+        let [usuariosActivos] = await Reports.activosSemestre(fechaSeisMeses, fechaActual)
+        let [usuariosInactivos] = await Reports.inactivosSemestre(fechaSeisMeses, fechaActual)
+        console.log(usuariosActivos)
+        console.log(usuariosInactivos)
+        const activosSeisMeses=[0,0,0,0,0,0];
+        const inactivosSeisMeses=[0,0,0,0,0,0];
+        let mesesGrafica=[];
+        let cont=0;
+        while (cont < 6) {
+            // Buscar si hay datos para ese mes
+            const encontradoAc = usuariosActivos.find(u => u.mes === mm6check);
+            if (encontradoAc) {
+                activosSeisMeses[cont] = encontradoAc.cantidad ?? 0;
+                // Removemos el elemento encontrado del array si quieres simular un shift
+                usuariosActivos = usuariosActivos.filter(u => u.mes !== mm6check);
+            }
+            // Buscar si hay datos para ese mes
+            const encontradoIn = usuariosInactivos.find(u => u.mes === mm6check);
+            if (encontradoIn) {
+                inactivosSeisMeses[cont] = encontradoIn.cantidad ?? 0;
+                // Removemos el elemento encontrado del array si quieres simular un shift
+                usuariosInactivos = usuariosInactivos.filter(u => u.mes !== mm6check);
+            }
+            // Avanzamos el mes
+            mesesGrafica.push(mm6check)
+            mm6check++;
+            if (mm6check === 13) {
+                mm6check = 1; // Resetea a enero si llega a diciembre
+            }
+            cont++;
         }
 
-        let [usuariosActivos] = await Reports.activosSemestre(fechaSeisMeses, fechaActual);
-        let [usuariosInactivos] = await Reports.inactivosSemestre(fechaSeisMeses, fechaActual);
-        
-        // Inicializar arrays con 6 meses en 0
-        const activosSeisMeses = Array(6).fill(0);
-        const inactivosSeisMeses = Array(6).fill(0);
-
-        // Llenar los arrays con los datos
-        mesesGrafica.forEach((fecha, index) => {
-            const encontradoAc = usuariosActivos.find(u => 
-                u.mes === fecha.mes && u.año === fecha.año
-            );
-            if (encontradoAc) {
-                activosSeisMeses[index] = encontradoAc.cantidad;
-            }
-
-            const encontradoIn = usuariosInactivos.find(u => 
-                u.mes === fecha.mes && u.año === fecha.año
-            );
-            if (encontradoIn) {
-                inactivosSeisMeses[index] = encontradoIn.cantidad;
-            }
-        });
-
-        const nombresMeses = mesesGrafica.map(({ mes, año }) => 
-            `${meses[mes - 1]} - ${año}`
-        );
-
-        console.log('Meses de la gráfica:', nombresMeses);
-        console.log('Datos activos:', activosSeisMeses);
-        console.log('Datos inactivos:', inactivosSeisMeses);
-
+        const nombresMeses = mesesGrafica.map((mes, index) => {
+            // Si el mes es menor que el último mes, entonces pasó el año nuevo
+            const año = mes < mesesGrafica[0] ? yyyy : yyyy6;
+            return `${meses[mes - 1]} - ${año}`;
+          });
+        console.log(nombresMeses)
+        console.log(activosSeisMeses);
+        console.log(inactivosSeisMeses);
         const resultado = await Reports.usuariosPrevios(fechaSeisMeses);
-        let temp = resultado[0][0].total;
-        
-        const activosTotales = activosSeisMeses.map((valor) => {
+        console.log(resultado);
+        let temp =resultado[0][0].total;
+        const activosTotales = activosSeisMeses.map((valor, i) => {
             const resultado = temp + valor;
-            temp = resultado;
-            return resultado;
+            temp = resultado;  // Actualizamos 'temp' para la siguiente iteración
+            return resultado;  // Retornamos el valor actualizado
         });
+        console.log(activosTotales);
 
         const promedioActivos = activosTotales.map((valor, i) => {
-            return Math.max((valor + (valor - inactivosSeisMeses[i])) / 2, 0);
+            return (valor+ (valor-inactivosSeisMeses[i])) / 2;
         });
-
         const indice = promedioActivos.map((valor, i) => {
-            if (valor === 0) {
+            if(valor==0){
                 return 0;
             }
-            const porcentaje = Math.round((inactivosSeisMeses[i] / valor) * 100);
-            return isNaN(porcentaje) ? 0 : porcentaje;
-        });
 
-        const valoresValidos = indice.filter(val => !isNaN(val));
-        const suma = valoresValidos.reduce((acc, val) => acc + val, 0);
-        const promedioIndice = valoresValidos.length > 0 ? 
-            (suma / valoresValidos.length).toFixed(2) : "0.00";
+            return Math.round((inactivosSeisMeses[i]/ valor)*100);
+        });
+        const suma = indice.reduce((acc, val) => acc + val, 0);
+        const promedioIndice = indice.length > 0 ? (suma / indice.length).toFixed(2) : "0.00";
 
         const [aoYear] = await Reports.fetchAoYear(yyyy);
 

@@ -78,13 +78,11 @@
       <div id="modalGrafica" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
         background-color: rgba(0, 0, 0, 0.658); justify-content: center; align-items: center; z-index: 1000;">
         
-        <div style="background: #131A26; padding: 20px; border-radius: 10px; width: 90%; max-width: 800px; height: auto; position: relative;">
+        <div style="background: #131A26; padding: 20px; border-radius: 10px; width: 80%; max-width: 600px; position: relative;">
           <button style="position: absolute; top: 10px; right: 10px;" onclick="cerrarModal()">✖</button>
           
           <h3 style="text-align:center;">Employee Turnover Chart</h3>
-          <div style="height: 500px; width: 100%;">
-            <canvas id="miGrafico"></canvas>
-          </div>
+          <canvas id="miGrafico" width="1000" height="600"></canvas>
         </div>
       </div>
     
@@ -111,14 +109,14 @@
               backgroundColor: "#4CAF50",
               data: activos,
               borderRadius: 5,
-              borderSkipped: false
+              borderSkipped: false // Importante para que se redondeen todos los lados
             },
             {
               label: "Terminated Collaborators",
               backgroundColor: "#F44336",
               data: inactivos,
               borderRadius: 5,
-              borderSkipped: false
+              borderSkipped: false // Importante para que se redondeen todos los lados
             }
           ]
         },
@@ -127,49 +125,32 @@
           maintainAspectRatio: true,
           plugins: {
               legend: {
-                position: 'top',
-                labels: {
-                    boxWidth: 12,
-                    usePointStyle: true,
-                    padding: 20,
-                    color: '#FFFFFF'
-                }
+              position: 'top',
+              labels: {
+                  boxWidth: 12,
+                  usePointStyle: true,
+                  padding: 20,
+                  color: '#FFFFFF' // ← Color de la fuente de la leyenda
+              }
               },
               title: {
-                display: true,
-                text: "Monthly New Hires and Terminations",
-                font: {
-                    size: 15,
-                    weight: 'bold',
-                },
-                color: '#FFFFFF'
+              display: true,
+              text: "Monthly New Hires and Terminations",
+              font: {
+                  size: 15,
+                  weight: 'bold',
               },
-              datalabels: {
-                display: true,
-                color: '#FFFFFF',
-                anchor: 'end',
-                align: 'top',
-                offset: 0,
-                font: {
-                  size: 11,
-                  weight: 'bold'
-                },
-                formatter: function(value) {
-                  return value + '%';
-                }
+              color: '#FFFFFF' // ← Color de la fuente del título
               }
           },
           scales: {
             y: {
               beginAtZero: true,
               grid: {
-                color: 'rgba(255, 255, 255, 0.1)'
+                color: '#FFFFFF'
               },
               ticks: {
-                color: '#FFFFFF',
-                callback: function(value) {
-                  return value + '%';
-                }
+                color: '#FFFFFF' // ← Cambia el color de las etiquetas del eje X
               }
             },
             x: {
@@ -177,7 +158,7 @@
                 display: false
               },
               ticks: {
-                color: '#FFFFFF'
+                color: '#FFFFFF' // ← Cambia el color de las etiquetas del eje X
               }
             }
           },
@@ -191,8 +172,7 @@
               borderSkipped: false
             }
           }
-        },
-        plugins: [ChartDataLabels]
+        }
       });
     });
 
@@ -218,106 +198,33 @@
        data: {
          labels: labels,
          datasets: [{
-           label: 'Employee Turnover Rate',
+           label: 'Índice',
            data: data,
-           backgroundColor: 'rgba(74, 108, 247, 0.8)',
-           borderColor: 'rgba(74, 108, 247, 1)',
-           borderWidth: 2,
-           borderRadius: 6,
-           barPercentage: 0.9,
-           categoryPercentage: 0.9
+           backgroundColor: 'rgba(54, 162, 235, 0.6)',
+           borderColor: 'rgba(54, 162, 235, 1)',
+           borderWidth: 1
          }]
        },
        options: {
          responsive: true,
-         maintainAspectRatio: false,
-         layout: {
-           padding: {
-             top: 35,
-             right: 25,
-             bottom: 45,
-             left: 25
-           }
-         },
          plugins: {
-           legend: {
-             display: true,
-             position: 'top',
-             align: 'center',
-             labels: {
-               color: '#fff',
-               font: {
-                 size: 13,
-                 family: "'Segoe UI', sans-serif"
-               },
-               padding: 20
-             }
-           },
-           title: {
-             display: true,
-             text: 'Monthly Employee Turnover Rate',
-             color: '#fff',
-             font: {
-               size: 16,
-               family: "'Segoe UI', sans-serif",
-               weight: '600'
-             },
-             padding: {
-               top: 10,
-               bottom: 30
-             }
-           },
+           legend: { display: false },
            datalabels: {
-             display: true,
              anchor: 'end',
-             align: 'top',
-             offset: 10,
-             color: '#fff',
-             font: {
-               size: 12,
-               weight: '600',
-               family: "'Segoe UI', sans-serif"
-             },
-             formatter: function(value) {
-               return value + '%';
-             }
+             align: 'end',
+             formatter: value => value + '%',
+             font: { weight: 'bold' }
            }
          },
          scales: {
            y: {
              beginAtZero: true,
-             grid: {
-               color: 'rgba(255, 255, 255, 0.1)',
-               drawBorder: false
-             },
+             max: Math.max(...data) * 1.08, // Aumenta un 20% el máximo
              ticks: {
                callback: function(value) {
                  return value + '%';
                },
-               stepSize: 5,
-               color: 'rgba(255, 255, 255, 0.7)',
-               font: {
-                 size: 12,
-                 family: "'Segoe UI', sans-serif"
-               },
-               padding: 10
-             }
-           },
-           x: {
-             grid: {
-               display: false,
-               drawBorder: false
-             },
-             ticks: {
-               color: 'rgba(255, 255, 255, 0.7)',
-               font: {
-                 size: 12,
-                 family: "'Segoe UI', sans-serif"
-               },
-               padding: 10,
-               autoSkip: false,
-               maxRotation: 45,
-               minRotation: 45
+               color: 'white' // Asegúrate de que las etiquetas sean legibles
              }
            }
          }
