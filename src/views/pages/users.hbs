@@ -326,155 +326,147 @@
 
                 <!-- Campos -->
                 <form action="/nuclea/users" id="form-user" method="POST">
-                    <input type="hidden" name="action" value="register">
+                    <input type="hidden" name="action" value="register"> <!-- Campo oculto -->
                     <input type="hidden" name="_csrf" value="{{csrfToken}}">
                     
-                    <div class="form-columns">
-                        <!-- Columna de información personal -->
-                        <div class="form-column">
-                            <div class="form-group" id="name-field">
-                                <label>Employee Names</label>
-                                <input type="text" placeholder="Jacob" class="text-modal" name="nameUs" required
-                                oninvalid="this.setCustomValidity('Please remember to write the user names')"
-                                oninput="this.setCustomValidity('')">
-                            </div>
+                    <div class="form-group" id="name-field">
+                        <label>Employee Names</label>
+                        <input type="text" placeholder="Jacob" class="text-modal" name="nameUs" required
+                        oninvalid="this.setCustomValidity('Please remember to write the user names')"
+                        oninput="this.setCustomValidity('')">
+                    </div>
+        
+                    <div class="form-group">
+                        <label>Last Name</label>
+                        <input type="text" placeholder="Espejel" class="text-modal" name="lastnameUs" required
+                        oninvalid="this.setCustomValidity('Please remember to write the user last name')"
+                        oninput="this.setCustomValidity('')">
+                    </div>
                 
-                            <div class="form-group">
-                                <label>Last Name</label>
-                                <input type="text" placeholder="Espejel" class="text-modal" name="lastnameUs" required
-                                oninvalid="this.setCustomValidity('Please remember to write the user last name')"
-                                oninput="this.setCustomValidity('')">
-                            </div>
-                        
-                            <div class="form-group" id="email-field">
-                                <label>Email</label>
-                                <input type="text" placeholder="jacob@nuclea.com" class="text-modal" name="emailUs" required
-                                oninvalid="this.setCustomValidity('Please remember to write the user email')"
-                                oninput="this.setCustomValidity('')">
-                            </div>
-
-                            <div class="form-group">
-                                <label>Country</label>
-                                <input type="text" placeholder="Mexico" class="text-modal" name="countryUs" required
-                                oninvalid="this.setCustomValidity('Please remember to write the user country')"
-                                oninput="this.setCustomValidity('')">
-                            </div>
-
-                            <div class="form-group">
-                                <label>City</label>
-                                <input type="text" placeholder="Queretaro" class="text-modal" name="cityUs" required
-                                oninvalid="this.setCustomValidity('Please remember to write the user city')"
-                                oninput="this.setCustomValidity('')">
-                            </div>
-
-                            <div class="form-group">
-                                <label>Street</label>
-                                <input type="text" placeholder="Las Praderas 123" class="text-modal" name="streetUs" required
-                                oninvalid="this.setCustomValidity('Please remember to write the user street')"
-                                oninput="this.setCustomValidity('')">
-                            </div>
-                        </div>
-
-                        <!-- Columna de información laboral -->
-                        <div class="form-column">
-                            <div class="form-group" id="role-field">
-                                <label>Select Role</label>
-                                <select class="text-modal" name="role" required
-                                    oninvalid="this.setCustomValidity('Please select a Role')" 
-                                    onchange="this.setCustomValidity('')">
-                                    <option value="">- Select a User Rol -</option>
-                                    {{#each rols}}
-                                    <option value="{{idRol}}">{{Nombre_rol}}</option>
-                                    {{/each}}
-                                </select>
-                            </div>
-
-                            <div class="form-group" id="company-field">
-                                <label>Select Company</label>
-                                <select class="text-modal" name="company" required
-                                    oninvalid="this.setCustomValidity('Please select a Company')" 
-                                    onchange="this.setCustomValidity('')">
-                                    <option value="">- Select a Company -</option>
-                                    {{#each emps}}
-                                    <option value="{{idEmpresa}}">{{Nombre_empresa}}</option>
-                                    {{/each}}
-                                </select>
-                            </div>
-            
-                            <div class="form-group" id="department-field">
-                                <label>Select Department</label>
-                                <select class="text-modal" name="depa" required
-                                    oninvalid="this.setCustomValidity('Please select a Department')" 
-                                    onchange="this.setCustomValidity('')">
-                                    <option value="">- Select a Department -</option>
-                                    {{#each deptos}}
-                                    <option value="{{idDepartamento}}">{{Nombre_departamento}}</option>
-                                    {{/each}}
-                                </select>
-                            </div>
-
-                            <div class="form-group" id="model-field">
-                                <label>Working Model</label>
-                                <select class="text-modal" name="modelUs" required
-                                    oninvalid="this.setCustomValidity('Please select a working model')" 
-                                    onchange="this.setCustomValidity('')">
-                                    <option value="">- Select a working model -</option>
-                                    <option value="On-Site-Work">On-site-work</option>
-                                    <option value="Hybrid Work">Hybrid work</option>
-                                    <option value="Remote Work">Remote Work</option>
-                                </select>
-                            </div>
-
-                            <div class="form-group">
-                                <label>Vacation Days</label>
-                                <input 
-                                    type="number" 
-                                    placeholder="Enter vacation days" 
-                                    class="text-modal" 
-                                    name="diasVacaciones"
-                                    required
-                                    min="0"
-                                    max="12"
-                                    oninvalid="this.setCustomValidity('Please enter a number of vacation days between 0 and 12')"
-                                    oninput="this.setCustomValidity('')"
-                                    onkeydown="if(['e', 'E', '+', '-', '.'].includes(event.key)){ event.preventDefault(); }"
-                                />
-                            </div>
-
-                            <div class="form-group" id="status-field">
-                                <label>Status</label>
-                                <select class="text-modal" name="statusUs" required
-                                    oninvalid="this.setCustomValidity('Please select a Status')" 
-                                    onchange="this.setCustomValidity('')">
-                                    <option value="">- Select a Status -</option>
-                                    <option value="1">Active</option>
-                                    <option value="0">Inactive</option>
-                                </select>
-                            </div>
-
-                            <div class="form-group">
-                                <label>Password</label>
-                                <input type="password" placeholder="Choose a Number" value="{{tempPassword}}" class="text-modal" name="password" readonly>
-                            </div>
-                        </div>
+                    <div class="form-group" id="email-field">
+                        <label>Email</label>
+                        <input type="text" placeholder="jacob@nuclea.com" class="text-modal" name="emailUs" required
+                        oninvalid="this.setCustomValidity('Please remember to write the user email')"
+                        oninput="this.setCustomValidity('')">
+                    </div>
+        
+                    <div class="form-group">
+                        <label>Country</label>
+                        <input type="text" placeholder="Mexico" class="text-modal" name="countryUs" required
+                        oninvalid="this.setCustomValidity('Please remember to write the user country')"
+                        oninput="this.setCustomValidity('')">
                     </div>
 
-                    <div class="form-row">
-                        <div class="form-group">
+                    <div class="form-group">
+                        <label>City </label>
+                        <input type="text" placeholder="Queretaro" class="text-modal" name="cityUs" required
+                        oninvalid="this.setCustomValidity('Please remember to write the user city')"
+                        oninput="this.setCustomValidity('')">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Street</label>
+                        <input type="text" placeholder="Las Praderas 123" class="text-modal" name="streetUs" required
+                        oninvalid="this.setCustomValidity('Please remember to write the user street')"
+                        oninput="this.setCustomValidity('')">
+                    </div>
+
+                    <div class="form-group" id="model-field">
+                        <label for="status">Working Model</label>
+                        <select class="text-modal" name="modelUs" required
+                            oninvalid="this.setCustomValidity('Please select a working model')" 
+                            onchange="this.setCustomValidity('')">
+                            <option value="">- Select a working model -</option>
+                            <option value="On-Site-Work">On-site-work</option>
+                            <option value="Hybrid Work">Hybrid work</option>
+                            <option value="Remote Work">Remote Work</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Vacation Days</label>
+                        <input 
+                            type="number" 
+                            placeholder="Enter vacation days" 
+                            class="text-modal" 
+                            name="diasVacaciones"
+                            required
+                            min="0"
+                            max="12"
+                            oninvalid="this.setCustomValidity('Please enter a number of vacation days between 0 and 12')"
+                            oninput="this.setCustomValidity('')"
+                            onkeydown="if(['e', 'E', '+', '-', '.'].includes(event.key)){ event.preventDefault(); }"
+                        />
+                    </div>
+
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" placeholder="Choose a Number" value="{{tempPassword}}" class="text-modal" name="password" readonly>
+                    </div>
+
+                    <div class="form-group" id="role-field">
+                        <label for="status">Select Role</label>
+                        <select class="text-modal" name="role" required
+                            oninvalid="this.setCustomValidity('Please select a Role')" 
+                            onchange="this.setCustomValidity('')">
+                            <option value="">- Select a User Rol -</option>
+                            {{#each rols}}
+                            <option value="{{idRol}}">{{Nombre_rol}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+
+                    <div class="form-group" id="company-field">
+                        <label for="status">Select Company</label>
+                        <select class="text-modal" name="company" required
+                            oninvalid="this.setCustomValidity('Please select a Company')" 
+                            onchange="this.setCustomValidity('')">
+                            <option value="">- Select a Company -</option>
+                            {{#each emps}}
+                            <option value="{{idEmpresa}}">{{Nombre_empresa}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+    
+                    <div class="form-group" id="department-field">
+                        <label for="status">Select Department</label>
+                        <select class="text-modal" name="depa" required
+                            oninvalid="this.setCustomValidity('Please select a Department')" 
+                            onchange="this.setCustomValidity('')">
+                            <option value="">- Select a Department -</option>
+                            {{#each deptos}}
+                            <option value="{{idDepartamento}}">{{Nombre_departamento}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+
+                    <div class="form-group" id="status-field">
+                        <label>Status</label>
+                        <select class="text-modal" name="statusUs" required
+                            oninvalid="this.setCustomValidity('Please select a Status')" 
+                            onchange="this.setCustomValidity('')">
+                            <option value="">- Select a Status -</option>
+                            <option value="1">Active</option>
+                            <option value="0">Inactive</option>
+                        </select>
+                    </div>
+
+                    <div class="form-row" id="dates-field">
+                        <div class="form-group form-date">
                             <label>Start Date</label>
                             <input type="date" class="text-modal date-modal" name="startDate" required
                             oninvalid="this.setCustomValidity('Please select a date')" 
                             onchange="this.setCustomValidity('')">
                         </div>
 
-                        <div class="form-group">
+                        <div class="form-group form-date">
                             <label>End Date</label>
                             <input type="date" class="text-modal date-modal" name="endDate">
                         </div>
                     </div>
 
                     <!-- Botón de enviar -->
-                    <input type="submit" class="btn-submit" value="Add Users">
+                    <input style="margin: -1px;" type="submit" class="btn-submit" id="submit-btn" value="Add Users">
                 </form>
             </div>
         </div>
