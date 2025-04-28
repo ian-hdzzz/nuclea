@@ -38,6 +38,7 @@
               </div>
             {{/if}}
             </div>
+            
     </div>
     {{#if info}}
      <div "top-container">
@@ -127,7 +128,7 @@
 
                 <td> <!-- Dropdown Actions con RBAC -->
                   <div class="dropdown"> 
-                    <button class="action-btn">Actions</button>
+                    <button class="action-btn">Manage</button>
                     <div class="dropdown-content">
                       {{#if ../puedeAceptar}}
                         <button class="approve-btn" onclick="approveRequest('{{idSolicitud}}')">
@@ -161,28 +162,12 @@
             {{/if}}
           </tbody>
         </table>
-      </div>
 
-      <div class="holidays-box">
-        <div class="holidays-header">
-          <h3 class="holidays-title">Holidays</h3>
-        </div>
-        <table>
-          <thead>
-            <tr>
-            </tr>
-          </thead>
-          <tbody>
-            {{#each diasferiados}}
-            <tr class="holiday-row">
-              
-              <td class="day"><div class="icon-circle"><i class="fa-regular fa-calendar"></i></div> <div class="nombre">{{Nombre_asueto}}</div></td>
-              <td class="fecha">{{formatDate Fecha_asueto}}</td>
-            </tr>
-            {{/each}}
-          </tbody>
-        </table>
+        
       </div>
+       
+
+     
     </div>
 
 
