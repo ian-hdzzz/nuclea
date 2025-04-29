@@ -14,6 +14,7 @@ class SchedulePopup {
         this.initializeFlatpickr();
         this.setupEventListeners();
         this.setupScheduleButton();
+        this.setupTimePicker();
     }
 
     initializeFlatpickr() {
@@ -192,6 +193,62 @@ class SchedulePopup {
             this.searchInput.value = '';
             this.searchInput.dispatchEvent(new Event('input'));
         }
+    }
+
+    setupTimePicker() {
+        // Time picker functionality
+        const timeInput = this.timeInput;
+        const timeDropdown = this.timeDropdown;
+
+        // Show/hide time dropdown
+        timeInput.addEventListener('click', () => {
+            timeDropdown.classList.toggle('show');
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!timeInput.contains(e.target) && !timeDropdown.contains(e.target)) {
+                timeDropdown.classList.remove('show');
+            }
+        });
+
+        // Handle time selection
+        timeDropdown.addEventListener('click', (e) => {
+            if (e.target.classList.contains('time-option')) {
+                const hour = e.target.closest('.hours-column') ? e.target.textContent : timeInput.value.split(':')[0];
+                const minute = e.target.closest('.minutes-column') ? e.target.textContent : timeInput.value.split(':')[1];
+                timeInput.value = `${hour}:${minute}`;
+                
+                // Update selected state
+                const options = timeDropdown.getElementsByClassName('time-option');
+                Array.from(options).forEach(opt => opt.classList.remove('selected'));
+                e.target.classList.add('selected');
+            }
+        });
+
+        // Allow manual input with validation
+        timeInput.addEventListener('input', (e) => {
+            let value = e.target.value;
+            
+            // Remove non-numeric characters except colon
+            value = value.replace(/[^\d:]/g, '');
+            
+            // Format as HH:MM
+            if (value.length > 2 && !value.includes(':')) {
+                value = value.substring(0, 2) + ':' + value.substring(2);
+            }
+            
+            // Validate hours and minutes
+            const [hours, minutes] = value.split(':');
+            if (hours && parseInt(hours) > 23) {
+                value = '23' + (value.includes(':') ? ':' + (minutes || '00') : '');
+            }
+            if (minutes && parseInt(minutes) > 59) {
+                value = (hours || '00') + ':59';
+            }
+            
+            e.target.value = value;
+        });
     }
 
     open() {

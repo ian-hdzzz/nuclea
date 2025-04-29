@@ -24,7 +24,7 @@
           {{> search 
             placeholder="Employee name..." searchId="search-input"}}
         </div>
-
+      <div class="btns-wrapper">
         <div id="btn-personal" onclick="location.href='/nuclea/request/personal'" class="add-btn-container" >
           <i class="fa-regular fa-square-plus"></i>
           <input type="button" value="Personal requests" class="add-btn">
@@ -34,6 +34,7 @@
           <i class="fa-regular "></i>
           <input type="button" value="Accepted Absences" class="add-btn">
         </a>
+      </div>
     </div>
     
     {{#if error}}
@@ -48,8 +49,8 @@
       </div>
     {{/if}}
 
-    <div class="content" id="pending-content">
-      <div class="nav-content">
+    <div class="content">
+     <div class="content" id="pending-content">
         <h2>Pending Absences</h2>
       </div>
 
@@ -67,7 +68,7 @@
                 <th class="descripcion-columna">Description</th>
                 <th>Leader Approval</th>
                 <th>Admin Approval</th>
-                <th id="btn-actions">Actions</th>
+                 <th id="btn-actions">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -119,7 +120,7 @@
                           </span>
                         {{else}}
                           <div class="dropdown"> 
-                            <button class="action-btn">Actions</button>
+                            <button class="action-btn">Manage</button>
                             <div class="dropdown-content">
                               {{#if ../puedeAceptar}}
                                 <button class="approve-btn" onclick="approveRequest('{{idSolicitud}}')">
@@ -338,26 +339,25 @@
 
     </div>
   </div>
-  
-  <!-- Tutorial Toggle Button -->
-  <button class="tutorial-toggle" id="tutorial-toggle">
-    <i class="fa-solid fa-question-circle"></i>
-    <span>Start Tour</span>
-  </button>
-
-  <!-- Tutorial Overlay -->
-  <div class="overlay" id="tutorial-overlay">
-    <div class="highlight" id="highlight"></div>
-    <div class="tutorial-tooltip" id="tutorial-tooltip">
-      <h3>Welcome to the Tutorial</h3>
-      <p>This tour will guide you through the Administrative Offenses management system.</p>
-      <div class="tooltip-buttons">
-        <button class="tooltip-button" id="next-button">Start Tour</button>
-      </div>
-    </div>
-  </div>
-
+   <!-- Tutorial Toggle Button -->
+   <button class="tutorial-toggle" id="tutorial-toggle">
+     <i class="fa-solid fa-question-circle"></i>
+     <span>Start Tour</span>
+   </button>
  
+   <!-- Tutorial Overlay -->
+   <div class="overlay" id="tutorial-overlay">
+     <div class="highlight" id="highlight"></div>
+     <div class="tutorial-tooltip" id="tutorial-tooltip">
+       <h3>Welcome to the Tutorial</h3>
+       <p>This tour will guide you through the Administrative Offenses management system.</p>
+       <div class="tooltip-buttons">
+         <button class="tooltip-button" id="next-button">Start Tour</button>
+       </div>
+     </div>
+   </div>
+   <script src="/js/ActionRequest.js"></script>
+    <script src="/js/requestAdminTuto.js"></script>
   <script src="/js/ActionRequest.js"></script>
   <script src="/js/addRequest.js"></script>
   <script src="/js/delete.js"></script>

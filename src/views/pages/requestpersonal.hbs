@@ -41,12 +41,14 @@
         <table>
           <thead>
             <tr>
+              <th>Request of</th>
               <th>Type</th>
               <th>Start Date</th>
               <th>End Date</th>
-              <th>Description</th>
+              <th class="descripcion-columna">Description</th>
               <th>Leader Approval</th>
               <th>Admin Approval</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -57,9 +59,9 @@
                 <td>{{Tipo}}</td>
                 <td>{{formatDate Fecha_inicio}}</td>
                 <td>{{formatDate Fecha_fin}}</td>
-                <td>{{Descripcion}}</td>
+                <td class="descripcion-columna">{{Descripcion}}</td>
                 <td>
-                  <span class=" vacation-status {{#if (eq Aprobacion_L 'Aprobado')}}active{{else if (eq Aprobacion_L 'Rechazado')}}inactive{{else}}pending{{/if}}">
+                  <span class="vacation-status {{#if (eq Aprobacion_L 'Aprobado')}}active{{else if (eq Aprobacion_L 'Rechazado')}}inactive{{else}}pending{{/if}}">
                   <div class="dot"></div>
                     {{#if (eq Aprobacion_L 'Aprobado')}}Approved
                     {{else if (eq Aprobacion_L 'Rechazado')}}Rejected
@@ -68,7 +70,7 @@
                   </span>
                 </td>
                 <td>
-                  <span class=" vacation-status {{#if (eq Aprobacion_A 'Aprobado')}}active{{else if (eq Aprobacion_A 'Rechazado')}}inactive{{else}}pending{{/if}}">
+                  <span class="vacation-status {{#if (eq Aprobacion_A 'Aprobado')}}active{{else if (eq Aprobacion_A 'Rechazado')}}inactive{{else}}pending{{/if}}">
                   <div class="dot"></div>
                     {{#if (eq Aprobacion_A 'Aprobado')}}Approved
                     {{else if (eq Aprobacion_A 'Rechazado')}}Rejected
@@ -76,35 +78,24 @@
                     {{/if}}
                   </span>
                 </td>
+                <td>
+                  <button class="action-btn">Actions</button>
+                </td>
               </tr>
               {{/each}}
             {{else}}
               <tr>
-                <td colspan="7" class="empty-message">No requests available</td>
+                <td colspan="8" class="empty-message">No requests available</td>
               </tr>
             {{/if}}
+            <tr class="height-spacer">
+              <td colspan="8"></td>
+            </tr>
           </tbody>
         </table>
       </div>
 
-      <div class="holidays-box">
-        <div class="holidays-header">
-          <h3 class="holidays-title">Holidays</h3>
-        </div>
-        <table>
-          <tbody>
-            {{#each diasferiados}}
-            <tr class="holiday-row">
-              <td class="day">
-                <div class="icon-circle"><i class="fa-regular fa-calendar"></i></div>
-                <div class="nombre">{{Nombre_asueto}}</div>
-              </td>
-              <td class="fecha">{{formatDate Fecha_asueto}}</td>
-            </tr>
-            {{/each}}
-          </tbody>
-        </table>
-      </div>
+      
     </div>
 
     <!-- Modal -->

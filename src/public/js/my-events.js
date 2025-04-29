@@ -487,7 +487,7 @@ function generateCalendar(month, year) {
     const prevMonthLastDay = new Date(year, month, 0).getDate();
     
     // Siempre usamos 42 días (6 filas x 7 días)
-    const totalCalendarDays = 42;
+    const totalCalendarDays = 35;
     
     // Configurar el grid para mantener dimensiones consistentes
     daysContainer.style.gridTemplateRows = `repeat(6, minmax(100px, 1fr))`;
