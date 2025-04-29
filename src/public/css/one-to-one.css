@@ -527,6 +527,41 @@
   background-color: rgba(255, 255, 255, 0.03);
 }
 
+/* Ajustando anchos de columnas para Open Questions */
+.open-responses .responses-table th:first-child,
+.open-responses .responses-table td:first-child {
+  width: 35%;
+}
+
+.open-responses .responses-table th:last-child,
+.open-responses .responses-table td:last-child {
+  width: 65%;
+  padding-right: 2rem; /* Añadiendo más padding a la derecha */
+}
+
+/* Ajuste responsivo */
+@media (max-width: 768px) {
+  .interview-header {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  
+  .responses-table th:first-child,
+  .responses-table td:first-child {
+    width: 40%;
+  }
+
+  .open-responses .responses-table th:first-child,
+  .open-responses .responses-table td:first-child {
+    width: 30%;
+  }
+  
+  .open-responses .responses-table th:last-child,
+  .open-responses .responses-table td:last-child {
+    width: 70%;
+  }
+}
+
 .question-text {
   font-weight: 500;
   margin-bottom: 0.5rem;

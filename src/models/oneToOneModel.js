@@ -349,6 +349,13 @@ static async updateQuestion(questionId, data) {
 // Delete a question (soft delete by setting active=0)
 static async deleteQuestion(questionId) {
   try {
+      // First delete any responses associated with this question
+      await db.execute(
+          'DELETE FROM respuestas WHERE preguntaId = ?',
+          [questionId]
+      );
+      
+      // Then delete the question itself
       const [result] = await db.execute(
           'DELETE FROM preguntas WHERE preguntaId = ?',
           [questionId]

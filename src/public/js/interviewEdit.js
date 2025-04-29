@@ -1,4 +1,3 @@
-
 // Get the CSRF token from the page
 function getCsrfToken() {
     // Try to get it from a meta tag if you've added one
@@ -435,6 +434,13 @@ async function deleteItem(context, id) {
         }
         
         const csrfToken = getCsrfToken();
+        if (!csrfToken) {
+            console.error('CSRF token not found');
+            alert('Error: Security token not found. Please refresh the page and try again.');
+            return;
+        }
+        
+        console.log('Deleting item:', { context, id }); // Debug log
         
         const response = await fetch(`/nuclea/interview/edit/${id}`, {
             method: 'DELETE',
@@ -443,6 +449,12 @@ async function deleteItem(context, id) {
                 'X-CSRF-Token': csrfToken
             }
         });
+        
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error('Server error:', response.status, errorText);
+            throw new Error(`Server error: ${response.status} ${errorText}`);
+        }
         
         const data = await response.json();
         
@@ -453,13 +465,17 @@ async function deleteItem(context, id) {
             
             if (item) {
                 item.remove();
+                console.log('Item removed from UI successfully');
+            } else {
+                console.warn('Item not found in UI after deletion');
             }
         } else {
-            alert('Error al eliminar la pregunta: ' + data.message);
+            console.error('Delete operation failed:', data.message);
+            alert('Error al eliminar la pregunta: ' + (data.message || 'Error desconocido'));
         }
     } catch (error) {
         console.error('Error deleting item:', error);
-        alert('Error al eliminar la pregunta. Por favor intente de nuevo.');
+        alert('Error al eliminar la pregunta: ' + (error.message || 'Por favor intente de nuevo.'));
     }
 }
 

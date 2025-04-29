@@ -490,25 +490,25 @@ exports.deleteQuestion = async (req, res) => {
             });
         }
         
-        // Delete question from the database
+        // Delete question and its responses from the database
         const deleted = await Questions.deleteQuestion(questionId);
         
         if (!deleted) {
             return res.status(404).json({
                 success: false,
-                message: 'Question not found'
+                message: 'Question not found or could not be deleted'
             });
         }
         
         res.status(200).json({
             success: true,
-            message: 'Question deleted successfully'
+            message: 'Question and associated responses deleted successfully'
         });
     } catch (error) {
         console.error('Error deleting question:', error);
         res.status(500).json({
             success: false,
-            message: 'Error deleting question'
+            message: 'Error deleting question: ' + (error.message || 'Unknown error occurred')
         });
     }
 };
