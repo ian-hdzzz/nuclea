@@ -579,3 +579,13 @@ th, td {
     background: linear-gradient(to right, #2762ea 0%, #4162f0 29%, #8061fd 100%);
     border-radius: 4px;
   }
+
+  select.text-modal {
+    background-color: #1a1a1a; /* Fondo oscuro */
+    color: #fff; /* Texto blanco */
+  }
+  
+  select.text-modal option {
+    background-color: #1a1a1a; /* Fondo oscuro de las opciones */
+    color: #fff; /* Texto blanco */
+  }
