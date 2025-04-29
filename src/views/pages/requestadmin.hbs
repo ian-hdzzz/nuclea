@@ -24,16 +24,17 @@
           {{> search 
             placeholder="Employee name..." searchId="search-input"}}
         </div>
-
+      <div class="btns-wrapper">
         <div id="btn-personal" onclick="location.href='/nuclea/request/personal'" class="add-btn-container" >
           <i class="fa-regular fa-square-plus"></i>
           <input type="button" value="Personal requests" class="add-btn">
         </div>
 
-      <a href="#accepted" class="add-btn-container" id="btn-accepted">
+        <a href="#accepted" class="add-btn-container" id="btn-accepted">
           <i class="fa-regular "></i>
           <input type="button" value="Accepted Absences" class="add-btn">
         </a>
+      </div>
     </div>
     
     {{#if error}}

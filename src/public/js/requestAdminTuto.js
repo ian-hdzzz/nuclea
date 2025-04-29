@@ -145,11 +145,6 @@ document.addEventListener("DOMContentLoaded", () => {
         title: "Go to Accepted Absences",
         content: "Click here to see all the vacation requests that have already been approved by the management."
     },
-    {
-        element: "accepted",
-        title: "Accepted Vacation Requests",
-        content: "This table shows only the absences that have been successfully approved, providing an organized view of your confirmed leaves."
-    }
 ];
 
 let currentStep = 0;
