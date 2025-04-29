@@ -1,0 +1,25 @@
+<head>
+    <link rel="stylesheet" href="/css/oneEmployee.css">
+</head>
+<div class="content-1">
+    <div class="graphAraña">
+        <h1>Ian performance overview</h1>
+        {{> graph 
+                workload=closedResponses.[0].valorRespuesta
+                health=closedResponses.[1].valorRespuesta 
+                recognition=closedResponses.[2].valorRespuesta
+                emotionalHealth=closedResponses.[3].valorRespuesta
+                workLifeBalance=closedResponses.[4].valorRespuesta
+                className="chart-container details"
+                graphTitle="Performance Overview"}}
+    </div>
+    
+    <div class="upcoming">
+        <!-- Additional information can be added here -->
+    </div>
+</div>
+<div class="card tableCollab">
+
+</div>
+
+  <script src="/js/oneEmployee.js"></script>
