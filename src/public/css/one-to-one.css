@@ -530,12 +530,12 @@
 /* Ajustando anchos de columnas para Open Questions */
 .open-responses .responses-table th:first-child,
 .open-responses .responses-table td:first-child {
-  width: 35%;
+  width: 47%;
 }
 
 .open-responses .responses-table th:last-child,
 .open-responses .responses-table td:last-child {
-  width: 65%;
+  width: 53%;
   padding-right: 2rem; /* Añadiendo más padding a la derecha */
 }
 
@@ -559,6 +559,16 @@
   .open-responses .responses-table th:last-child,
   .open-responses .responses-table td:last-child {
     width: 70%;
+  }
+  
+  .closed-responses .responses-table th:first-child,
+  .closed-responses .responses-table td:first-child {
+    width: 35%;
+  }
+  
+  .closed-responses .responses-table th:last-child,
+  .closed-responses .responses-table td:last-child {
+    width: 65%;
   }
 }
 
