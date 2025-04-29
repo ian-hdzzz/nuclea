@@ -31,53 +31,7 @@ class OneToOneModel {
     return rows[0]; // devuelve solo uno
   }
 
-  static async saveOneToOneInterview(data) {
-    const { 
-      idUsuario, 
-      idUsuarioA, 
-      deOrgulloso, 
-      preocupaciones, 
-      trabajandoEn, 
-      metaMes,
-      cargaTrabajo,
-      saludFisica,
-      reconocimiento,
-      saludEmocional,
-      equilibrioTrabajoVida
-    } = data;
-
-    const [result] = await db.execute(
-      `INSERT INTO Reuniones (
-        idUsuario, 
-        idUsuario_A, 
-        Fecha_reunion, 
-        De_que_orgulloso_mes_pasado, 
-        Estas_preocupado_decepcionado_estresado, 
-        Que_trabajando, 
-        Meta_mes, 
-        Carga_trabajo, 
-        Salud_fisica, 
-        Reconocimiento, 
-        Salud_emocional, 
-        Equilibrio_trabajo_vida
-      ) VALUES (?, ?, CURDATE(), ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-      [
-        idUsuario, 
-        idUsuarioA, 
-        deOrgulloso, 
-        preocupaciones, 
-        trabajandoEn, 
-        metaMes,
-        cargaTrabajo,
-        saludFisica,
-        reconocimiento,
-        saludEmocional,
-        equilibrioTrabajoVida
-      ]
-    );
-
-    return result.insertId;
-  }
+  
 
   static async getAllEmployees() {
     const [rows] = await db.execute(
@@ -280,7 +234,6 @@ static async getAllClosedResponsesAverage(){
           ORDER BY p.orden ASC
       `;
       const [rows, fields] = await db.query(query);
-      console.log('Promedios de respuestas cerradas:', rows);
       return rows;
   } catch (error) {
       console.error('Error al obtener promedios de respuestas cerradas:', error);

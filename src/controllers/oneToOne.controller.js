@@ -245,7 +245,7 @@ exports.getAllInterviewHistory = async (req, res) => {
             entrevistadorNombre: `${interview.entrevistadorNombre || ''} ${interview.entrevistadorApellidos || ''}`.trim(),
             completada: interview.completada
         }));
-        console.log('Entrevistas formateadas:', formattedInterviews);
+        
         res.json({
             success: true,
             interviews: formattedInterviews
