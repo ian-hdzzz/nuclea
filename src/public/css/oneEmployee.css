@@ -584,7 +584,7 @@
 }
 .detail-item {
     position: relative;
-    cursor: pointer;
+    cursor: default;
     margin: 15px 10px;
     background: var(--color-bg-secundario);
     padding: 15px 10px;
@@ -594,17 +594,81 @@
 .detail-item .detail-info {
     display: flex;
     justify-content: space-between;
-    gap: 4px;
+    align-items: center;
+    gap: 8px;
     font-size: .8rem;
     color: var(--color-iconos);
 }
 
-.detail-item .detail-info .detail-date {
+.detail-date {
     display: flex;
-    justify-content: space-between;
-    width: 100%;
+    gap: 12px;
+}
+
+.action-menu-btn {
+    background: none;
+    border: none;
+    color: var(--color-fuente);
+    padding: 6px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
     align-items: center;
-    padding: 0 10px;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+}
+
+.action-menu-btn:hover {
+    background-color: var(--color-bg-secundario);
+    transform: scale(1.1);
+}
+
+.event-actions {
+    position: absolute;
+    right: 10px;
+    top: calc(100% - 5px);
+    display: none;
+    background: var(--color-bg);
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    z-index: 10;
+    padding: 8px 0;
+}
+
+.event-actions.show {
+    display: block;
+}
+
+.action-btn {
+    display: block;
+    width: 100%;
+    padding: 8px 16px;
+    border: none;
+    background: none;
+    color: var(--color-fuente);
+    text-align: left;
+    cursor: pointer;
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+.action-btn:hover {
+    background-color: var(--color-bg-secundario);
+}
+
+.action-btn.deletee {
+    color: #ff4444;
+}
+
+.action-btn.complete {
+    color: #00C851;
+}
+
+.action-btn i {
+    margin-right: 8px;
+    width: 16px;
 }
 
 .date-group, .time-group {
@@ -622,4 +686,8 @@
 }
 .fa-calendar{
     margin-right: 10px;
+}
+
+.performance{
+  margin-left: 30px;
 }

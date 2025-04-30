@@ -40,10 +40,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         <p class="employee-department">Modality: ${employee.modalidad || 'No modality specified'}</p>
                     </div>
                 </div>
-                <div class="profile-details">
-                    <p><strong>Start Date:</strong> ${formatDate(employee.fechaInicio)}</p>
-                    <p><strong>Time in Company:</strong> ${timeInCompany}</p>
-                </div>
+                
             </div>
         `;
 
@@ -71,7 +68,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         <td>${interviewerName || 'Unknown'}</td>
                         <td>${interview.completada ? 'Completed' : 'In Progress'}</td>
                         <td>
-                            <button class="btn-view" data-id="${interview.id}" data-employee="${employee.id}">
+                            <button class="btn-view" data-id="${interview.id || ''}" onclick="viewInterviewDetails('${interview.id || ''}')">
                                 View Details
                             </button>
                         </td>
@@ -203,3 +200,83 @@ document.addEventListener('DOMContentLoaded', function () {
   initializeAccordion();
     handleEmployeeSelection(idUsuario);
 });
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Close any open menu when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.action-menu-btn') && !e.target.closest('.event-actions')) {
+            document.querySelectorAll('.event-actions.show').forEach(menu => {
+                menu.classList.remove('show');
+            });
+        }
+    });
+
+    // Handle ellipsis button clicks
+    document.querySelectorAll('.action-menu-btn').forEach(button => {
+        button.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const eventId = button.dataset.eventId;
+            const actionsMenu = document.querySelector(`.event-actions[data-event-id="${eventId}"]`);
+            
+            // Close other open menus
+            document.querySelectorAll('.event-actions.show').forEach(menu => {
+                if (menu !== actionsMenu) {
+                    menu.classList.remove('show');
+                }
+            });
+
+            // Toggle this menu
+            actionsMenu.classList.toggle('show');
+        });
+    });
+
+    // Handle action button clicks
+    document.querySelectorAll('.action-btn').forEach(button => {
+        button.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const eventId = button.dataset.eventId;
+            const action = button.classList.contains('delete') ? 'delete' : 'complete';
+            
+            handleEventAction(action, eventId, button);
+            
+            // Close the menu after action
+            const actionsMenu = button.closest('.event-actions');
+            if (actionsMenu) {
+                actionsMenu.classList.remove('show');
+            }
+        });
+    });
+});
+
+function handleEventAction(action, eventId, button) {
+    const eventItem = button.closest('.detail-item');
+    
+    switch(action) {
+        case 'delete':
+            if (confirm('¿Estás seguro de que quieres eliminar este evento?')) {
+                eventItem.style.opacity = '0';
+                setTimeout(() => {
+                    eventItem.remove();
+                    updateEventCount();
+                }, 300);
+            }
+            break;
+            
+        case 'complete':
+            eventItem.style.backgroundColor = 'rgba(0, 200, 81, 0.2)';
+            eventItem.style.opacity = '0';
+            setTimeout(() => {
+                eventItem.remove();
+                updateEventCount();
+            }, 300);
+            break;
+    }
+}
+
+function updateEventCount() {
+    const countElement = document.querySelector('.category-count .meeting');
+    if (countElement) {
+        const currentCount = document.querySelectorAll('.detail-item').length;
+        countElement.textContent = currentCount;
+    }
+}

@@ -89,13 +89,6 @@ exports.getOneEmployee = async (req, res) => {
                      }
                  });
  
-             // Map the eventos por tipo to match template variables
-            //  const templateData = {
-            //      oneToOne: eventosPorTipo[2] || { count: 0, items: [] },
-            //      tipos: tipos,
-            //      usuarioId: req.session.idUsuario,
-            //  }; 
-
 
     res.render('pages/oneEmployee', { 
         title: 'One-to-One ', 
