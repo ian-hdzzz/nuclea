@@ -1,16 +1,22 @@
-.content1{
+.content-1{
     width: 100%;
     height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
+    gap: 10px;
 }
 .graphAraña{
-    background: var(--color-bg-secundario);
-    border-radius: 20px;
-    font-size: 1rem;
+    background-color: var(--card-bg);
+    border-radius: 12px;
+    padding: 20px;
+    color: var(--color-fuente);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     width: 50%;
     padding: 10px 20px;
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    transition: all 0.3s ease;
 }
 .graphAraña h1{
     margin-top: 20px;
@@ -18,11 +24,19 @@
     font-size: 2rem;
 }
 .upcoming{
-    background: var(--color-bg-secundario);
-    border-radius: 20px;
-    font-size: 1rem;
+    background-color: var(--card-bg);
+    border-radius: 12px;
+    padding: 20px;
+    color: var(--color-fuente);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     width: 50%;
     padding: 10px 20px;
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    margin-top: -22px;
+    transition: all 0.3s ease;
 }
 
 .history{
@@ -53,8 +67,559 @@
   .tableCollab {
     background-color: var(--card-bg);
     border-radius: 12px;
-    padding: 20px;
-    margin-top: 20px;
+;    padding: 20px;
     color: var(--color-fuente);
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   }
+  .interview-history {
+    margin-top: 30px;
+  }
+  
+  .interview-history h3 {
+    margin-bottom: 15px;
+    font-size: 18px;
+    font-weight: 600;
+  }
+  
+  .history-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+  }
+  
+  .history-table th, .history-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  .history-table th {
+    background-color: rgba(0, 0, 0, 0.2);
+    font-weight: 600;
+  }
+  
+  .history-table tr:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+  }
+  
+  .no-interviews {
+    background-color: rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    border-radius: 8px;
+    text-align: center;
+    margin-top: 20px;
+  }
+  
+  .interview-actions {
+    margin-top: 20px;
+    text-align: right;
+  }
+  
+  .btn.view-details {
+    background-color: #3182ce;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.2s;
+  }
+  
+  .btn.view-details:hover {
+    background-color: #2c5282;
+  }
+  
+  .interviews-container {
+    width: 100%;
+  }
+  
+  .interviews-header {
+    margin-bottom: 20px;
+  }
+  
+  .interviews-header h2 {
+    margin: 0 0 5px 0;
+    font-size: 22px;
+    font-weight: 600;
+  }
+  
+  .interviews-header p {
+    color: #a0aec0;
+    margin: 0;
+  }
+  
+  .history-table {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  
+  .history-table th, .history-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  .history-table th {
+    background-color: rgba(0, 0, 0, 0.2);
+    font-weight: 600;
+  }
+  
+
+  .no-data {
+    text-align: center;
+    color: #a0aec0;
+    padding: 20px;
+  }
+  
+  .btn-view {
+    background: linear-gradient(to right, #256DED, #1E9FFB);
+    color: white;
+    border: none;
+    padding: 10px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.2s;
+  }
+  
+  .btn-view:hover {
+    background-color: #2c5282;
+  }
+  
+  .btn-back {
+    background-color: #4a5568;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.2s;
+    margin-top: 15px;
+  }
+  
+  .btn-back:hover {
+    background-color: #2d3748;
+  }
+  
+  .back-to-all {
+    margin-top: 15px;
+  }
+  
+  .loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+    color: #a0aec0;
+  }
+  
+  .error {
+    background-color: rgba(231, 76, 60, 0.1);
+    color: #e74c3c;
+    padding: 15px;
+    border-radius: 8px;
+    margin: 20px 0;
+    text-align: center;
+  }
+  
+  /* --------------------Interview Details Styling ---------------*/
+  .interview-details-container {
+    margin: 0 auto;
+    padding: 0 2rem;
+    color: var(--text-primary);
+  }
+  
+  .back-button-container {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+  }
+  
+  .btn-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: linear-gradient(to right, #256DED, #1E9FFB);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: background-color 0.2s;
+  }
+  
+  .btn-back:hover {
+    background-color: #2d3748;
+    text-decoration: none;
+  }
+  
+  
+  /* Interview header */
+  .interview-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+  }
+  
+  .employee-profile {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  
+  .employee-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(to right, #256DED, #1E9FFB);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: bold;
+  }
+  
+  .employee-info h2 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+  }
+  
+  .employee-position, .employee-department {
+    margin: 0.25rem 0;
+    color: var(--text-secondary);
+  }
+  
+  .interview-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    justify-content: center;
+  }
+  
+  .meta-item {
+    font-size: 0.9rem;
+  }
+  
+  .meta-item strong {
+    margin-right: 0.5rem;
+  }
+  
+  .status-completed {
+    color: #4ADE80;
+    font-weight: 600;
+  }
+  
+  .status-progress {
+    color: #FCD34D;
+    font-weight: 600;
+  }
+  
+  .employee-profile{
+    display: flex;
+    justify-content: space-between;
+  }
+  .profile-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .employee-avatar {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background-color: #1da1f2;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: bold;
+    margin-right: 20px;
+  }
+  
+  .employee-info h2 {
+    margin: 0 0 5px 0;
+    font-size: 20px;
+    font-weight: 600;
+  }
+  
+  .employee-position, .employee-department {
+    margin: 0;
+    color: #a0aec0;
+  }
+  
+  .profile-details {
+    background-color: rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    padding: 15px;
+  }
+  
+  .profile-details p {
+    margin: 8px 0;
+  }
+
+  /* ---------------UPCOMING EVENTS----------------------- */
+  .category-card {
+    background: var(--card-bg);
+    border-radius: 8px;
+    overflow: hidden;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 auto;
+}
+
+.category-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+
+
+.dropdown-icons {
+    display: flex;
+    align-items: center;
+}
+
+/* MODIFICACIÓN: Reglas simplificadas para los íconos de flecha */
+.dropdown-icons i {
+    font-size: 14px;
+    color: #fff; /* Para mejor visibilidad */
+    transition: transform 0.3s ease;
+}
+
+.dropdown-icons i.fa-angle-down {
+    display: block; /* Mostrar siempre la flecha hacia abajo por defecto */
+}
+
+.dropdown-icons i.fa-angle-up {
+    display: none; /* Ocultar la flecha hacia arriba por defecto */
+}
+
+.category-header.active .dropdown-icons i.fa-angle-down {
+    display: none; /* Ocultar la flecha hacia abajo cuando está activo */
+}
+
+.category-header.active .dropdown-icons i.fa-angle-up {
+    display: block; /* Mostrar la flecha hacia arriba cuando está activo */
+}
+
+.category-details {
+    padding: 0 15px;
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: all 0.3s ease-out;
+}
+
+.category-details:not(.collapsed) {
+
+    max-height: 438px; /* o la altura que desees */
+    overflow-y: auto;
+    opacity: 1;
+    padding-bottom: 15px;
+}
+
+.category-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.category-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+
+.category-name {
+    font-size: 14px;
+    color: #fff;
+}
+
+.category-count {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.circle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.1);
+    font-size: 16px;
+    color: #fff;
+    font-weight: bold;
+    margin-right: 16px;
+}
+
+.circle.meeting{
+    background-color: #4286f48f;
+}
+.circle.vacation{
+    background-color: #bf42f496;
+    color: #fff;
+}
+.circle.holiday{
+    background-color: #42f46bbf;
+}
+.circle.non-working{
+    background-color: rgba(176, 107, 63, 0.5);
+    color: #fff;
+}
+
+/* Animación para la flecha de dropdown */
+.dropdown-icons i {
+    font-size: 14px;
+    color: #fff;
+    transition: transform 0.3s ease;
+}
+
+/* Simplificamos el enfoque usando transform para rotar el ícono */
+.dropdown-icons i.fa-angle-down {
+    display: block; 
+    transform: rotate(0deg);
+}
+
+.category-header.active .dropdown-icons i.fa-angle-down {
+    transform: rotate(180deg);
+    /* No necesitamos ocultarlo, solo rotarlo */
+    display: block;
+}
+
+/* Ya no necesitamos dos íconos diferentes */
+.dropdown-icons i.fa-angle-up {
+    display: none; /* Podemos eliminar este elemento del HTML */
+}
+
+/* Tooltip styles for events */
+.event-tooltip {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.98);
+    border-radius: 8px;
+    padding: 12px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+    min-width: 200px;
+    max-width: 300px;
+    display: none;
+    pointer-events: none;
+    border: 1px solid #e0e0e0;
+    font-size: 0.9em;
+    line-height: 1.4;
+}
+
+.event-tooltip.visible {
+    display: block;
+}
+
+.event-tooltip-title {
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: #333;
+}
+
+.event-tooltip-type {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.8em;
+    margin-bottom: 8px;
+}
+
+.event-tooltip-time,
+.event-tooltip-description {
+    color: #666;
+    margin-bottom: 4px;
+}
+
+.event-tooltip-description {
+    font-style: italic;
+}
+
+/* Styles for event types in the tooltip */
+.event-tooltip-type.vacation {
+    background-color: #9C27B0;
+    color: white;
+}
+
+.event-tooltip-type.meeting {
+    background-color: #4285F4;
+    color: white;
+}
+
+.event-tooltip-type.holiday {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.event-tooltip-type.non-working {
+    background-color: #FF7700;
+    color: white;
+}
+
+/* Adjustments for events in the calendar and sidebar */
+.day-event-tag{
+    position: relative;
+    cursor: pointer;
+  
+}
+.detail-item {
+    position: relative;
+    cursor: pointer;
+    margin: 15px 10px;
+    background: var(--color-bg-secundario);
+    padding: 15px 10px;
+    border-radius: 10px;
+}
+
+.detail-item .detail-info {
+    display: flex;
+    justify-content: space-between;
+    gap: 4px;
+    font-size: .8rem;
+    color: var(--color-iconos);
+}
+
+.detail-item .detail-info .detail-date {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    align-items: center;
+    padding: 0 10px;
+}
+
+.date-group, .time-group {
+    display: inline-flex;
+    align-items: center;
+    white-space: nowrap;
+}
+
+.date-group i, .time-group i {
+    margin-right: 4px;
+}
+.category-name{
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+.fa-calendar{
+    margin-right: 10px;
+}

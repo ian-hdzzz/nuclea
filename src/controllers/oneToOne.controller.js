@@ -281,7 +281,7 @@ exports.getInterviewDetails = async (req, res) => {
         // Get open and closed questions with responses
         const openResponses = await Questions.getOpenResponses(interviewId);
         const closedResponses = await Questions.getClosedResponses(interviewId);
-        
+        console.log('Closed responseeees:', closedResponses);
         // Format date
         const formattedDate = interview.fechaEntrevista ? 
             new Date(interview.fechaEntrevista).toLocaleDateString('es-ES', { 
