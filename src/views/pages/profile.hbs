@@ -7,9 +7,10 @@
     <link rel="stylesheet" href="/css/profile.css"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.js"></script>
+        <link rel="stylesheet" href="/css/oneEmployee.css">
 </head>
 <body>
-    <div class="dashboard-container">
+    <div id="employeeData" data-idUsuario="{{idUsuario}}" class="dashboard-container">
         <!-- Panel izquierdo: Perfil del empleado -->
         <div class="profile-panel">
             <div class="profile-header">
@@ -77,15 +78,11 @@
             </div>
             
             <!-- Tarjetas de métricas -->
+            <div class="profile-content">
             <div class="metrics-cards">
-                <div class="metric-card">
-                    <p class="metric-title">Completed Tasks</p>
-                    <p class="metric-value">128</p>
-                    <p class="metric-change positive">+12%</p>
-                </div>
                 
                 <div class="metric-card">
-                    <p class="metric-title">One-to-One Sessions</p>
+                    <p class="metric-title">Upcoming One-to-one meetings</p>
                     <p class="metric-value">8</p>
                     <p class="metric-change positive">+2</p>
                 </div>
@@ -96,15 +93,26 @@
                     <p class="metric-change negative">-1 day</p>
                 </div>
             </div>
-            
-            
+            <div class="performance-graph">
+
+            {{> graph 
+                workload=closedResponses.[0].valorRespuesta
+                health=closedResponses.[1].valorRespuesta 
+                recognition=closedResponses.[2].valorRespuesta
+                emotionalHealth=closedResponses.[3].valorRespuesta
+                workLifeBalance=closedResponses.[4].valorRespuesta
+                className="chart-container profile"}}
+            </div>
+            </div>
             <!-- Acciones rápidas -->
             <div class="quick-actions">
                 <h2 class="section-title">Quick Actions</h2>
                 
                 <div class="action-buttons">
-                    <button class="button is-info">Schedule One-to-One</button>
-                    <button class="button is-white">Request Time Off</button>
+                    {{#hasPrivilege privilegios "viewAdmin"}}
+                        <button class="button is-info">Schedule One-to-One</button>
+                    {{/hasPrivilege}}
+                    <a href="/nuclea/request" class="button is-white">Request Time Off</a>
                     <a href="/nuclea/faltasAdministrativas" class="button is-white">Administrative offenses</a>
                 </div>
             </div>
@@ -117,7 +125,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.js"></script>
     <!-- Script del componente -->
     <script src="/js/schedulePopup.js"></script>
-    
+    <script src="/js/oneEmployee.js"></script>
     <script>
     document.addEventListener('DOMContentLoaded', function() {
         const scheduleBtn = document.querySelector('.quick-actions .button.is-info');
@@ -132,6 +140,5 @@
     });
     </script>
 </body>
-
 
 

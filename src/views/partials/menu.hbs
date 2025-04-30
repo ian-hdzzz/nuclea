@@ -19,12 +19,22 @@
                     <span class="nav-text">Vacation Requests</span>
                 </a>
             </li>
-            <li>
-                <a href="/nuclea/one" class="nav-link {{#if (eq currentPath '/nuclea/one')}}active{{/if}}">
-                    <i class="fa-solid fa-people-arrows"></i>
-                    <span class="nav-text">One-to-one</span>
-                </a>
-            </li> 
+            {{#hasPrivilege privilegios "viewAdmin"}}
+                <li>
+                    <a href="/nuclea/one" class="nav-link {{#if (eq currentPath '/nuclea/one')}}active{{/if}}">
+                        <i class="fa-solid fa-people-arrows"></i>
+                        <span class="nav-text">One-to-one</span>
+                    </a>
+                </li>
+            {{/hasPrivilege}} 
+            {{#hasPrivilege privilegios "oneColabLider"}}
+                <li>
+                    <a href="/nuclea/oneEmployee" class="nav-link {{#if (eq currentPath '/nuclea/oneEmployee')}}active{{/if}}">
+                        <i class="fa-solid fa-people-arrows"></i>
+                        <span class="nav-text">One-to-one</span>
+                    </a>
+                </li> 
+            {{/hasPrivilege}} 
             <li>
                 <a href="/nuclea/my-events" class="nav-link {{#if (eq currentPath '/nuclea/my-events')}}active{{/if}}">
                     <i class="fa-regular fa-calendar"></i>

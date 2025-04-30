@@ -148,8 +148,10 @@ h2{
 /* Tarjetas de métricas */
 .metrics-cards {
   display: flex;
+  flex-direction: column;
   padding: 20px 30px;
   gap: 20px;
+  width: 50%;
 }
 
 .metric-card {
@@ -158,6 +160,7 @@ h2{
   padding: 15px 20px;
   border-radius: 8px;
   color: #fff;
+  height: 25%;
 }
 
 .metric-title {
@@ -678,4 +681,13 @@ input:focus {
 /* Si hay algún contorno en el calendario */
 .flatpickr-calendar {
   outline: none !important;
+}
+.profile-content{
+  display: flex;
+}
+.performance-graph{
+  width: 70%;
+}
+.chart-container.profile{
+  width: 100%;
 }

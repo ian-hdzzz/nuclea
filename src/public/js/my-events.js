@@ -490,7 +490,7 @@ function generateCalendar(month, year) {
     const totalCalendarDays = 35;
     
     // Configurar el grid para mantener dimensiones consistentes
-    daysContainer.style.gridTemplateRows = `repeat(6, minmax(100px, 1fr))`;
+    daysContainer.style.gridTemplateRows = `repeat(5, minmax(100px, 1fr))`;
     
     // Días del mes anterior
     for (let i = 0; i < startingDay; i++) {

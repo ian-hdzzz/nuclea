@@ -1,6 +1,14 @@
-exports.getProfile = (req, res, next)=>{
+const { id } = require("date-fns/locale");
+const Questions = require('../models/oneToOneModel');
+
+exports.getProfile = async (req, res, next)=>{
+
+    const idUsuario = req.session.idUsuario;
+
+    const closedResponses = await Questions.getAllClosedResponsesAverage(idUsuario);
     res.render('./pages/profile', {
         nombre: req.session.nombre || [],
+        idUsuario: req.session.idUsuario || [],
         apellidos: req.session.apellidos || [],
         email: req.session.email || [],
         registration: req.session.registration || [],
@@ -10,6 +18,8 @@ exports.getProfile = (req, res, next)=>{
         departamentos: req.session.departamentos || [],
         title: 'Profile',
         iconClass: 'fa-solid fa-user',
-        csrfToken: req.csrfToken() // Añadiendo el token explícitamente
+        csrfToken: req.csrfToken(), // Añadiendo el token explícitamente
+        closedResponses: closedResponses,
     });
 };
+

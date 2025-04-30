@@ -1,0 +1,68 @@
+<head>
+    <link rel="stylesheet" href="/css/oneEmployee.css">
+</head>
+<div id="employeeData" data-idUsuario="{{idUsuario}}" class="content-1">
+    <div class=" card graphAraña">
+        <h1>Your performance overview</h1>
+        {{> graph 
+                workload=closedResponses.[0].valorRespuesta
+                health=closedResponses.[1].valorRespuesta 
+                recognition=closedResponses.[2].valorRespuesta
+                emotionalHealth=closedResponses.[3].valorRespuesta
+                workLifeBalance=closedResponses.[4].valorRespuesta
+                className="chart-container details"}}
+    </div>
+    
+    <div class="upcoming card">
+        <div class="category-card">
+            <div class="category-header" data-category="oneToOne">
+                <div class="category-info">
+                    <span class="category-dot" style="background-color: #4285F4;"></span>
+                    <span class="category-name">One-to-one</span>
+                </div>
+                <div class="category-count">
+                    <span class="circle meeting">{{oneToOne.count}}</span>
+                </div>
+            </div>
+            
+            <div class="category-details collapsed">
+                {{#if oneToOne.items.length}}
+                    {{#each oneToOne.items}}
+                        <div class="detail-item">
+                            <div class="detail-name">{{name}}</div>
+                            <div class="detail-info">
+                                <div class="detail-date">
+                                    <span><i class="fa-regular fa-calendar"></i> {{startDate}}</span>
+                                    <span><i class="fa-regular fa-clock"></i> {{startTime}}</span>
+                                </div>
+                                <button class="action-menu-btn" data-event-id="{{id}}">
+                                    <i class="fa-solid fa-ellipsis"></i>
+                                </button>
+                            </div>
+                            <div class="event-actions" data-event-id="{{id}}">
+                                <button class="action-btn deletee" data-event-id="{{id}}">
+                                    <i class="fas fa-trash"></i> Delete
+                                </button>
+                                <button class="action-btn complete" data-event-id="{{id}}">
+                                    <i class="fas fa-check"></i> Mark as Complete
+                                </button>
+                            </div>
+                        </div>
+                    {{/each}}
+                {{else}}
+                    <div class="detail-item no-events">
+                        <div class="detail-name">No events scheduled</div>
+                    </div>
+                {{/if}}
+            </div>
+        </div>
+    </div>
+</div>
+
+    <div class="card tableCollab">
+    
+    </div>
+    
+
+<script src="/js/my-events.js"></script>
+  <script src="/js/oneEmployee.js"></script>
