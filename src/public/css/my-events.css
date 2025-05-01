@@ -321,13 +321,14 @@
     font-size: 14px;
     border-radius: 8px;
     position: relative;
-    padding: 5px;
+    padding: 6px; /* Aumentado el padding del día */
     min-height: 80px;
     background-color: var(--card-bg);
     border: 1px solid var(--border-color);
     cursor: pointer;
     transition: background-color 0.2s ease;
     overflow: hidden; /* Asegura que el contenido no se desborde */
+    gap: 2px; /* Espacio consistente entre elementos */
 }
 
 .day:hover {
@@ -360,8 +361,9 @@
     text-align: right;
     font-weight: 500;
     padding-right: 5px;
-    margin-bottom: 4px;
+    margin-bottom: 6px; /* Aumentado el espacio después del número */
     color: var(--text-color);
+    height: 18px; /* Altura fija para el número del día */
 }
 
 .day-events {
@@ -372,6 +374,7 @@
     scrollbar-width: thin; /* Para Firefox */
     scrollbar-color: var(--blue-color) transparent; /* Para Firefox */
     padding-right: 2px; /* Espacio para el scrollbar */
+    padding: 2px 4px; /* Añadido padding horizontal */
 }
 
 .day-events::-webkit-scrollbar {
@@ -388,22 +391,31 @@
 }
 
 .day-event-tag {
-    width: calc(100% - 10px);
+    width: calc(100% - 4px); /* Ajustado para considerar el padding */
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    padding: 3px 5px;
+    padding: 4px 6px; /* Aumentado el padding vertical y horizontal */
     border-radius: 4px;
-    font-size: 10px;
+    font-size: 11px; /* Ligeramente aumentado el tamaño de fuente */
     display: flex;
     align-items: center;
     cursor: pointer;
-    margin: 1px 0;
+    margin: 2px 0; /* Aumentado el margen entre eventos */
+    min-height: 20px; /* Altura mínima para cada evento */
+    line-height: 1.2; /* Mejorar la legibilidad del texto */
 }
 
 .day-event-tag.one-to-one {
     background-color: rgba(66, 133, 244, 0.2);
     color: #ffffff;
+}
+
+.day-event-tag i {
+    margin-right: 6px;
+    font-size: 11px;
+    display: flex;
+    align-items: center;
 }
 
 /* Estilos específicos para tipos de eventos */
@@ -564,13 +576,14 @@
     font-size: 14px;
     border-radius: 8px;
     position: relative;
-    padding: 5px;
+    padding: 6px; /* Aumentado el padding del día */
     min-height: 80px;
     background-color: var(--card-bg);
     border: 1px solid var(--border-color);
     cursor: pointer;
     transition: background-color 0.2s ease;
     overflow: hidden; /* Asegura que el contenido no se desborde */
+    gap: 2px; /* Espacio consistente entre elementos */
 }
 
 .day:hover {
@@ -587,19 +600,20 @@
 .day-number {
     width: 100%;
     text-align: right;
-    margin-bottom: 4px;
+    margin-bottom: 6px; /* Aumentado el espacio después del número */
     font-weight: 500;
     padding-right: 5px;
     color: var(--text-color);
+    height: 18px; /* Altura fija para el número del día */
 }
 
 /* Event tag container - below the number */
 .day-event-tag {
-    width: calc(100% - 10px);
-    padding: 3px 5px;
+    width: calc(100% - 4px); /* Ajustado para considerar el padding */
+    padding: 4px 6px; /* Aumentado el padding vertical y horizontal */
     border-radius: 4px;
     text-align: left;
-    font-size: 10px;
+    font-size: 11px; /* Ligeramente aumentado el tamaño de fuente */
     margin-top: 2px;
     white-space: nowrap;
     overflow: hidden;
@@ -607,10 +621,11 @@
     display: flex;
     align-items: center;
     cursor: pointer;
-    margin: 1px 0;
+    margin: 2px 0; /* Aumentado el margen entre eventos */
+    min-height: 20px; /* Altura mínima para cada evento */
+    line-height: 1.2; /* Mejorar la legibilidad del texto */
 }
 
-/* Meeting event tag */
 .day-event-tag.meeting {
     background-color: rgba(37, 97, 227, 0.2);
     color: #0754ef;
@@ -636,8 +651,10 @@
 
 /* Event icons */
 .day-event-tag i {
-    margin-right: 4px;
-    font-size: 10px;
+    margin-right: 6px;
+    font-size: 11px;
+    display: flex;
+    align-items: center;
 }
 
 /* Add these CSS styles to align day numbers to the right */
@@ -650,13 +667,14 @@
     font-size: 14px;
     border-radius: 8px;
     position: relative;
-    padding: 5px;
+    padding: 6px; /* Aumentado el padding del día */
     min-height: 80px;
     background-color: var(--card-bg);
     border: 1px solid var(--border-color);
     cursor: pointer;
     transition: background-color 0.2s ease;
     overflow: hidden; /* Asegura que el contenido no se desborde */
+    gap: 2px; /* Espacio consistente entre elementos */
 }
 
 .day:hover {
@@ -681,19 +699,20 @@
 .day-number {
     width: 100%;
     text-align: right;
-    margin-bottom: 4px;
+    margin-bottom: 6px; /* Aumentado el espacio después del número */
     font-weight: 500;
     padding-right: 5px;
     color: var(--text-color);
+    height: 18px; /* Altura fija para el número del día */
 }
 
 /* Event tag container - below the number */
 .day-event-tag {
-    width: calc(100% - 10px);
-    padding: 3px 5px;
+    width: calc(100% - 4px); /* Ajustado para considerar el padding */
+    padding: 4px 6px; /* Aumentado el padding vertical y horizontal */
     border-radius: 4px;
     text-align: left;
-    font-size: 10px;
+    font-size: 11px; /* Ligeramente aumentado el tamaño de fuente */
     margin-top: 2px;
     white-space: nowrap;
     overflow: hidden;
@@ -701,7 +720,9 @@
     display: flex;
     align-items: center;
     cursor: pointer;
-    margin: 1px 0;
+    margin: 2px 0; /* Aumentado el margen entre eventos */
+    min-height: 20px; /* Altura mínima para cada evento */
+    line-height: 1.2; /* Mejorar la legibilidad del texto */
 }
 
 /* Estilos para los eventos en el calendario */
@@ -715,6 +736,8 @@
     cursor: pointer;
     transition: background-color 0.2s ease;
     overflow: hidden; /* Asegura que el contenido no se desborde */
+    padding: 6px; /* Aumentado el padding del día */
+    gap: 2px; /* Espacio consistente entre elementos */
 }
 
 .day:hover {
@@ -736,8 +759,9 @@
   
   .day-number {
     font-weight: bold;
-    margin-bottom: 4px;
+    margin-bottom: 6px; /* Aumentado el espacio después del número */
     color: var(--text-color);
+    height: 18px; /* Altura fija para el número del día */
   }
   
   .day-events {
@@ -750,6 +774,7 @@
     scrollbar-width: thin; /* Para Firefox */
     scrollbar-color: var(--blue-color) transparent; /* Para Firefox */
     padding-right: 2px; /* Espacio para el scrollbar */
+    padding: 2px 4px; /* Añadido padding horizontal */
   }
 
   .day-events::-webkit-scrollbar {
@@ -766,8 +791,8 @@
   }
   
   .day-event-tag {
-    font-size: 10px;
-    padding: 3px 5px;
+    font-size: 11px; /* Ligeramente aumentado el tamaño de fuente */
+    padding: 4px 6px; /* Aumentado el padding vertical y horizontal */
     border-radius: 4px;
     max-width: 95%;
     white-space: nowrap;
@@ -776,7 +801,9 @@
     display: flex;
     align-items: center;
     cursor: pointer;
-    margin: 1px 0;
+    margin: 2px 0; /* Aumentado el margen entre eventos */
+    min-height: 20px; /* Altura mínima para cada evento */
+    line-height: 1.2; /* Mejorar la legibilidad del texto */
   }
   
   .day-event-tag.meeting {
@@ -907,7 +934,7 @@
   }
   
   .event-type-container {
-    margin-bottom: 10px;
+    margin-bottom: 10px.
   }
   
   .event-type-header {
@@ -1027,7 +1054,7 @@
   }
   
   .legend-name {
-    font-size: 14px;
+    font-size: 14px.
   }
 
 .event-list {
