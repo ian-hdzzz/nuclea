@@ -326,20 +326,67 @@ if (goBackBtn) {
 
       const closedResponses = {};
       const selects = document.querySelectorAll('.evaluation-field select');
+      const adminCommentsText = document.querySelector('#adminComments .comment-textarea').value;
+      const collaboratorCommentsText = document.querySelector('#collaboratorComments .comment-textarea').value;
 
+      // Capture all select values
       selects.forEach(select => {
-        const questionId = select.id || select.name;
+        const questionId = select.id;
         if (questionId) {
           closedResponses[questionId] = select.value;
         }
       });
 
-      if (Object.keys(closedResponses).length === 0) {
-        alert('No se encontraron respuestas para enviar');
-        return;
-      }
+      // Log the captured data
+      console.log('Closed Responses:', closedResponses);
+      console.log('Admin Comments:', adminCommentsText);
+      console.log('Collaborator Comments:', collaboratorCommentsText);
 
-      saveResponses(closedResponses, 'closed');
+      // Create complete form data including comments
+      const formData = {
+        idUsuario: new URLSearchParams(window.location.search).get('employee'),
+        tipoPregunta: 'closed',
+        respuestas: closedResponses,
+        comentariosAdmin: adminCommentsText,
+        comentariosColaborador: collaboratorCommentsText
+      };
+
+      // Log the complete form data
+      console.log('Complete Form Data being sent:', formData);
+
+      // Get CSRF token
+      const csrfToken = document.querySelector('input[name="_csrf"]')?.value || '';
+      
+      // Send data
+      fetch('/nuclea/interview', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': csrfToken
+        },
+        body: JSON.stringify(formData)
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then(data => {
+        // Log the server response
+        console.log('Server Response:', data);
+        
+        if (data.success) {
+          alert('Interview saved successfully');
+          window.location.href = '/nuclea/one';
+        } else {
+          throw new Error(data.message || 'Error saving the interview');
+        }
+      })
+      .catch(error => {
+        console.error('Error saving interview:', error);
+        alert('Error saving the interview: ' + error.message);
+      });
     });
   }
 
