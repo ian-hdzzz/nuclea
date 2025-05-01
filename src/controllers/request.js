@@ -4,6 +4,7 @@ const DiasFeriados = require('../models/diasferiados.model');
 const Usuario = require('../models/usuario.model');
 const helpers = require('../lib/helpers');
 const nodemailer = require('nodemailer');
+const Notificacion = require("../models/notificacion.model")
 
 const transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -108,57 +109,89 @@ exports.getRequests = (req, res) => {
   });
 };
 
+
 exports.postRequest = async (request, response, next) => {
   try {
-    const sessionId = request.session.idUsuario;
-    const nombreUsuario = request.session.nombre;
-    const apellidoUsuario = request.session.apellidos;
+    const sessionId = request.session.idUsuario
+    const nombreUsuario = request.session.nombre
+    const apellidoUsuario = request.session.apellidos
 
-    const { tipo, fechaInicio, fechaFin, descripcion } = request.body;
+    const { tipo, fechaInicio, fechaFin, descripcion } = request.body
 
-    const requests = new Request(sessionId, tipo, fechaInicio, fechaFin, descripcion);
+    const requests = new Request(sessionId, tipo, fechaInicio, fechaFin, descripcion)
 
-    const [feriadoRows] = await DiasFeriados.fetchBetween(fechaInicio, fechaFin);
-    const feriados = feriadoRows[0]['COUNT(*)'];
-    
-    const fechaInicioDate = new Date(fechaInicio);
-    const fechaFinDate = new Date(fechaFin);
+    const [feriadoRows] = await DiasFeriados.fetchBetween(fechaInicio, fechaFin)
+    const feriados = feriadoRows[0]["COUNT(*)"]
 
-    const totalWeekdays = helpers.countWeekdays(fechaInicioDate, fechaFinDate);
-    const totalDias = totalWeekdays - feriados;
+    const fechaInicioDate = new Date(fechaInicio)
+    const fechaFinDate = new Date(fechaFin)
 
-    if (tipo === 'Vacations') {
+    const totalWeekdays = helpers.countWeekdays(fechaInicioDate, fechaFinDate)
+    const totalDias = totalWeekdays - feriados
+
+    if (tipo === "Vacations") {
       if (totalDias <= 0) {
-        request.session.errorRe = 'Vacation request must contain at least 1 valid weekday.';
-        return response.redirect('/nuclea/request/personal');
+        request.session.errorRe = "Vacation request must contain at least 1 valid weekday."
+        return response.redirect("/nuclea/request/personal")
       }
 
-      const [[{ dias_vaciones }]] = await Request.fetchDays(sessionId);
-      const diasRestantes = dias_vaciones;
+      const [[{ dias_vaciones }]] = await Request.fetchDays(sessionId)
+      const diasRestantes = dias_vaciones
 
       if (diasRestantes < totalDias) {
-        request.session.errorRe = `Could not register request, vacation days left ${diasRestantes}`;
-        return response.redirect('/nuclea/request/personal');
+        request.session.errorRe = `Could not register request, vacation days left ${diasRestantes}`
+        return response.redirect("/nuclea/request/personal")
       }
     }
 
-    await requests.save();
-    request.session.info = `Request from ${nombreUsuario} saved.`;
-    console.log('Solicitud guardada exitosamente.');
+    // Guardar la solicitud y obtener el ID insertado
+    const result = await requests.save()
+    const idSolicitud = result[0].insertId // Obtener el ID de la solicitud insertada
 
-    const admins = await Usuario.fetchAdmins();
-    const leaders = await Usuario.fetchLeader(sessionId);
+    request.session.info = `Request from ${nombreUsuario} saved.`
+    console.log("Solicitud guardada exitosamente.")
 
-    const correoAdmins = admins[0][0].Admins;
-    const correoLideres = leaders[0][0].Lideres;
+    // Obtener administradores y líderes
+    const admins = await Usuario.fetchAdmins()
+    const leaders = await Usuario.fetchLeader(sessionId)
 
-    console.log('Admins:', correoAdmins);
-    console.log('Lideres:', correoLideres);
+    // Crear notificaciones para administradores
+    if (admins[0] && admins[0][0] && admins[0][0].Admins) {
+      const adminEmails = admins[0][0].Admins.split(", ")
 
-    console.log(correoAdmins)
-    console.log(correoLideres)
+      // Obtener IDs de administradores a partir de sus correos
+      for (const email of adminEmails) {
+        const [adminUser] = await Usuario.fetchOne(email)
+        if (adminUser && adminUser.length > 0) {
+          const adminId = adminUser[0].idUsuario
+          const notificationMessage = `Nueva solicitud de ${tipo} de ${nombreUsuario} ${apellidoUsuario} (${fechaInicio} a ${fechaFin})`
+          const notification = new Notificacion(adminId, notificationMessage, "solicitud", idSolicitud)
+          await notification.save()
+        }
+      }
+    }
 
-    if (tipo === 'Vacations') {
+    // Crear notificaciones para líderes
+    if (leaders[0] && leaders[0][0] && leaders[0][0].Lideres) {
+      const leaderEmails = leaders[0][0].Lideres.split(", ")
+
+      // Obtener IDs de líderes a partir de sus correos
+      for (const email of leaderEmails) {
+        const [leaderUser] = await Usuario.fetchOne(email)
+        if (leaderUser && leaderUser.length > 0) {
+          const leaderId = leaderUser[0].idUsuario
+          // No notificar si el líder es el mismo usuario que hace la solicitud
+          if (leaderId !== sessionId) {
+            const notificationMessage = `Nueva solicitud de ${tipo} de ${nombreUsuario} ${apellidoUsuario} (${fechaInicio} a ${fechaFin})`
+            const notification = new Notificacion(leaderId, notificationMessage, "solicitud", idSolicitud)
+            await notification.save()
+          }
+        }
+      }
+    }
+
+    // Envío de correos (código existente)
+    if (tipo === "Vacations") {
       const correoHTML = `
         <h2>New Vacation Request Created</h2>
         <p>A vacation request has been submitted by ${nombreUsuario} ${apellidoUsuario}.</p>
@@ -169,81 +202,140 @@ exports.postRequest = async (request, response, next) => {
         </ul>
         <p>Please review the request in the system and proceed with the corresponding action.</p>
         <p>Thank you!</p>
-      `;
+      `
+
+      const correoAdmins = admins[0][0].Admins
+      const correoLideres = leaders[0][0].Lideres
 
       if (correoAdmins) {
-        console.log('enviando correo admins')
+        console.log("enviando correo admins")
         await transporter.sendMail({
           from: '"Nuclea App" <flowitdb@gmail.com>',
           to: correoAdmins,
-          subject: 'New Vacation Request Created',
+          subject: "New Vacation Request Created",
           html: correoHTML,
-        });
+        })
       }
 
       if (correoLideres) {
-        console.log('enviando correo lideres')
+        console.log("enviando correo lideres")
         await transporter.sendMail({
           from: '"Nuclea App" <flowitdb@gmail.com>',
           to: correoLideres,
-          subject: 'New Vacation Request Created',
+          subject: "New Vacation Request Created",
           html: correoHTML,
-        });
+        })
       }
     }
 
-    response.redirect('/nuclea/request/personal');
+    response.redirect("/nuclea/request/personal")
   } catch (err) {
-    console.error('Error al procesar la solicitud:', err);
-    request.session.errorRe = 'Error registering request.';
-    response.redirect('/nuclea/request/personal');
-    response.status(500);
+    console.error("Error al procesar la solicitud:", err)
+    request.session.errorRe = "Error registering request."
+    response.redirect("/nuclea/request/personal")
+    response.status(500)
   }
-};
+}
 
+// También modificar approveRequest y rejectRequest para crear notificaciones
 exports.approveRequest = (req, res) => {
-  const solicitudId = req.params.id;
-  const usuarioId = req.session.idUsuario;
+  const solicitudId = req.params.id
+  const usuarioId = req.session.idUsuario
 
   Usuario.getRolById(usuarioId)
     .then(([result]) => {
-      const rol = result[0]?.idRol;
-      if (!rol) return res.status(403).send('Rol no encontrado');
+      const rol = result[0]?.idRol
+      if (!rol) return res.status(403).send("Rol no encontrado")
 
-      return Request.approveSolicitud(solicitudId, rol);
+      return Request.approveSolicitud(solicitudId, rol)
     })
-    .then((rechazada) => {
+    .then(async (rechazada) => {
       if (rechazada) {
-        req.session.errorRe = 'Request rejected: not enough vacation days.';
-    }
-      res.redirect('/nuclea/request/approval');
+        req.session.errorRe = "Request rejected: not enough vacation days."
+      } else {
+        // Obtener información de la solicitud para la notificación
+        const [solicitudInfo] = await db.execute(
+          "SELECT s.*, u.Nombre, u.Apellidos FROM Solicitudes s JOIN Usuarios u ON s.idUsuario = u.idUsuario WHERE s.idSolicitud = ?",
+          [solicitudId],
+        )
+
+        if (solicitudInfo && solicitudInfo.length > 0) {
+          const solicitud = solicitudInfo[0]
+          const rolName = await getRolName(usuarioId)
+
+          // Crear notificación para el usuario que hizo la solicitud
+          const mensaje = `Tu solicitud de ${solicitud.Tipo} (${solicitud.Fecha_inicio} a ${solicitud.Fecha_fin}) ha sido aprobada por ${rolName}`
+          const notificacion = new Notificacion(solicitud.idUsuario, mensaje, "aprobacion", solicitudId)
+          await notificacion.save()
+        }
+      }
+      res.redirect("/nuclea/request/approval")
     })
     .catch((err) => {
-      console.error('Error al aprobar la solicitud:', err);
-      res.status(500).send('Error interno');
-    });
-};
+      console.error("Error al aprobar la solicitud:", err)
+      res.status(500).send("Error interno")
+    })
+}
 
-//Método para rechazar una solicitud
 exports.rejectRequest = (req, res) => {
-  const solicitudId = req.params.id;
-  const usuarioId = req.session.idUsuario;
+  const solicitudId = req.params.id
+  const usuarioId = req.session.idUsuario
 
   Usuario.getRolById(usuarioId)
     .then(([result]) => {
-      const rol = result[0]?.idRol;
+      const rol = result[0]?.idRol
       if (!rol) {
-        return res.status(403).send('Rol no encontrado');
+        return res.status(403).send("Rol no encontrado")
       }
 
-      return Request.rejectSolicitud(solicitudId, rol);
+      return Request.rejectSolicitud(solicitudId, rol)
     })
-    .then(() => res.redirect('/nuclea/request/approval'))
+    .then(async () => {
+      // Obtener información de la solicitud para la notificación
+      const [solicitudInfo] = await db.execute(
+        "SELECT s.*, u.Nombre, u.Apellidos FROM Solicitudes s JOIN Usuarios u ON s.idUsuario = u.idUsuario WHERE s.idSolicitud = ?",
+        [solicitudId],
+      )
+
+      if (solicitudInfo && solicitudInfo.length > 0) {
+        const solicitud = solicitudInfo[0]
+        const rolName = await getRolName(usuarioId)
+
+        // Crear notificación para el usuario que hizo la solicitud
+        const mensaje = `Tu solicitud de ${solicitud.Tipo} (${solicitud.Fecha_inicio} a ${solicitud.Fecha_fin}) ha sido rechazada por ${rolName}`
+        const notificacion = new Notificacion(solicitud.idUsuario, mensaje, "rechazo", solicitudId)
+        await notificacion.save()
+      }
+
+      res.redirect("/nuclea/request/approval")
+    })
     .catch((err) => {
-      console.error('Error al rechazar la solicitud:', err);
-      res.status(500).send('Error interno');
-    });
-};
+      console.error("Error al rechazar la solicitud:", err)
+      res.status(500).send("Error interno")
+    })
+}
+
+// Función auxiliar para obtener el nombre del rol
+async function getRolName(usuarioId) {
+  try {
+    const [rolResult] = await db.execute(
+      `SELECT r.Nombre_rol 
+       FROM Roles r 
+       JOIN User_Rol ur ON r.idRol = ur.idRol 
+       WHERE ur.idUsuario = ?`,
+      [usuarioId],
+    )
+
+    if (rolResult && rolResult.length > 0) {
+      return rolResult[0].Nombre_rol
+    }
+    return "Administrador"
+  } catch (error) {
+    console.error("Error al obtener nombre de rol:", error)
+    return "Administrador"
+  }
+}
+
 
 exports.editRequest = (req, res) => {
   const idSolicitud = req.params.id;
