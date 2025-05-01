@@ -117,7 +117,7 @@ body {
     margin-top: 5px;
   }
   
-  .counter-label {
+  .info-card-3 .counter-label {
     font-size: 14px;
     opacity: 0.9;
   }
@@ -156,4 +156,29 @@ body {
 .chart-container.report canvas{
   margin-bottom: 0;
   padding-bottom: 0;
+}
+
+.chart-container.report {
+  width: 80%;
+  height: 80%;
+  padding: 10px auto;
+  margin: 0 auto;
+}
+
+.chart-container.report #radar-chart {
+  width: 90%;
+  height: auto !important;
+  margin: 0;
+  padding: 0;
+  margin-top: -30px;
+}
+
+.chart-container.report .overview {
+  margin: 0;
+  margin-left: 3rem;
+  margin-top: 1.5rem;
+  padding: 0 auto;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #fff;
 }

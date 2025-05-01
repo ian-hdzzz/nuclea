@@ -128,6 +128,6 @@
     
     // Botón guardar (si existe)
     document.getElementById('save-button')?.addEventListener('click', function() {
-      alert('Evaluación guardada');
+
     });
   });
