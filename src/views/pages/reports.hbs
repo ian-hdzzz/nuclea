@@ -219,7 +219,7 @@
          scales: {
            y: {
              beginAtZero: true,
-             max: Math.max(...data) * 1.08, // Aumenta un 20% el máximo
+             max: parseFloat((Math.max(...data) * 1.08).toFixed(2)),
              ticks: {
                callback: function(value) {
                  return value + '%';
