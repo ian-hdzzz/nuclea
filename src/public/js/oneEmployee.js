@@ -2,8 +2,17 @@ document.addEventListener('DOMContentLoaded', function () {
     const idUsuario = document.getElementById('employeeData').dataset.idusuario;
     const tableCollabDiv = document.querySelector('.tableCollab');
 
-
     console.log('ID de usuario desde el HTML:', idUsuario);
+    
+    // Function to view interview details
+    window.viewInterviewDetails = function(interviewId) {
+        if (interviewId) {
+            window.location.href = `/nuclea/interview/details/${interviewId}`;
+        } else {
+            console.error('No interview ID provided');
+        }
+    };
+
     // ---------------render employee data----------------
     function renderEmployeeData(employee, interviewHistory) {
         const formatDate = (dateString) => {
@@ -40,7 +49,10 @@ document.addEventListener('DOMContentLoaded', function () {
                         <p class="employee-department">Modality: ${employee.modalidad || 'No modality specified'}</p>
                     </div>
                 </div>
-                
+                <div class="profile-details">
+                    <p><strong>Start Date:</strong> ${formatDate(employee.fechaInicio)}</p>
+                    <p><strong>Time in Company:</strong> ${timeInCompany}</p>
+                </div>
             </div>
         `;
 
@@ -68,14 +80,14 @@ document.addEventListener('DOMContentLoaded', function () {
                         <td>${interviewerName || 'Unknown'}</td>
                         <td>${interview.completada ? 'Completed' : 'In Progress'}</td>
                         <td>
-                            <button class="btn-view" data-id="${interview.id || ''}" onclick="viewInterviewDetails('${interview.id || ''}')">
+                            <button class="btn-view" data-id="${interview.idUsuario}" onclick="viewInterviewDetails('${interview.idUsuario}')">
                                 View Details
                             </button>
                         </td>
                     </tr>
                 `;
             });
-
+            
             html += `
                         </tbody>
                     </table>
@@ -91,18 +103,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (tableCollabDiv) {
             tableCollabDiv.innerHTML = html;
-
-            const viewButtons = tableCollabDiv.querySelectorAll('.btn-view');
-            viewButtons.forEach(button => {
-                button.addEventListener('click', function () {
-                    const interviewId = this.getAttribute('data-id');
-                    window.location.href = `/nuclea/oneEmployee`;
-                });
-            });
         }
     }
+    
     function handleEmployeeSelection(idUsuario) {
-
         if (idUsuario) {
             if (tableCollabDiv) {
                 tableCollabDiv.innerHTML = '<div class="loading">Loading employee data...</div>';
@@ -126,78 +130,85 @@ document.addEventListener('DOMContentLoaded', function () {
         } 
     }
 
-  // Función para inicializar el acordeón
-  function initializeAccordion() {
-      const categoryHeaders = document.querySelectorAll('.category-header');
-      console.log('Headers encontrados:', categoryHeaders.length);
-  
-      // Remover listeners existentes primero
-      categoryHeaders.forEach(header => {
-          const newHeader = header.cloneNode(true);
-          header.parentNode.replaceChild(newHeader, header);
-      });
-  
-      // Actualizar la referencia después de clonar
-      const newHeaders = document.querySelectorAll('.category-header');
-  
-      // Cerrar todos los paneles primero
-      document.querySelectorAll('.category-details').forEach(details => {
-          details.classList.add('collapsed');
-      });
-  
-      // Abrir el primer panel por defecto
-      if (newHeaders.length > 0) {
-          const firstHeader = newHeaders[0];
-          const firstDetails = firstHeader.nextElementSibling;
-          firstHeader.classList.add('active');
-          if (firstDetails) {
-              firstDetails.classList.remove('collapsed');
-          }
-      }
-  }
-  
-  // Función para alternar el estado de un elemento del acordeón
-  function toggleAccordionItem(header) {
-      if (!header) return;
-      
-      const details = header.nextElementSibling;
-      if (!details) return;
-  
-      // Verificar si el panel está colapsado
-      const isCollapsed = details.classList.contains('collapsed');
-      
-      // Cerrar todos los paneles primero
-      document.querySelectorAll('.category-header').forEach(h => {
-          h.classList.remove('active');
-          const d = h.nextElementSibling;
-          if (d) {
-              d.classList.add('collapsed');
-          }
-      });
-  
-      // Si estaba colapsado, abrir este panel
-      if (isCollapsed) {
-          header.classList.add('active');
-          details.classList.remove('collapsed');
-      }
-      
-      // Ajustar altura del contenedor si es necesario
-      adjustContainerHeight();
-  }
-  
-  // Helper para manejar la altura del contenedor
-  function adjustContainerHeight() {
-      const container = document.querySelector('.statistics-container');
-      const activeDetails = document.querySelector('.category-details:not(.collapsed)');
-      
-      if (container && activeDetails) {
-          const minHeight = 400;
-          const contentHeight = activeDetails.scrollHeight + 200;
-          container.style.minHeight = `${Math.max(minHeight, contentHeight)}px`;
-      }
-  }
-  
-  initializeAccordion();
+    // Función para inicializar el acordeón
+    function initializeAccordion() {
+        const categoryHeaders = document.querySelectorAll('.category-header');
+        console.log('Headers encontrados:', categoryHeaders.length);
+    
+        // Remover listeners existentes primero
+        categoryHeaders.forEach(header => {
+            const newHeader = header.cloneNode(true);
+            header.parentNode.replaceChild(newHeader, header);
+        });
+    
+        // Actualizar la referencia después de clonar
+        const newHeaders = document.querySelectorAll('.category-header');
+    
+        // Cerrar todos los paneles primero
+        document.querySelectorAll('.category-details').forEach(details => {
+            details.classList.add('collapsed');
+        });
+    
+        // Abrir el primer panel por defecto
+        if (newHeaders.length > 0) {
+            const firstHeader = newHeaders[0];
+            const firstDetails = firstHeader.nextElementSibling;
+            firstHeader.classList.add('active');
+            if (firstDetails) {
+                firstDetails.classList.remove('collapsed');
+            }
+        }
+        
+        // Add click event listeners to headers
+        newHeaders.forEach(header => {
+            header.addEventListener('click', function() {
+                toggleAccordionItem(this);
+            });
+        });
+    }
+    
+    // Función para alternar el estado de un elemento del acordeón
+    function toggleAccordionItem(header) {
+        if (!header) return;
+        
+        const details = header.nextElementSibling;
+        if (!details) return;
+    
+        // Verificar si el panel está colapsado
+        const isCollapsed = details.classList.contains('collapsed');
+        
+        // Cerrar todos los paneles primero
+        document.querySelectorAll('.category-header').forEach(h => {
+            h.classList.remove('active');
+            const d = h.nextElementSibling;
+            if (d) {
+                d.classList.add('collapsed');
+            }
+        });
+    
+        // Si estaba colapsado, abrir este panel
+        if (isCollapsed) {
+            header.classList.add('active');
+            details.classList.remove('collapsed');
+        }
+        
+        // Ajustar altura del contenedor si es necesario
+        adjustContainerHeight();
+    }
+    
+    // Helper para manejar la altura del contenedor
+    function adjustContainerHeight() {
+        const container = document.querySelector('.statistics-container');
+        const activeDetails = document.querySelector('.category-details:not(.collapsed)');
+        
+        if (container && activeDetails) {
+            const minHeight = 400;
+            const contentHeight = activeDetails.scrollHeight + 200;
+            container.style.minHeight = `${Math.max(minHeight, contentHeight)}px`;
+        }
+    }
+    
+    initializeAccordion();
     handleEmployeeSelection(idUsuario);
 });
 

@@ -1,4 +1,3 @@
-
 document.addEventListener('DOMContentLoaded', function() {
 // Get reference to tableCollab div
 const tableCollabDiv = document.querySelector('.tableCollab');

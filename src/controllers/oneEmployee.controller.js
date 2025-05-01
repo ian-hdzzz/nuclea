@@ -119,6 +119,14 @@ exports.getEmployeeHistory = async (req, res) => {
         const closedResponses = await Questions.getAllClosedResponsesAverage(idUsuario);
         const interviewHistory = await Questions.getAllCompletedInterviewHistory(idUsuario);
 
+        // Ensure interview history has the expected format for the handlebars template
+        const formattedInterviewHistory = interviewHistory.map(interview => ({
+            idUsuario: interview.entrevistaId, // For the data-id attribute in the template
+            fechaEntrevista: interview.fechaEntrevista,
+            entrevistadorNombre: interview.entrevistadorNombre || '',
+            entrevistadorApellidos: interview.entrevistadorApellidos || '',
+            completada: interview.completada
+        }));
 
         res.json({
             success: true,
@@ -131,11 +139,104 @@ exports.getEmployeeHistory = async (req, res) => {
                 initial: employee.Nombre ? employee.Nombre.charAt(0).toUpperCase() : ''
             },
             closedResponses: closedResponses,
-            interviewHistory: interviewHistory,
-            
+            interviewHistory: formattedInterviewHistory,
         });
     } catch (error) {
         console.error('Error al obtener historial de empleado:', error);
         res.status(500).json({ error: 'Error al obtener historial de empleado' });
+    }
+};
+exports.getAllInterviewHistory = async (req, res) => {
+    try {
+        // Get all completed interviews
+        const allInterviews = await Questions.getAllCompletedInterviewHistory();
+        
+        // Format the data for the frontend
+        const formattedInterviews = allInterviews.map(interview => ({
+            id: interview.entrevistaId,
+            fechaEntrevista: interview.fechaEntrevista,
+            empleadoId: interview.empleadoId,
+            empleadoNombre: `${interview.empleadoNombre || ''} ${interview.empleadoApellidos || ''}`.trim(),
+            entrevistadorId: interview.entrevistadorId,
+            entrevistadorNombre: `${interview.entrevistadorNombre || ''} ${interview.entrevistadorApellidos || ''}`.trim(),
+            completada: interview.completada
+        }));
+        
+        res.json({
+            success: true,
+            interviews: formattedInterviews
+        });
+    } catch (error) {
+        console.error('Error al obtener historial de entrevistas:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error al obtener historial de entrevistas'
+        });
+    }
+};
+
+exports.getInterviewDetails = async (req, res) => {
+    try {
+        const interviewId = req.params.id;
+        console.log('Interview ID:', interviewId);
+        // Get interview details
+        const interview = await Questions.getInterviewById(interviewId);
+        
+        if (!interview) {
+            return res.status(404).render('error', { 
+                message: 'Entrevista no encontrada',
+                error: { status: 404 }
+            });
+        }
+        
+        // Get employee and interviewer details
+        const employee = await SearchModel.getEmployeeById(interview.empleadoId);
+        const interviewer = await SearchModel.getEmployeeById(interview.entrevistadorId);
+        
+        // Get open and closed questions with responses
+        const openResponses = await Questions.getOpenResponses(interviewId);
+        const closedResponses = await Questions.getClosedResponses(interviewId);
+        console.log('Closed responseeees:', closedResponses);
+        // Format date
+        const formattedDate = interview.fechaEntrevista ? 
+            new Date(interview.fechaEntrevista).toLocaleDateString('es-ES', { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            }) : 'N/A';
+            
+        res.render('pages/interviewDetails', { 
+            title: 'Interview Details', 
+            iconClass: 'fa-solid fa-people-arrows',
+            interview: {
+                id: interview.entrevistaId,
+                date: formattedDate,
+                completed: interview.completada,
+                comentariosAdmin: interview.comentariosAdmin || '',
+                comentariosColaborador: interview.comentariosColaborador || ''
+            },
+            employee: {
+                id: employee.idUsuario,
+                nombre: employee.Nombre,
+                apellidos: employee.Apellidos || '',
+                modalidad: employee.Modalidad || '',
+                departamento: employee.Departamento || '',
+                initial: employee.Nombre ? employee.Nombre.charAt(0).toUpperCase() : ''
+            },
+            interviewer: {
+                id: interviewer.idUsuario,
+                nombre: interviewer.Nombre,
+                apellidos: interviewer.Apellidos || '',
+                puesto: interviewer.Puesto || ''
+            },
+            openResponses: openResponses,
+            closedResponses: closedResponses
+        });
+    } catch (error) {
+        console.error('Error al obtener detalles de la entrevista:', error);
+        res.status(500).render('error', { 
+            message: 'Error al cargar los detalles de la entrevista',
+            error: process.env.NODE_ENV === 'development' ? error : {}
+        });
     }
 };
