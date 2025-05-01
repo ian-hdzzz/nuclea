@@ -92,17 +92,19 @@ exports.getInterviewEdit = async (req, res) => {
 };
 
 // Nuevo método para guardar las entrevistas
+// Updated saveInterview method to handle comments
 exports.saveInterview = async (req, res) => {
     try {
-
         // Obtener datos del cuerpo de la petición
-        const { idUsuario, tipoPregunta, respuestas } = req.body;
+        const { idUsuario, tipoPregunta, respuestas, comentariosAdmin, comentariosColaborador } = req.body;
         const idUsuarioA = req.session.idUsuario;
 
         console.log('Datos extraídos:', { 
             idUsuario, 
             tipoPregunta, 
             respuestas: respuestas ? 'presente' : 'ausente',
+            comentariosAdmin: comentariosAdmin ? 'presente' : 'ausente',
+            comentariosColaborador: comentariosColaborador ? 'presente' : 'ausente',
             idUsuarioA
         });
 
@@ -118,19 +120,26 @@ exports.saveInterview = async (req, res) => {
                 message: 'No se recibieron respuestas'
             });
         }
+        
         // Si es la primera parte de la entrevista (preguntas abiertas), creamos una nueva
         if (tipoPregunta === 'open') {
-            // Guardar nueva entrevista
+            // Guardar nueva entrevista con comentarios
             const entrevistaId = await Questions.saveInterview({
                 idUsuario, 
-                idUsuarioA
+                idUsuarioA,
+                comentariosAdmin,
+                comentariosColaborador
             });
             
             // Guardar entrevistaId en la sesión para la segunda parte
             req.session.currentEntrevistaId = entrevistaId;
             
-            // Procesar y guardar respuestas abiertas
-            await Questions.saveAnswers(entrevistaId, respuestas);
+            // Procesar y guardar respuestas abiertas (excluir campos de comentarios si están en respuestas)
+            const respuestasToSave = { ...respuestas };
+            delete respuestasToSave.comentariosAdmin;
+            delete respuestasToSave.comentariosColaborador;
+            
+            await Questions.saveAnswers(entrevistaId, respuestasToSave);
             
             return res.status(200).json({
                 success: true,
@@ -150,10 +159,17 @@ exports.saveInterview = async (req, res) => {
                 });
             }
             
-            // Procesar respuestas numéricas
+            // Actualizar comentarios si se modificaron en la segunda fase
+            if (comentariosAdmin || comentariosColaborador) {
+                await Questions.updateInterviewComments(entrevistaId, comentariosAdmin, comentariosColaborador);
+            }
+            
+            // Procesar respuestas numéricas (excluir campos de comentarios)
             const processedResponses = {};
             for (const [preguntaId, respuesta] of Object.entries(respuestas)) {
-                processedResponses[preguntaId] = parseInt(respuesta, 10);
+                if (preguntaId !== 'comentariosAdmin' && preguntaId !== 'comentariosColaborador') {
+                    processedResponses[preguntaId] = parseInt(respuesta, 10);
+                }
             }
             
             // Guardar respuestas cerradas

@@ -97,16 +97,37 @@ class OneToOneModel {
   
   // Método para crear una nueva entrevista
   static async saveInterview(data) {
-    const { idUsuario, idUsuarioA } = data;
-
-    
+    const { idUsuario, idUsuarioA, comentariosAdmin, comentariosColaborador } = data;
+  
     const [result] = await db.execute(
-      `INSERT INTO entrevistas (empleadoId, entrevistadorId, fechaEntrevista, completada) 
-       VALUES (?, ?, CURRENT_TIMESTAMP(), 0)`,
-      [idUsuario, idUsuarioA]
+      `INSERT INTO entrevistas (
+        empleadoId, 
+        entrevistadorId, 
+        fechaEntrevista, 
+        completada,
+        comentariosAdmin,
+        comentariosColaborador
+      ) VALUES (?, ?, CURRENT_TIMESTAMP(), 0, ?, ?)`,
+      [idUsuario, idUsuarioA, comentariosAdmin || null, comentariosColaborador || null]
     );
     
     return result.insertId;
+  }
+  
+  // New method to update comments in an existing interview
+  static async updateInterviewComments(entrevistaId, comentariosAdmin, comentariosColaborador) {
+    try {
+      await db.execute(
+        `UPDATE entrevistas 
+         SET comentariosAdmin = ?, comentariosColaborador = ?
+         WHERE entrevistaId = ?`,
+        [comentariosAdmin || null, comentariosColaborador || null, entrevistaId]
+      );
+      return true;
+    } catch (error) {
+      console.error('Error updating interview comments:', error);
+      throw error;
+    }
   }
   
   // Método para guardar respuestas (tanto abiertas como cerradas)
