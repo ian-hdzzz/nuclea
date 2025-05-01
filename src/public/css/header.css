@@ -52,3 +52,218 @@
     font-size: .8rem;
     color: #fff;
   } */
+
+  /* Estilos para el dropdown de notificaciones */
+.notification-container {
+  position: relative;
+  display: inline-block;
+}
+
+/* Badge de notificaciones */
+.notification-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: linear-gradient(45deg, var(--color-secundario), var(--color-primario));
+  color: white;
+  font-size: 10px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+}
+
+/* Dropdown de notificaciones */
+.notification-dropdown {
+  position: absolute;
+  right: 0;
+  top: 100%;
+  width: 320px;
+  background: var(--color-bg);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+  margin-top: 10px;
+  z-index: 1000;
+  overflow: hidden;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: all 0.3s ease;
+}
+
+.notification-dropdown.active {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+/* Encabezado del dropdown */
+.notification-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 15px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--color-bg-secundario);
+}
+
+.notification-header h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 500;
+  color: #fff;
+}
+
+.notification-header button {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 50%;
+  transition: all 0.2s;
+}
+
+.notification-header button:hover {
+  color: white;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.notification-header button i {
+  font-size: 16px;
+}
+
+/* Lista de notificaciones */
+.notification-list {
+  max-height: 350px;
+  overflow-y: auto;
+}
+
+.notification-item {
+  padding: 12px 15px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background-color 0.2s;
+  color: #fff;
+}
+
+.notification-item:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.notification-item.unread {
+  border-left: 3px solid var(--color-primario);
+}
+
+.notification-content {
+  flex: 1;
+}
+
+.notification-title {
+  margin: 0 0 5px 0;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.notification-time {
+  margin: 0;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.unread-indicator {
+  width: 8px;
+  height: 8px;
+  background: linear-gradient(45deg, var(--color-secundario), var(--color-primario));
+  border-radius: 50%;
+  display: block;
+  box-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+}
+
+/* Pie del dropdown */
+.notification-footer {
+  padding: 10px;
+  text-align: center;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--color-bg-secundario);
+}
+
+.notification-footer button {
+  background: none;
+  border: none;
+  color: var(--color-primario);
+  font-size: 12px;
+  cursor: pointer;
+  padding: 5px 10px;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.notification-footer button:hover {
+  color: white;
+  text-shadow: 0 0 5px var(--color-primario);
+}
+
+/* Estados adicionales */
+.notification-empty,
+.notification-loading {
+  padding: 20px;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 14px;
+}
+
+/* Barra de desplazamiento personalizada */
+.notification-list::-webkit-scrollbar {
+  width: 5px;
+}
+
+.notification-list::-webkit-scrollbar-track {
+  background: var(--color-bg);
+}
+
+.notification-list::-webkit-scrollbar-thumb {
+  background: var(--color-primario);
+  border-radius: 10px;
+}
+
+.notification-list::-webkit-scrollbar-thumb:hover {
+  background: var(--color-secundario);
+}
+
+/* Animación de carga */
+@keyframes pulse {
+  0% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.6;
+  }
+}
+
+.notification-loading {
+  animation: pulse 1.5s infinite;
+}
+
+/* Estilos específicos por tipo de notificación */
+.notification-item[data-type="solicitud"] {
+  border-left-color: #3498db;
+}
+
+.notification-item[data-type="aprobacion"] {
+  border-left-color: #2ecc71;
+}
+
+.notification-item[data-type="rechazo"] {
+  border-left-color: #e74c3c;
+}

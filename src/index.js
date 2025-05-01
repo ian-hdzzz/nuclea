@@ -136,6 +136,9 @@ app.use('/nuclea', inactiveRoutes);
 
 const tutorialRoutes = require('./routes/tutorial.routes');
 app.use('/nuclea/tutorial', tutorialRoutes);
+
+const notifacionRoutes = require('./routes/notificacion.routes');
+app.use('/nuclea', notifacionRoutes);
 // public
 app.use(express.static(path.join(__dirname, 'public')));
 
