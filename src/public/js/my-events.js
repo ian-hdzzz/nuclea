@@ -435,28 +435,37 @@ function showTooltip(event, data) {
         </div>` : ''}
     `;
 
-    // Position tooltip
-    const scrollY = window.scrollY || window.pageYOffset;
-    const scrollX = window.scrollX || window.pageXOffset;
+    // Make tooltip visible temporarily to get its dimensions
+    tooltip.style.opacity = '0';
+    tooltip.classList.add('visible');
     
-    // Calculate position
-    let top = rect.top + scrollY - tooltip.offsetHeight - 10;
-    let left = rect.left + scrollX + (rect.width / 2) - (tooltip.offsetWidth / 2);
-
-    // Check if tooltip would go off screen
+    // Get viewport dimensions and scroll position
+    const viewportWidth = window.innerWidth;
+    const scrollX = window.scrollX || window.pageXOffset;
+    const scrollY = window.scrollY || window.pageYOffset;
+    
+    // Calculate position to the right of the element
+    let left = rect.right + scrollX + 10; // 10px de espacio entre el elemento y el tooltip
+    
+    // If tooltip would go off screen to the right, position it to the left of the element instead
+    if (left + tooltip.offsetWidth > viewportWidth + scrollX) {
+        left = rect.left + scrollX - tooltip.offsetWidth - 10;
+    }
+    
+    // Vertical positioning - center align with the element
+    let top = rect.top + scrollY + (rect.height / 2) - (tooltip.offsetHeight / 2);
+    
+    // Make sure tooltip doesn't go off screen vertically
     if (top < scrollY) {
-        top = rect.bottom + scrollY + 10;
+        top = scrollY + 10;
+    } else if (top + tooltip.offsetHeight > window.innerHeight + scrollY) {
+        top = window.innerHeight + scrollY - tooltip.offsetHeight - 10;
     }
-    if (left < scrollX) {
-        left = scrollX + 10;
-    }
-    if (left + tooltip.offsetWidth > window.innerWidth + scrollX) {
-        left = window.innerWidth + scrollX - tooltip.offsetWidth - 10;
-    }
-
+    
+    // Apply final position
     tooltip.style.top = `${top}px`;
     tooltip.style.left = `${left}px`;
-    tooltip.classList.add('visible');
+    tooltip.style.opacity = '1';
 }
 
 // Function to hide tooltip
