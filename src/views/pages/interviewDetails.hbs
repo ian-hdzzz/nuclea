@@ -38,7 +38,7 @@
     <!-- Responses Tables -->
     <div class="responses-container">
         {{#if openResponses.length}}
-        <div class=" open-responses">
+        <div class="open-responses">
             <h3>Open Questions</h3>
             <table class="responses-table">
                 <thead>
@@ -64,49 +64,87 @@
         
         {{#if closedResponses.length}}
         <div class="closedQuestions-container">
-
-       
-        <div class=" card closed-responses">
-            <h3>Closed Questions (Rated 1-5)</h3>
-            <table class="responses-table">
-                <thead>
-                    <tr>
-                        <th>Question</th>
-                        <th>Rating</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {{#each closedResponses}}
-                    <tr>
-                        <td>
-                            <div class="question-text">{{this.pregunta}}</div>
-                            <div class="question-description">{{this.descripcionPregunta}}</div>
-                        </td>
-                        <td>
-                            <div class="rating-display">
-                                {{#times 5}}
-                                    <span class="star {{#if (lte this ../this.valorRespuesta)}}filled{{/if}}">★</span>
-                                {{/times}}
-                                <span class="rating-number">{{this.valorRespuesta}}/5</span>
-                            </div>
-                        </td>
-                    </tr>
-                    {{/each}}
-                </tbody>
-            </table>
+            <div class="card closed-responses">
+                <h3>Closed Questions (Rated 1-5)</h3>
+                <table class="responses-table">
+                    <thead>
+                        <tr>
+                            <th>Question</th>
+                            <th>Rating</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each closedResponses}}
+                        <tr>
+                            <td>
+                                <div class="question-text">{{this.pregunta}}</div>
+                                <div class="question-description">{{this.descripcionPregunta}}</div>
+                            </td>
+                            <td>
+                                <div class="rating-display">
+                                    {{#times 5}}
+                                        <span class="star {{#if (lte this ../this.valorRespuesta)}}filled{{/if}}">★</span>
+                                    {{/times}}
+                                    <span class="rating-number">{{this.valorRespuesta}}/5</span>
+                                </div>
+                            </td>
+                        </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+            </div>
+            <div class="card graph details">
+                {{> graph 
+                    workload=closedResponses.[0].valorRespuesta
+                    health=closedResponses.[1].valorRespuesta 
+                    recognition=closedResponses.[2].valorRespuesta
+                    emotionalHealth=closedResponses.[3].valorRespuesta
+                    workLifeBalance=closedResponses.[4].valorRespuesta
+                    className="chart-container details"
+                    graphTitle="Performance Overview"}}
+            </div>
         </div>
         {{/if}}
-            <div class=" card graph details">
-            {{> graph 
-                workload=closedResponses.[0].valorRespuesta
-                health=closedResponses.[1].valorRespuesta 
-                recognition=closedResponses.[2].valorRespuesta
-                emotionalHealth=closedResponses.[3].valorRespuesta
-                workLifeBalance=closedResponses.[4].valorRespuesta
-                className="chart-container details"
-                graphTitle="Performance Overview"}}
+
+        <!-- Comments Section -->
+        <div class="comments-container card">
+            <h3>Interview Comments</h3>
+            
+            <div class="comments-content">
+
+            
+            <!-- Admin Comments -->
+            <div class="comment-box admin-comments">
+                <h4>
+                    <i class="fa-solid fa-shield-halved"></i>
+                    Admin Comments
+                </h4>
+                <div class="comment-content">
+                    {{#if interview.comentariosAdmin}}
+                        {{interview.comentariosAdmin}}
+                    {{else}}
+                        <p class="no-comments">No admin comments provided</p>
+                    {{/if}}
+                </div>
             </div>
-         </div>
+
+            <!-- Collaborator Comments -->
+            <div class="comment-box collaborator-comments">
+                <h4>
+                    <i class="fa-solid fa-comment-dots"></i>
+                    Collaborator Comments
+                </h4>
+                <div class="comment-content">
+                    {{#if interview.comentariosColaborador}}
+                        {{interview.comentariosColaborador}}
+                    {{else}}
+                        <p class="no-comments">No collaborator comments provided</p>
+                    {{/if}}
+                </div>
+            </div>
+        </div>
+        </div>
+
         {{#unless (or openResponses.length closedResponses.length)}}
         <div class="no-responses">
             <p>No responses available for this interview.</p>

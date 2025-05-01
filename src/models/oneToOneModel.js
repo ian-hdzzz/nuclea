@@ -211,34 +211,34 @@ class OneToOneModel {
 
   static async getInterviewById(interviewId) {
     try {
-      // Log the interviewId to troubleshoot
-      console.log("Fetching interview with ID:", interviewId);
-      
-      if (!interviewId || interviewId === 'undefined') {
-          throw new Error('Invalid interview ID provided');
-      }
-      
-      // Adjust table names based on your actual schema
-      // Replace 'users' with your actual users table name
-      const query = `
-          SELECT e.*, 
-                 u1.Nombre AS empleadoNombre, 
-                 u1.Apellidos AS empleadoApellidos,
-                 u2.Nombre AS entrevistadorNombre, 
-                 u2.Apellidos AS entrevistadorApellidos
-          FROM entrevistas e
-          INNER JOIN Usuarios u1 ON e.empleadoId = u1.idUsuario
-          INNER JOIN Usuarios u2 ON e.entrevistadorId = u2.idUsuario
-          WHERE e.entrevistaId = ?
-      `;
-      
-      const [rows] = await db.query(query, [interviewId]);
-      return rows.length > 0 ? rows[0] : null;
-  } catch (error) {
-      console.error('Error al obtener entrevista por ID:', error);
-      throw error;
-  }
-};
+        console.log("Fetching interview with ID:", interviewId);
+        
+        if (!interviewId || interviewId === 'undefined') {
+            throw new Error('Invalid interview ID provided');
+        }
+        
+        const query = `
+            SELECT e.*, 
+                   u1.Nombre AS empleadoNombre, 
+                   u1.Apellidos AS empleadoApellidos,
+                   u2.Nombre AS entrevistadorNombre, 
+                   u2.Apellidos AS entrevistadorApellidos,
+                   e.comentariosAdmin,
+                   e.comentariosColaborador
+            FROM entrevistas e
+            INNER JOIN Usuarios u1 ON e.empleadoId = u1.idUsuario
+            INNER JOIN Usuarios u2 ON e.entrevistadorId = u2.idUsuario
+            WHERE e.entrevistaId = ?
+        `;
+        
+        const [rows] = await db.query(query, [interviewId]);
+        
+        return rows.length > 0 ? rows[0] : null;
+    } catch (error) {
+        console.error('Error al obtener entrevista por ID:', error);
+        throw error;
+    }
+}
 
 static async getOpenResponses(interviewId) {
   try {

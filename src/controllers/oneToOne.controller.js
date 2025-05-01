@@ -35,39 +35,67 @@ exports.getInterview = async (req, res) => {
     try {
         const entrevistadorId = req.session.idUsuario;
         const entrevistadorName = req.session.name;
-        console.log('ID del entrevistador:', entrevistadorId, 'Nombre:', entrevistadorName); 
-
-        const preguntas = await Questions.getQuestions();
         const employeeId = req.query.employee;
 
+        // Obtener los detalles del empleado
         const employee = await OneToOneModel.getEmployeeById(employeeId);
 
+        // Obtener la última entrevista completada del empleado
+        const [lastInterview] = await Questions.getSpecificInterviewHistory(employeeId);
+        
+        if (!employee) {
+            return res.status(404).render('error', {
+                message: 'Empleado no encontrado',
+                error: { status: 404 }
+            });
+        }
 
         // Obtener inicial de usuario
         employee.initial = employee.Nombre.charAt(0).toUpperCase();
 
-        // Obtener el tiempo del usuario en la empresa
+        // Calcular tiempo en la empresa
         const currentDate = new Date();
         const startDate = new Date(employee.Fecha_inicio_colab);
-
         const years = differenceInYears(currentDate, startDate);
         const months = differenceInMonths(currentDate, startDate) % 12;
-        const days = differenceInDays(currentDate, startDate) % 30; // Aproximación de días en el mes
+        const days = differenceInDays(currentDate, startDate) % 30;
         employee.timeInCompany = `${years} year(s), ${months} month(s), ${days} day(s)`;
 
-        res.render('pages/interview',{ 
-            title: 'Interview', 
-            iconClass:'fa-solid fa-people-arrows',
-            preguntas,  
+        // Obtener preguntas y respuestas si hay una entrevista anterior
+        let preguntas = await Questions.getQuestions();
+        let openResponses = [];
+        let closedResponses = [];
+        let comentarios = {
+            admin: '',
+            colaborador: ''
+        };
+
+        if (lastInterview) {
+            openResponses = await Questions.getOpenResponses(lastInterview.entrevistaId);
+            closedResponses = await Questions.getClosedResponses(lastInterview.entrevistaId);
+            comentarios = {
+                admin: lastInterview.comentariosAdmin || '',
+                colaborador: lastInterview.comentariosColaborador || ''
+            };
+        }
+
+        res.render('pages/interview', {
+            title: 'Interview',
+            iconClass: 'fa-solid fa-people-arrows',
+            preguntas,
             entrevistadorId,
             employee,
+            openResponses,
+            closedResponses,
+            comentarios,
             csrfToken: req.csrfToken(),
             departamento: req.session.departamento || [],
+            lastInterview: lastInterview || null
         });
     } catch (error) {
-        console.error('Error al obtener preguntas:', error);
-        res.status(500).render('error', { 
-            message: 'Error al cargar la página de entrevistas',
+        console.error('Error al cargar la entrevista:', error);
+        res.status(500).render('error', {
+            message: 'Error al cargar la página de entrevista',
             error: process.env.NODE_ENV === 'development' ? error : {}
         });
     }
@@ -310,9 +338,11 @@ exports.getInterviewDetails = async (req, res) => {
             title: 'Interview Details', 
             iconClass: 'fa-solid fa-people-arrows',
             interview: {
-                id: interview.id,
+                id: interview.entrevistaId,
                 date: formattedDate,
-                completed: interview.completada
+                completed: interview.completada,
+                comentariosAdmin: interview.comentariosAdmin || '',
+                comentariosColaborador: interview.comentariosColaborador || ''
             },
             employee: {
                 id: employee.idUsuario,
