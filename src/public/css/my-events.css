@@ -313,21 +313,21 @@
 }
 
 .day {
-    position: relative;
-    min-width: 0;
-    width: 100%;
-    height: 100px;
-    overflow: hidden;
+    aspect-ratio: 1/1;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
     font-size: 14px;
     border-radius: 8px;
+    position: relative;
+    padding: 5px;
+    min-height: 80px;
     background-color: var(--card-bg);
     border: 1px solid var(--border-color);
     cursor: pointer;
     transition: background-color 0.2s ease;
+    overflow: hidden; /* Asegura que el contenido no se desborde */
 }
 
 .day:hover {
@@ -367,10 +367,24 @@
 .day-events {
     position: relative;
     width: 100%;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
+    overflow-y: auto; /* Habilita el scroll vertical */
+    max-height: calc(100% - 25px); /* Altura máxima considerando el espacio del número del día */
+    scrollbar-width: thin; /* Para Firefox */
+    scrollbar-color: var(--blue-color) transparent; /* Para Firefox */
+    padding-right: 2px; /* Espacio para el scrollbar */
+}
+
+.day-events::-webkit-scrollbar {
+    width: 4px;
+}
+
+.day-events::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.day-events::-webkit-scrollbar-thumb {
+    background-color: var(--blue-color);
+    border-radius: 4px;
 }
 
 .day-event-tag {
@@ -556,6 +570,7 @@
     border: 1px solid var(--border-color);
     cursor: pointer;
     transition: background-color 0.2s ease;
+    overflow: hidden; /* Asegura que el contenido no se desborde */
 }
 
 .day:hover {
@@ -641,6 +656,7 @@
     border: 1px solid var(--border-color);
     cursor: pointer;
     transition: background-color 0.2s ease;
+    overflow: hidden; /* Asegura que el contenido no se desborde */
 }
 
 .day:hover {
@@ -698,6 +714,7 @@
     border: 1px solid var(--border-color);
     cursor: pointer;
     transition: background-color 0.2s ease;
+    overflow: hidden; /* Asegura que el contenido no se desborde */
 }
 
 .day:hover {
@@ -728,7 +745,24 @@
     flex-direction: column;
     gap: 2px;
     margin-top: 2px;
-    overflow-y: auto;
+    overflow-y: auto; /* Habilita el scroll vertical */
+    max-height: calc(100% - 25px); /* Altura máxima considerando el espacio del número del día */
+    scrollbar-width: thin; /* Para Firefox */
+    scrollbar-color: var(--blue-color) transparent; /* Para Firefox */
+    padding-right: 2px; /* Espacio para el scrollbar */
+  }
+
+  .day-events::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  .day-events::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .day-events::-webkit-scrollbar-thumb {
+    background-color: var(--blue-color);
+    border-radius: 4px;
   }
   
   .day-event-tag {

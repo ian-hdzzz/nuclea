@@ -557,24 +557,15 @@ function generateCalendar(month, year) {
                 dayDiv.classList.add('holiday-day');
             } else if (eventTypes.has('non-working')) {
                 dayDiv.classList.add('non-working-day');
-            }else if (eventTypes.has('one-to-one')) {
+            } else if (eventTypes.has('one-to-one')) {
                 dayDiv.classList.add('one-to-one');
             }
             
-            // Limitar a máximo 3 eventos visibles
-            const visibleEvents = dayEvents.slice(0, 3);
-            visibleEvents.forEach(event => {
+            // Mostrar todos los eventos sin límite
+            dayEvents.forEach(event => {
                 const eventTag = createEventTag(event);
                 eventsContainer.appendChild(eventTag);
             });
-            
-            // Si hay más eventos, mostrar el contador
-            if (dayEvents.length > 3) {
-                const moreEvents = document.createElement("div");
-                moreEvents.classList.add("more-events");
-                moreEvents.textContent = `+${dayEvents.length - 3}`;
-                eventsContainer.appendChild(moreEvents);
-            }
             
             dayDiv.appendChild(eventsContainer);
         }
