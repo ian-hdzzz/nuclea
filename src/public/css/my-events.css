@@ -61,7 +61,7 @@
     font-size: 14px;
 }
 
-.sync-button {
+.sync-button, .clear-button {
     display: flex;
     align-items: center;
     background-color: #111F30;
@@ -72,6 +72,23 @@
     cursor: pointer;
     font-size: 16px;
     margin-top: -20px;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.clear-button {
+    display: none; /* Inicialmente oculto */
+    background-color: #c2c2c22e;
+    color: #a4a4a4;
+}
+.clear-button i{
+    margin-right: 5px;
+}
+.clear-button.visible {
+    display: flex;
+}
+
+.sync-button.hidden {
+    display: none;
 }
 
 .sync-button i {
@@ -1050,7 +1067,7 @@
     width: 12px;
     height: 12px;
     border-radius: 50%;
-    margin-right: 10px;
+    margin-right: 10px.
   }
   
   .legend-name {
