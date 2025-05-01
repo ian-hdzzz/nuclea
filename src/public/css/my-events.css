@@ -173,8 +173,8 @@
 }
 
 .event-type.meeting {
-    background-color: rgba(139, 92, 246, 0.2);
-    color: var(--purple-color);
+    background-color: rgba(0, 132, 255, 0.2);
+    color: #0077ef;
 }
 
 .event-type.vacation {
@@ -389,7 +389,7 @@
 
 .day-event-tag.one-to-one {
     background-color: rgba(66, 133, 244, 0.2);
-    color: #4285F4;
+    color: #ffffff;
 }
 
 /* Estilos específicos para tipos de eventos */
@@ -597,8 +597,8 @@
 
 /* Meeting event tag */
 .day-event-tag.meeting {
-    background-color: rgba(139, 92, 246, 0.2);
-    color: var(--purple-color);
+    background-color: rgba(37, 97, 227, 0.2);
+    color: #0754ef;
 }
 
 /* Vacation event tag */
@@ -728,7 +728,7 @@
     flex-direction: column;
     gap: 2px;
     margin-top: 2px;
-    overflow: hidden.
+    overflow-y: auto;
   }
   
   .day-event-tag {
@@ -746,13 +746,13 @@
   }
   
   .day-event-tag.meeting {
-    background-color: rgba(139, 92, 246, 0.2);
-    color: var(--purple-color);
+    background-color: rgba(0, 81, 220, 0.2);
+    color: #fff;
   }
   
   .day-event-tag.vacation {
-    background-color: rgba(59, 130, 246, 0.2);
-    color: var(--blue-color);
+    background-color: rgba(158, 2, 255, 0.2);
+    color: #6f00b3;
   }
   
   .day-event-tag.holiday {
@@ -770,7 +770,7 @@
     font-style: italic;
     color: var(--text-secondary);
     text-align: center;
-    padding: 2px.
+    padding: 2px;
   }
   
   /* Estilos para días con eventos */
@@ -793,7 +793,7 @@
 }
 
 .day-event-tag.type-2 {
-    background-color: #8B5CF5;
+    background-color: #1a52eb;
     color: white;
 }
 
@@ -830,7 +830,7 @@
 }
 
 .event-tag.vacation {
-    background-color: #3B82F6;
+    background-color: #8b30f2eb;
 }
 
 .event-tag.holiday {
@@ -873,7 +873,7 @@
   }
   
   .event-type-container {
-    margin-bottom: 10px.
+    margin-bottom: 10px;
   }
   
   .event-type-header {
