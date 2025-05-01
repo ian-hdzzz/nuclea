@@ -1,7 +1,7 @@
 const pool = require('../util/database');
 
 class AgendarModel {
-    static async createOneToOne(selectedUserId, fechaInicio, horaInicio) {
+    static async createOneToOne(selectedUserId, fechaInicio, horaInicio, titulo = "One-to-one") {
         try {
             // Convertir la hora de inicio a objeto Date
             const startDateTime = new Date(`${fechaInicio}T${horaInicio}`);
@@ -12,12 +12,13 @@ class AgendarModel {
 
             const query = `
                 INSERT INTO eventos 
-                (descripcion, fechaInicio, horaInicio, fechaFin, horaFin, tipoId, usuarioId, estado) 
+                (titulo, descripcion, fechaInicio, horaInicio, fechaFin, horaFin, tipoId, usuarioId, estado) 
                 VALUES 
-                ('One-to-One Meeting', ?, ?, ?, ?, 2, ?, 'active')
+                (?, 'One-to-One Meeting', ?, ?, ?, ?, 2, ?, 'active')
             `;
 
             const [result] = await pool.query(query, [
+                titulo,
                 fechaInicio,
                 horaInicio,
                 fechaInicio,

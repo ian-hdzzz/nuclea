@@ -128,6 +128,7 @@ class SchedulePopup {
                             selectedUserId: this.selectedUser.id,
                             date: dateStr,
                             time: timeStr,
+                            titulo: "One-to-one",
                             _csrf: csrfToken
                         })
                     });

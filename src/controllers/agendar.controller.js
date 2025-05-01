@@ -6,7 +6,7 @@ const agendarController = {};
 
 agendarController.scheduleOneToOne = async (req, res) => {
     try {
-        const { selectedUserId, date, time } = req.body;
+        const { selectedUserId, date, time, titulo = "One-to-one" } = req.body;
 
         // Basic validations
         if (!selectedUserId || !date || !time) {
@@ -26,8 +26,8 @@ agendarController.scheduleOneToOne = async (req, res) => {
             });
         }
 
-        // Create the meeting
-        const result = await AgendarModel.createOneToOne(selectedUserId, date, time);
+        // Create the meeting with the title
+        const result = await AgendarModel.createOneToOne(selectedUserId, date, time, titulo);
 
         if (result.affectedRows > 0) {
             try {
@@ -41,14 +41,14 @@ agendarController.scheduleOneToOne = async (req, res) => {
                     // Send email if user has email address
                     if (userContact.email) {
                         notificationPromises.push(
-                            sendMeetingInvitation(userContact.email, { date, time })
+                            sendMeetingInvitation(userContact.email, { date, time, titulo })
                         );
                     }
 
                     // Send WhatsApp if user has phone number
                     if (userContact.phone) {
                         notificationPromises.push(
-                            sendWhatsAppNotification(userContact.phone, { date, time })
+                            sendWhatsAppNotification(userContact.phone, { date, time, titulo })
                         );
                     }
 

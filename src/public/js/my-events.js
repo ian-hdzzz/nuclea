@@ -60,22 +60,23 @@ async function loadEventsFromBackend() {
             // Mapear el tipo de evento
             let type = event.type;
             let icon = "📅";
+            let eventType = "";
             
             switch(type) {
                 case 1:
-                    type = "vacation";
+                    eventType = "vacation";
                     icon = "🌙";
                     break;
                 case 2:
-                    type = "meeting";
+                    eventType = "one-to-one"; // Cambiado de "meeting" a "one-to-one"
                     icon = "👤";
                     break;
                 case 3:
-                    type = "holiday";
+                    eventType = "holiday";
                     icon = "📌";
                     break;
                 case 4:
-                    type = "non-working";
+                    eventType = "non-working";
                     icon = "🏠";
                     break;
             }
@@ -83,7 +84,7 @@ async function loadEventsFromBackend() {
             return {
                 id: event.id,
                 title: event.title,
-                type: type,
+                type: eventType,
                 start: startDate,
                 end: endDate,
                 icon: icon,
@@ -91,7 +92,7 @@ async function loadEventsFromBackend() {
                 description: event.description,
                 color: event.color || "#6C7280"
             };
-        }).filter(Boolean); // Eliminar eventos nulos
+        }).filter(Boolean);
         
         console.log('Total de eventos procesados:', events.length);
         console.log('Eventos finales:', events);
@@ -396,31 +397,27 @@ function showTooltip(event, data) {
     const rect = event.target.getBoundingClientRect();
     
     // Format the time string
-    let timeString = data.allDay ? 'All Day' : 
+    let timeString = data.allDay ? 'Todo el día' : 
         `${formatTime(new Date(data.start))} - ${formatTime(new Date(data.end))}`;
 
     // Get event type name
-    let typeName = 'Event';
+    let typeName = 'Evento';
     let typeClass = '';
     switch(data.type) {
-        case 1:
         case 'vacation':
-            typeName = 'Vacation';
+            typeName = 'Vacaciones';
             typeClass = 'vacation';
             break;
-        case 2:
-        case 'meeting':
+        case 'one-to-one':
             typeName = 'One-to-One';
             typeClass = 'meeting';
             break;
-        case 3:
         case 'holiday':
-            typeName = 'Holiday'; // Simplificado de "Cultural Holiday" a "Holiday"
+            typeName = 'Día Festivo';
             typeClass = 'holiday';
             break;
-        case 4:
         case 'non-working':
-            typeName = 'Non-Working Day';
+            typeName = 'Día No Laborable';
             typeClass = 'non-working';
             break;
     }
@@ -433,26 +430,28 @@ function showTooltip(event, data) {
             <i class="fa-regular fa-clock"></i> ${timeString}
         </div>
         ${data.description ? `
-            <div class="event-tooltip-description">
-                ${data.description}
-            </div>
-        ` : ''}
+        <div class="event-tooltip-description">
+            ${data.description}
+        </div>` : ''}
     `;
 
-    // Position the tooltip
-    const padding = 10;
-    let top = rect.top - tooltip.offsetHeight - padding;
-    let left = rect.left + (rect.width / 2) - (tooltip.offsetWidth / 2);
+    // Position tooltip
+    const scrollY = window.scrollY || window.pageYOffset;
+    const scrollX = window.scrollX || window.pageXOffset;
+    
+    // Calculate position
+    let top = rect.top + scrollY - tooltip.offsetHeight - 10;
+    let left = rect.left + scrollX + (rect.width / 2) - (tooltip.offsetWidth / 2);
 
     // Check if tooltip would go off screen
-    if (top < 0) {
-        // Show below element instead
-        top = rect.bottom + padding;
+    if (top < scrollY) {
+        top = rect.bottom + scrollY + 10;
     }
-    if (left < padding) {
-        left = padding;
-    } else if (left + tooltip.offsetWidth > window.innerWidth - padding) {
-        left = window.innerWidth - tooltip.offsetWidth - padding;
+    if (left < scrollX) {
+        left = scrollX + 10;
+    }
+    if (left + tooltip.offsetWidth > window.innerWidth + scrollX) {
+        left = window.innerWidth + scrollX - tooltip.offsetWidth - 10;
     }
 
     tooltip.style.top = `${top}px`;
@@ -471,6 +470,18 @@ function createEventTag(event) {
     eventTag.className = `day-event-tag ${event.type}`;
     eventTag.dataset.eventId = event.id;
     eventTag.innerHTML = `${event.icon} ${event.title}`;
+    
+    // Añadir event listeners para el tooltip
+    eventTag.addEventListener('mouseover', (e) => {
+        e.stopPropagation();
+        showTooltip(e, event);
+    });
+    
+    eventTag.addEventListener('mouseout', (e) => {
+        e.stopPropagation();
+        hideTooltip();
+    });
+    
     return eventTag;
 }
 
@@ -537,6 +548,8 @@ function generateCalendar(month, year) {
                 dayDiv.classList.add('holiday-day');
             } else if (eventTypes.has('non-working')) {
                 dayDiv.classList.add('non-working-day');
+            }else if (eventTypes.has('one-to-one')) {
+                dayDiv.classList.add('one-to-one');
             }
             
             // Limitar a máximo 3 eventos visibles
@@ -620,9 +633,9 @@ function generateUpcomingEvents() {
                 eventTypeClass = "vacation";
                 eventTypeName = "Vacation";
                 break;
-            case "meeting":
+            case "one-to-one":
                 eventTypeClass = "meeting";
-                eventTypeName = "Meeting";
+                eventTypeName = "One-to-one";
                 break;
             case "holiday":
                 eventTypeClass = "holiday";
@@ -676,7 +689,7 @@ function updateStats() {
     try {
         // Count and group events by type
         const eventsByType = {
-            meeting: events.filter(e => e.type === "meeting"),
+            "one-to-one": events.filter(e => e.type === "one-to-one"),
             vacation: events.filter(e => e.type === "vacation"),
             holiday: events.filter(e => e.type === "holiday"),
             "non-working": events.filter(e => e.type === "non-working")
@@ -685,7 +698,7 @@ function updateStats() {
         // Update counts
         const oneToOneElement = document.querySelector(".circle.meeting");
         if (oneToOneElement) {
-            oneToOneElement.textContent = eventsByType.meeting.length;
+            oneToOneElement.textContent = eventsByType["one-to-one"].length;
         }
         
         const vacationElement = document.querySelector(".circle.vacation");
@@ -712,7 +725,7 @@ function updateStats() {
         }
 
         // Update category details
-        updateCategoryDetails("oneToOne", eventsByType.meeting);
+        updateCategoryDetails("oneToOne", eventsByType["one-to-one"]);
         updateCategoryDetails("vacations", eventsByType.vacation);
         updateCategoryDetails("holidays", eventsByType.holiday);
         updateCategoryDetails("nonWorkingDays", eventsByType["non-working"]);
