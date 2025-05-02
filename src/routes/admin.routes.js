@@ -8,7 +8,7 @@ const router = express.Router();
 // Definir rutas
 router.get('/admin',isAuth, (req, res) => {
   res.render('./pages/admin', {
-    title: 'Managment',
+    title: 'Management',
     csrfToken: req.csrfToken(),
     iconClass: 'fa-solid fa-list-check',
   });

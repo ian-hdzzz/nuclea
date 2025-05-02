@@ -20,6 +20,7 @@
   border-radius: 10px;
   border: 1px solid var(--accent-blue);
   margin: 15px 0;
+  margin-left: ;
   align-items: center;
 }
 
@@ -82,7 +83,7 @@
 
 .search-input {
   width: 100%;
-  padding: 15px 40px 15px 10px; /* espacio a la derecha para el ícono */
+  padding: 15px 10px 15px 40px; /* cambiado el padding para el ícono a la izquierda */
   margin: 10px 0;
   background-color: #0C1019;
   border-radius: 10px;
@@ -97,9 +98,9 @@
 
 .search-bar i {
   position: absolute;
-  right: 15px;
-  top: 60%;
-  transform: translateY(-47%);
+  left: 15px;
+  top: 50%; /* Cambiado de 60% a 50% */
+  transform: translateY(-50%); /* Cambiado de -47% a -50% */
   color: #888;
   pointer-events: none;
 }
@@ -180,14 +181,17 @@
   color: #a0aec0;
   display: none;
 }
+.fa-magnifying-glass.one{
+    top: 60%;
+}
 </style>
 
 <div class="search-container" id="search-container-{{searchId}}">
     {{!-- <h3 class="text-lg font-medium mb-4 text-white">{{title}}</h3> --}}
     <div class="search-bar">
-        <label for="nombre">Employee name</label>
+        <label for="nombre">{{labelSearch}}</label>
         <input type="text" placeholder="{{placeholder}}" class="search-input" id="{{searchId}}" data-search-type="{{searchType}}">
-        <i class="fa-solid fa-magnifying-glass"></i>
+        <i class="fa-solid fa-magnifying-glass one"></i>
     </div>
     {{#ifNotEqual searchId "search-input"}}
     <div class="search-loader">

@@ -234,11 +234,25 @@ async function fetchGoogleCalendarEvents() {
     }
 }
 
+// Función para mostrar/ocultar botones según el estado de sincronización
+function updateButtonsVisibility(hasGoogleEvents) {
+    const syncButton = document.querySelector('.sync-button');
+    const clearButton = document.getElementById('clearGoogleEvents');
+    
+    if (hasGoogleEvents) {
+        syncButton.classList.add('hidden');
+        clearButton.classList.add('visible');
+    } else {
+        syncButton.classList.remove('hidden');
+        clearButton.classList.remove('visible');
+    }
+}
+
 // Función para procesar los eventos de Google Calendar
 function processGoogleCalendarEvents(googleEvents) {
     if (!googleEvents || googleEvents.length === 0) {
-      alert('No se encontraron eventos en Google Calendar.');
-      return;
+        alert('No se encontraron eventos en Google Calendar.');
+        return;
     }
   
     console.log('Eventos recibidos de Google Calendar:', googleEvents);
@@ -312,6 +326,9 @@ function processGoogleCalendarEvents(googleEvents) {
     generateUpcomingEvents();
     updateStats();
     
+    // Actualizar visibilidad de los botones
+    updateButtonsVisibility(true);
+    
     // Mostrar mensaje de éxito
     alert(`Sincronización completada. Se agregaron ${uniqueNewEvents.length} eventos.`);
 }
@@ -319,11 +336,11 @@ function processGoogleCalendarEvents(googleEvents) {
 // Agregar en tu HTML después del botón de sincronización
 document.querySelector('.sync-button').insertAdjacentHTML('afterend', `
     <button class="clear-button" id="clearGoogleEvents" style="margin-left: 10px;">
-      <i class="fa-regular fa-trash-can"></i> Limpiar eventos de Google
+      <i class="fa-regular fa-trash-can"></i> Unsync Google Calendar
     </button>
   `);
   
-// Agregar el evento para limpiar
+// Modificar el evento para limpiar
 document.getElementById('clearGoogleEvents').addEventListener('click', function() {
     // Filtrar y mantener solo los eventos originales
     events = events.filter(event => !event.source || event.source !== 'google');
@@ -333,7 +350,57 @@ document.getElementById('clearGoogleEvents').addEventListener('click', function(
     generateUpcomingEvents();
     updateStats();
     
+    // Actualizar visibilidad de los botones
+    updateButtonsVisibility(false);
+    
     alert('Eventos importados de Google Calendar eliminados.');
+});
+
+// Asegurar que la aplicación se inicie con los botones en el estado correcto
+document.addEventListener('DOMContentLoaded', function() {
+    init();
+    initializeAccordion();
+
+    // Delegación de eventos para el acordeón
+    const statisticsContainer = document.querySelector('.statistics-container');
+    if (statisticsContainer) {
+        statisticsContainer.addEventListener('click', function(e) {
+            const header = e.target.closest('.category-header');
+            if (header) {
+                e.preventDefault();
+                e.stopPropagation();
+                toggleAccordionItem(header);
+            }
+        });
+    }
+
+    if (document.querySelector('.sync-button')) {
+        loadGoogleAPIs();
+    }
+
+    // Add click handlers for category cards
+    const categoryCards = document.querySelectorAll('.category-card');
+    categoryCards.forEach(card => {
+        card.addEventListener('click', function() {
+            // Toggle the active class on the clicked card
+            this.classList.toggle('active');
+            
+            // Find the event list associated with this card
+            const eventList = this.querySelector('.event-list');
+            if (eventList) {
+                // Remove hidden class first
+                eventList.classList.remove('hidden');
+                // Add show class after a small delay to trigger animation
+                setTimeout(() => {
+                    eventList.classList.toggle('show');
+                }, 10);
+            }
+        });
+    });
+
+    // Verificar si hay eventos de Google al inicio
+    const hasGoogleEvents = events.some(event => event.source === 'google');
+    updateButtonsVisibility(hasGoogleEvents);
 });
 
 // Función para formatear la fecha
@@ -855,49 +922,6 @@ toggleOptions.forEach(option => {
 if (currentView === 'upcoming') {
     toggleSlider.classList.add('left');
 }
-
-// Asegurar que la aplicación se inicie correctamente
-document.addEventListener('DOMContentLoaded', function() {
-    init();
-    initializeAccordion();
-
-    // Delegación de eventos para el acordeón
-    const statisticsContainer = document.querySelector('.statistics-container');
-    if (statisticsContainer) {
-        statisticsContainer.addEventListener('click', function(e) {
-            const header = e.target.closest('.category-header');
-            if (header) {
-                e.preventDefault();
-                e.stopPropagation();
-                toggleAccordionItem(header);
-            }
-        });
-    }
-
-    if (document.querySelector('.sync-button')) {
-        loadGoogleAPIs();
-    }
-
-    // Add click handlers for category cards
-    const categoryCards = document.querySelectorAll('.category-card');
-    categoryCards.forEach(card => {
-        card.addEventListener('click', function() {
-            // Toggle the active class on the clicked card
-            this.classList.toggle('active');
-            
-            // Find the event list associated with this card
-            const eventList = this.querySelector('.event-list');
-            if (eventList) {
-                // Remove hidden class first
-                eventList.classList.remove('hidden');
-                // Add show class after a small delay to trigger animation
-                setTimeout(() => {
-                    eventList.classList.toggle('show');
-                }, 10);
-            }
-        });
-    });
-});
 
 // Manejar errores globales
 window.addEventListener('error', function(event) {
