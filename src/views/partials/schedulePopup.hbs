@@ -1,4 +1,41 @@
 <!-- Schedule Meeting Popup Component -->
+<style>
+/* Reset de posicionamiento para el ícono de búsqueda */
+#popupOverlay .popup .search-bar i.fa-magnifying-glass,
+#popupOverlay .popup .search-bar i.fa-solid.fa-magnifying-glass.one {
+    position: absolute !important;
+    left: 25px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    z-index: 10;
+    color: #888;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+#popupOverlay .popup .search-input {
+    padding: 15px 15px 15px 55px !important;
+    width: 100%;
+    height: auto;
+    line-height: normal;
+}
+
+#popupOverlay .popup .search-bar {
+    position: relative !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+#popupOverlay .popup .search-input-wrapper {
+    position: relative;
+    width: 100%;
+    padding: 10px;
+}
+</style>
+
 <div class="popup-overlay" id="popupOverlay">
     <meta name="csrf-token" content="{{csrfToken}}">
     <div class="popup">
